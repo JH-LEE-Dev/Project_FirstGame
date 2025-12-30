@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bc4c5ecdccd7c489e2b9069e753026, type: 3}
+  m_Name: CardDataBase
+  m_EditorClassIdentifier: Assembly-CSharp::CardDataBase
+  cardData:
+  - id: NormalAttack
+    cardObject: {fileID: 4183898965353944567, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
+    cost: 0
+    type: 0
+    effects:
+    - cardEffectStrategy: {fileID: 11400000, guid: a8053d6f2739c944d96dff07a6f38241, type: 2}

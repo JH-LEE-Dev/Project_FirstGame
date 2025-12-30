@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using UnityEngine;
@@ -5,12 +6,15 @@ using UnityEngine.InputSystem;
 
 public class Unit : MonoBehaviour, IDamageable
 {
+    public event Action UnitIsDeadEvent;
+
     [Header("Components")]
     protected Rigidbody2D rb;
     protected Collider2D col;
     protected SpriteRenderer sr;
     protected MoveComponent moveComponent;
     protected UnitContext ctx;
+    protected EffectComponent effectComponent;
  
     public Animator animator { get; private set; }
 
@@ -19,12 +23,15 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected WaveManager waveManager;
     protected InputManager inputManager;
+    protected GameServiceLocator gameServiceLocator;
 
     protected Vector2 moveDirection;
+    protected bool bDead = false;
 
-    public virtual void Initialize(InputManager _inputManager,WaveManager _waveManager = null,
-        EnemyTypeData _enemyTypeData= null)
+    public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator,
+        WaveManager _waveManager = null, EnemyTypeData _enemyTypeData= null)
     {
+        gameServiceLocator = _gameServiceLocator;
         inputManager = _inputManager;
         waveManager = _waveManager;
     }
@@ -36,6 +43,7 @@ public class Unit : MonoBehaviour, IDamageable
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
         moveComponent = GetComponent<MoveComponent>();
+        effectComponent = GetComponent<EffectComponent>();
 
         ctx = new UnitContext();
         ctx.Initialize(this);
@@ -117,5 +125,16 @@ public class Unit : MonoBehaviour, IDamageable
     public virtual void ApplyDamage(float damage)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void ResetDamping()
+    {
+        rb.linearDamping = 0f;
+        rb.angularDamping = 0f;
+    }
+
+    protected void InvokeUnitIsDead()
+    {
+        UnitIsDeadEvent?.Invoke();
     }
 }

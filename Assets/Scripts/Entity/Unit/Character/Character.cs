@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Character : Unit
 {
-    public override void Initialize(InputManager _inputManager, WaveManager _waveManager = null, 
+    public override void Initialize(InputManager _inputManager,GameServiceLocator _gameServiceLocator, WaveManager _waveManager = null, 
         EnemyTypeData _enemyTypeData = null)
     {
-        base.Initialize(_inputManager, _waveManager);
+        base.Initialize(_inputManager, _gameServiceLocator, _waveManager);
 
         inputManager.inputReader.MoveEvent += OnMove;
     }

@@ -14,6 +14,10 @@ public class PlayerMoveStrategy : MoveStrategy
 
     private float angle = Mathf.PI / 2;
 
+    public override void Accelerate(Vector2 direction,float acceleration, float maxSpeed)
+    {
+    }
+
     public override async Task AsyncMove(Vector2 direction)
     {
         await Task.Yield();
@@ -38,11 +42,16 @@ public class PlayerMoveStrategy : MoveStrategy
 
         angle += direction.x * angleSpeed * Time.deltaTime;
 
-        angle = Mathf.Clamp(angle, Mathf.PI * 0.2f, Mathf.PI * 0.8f);
+        angle = Mathf.Clamp(angle, Mathf.PI * 0.3f, Mathf.PI * 0.7f);
 
         float x = radiusX * Mathf.Cos(angle);
         float y = radiusY * Mathf.Sin(angle);
 
         unit.transform.position = new Vector3(x, InitialPos.y + y, 0f);
+    }
+
+    public override void Move_Impulse(Vector2 direction, float power)
+    {
+        return;
     }
 }

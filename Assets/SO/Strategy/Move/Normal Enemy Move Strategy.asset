@@ -15,5 +15,4 @@ MonoBehaviour:
   maxSpeed: 5
   accelTime: 0.2
   decelTime: 0.2
-  force: 5
   forceDelta: 3

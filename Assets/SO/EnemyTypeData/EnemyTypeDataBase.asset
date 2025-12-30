@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyType
   enemyData:
   - id: Baren
-    sprite: {fileID: 2728101629820265006, guid: fc97abadc3996a14ca65a9dda2d7d183, type: 3}
-    scale: 1
-    moveForce: 0
-  - id: Ice
-    sprite: {fileID: -7560284153744367771, guid: ae8ddd5dedc250848a9bf1d0d0bfc046, type: 3}
+    sprite: {fileID: 9018329983352920618, guid: 0d2dd8e6cc2a64d41b9cd2b15b1331fe, type: 3}
     scale: 2
-    moveForce: 0
+    moveForce: 6
+  - id: Ice
+    sprite: {fileID: 215401576309132004, guid: c97a667afec2bd5419ec6d2d48465c7c, type: 3}
+    scale: 4
+    moveForce: 7
   - id: Lava
-    sprite: {fileID: -8890641348306671835, guid: 7a73b2c7eb4313041b8d758a8e3b8421, type: 3}
-    scale: 1
-    moveForce: 0
+    sprite: {fileID: 6024657178149202955, guid: 47566be39d3a771448842dc5e7f9403e, type: 3}
+    scale: 3
+    moveForce: 5
   - id: Terran
-    sprite: {fileID: -8243176133654140095, guid: a8234f35af998d44784105c30b629223, type: 3}
-    scale: 2.5
-    moveForce: 0
+    sprite: {fileID: -4734392874465410214, guid: ccfe7fa19208eb44c8518c1d58cf0572, type: 3}
+    scale: 3
+    moveForce: 8

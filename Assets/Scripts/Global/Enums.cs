@@ -14,3 +14,9 @@ public enum Dir
     RightDown,
     Down,
 }
+
+public enum CardType
+{
+    Attack,
+    Shield
+}

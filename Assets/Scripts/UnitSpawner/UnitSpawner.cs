@@ -10,8 +10,9 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField] private GameObject enemyUnitPrefab;
     [SerializeField] private GameObject spawnPoint;
 
-    InputManager inputManager;
-    WaveManager waveManager;
+    private InputManager inputManager;
+    private WaveManager waveManager;
+    private GameServiceLocator gameServiceLocator;
 
     private uint curUnitCnt;
 
@@ -24,10 +25,11 @@ public class UnitSpawner : MonoBehaviour
     [Header("Enemy Target Point")]
     [SerializeField] private GameObject enemyTargetPoint;
 
-    public void Initiallize(InputManager _inputManager, WaveManager _waveManager)
+    public void Initiallize(InputManager _inputManager, WaveManager _waveManager, GameServiceLocator _gameServiceLocator)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
+        gameServiceLocator = _gameServiceLocator;
 
         if (inputManager == null)
         {
@@ -52,7 +54,7 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             Debug.Log("Character Spawned");
-            spawnedUnit.Initialize(inputManager);
+            spawnedUnit.Initialize(inputManager, gameServiceLocator);
         }
     }
 
@@ -109,11 +111,11 @@ public class UnitSpawner : MonoBehaviour
 
             if (spawnedUnit != null)
             {
-                int randomInt = UnityEngine.Random.Range(0, enemyTypeDataBase.enemyData.Count-1);
+                int randomInt = UnityEngine.Random.Range(0, enemyTypeDataBase.enemyData.Count - 1);
 
                 EnemyTypeData enemyTypeData = enemyTypeDataBase.GetEnemyData(randomInt);
 
-                spawnedUnit.Initialize(inputManager,waveManager, enemyTypeData);
+                spawnedUnit.Initialize(inputManager, gameServiceLocator, waveManager, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
             }
         }

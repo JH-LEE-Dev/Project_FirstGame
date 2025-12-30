@@ -48,6 +48,7 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _EnableExternalAlpha: 0
+    - _Sensitivity: 0.5
     - _Stencil: 1
     - _StencilComp: 8
     - _StencilOp: 2

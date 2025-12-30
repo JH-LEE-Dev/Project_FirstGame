@@ -7,6 +7,8 @@ public class MoveComponent : EntityComponent
     protected MoveStrategy moveStrategy;
 
     protected Vector2 moveDirection;
+    protected float impulsePower;
+    protected bool bAccelerate = false;
 
     protected override void Update()
     {
@@ -14,6 +16,13 @@ public class MoveComponent : EntityComponent
             return;
 
         moveStrategy.Move(moveDirection);
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+
     }
 
     protected override void Awake()
@@ -33,6 +42,16 @@ public class MoveComponent : EntityComponent
         moveDirection = direction;
     }
 
+    public void SetImpulsePower(float power)
+    {
+        impulsePower = power;
+    }
+
+    public void SetAccelerate(bool boolean)
+    {
+        bAccelerate = boolean;
+    }
+
     public virtual async void AsyncMove()
     {
         await moveStrategy.AsyncMove(moveDirection);
@@ -40,6 +59,6 @@ public class MoveComponent : EntityComponent
 
     public virtual void ApplyImpulse()
     {
-        moveStrategy.Move(moveDirection);
+        moveStrategy.Move_Impulse(moveDirection,impulsePower);
     }
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a21298bcc2355646bf61596a02275aa, type: 3}
   m_Name: Player Move Strategy
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMoveStrategy
-  radiusX: 5
-  radiusY: 2
+  radiusX: 6
+  radiusY: 3
   angleSpeed: 1.5

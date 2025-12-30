@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8236839706518566827}
   - component: {fileID: 4454563968030832724}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 1305217980410147217}
   - component: {fileID: -3339691030104686882}
   - component: {fileID: 3098091103372273114}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.35, y: 2.35, z: 1}
+  m_LocalScale: {x: 4.25, y: 4.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3123738006426394367}
@@ -226,7 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5280614631019589580}
   - component: {fileID: 6658772661816314594}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FrontLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3123738006426394367}
   - component: {fileID: 4777428062282963327}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BackLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}

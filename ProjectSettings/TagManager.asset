@@ -11,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Gravity
+  - Character
+  - Earth
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Character
     uniqueID: 3154428597
+    locked: 0
+  - name: Effect
+    uniqueID: 3312008363
     locked: 0
   - name: BlackBackground
     uniqueID: 3874161017

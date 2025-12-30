@@ -3,9 +3,12 @@ using UnityEngine;
 public class EntityComponent : MonoBehaviour
 {
     protected UnitContext ctx;
+    protected bool bDead = false;
+
     public virtual void Initialize(UnitContext _ctx)
     {
         ctx = _ctx;
+        ctx.unit.UnitIsDeadEvent += UnitIsDead;
     }
 
     protected virtual void Awake()
@@ -14,6 +17,12 @@ public class EntityComponent : MonoBehaviour
     }
 
     protected virtual void OnDestroy()
+    {
+        if (ctx != null)
+            ctx.unit.UnitIsDeadEvent -= UnitIsDead;
+    }
+
+    protected virtual void FixedUpdate()
     {
 
     }
@@ -26,5 +35,10 @@ public class EntityComponent : MonoBehaviour
     protected virtual void Start()
     {
 
+    }
+
+    private void UnitIsDead()
+    {
+        bDead = true;
     }
 }

@@ -12,4 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23bbbad034d7e54abb41405e3d99c70, type: 3}
   m_Name: AudioDatabase
   m_EditorClassIdentifier: Assembly-CSharp::AudioDatabase
-  sounds: []
+  sounds:
+  - id: EnemyExplosion
+    clip: {fileID: 8300000, guid: bd4620376dfd6dd4b92b5752085c8a07, type: 3}
+    mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
+    defaultVolume: 1
+    is3D: 0
+  - id: BGM
+    clip: {fileID: 8300000, guid: 2f9f0fa418049cd46b88b5513537e502, type: 3}
+    mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
+    defaultVolume: 1
+    is3D: 0
