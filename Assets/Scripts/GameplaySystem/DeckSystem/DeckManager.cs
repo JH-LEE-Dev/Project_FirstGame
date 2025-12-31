@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DeckManager : MonoBehaviour
+public class DeckManager : MonoBehaviour, IDeckProvider
 {
     private Dictionary<string, Queue<CardInstance>> cardPool;
     private Stack<CardInstance> drawPile;
@@ -10,8 +11,17 @@ public class DeckManager : MonoBehaviour
     private List<CardInstance> discardPile;
     private CardDataBase cardDataBase;
 
+    public IReadOnlyList<CardData> HandCards => throw new NotImplementedException();
+
+    public int DeckCount => throw new NotImplementedException();
+
+    public int GraveCount => throw new NotImplementedException();
+
+    public event Action OnHandChanged;
+
     public void Awake()
     {
+        return;
         for (int i = 0; i < cardDataBase.cardData.Count; ++i)
         {
             CardData cardData = cardDataBase.GetCardData(i);

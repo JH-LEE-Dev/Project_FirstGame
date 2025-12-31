@@ -28,7 +28,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(transform.parent.gameObject);
         CreatePool();
         CreateBGMSource();
     }

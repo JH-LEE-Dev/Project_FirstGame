@@ -23,3 +23,8 @@ MonoBehaviour:
     mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
     defaultVolume: 1
     is3D: 0
+  - id: BGM_MainMenu
+    clip: {fileID: 8300000, guid: ffe9fb4475cb24b4ab2ff7812554caf7, type: 3}
+    mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
+    defaultVolume: 1
+    is3D: 0

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class UIView : MonoBehaviour
 {
+    protected UIViewContext viewCtx;
+
     [Header("UIView Settings")]
     [SerializeField] private UILayer layer = UILayer.Screen;
     [SerializeField] private bool startHidden = true;
@@ -21,6 +23,11 @@ public abstract class UIView : MonoBehaviour
         {
             _isVisible = gameObject.activeSelf;
         }
+    }
+
+    public void Initialize(UIViewContext ctx)
+    {
+        viewCtx = ctx;
     }
 
     /// <summary>

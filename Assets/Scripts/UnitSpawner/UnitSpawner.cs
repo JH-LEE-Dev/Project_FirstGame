@@ -53,7 +53,6 @@ public class UnitSpawner : MonoBehaviour
 
         if (spawnedUnit != null)
         {
-            Debug.Log("Character Spawned");
             spawnedUnit.Initialize(inputManager, gameServiceLocator);
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameServiceLocator
 {
     private CameraController cameraController;
-    private GameController gameController; 
+    private GameController gameController;
 
     public void Initialize(CameraController _cameraController,GameController _gameController)
     {

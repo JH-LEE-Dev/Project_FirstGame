@@ -20,3 +20,9 @@ public enum CardType
     Attack,
     Shield
 }
+
+public enum SceneType
+{
+    MainMenu,
+    Gameplay
+}

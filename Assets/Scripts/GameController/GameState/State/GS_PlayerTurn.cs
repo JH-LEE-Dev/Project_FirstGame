@@ -15,7 +15,7 @@ public class GS_PlayerTurnState : IState
 
     }
 
-    public void Imitialize()
+    public void Initialize()
     {
 
     }

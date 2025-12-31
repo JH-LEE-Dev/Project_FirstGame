@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class InputManager
+public class InputManager : MonoBehaviour
 {
     public InputReader inputReader { get; private set; }
 

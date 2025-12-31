@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance { get; private set; }
+    private UIViewContext viewCtx;
 
-    [Header("Layer Roots (캔버스 자식에 배치)")]
-    [SerializeField] private Transform screenLayerRoot;
-    [SerializeField] private Transform popupLayerRoot;
-    [SerializeField] private Transform overlayLayerRoot;
-    [SerializeField] private Transform tooltipLayerRoot;
+    private Transform screenLayerRoot;
+    private Transform popupLayerRoot;
+    private Transform overlayLayerRoot;
+    private Transform tooltipLayerRoot;
 
     [Header("등록된 UIView Prefab들")]
     [SerializeField] private List<UIView> viewPrefabs = new List<UIView>();
@@ -21,21 +20,19 @@ public class UIManager : MonoBehaviour
     // 타입별 인스턴스 캐시
     private Dictionary<Type, UIView> instanceByType = new Dictionary<Type, UIView>();
 
-    public void Initialize()
+    public void SceneChanged(CanvasRoot canvasRoot)
     {
+        CloseAll();
+
+        screenLayerRoot = canvasRoot.screenLayerRoot;
+        popupLayerRoot = canvasRoot.popupLayerRoot;
+        overlayLayerRoot = canvasRoot.overlayLayerRoot;
+        tooltipLayerRoot = canvasRoot.tooltipLayerRoot;
     }
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
-        DontDestroyOnLoad(gameObject);
+        viewCtx = new UIViewContext();
 
         // 타입별 Prefab 사전 구성
         foreach (var view in viewPrefabs)
@@ -88,6 +85,23 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 현재 생성되어 있는 모든 UIView를 닫는다.
+    /// </summary>
+    public void CloseAll()
+    {
+        ResetVariable();
+
+        foreach (var kv in instanceByType)
+        {
+            UIView view = kv.Value;
+            if (view != null)
+            {
+                view.Hide();
+            }
+        }
+    }
+
+    /// <summary>
     /// 특정 타입의 UIView 인스턴스를 반환(있을 때만)
     /// </summary>
     public T GetView<T>() where T : UIView
@@ -112,8 +126,16 @@ public class UIManager : MonoBehaviour
 
         Transform parent = GetLayerRoot(prefab.Layer);
 
+        if(parent == null)
+        {
+            Debug.Log("NULL!");
+
+        }
+
         UIView instance = Instantiate(prefab, parent);
         instance.gameObject.name = $"{prefab.gameObject.name}_Instance";
+
+        instance.Initialize(viewCtx);
 
         return (T)instance;
     }
@@ -128,5 +150,18 @@ public class UIManager : MonoBehaviour
             case UILayer.Tooltip: return tooltipLayerRoot;
             default: return screenLayerRoot;
         }
+    }
+
+    public void Initialize_GameplayScene(IDeckProvider deckProvider)
+    {
+        viewCtx.Initialize(deckProvider);
+    }
+    public void Initialize_MainMenuScene()
+    {
+    }
+
+    public void ResetVariable()
+    {
+        viewCtx.ResetVariable();
     }
 }

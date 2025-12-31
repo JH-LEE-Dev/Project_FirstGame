@@ -12,30 +12,41 @@ public class GameInstaller : MonoBehaviour
 
     [SerializeField] private WaveDatabase waveDatabase;
 
-    private void Awake()
+    public void Initialize(InputManager _inputManager)
     {
-        inputManager = new InputManager();
-        unitSpawner =  GetComponent<UnitSpawner>();
+        inputManager = _inputManager;
+
+        unitSpawner = GetComponent<UnitSpawner>();
         waveManager = GetComponent<WaveManager>();
         gameController = GetComponent<GameController>();
         cameraController = GetComponent<CameraController>();
         gameServiceLocator = new GameServiceLocator();
-        deckManager = new DeckManager();
+        deckManager = GetComponent<DeckManager>();
 
-        gameServiceLocator.Initialize(cameraController,gameController);
+        gameServiceLocator.Initialize(cameraController, gameController);
         inputManager.Initialize();
         waveManager.Initialize(waveDatabase);
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator);
-        gameController.Initialize(waveManager, inputManager,deckManager);
+        gameController.Initialize(waveManager, inputManager, deckManager);
+    }
+
+    private void Awake()
+    {
+      
     }
 
     private void Start()
     {
-        Sound.PlayBGM("BGM");    
+        //Sound.PlayBGM("BGM");    
     }
 
     private void OnDestroy()
     {
         
+    }
+
+    public void DependencyInjection(UIInstaller uiInstaller)
+    {
+        uiInstaller.DependencyInjection_Gameplay(deckManager);
     }
 }
