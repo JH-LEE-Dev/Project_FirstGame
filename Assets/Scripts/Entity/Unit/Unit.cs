@@ -57,6 +57,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected virtual void OnDestroy()
     {
+        UnitIsDeadEvent = null;
     }
 
     protected virtual void Start()
@@ -136,5 +137,10 @@ public class Unit : MonoBehaviour, IDamageable
     protected void InvokeUnitIsDead()
     {
         UnitIsDeadEvent?.Invoke();
+    }
+
+    public void RegisterDeadListener(Action listener)
+    {
+        UnitIsDeadEvent += listener;
     }
 }

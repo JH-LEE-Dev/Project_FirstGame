@@ -35,6 +35,11 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     }
 
+    public void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     public void SetupGameplayScene()
     {
         gameInstaller = Instantiate(gameInstaller_Prefab);

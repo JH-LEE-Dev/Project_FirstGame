@@ -24,6 +24,8 @@ public class InputReader
     public void Release()
     {
         actions.Combat.Disable();
+        actions.Combat.Move.performed -= OnMove;
+        actions.Combat.Move.canceled -= OnMove;
     }
 
     public void OnMove(InputAction.CallbackContext context)
