@@ -25,9 +25,21 @@ public abstract class UIView : MonoBehaviour
         }
     }
 
+    public virtual void Update()
+    {
+        
+    }
+
     public void Initialize(UIViewContext ctx)
     {
         viewCtx = ctx;
+
+        SetupUI();
+    }
+
+    public virtual void SetupUI()
+    {
+
     }
 
     /// <summary>
@@ -65,4 +77,15 @@ public abstract class UIView : MonoBehaviour
     /// Hide() 직전 호출되는 훅
     /// </summary>
     protected virtual void OnHide() { }
+
+    protected virtual void SetAnchorToCanvas(Transform transform)
+    {
+        RectTransform rt = transform.GetComponent<RectTransform>();
+
+        rt.anchorMin = Vector2.zero;   // (0, 0)
+        rt.anchorMax = Vector2.one;    // (1, 1)
+
+        rt.offsetMin = Vector2.zero;   // Left, Bottom
+        rt.offsetMax = Vector2.zero;   // Right, Top
+    }
 }

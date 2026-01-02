@@ -1,12 +1,16 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class UIView_HUD : UIView
 {
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
     [SerializeField] private GameObject uiPrefab;
+    [Space]
+    [SerializeField] private TMP_Text turnIndicatorText;
+    [SerializeField] private TMP_Text turnProcessIndicatorText;
 
     protected override void Awake()
     {
@@ -33,5 +37,16 @@ public class UIView_HUD : UIView
     public void RenderUI()
     {
 
+    }
+
+    public void PlayerTurnStarted(int waveIdx)
+    {
+        turnIndicatorText.text = "PlayerTurn";
+        turnProcessIndicatorText.text = "Card Draw";
+    }
+
+    public void CardUseTimeStarted()
+    {
+        turnProcessIndicatorText.text = "Card Using Time";
     }
 }

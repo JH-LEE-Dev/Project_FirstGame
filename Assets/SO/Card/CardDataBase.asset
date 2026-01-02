@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDataBase
   cardData:
   - id: NormalAttack
-    cardObject: {fileID: 4183898965353944567, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
-    cost: 0
+    cardObject: {fileID: 5863989176703220490, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
+    cost: 1
     type: 0
     effects:
     - cardEffectStrategy: {fileID: 11400000, guid: a8053d6f2739c944d96dff07a6f38241, type: 2}

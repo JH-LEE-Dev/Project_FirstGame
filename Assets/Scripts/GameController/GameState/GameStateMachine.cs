@@ -34,4 +34,16 @@ public class GameStateMachine
     {
         return currentState != null && currentState.GetType() == typeof(T);
     }
+
+    public T GetState<T>() where T : IState
+    {
+        var type = typeof(T);
+
+        if (!states.TryGetValue(type, out IState instance) || instance == null)
+        {
+            return default(T);
+        }
+
+        return (T)instance;
+    }
 }

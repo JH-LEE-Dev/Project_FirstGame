@@ -15,7 +15,9 @@ public class Unit : MonoBehaviour, IDamageable
     protected MoveComponent moveComponent;
     protected UnitContext ctx;
     protected EffectComponent effectComponent;
- 
+    protected HealthComponent healthComponent;
+    protected CombatComponent combatComponent;
+
     public Animator animator { get; private set; }
 
     [Header("Command System")]
@@ -44,6 +46,8 @@ public class Unit : MonoBehaviour, IDamageable
         col = GetComponent<Collider2D>();
         moveComponent = GetComponent<MoveComponent>();
         effectComponent = GetComponent<EffectComponent>();
+        healthComponent = GetComponent<HealthComponent>();
+        combatComponent = GetComponent<CombatComponent>();
 
         ctx = new UnitContext();
         ctx.Initialize(this);
@@ -114,6 +118,9 @@ public class Unit : MonoBehaviour, IDamageable
 
     public virtual void OnMove(Vector2 move)
     {
+        if (gameServiceLocator.IsGameState<GS_PlayerTurnState>() == false)
+            return;
+
         moveDirection = move;
 
         moveComponent.SetMoveDirection(moveDirection);
@@ -123,9 +130,9 @@ public class Unit : MonoBehaviour, IDamageable
     {
     }
 
-    public virtual void ApplyDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
-        throw new System.NotImplementedException();
+        healthComponent.DecreaseHealth(damage);
     }
 
     public void ResetDamping()

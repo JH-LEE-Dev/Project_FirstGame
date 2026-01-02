@@ -22,16 +22,5 @@ public class WaveManager : MonoBehaviour
         {
             SpawnWaveEvent?.Invoke(curWaveData.enemyCnt);
         }
-
-        StartCoroutine(StartMoveCoroutine());
-    }
-
-    private IEnumerator StartMoveCoroutine()
-    {
-        yield return new WaitForSeconds(6.0f);
-
-        StartMoveEvent?.Invoke();   
-
-        StartCoroutine(StartMoveCoroutine());
     }
 }

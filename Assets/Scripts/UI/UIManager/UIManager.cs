@@ -30,6 +30,11 @@ public class UIManager : MonoBehaviour
         tooltipLayerRoot = canvasRoot.tooltipLayerRoot;
     }
 
+    public void Initialize(InputManager inputManager)
+    {
+        viewCtx.Initialize(inputManager);
+    }
+
     private void Awake()
     {
         viewCtx = new UIViewContext();
@@ -129,7 +134,6 @@ public class UIManager : MonoBehaviour
         if(parent == null)
         {
             Debug.Log("NULL!");
-
         }
 
         UIView instance = Instantiate(prefab, parent);
@@ -154,7 +158,7 @@ public class UIManager : MonoBehaviour
 
     public void Initialize_GameplayScene(IDeckProvider deckProvider)
     {
-        viewCtx.Initialize(deckProvider);
+        viewCtx.Initialize_Gameplay(deckProvider);
     }
     public void Initialize_MainMenuScene()
     {

@@ -9,4 +9,7 @@ public class EnemyTypeData
     public Sprite sprite;
     public float scale;
     public float moveForce;
+    public float health;
+    public float attack;
+    public float shield;
 }

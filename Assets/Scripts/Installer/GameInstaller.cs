@@ -24,7 +24,6 @@ public class GameInstaller : MonoBehaviour
         deckManager = GetComponent<DeckManager>();
 
         gameServiceLocator.Initialize(cameraController, gameController);
-        inputManager.Initialize();
         waveManager.Initialize(waveDatabase);
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator);
         gameController.Initialize(waveManager, inputManager, deckManager);
@@ -45,8 +44,11 @@ public class GameInstaller : MonoBehaviour
         
     }
 
-    public void DependencyInjection(UIInstaller uiInstaller)
+    public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        uiInstaller.DependencyInjection_Gameplay(deckManager);
+        if (deckManager == null)
+            Debug.Log("NUll!");
+
+        uiInstaller.DependencyInjection_Gameplay(deckManager,gameController);
     }
 }

@@ -14,7 +14,7 @@ public class BootStrap : MonoBehaviour, IGameFlowController
     [Header("Gameplay Level Object")]
     [SerializeField] GameInstaller gameInstaller_Prefab;
 
-    GameInstaller gameInstaller;
+    private GameInstaller gameInstaller;
 
     private void Awake()
     {
@@ -27,7 +27,8 @@ public class BootStrap : MonoBehaviour, IGameFlowController
         uiInstaller = GetComponentInChildren<UIInstaller>();
         inputManager = GetComponent<InputManager>();
 
-        uiInstaller.Initialize(this);
+        inputManager.Initialize();
+        uiInstaller.Initialize(this,inputManager);
     }
 
     public void Start()
@@ -44,9 +45,9 @@ public class BootStrap : MonoBehaviour, IGameFlowController
     {
         gameInstaller = Instantiate(gameInstaller_Prefab);
         gameInstaller.Initialize(inputManager);
-        uiInstaller.GameplayLevelStarted();
+        gameInstaller.DependencyInjection_Gameplay(uiInstaller);
 
-        gameInstaller.DependencyInjection(uiInstaller);
+        uiInstaller.GameplayLevelStarted();
     }
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)

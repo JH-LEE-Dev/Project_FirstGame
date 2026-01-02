@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 
 public class UIInstaller : MonoBehaviour
 {
+    private InputManager inputManager;
     private UIManager uiManager;
 
     private IDeckProvider deckProvider;
@@ -29,15 +30,33 @@ public class UIInstaller : MonoBehaviour
     private Canvas canvas_GamplayScene;
 
 
-    public void Initialize(IGameFlowController _gameFlowController)
+    public void Initialize(IGameFlowController _gameFlowController,InputManager _inputManager)
     {
+        inputManager = _inputManager;
         uiManager = GetComponent<UIManager>();
         gameFlowController = _gameFlowController;
+
+        uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(IDeckProvider _deckProvider)
+    public void DependencyInjection_Gameplay(IDeckProvider _deckProvider,GameController gameController)
     {
         deckProvider = _deckProvider;
+
+        SetupUIElement();
+
+        GS_PlayerTurnState playerTurnState = gameController.GetGameState<GS_PlayerTurnState>();
+
+        if (playerTurnState != null)
+        {
+            UIView_HUD uiViewHUD = uiManager.GetView<UIView_HUD>();
+
+            if (uiViewHUD != null)
+            {
+                playerTurnState.PlayerTurnStartEvent -= uiViewHUD.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent += uiViewHUD.PlayerTurnStarted;
+            }
+        }
     }
 
     public void Release()
@@ -54,6 +73,9 @@ public class UIInstaller : MonoBehaviour
         //Transform screenLayerRoot = Instantiate(mainMenuLevelRoots_Prefab.screenLayerRoot, canvas_MainMenuScene.transform);
         //Transform tooltipLayerRoot = Instantiate(mainMenuLevelRoots_Prefab.tooltipLayerRoot, canvas_MainMenuScene.transform);
 
+        SetAnchorToCanvas(overlayRoot);
+        SetAnchorToCanvas(popupLayerRoot);
+
         CanvasRoot tempRoot = new CanvasRoot();
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
@@ -62,13 +84,17 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize_MainMenuScene();
 
         UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
+        mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
         mainMenuUIView.PlayButtonClickedEvent += gameFlowController.GoToGameplayScene;
     }
 
     public void GameplayLevelStarted()
     {
-        ResetVariable();
 
+    }
+
+    public void SetupUIElement()
+    {
         canvas_GamplayScene = Instantiate(canvas_GamplayScene_Prefab);
 
         Transform overlayRoot = Instantiate(gameplayLevelRoots_Prefab.overlayLayerRoot, canvas_GamplayScene.transform);
@@ -76,19 +102,54 @@ public class UIInstaller : MonoBehaviour
         //Transform screenLayerRoot = Instantiate(gameplayLevelRoots_Prefab.screenLayerRoot, canvas_GamplayScene.transform);
         //Transform tooltipLayerRoot = Instantiate(gameplayLevelRoots_Prefab.tooltipLayerRoot, canvas_GamplayScene.transform);
 
+        SetAnchorToCanvas(overlayRoot);
+        SetAnchorToCanvas(popupLayerRoot);
+
         CanvasRoot tempRoot = new CanvasRoot();
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
         uiManager.SceneChanged(tempRoot);
         uiManager.Initialize_GameplayScene(deckProvider);
 
+        OpenGameplayUIView();
+    }
+
+    public void OpenGameplayUIView()
+    {
         UIView_HUD HUDObject = uiManager.Open<UIView_HUD>();
-        UIView_CardSystem cardSystem = uiManager.Open<UIView_CardSystem>();
+        UIView_CardSystem cardSystemObject = uiManager.Open<UIView_CardSystem>();
+        UIView_Gameplay gameplayObject = uiManager.Open<UIView_Gameplay>();
+
+        SetAnchorToCanvas(HUDObject.transform);
+        SetAnchorToCanvas(cardSystemObject.transform);
+        SetAnchorToCanvas(gameplayObject.transform);
+
+        deckProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
+        deckProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
+        deckProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        deckProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardSystemObject.TurnFinishedEvent -= deckProvider.CardUsingFinished;
+        cardSystemObject.TurnFinishedEvent += deckProvider.CardUsingFinished;
+        deckProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        deckProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        deckProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+        deckProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
     }
 
     public void ResetVariable()
     {
         deckProvider = null;
         uiManager.ResetVariable();
+    }
+
+    private void SetAnchorToCanvas(Transform transform)
+    {
+        RectTransform rt = transform.GetComponent<RectTransform>();
+
+        rt.anchorMin = Vector2.zero;   // (0, 0)
+        rt.anchorMax = Vector2.one;    // (1, 1)
+
+        rt.offsetMin = Vector2.zero;   // Left, Bottom
+        rt.offsetMax = Vector2.zero;   // Right, Top
     }
 }

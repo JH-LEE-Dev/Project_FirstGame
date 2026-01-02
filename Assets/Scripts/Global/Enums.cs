@@ -26,3 +26,11 @@ public enum SceneType
     MainMenu,
     Gameplay
 }
+
+public enum PlayerTurnStateProcess
+{
+    CardDraw,
+    CardUsing,
+    Fire,
+}
+

@@ -28,10 +28,13 @@ public class Enemy : Unit
         Color c = trailRenderer.material.color;
         c.a = 0.3f;
         trailRenderer.material.color = c;
+
+        healthComponent.SetHealth(_enemyTypeData.health);
     }
 
-    public override void ApplyDamage(float damage)
+    public override void TakeDamage(float damage)
     {
+
     }
 
     protected override void Update()
