@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class BootStrap : MonoBehaviour, IGameFlowController
 {
+    private static BootStrap Instance;
+
     private SceneController sceneManager;
     private UIInstaller uiInstaller;
     private AudioManager audioManager;
@@ -18,6 +20,13 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -29,11 +38,14 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
         inputManager.Initialize();
         uiInstaller.Initialize(this,inputManager);
+
+        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
+        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
     }
 
     public void Start()
     {
-
+        //Sound.PlayBGM("BGM_MainMenu");
     }
 
     public void OnDestroy()

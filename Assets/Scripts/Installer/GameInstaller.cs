@@ -16,22 +16,22 @@ public class GameInstaller : MonoBehaviour
     {
         inputManager = _inputManager;
 
+        gameController = GetComponent<GameController>();
         unitSpawner = GetComponent<UnitSpawner>();
         waveManager = GetComponent<WaveManager>();
-        gameController = GetComponent<GameController>();
         cameraController = GetComponent<CameraController>();
         gameServiceLocator = new GameServiceLocator();
         deckManager = GetComponent<DeckManager>();
 
         gameServiceLocator.Initialize(cameraController, gameController);
         waveManager.Initialize(waveDatabase);
-        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator);
         gameController.Initialize(waveManager, inputManager, deckManager);
+        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, deckManager,gameController);
     }
 
     private void Awake()
     {
-      
+
     }
 
     private void Start()
@@ -41,14 +41,11 @@ public class GameInstaller : MonoBehaviour
 
     private void OnDestroy()
     {
-        
+
     }
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        if (deckManager == null)
-            Debug.Log("NUll!");
-
-        uiInstaller.DependencyInjection_Gameplay(deckManager,gameController);
+        uiInstaller.DependencyInjection_Gameplay(deckManager, gameController);
     }
 }

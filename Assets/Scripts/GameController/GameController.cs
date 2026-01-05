@@ -3,36 +3,37 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private float EnemyMoveDelay = 2f;
+
     public event Action<int> waveIdxDeclareEvent;
 
     private WaveManager waveManager;
     private GameStateMachine gameStateMachine;
     private InputManager inputManager;
-    private IDeckProvider deckProvider;
+    private DeckManager deckManager;
 
     private int waveIdx = 0;
 
-    public void Initialize(WaveManager _waveManager, InputManager _inputManager, IDeckProvider _deckProvider)
+    public void Initialize(WaveManager _waveManager, InputManager _inputManager, DeckManager _deckManager)
     {
         waveManager = _waveManager;
         inputManager = _inputManager;
-        deckProvider = _deckProvider;
+        deckManager = _deckManager;
         gameStateMachine = new GameStateMachine();
 
-        GS_PlayerTurnState PlayerTurn = new GS_PlayerTurnState();
-        waveIdxDeclareEvent += PlayerTurn.SetWaveIdx;
-        gameStateMachine.AddState(PlayerTurn);
+        GS_PlayerTurnState playerTurn = new GS_PlayerTurnState();
+        waveIdxDeclareEvent += playerTurn.SetWaveIdx;
+        gameStateMachine.AddState(playerTurn);
+
+        GS_EnemyTurnState enemyTurn = new GS_EnemyTurnState();
+        gameStateMachine.AddState(enemyTurn);
+
+        BindEvent(enemyTurn, playerTurn);
     }
 
     public void Start()
     {
-        GS_PlayerTurnState playerTurnState = gameStateMachine.GetState<GS_PlayerTurnState>();
-
-        if (playerTurnState != null)
-        {
-            playerTurnState.PlayerTurnStartEvent += waveManager.SpawnWave;
-        }
-
+        waveManager.SpawnWave(waveIdx);
         gameStateMachine.ChangeState<GS_PlayerTurnState>();
     }
 
@@ -40,6 +41,7 @@ public class GameController : MonoBehaviour
     {
         return gameStateMachine.IsState<T>();
     }
+
     public T GetGameState<T>() where T : IState
     {
         return gameStateMachine.GetState<T>();
@@ -47,6 +49,33 @@ public class GameController : MonoBehaviour
 
     public void OnDisable()
     {
-        
+
+    }
+
+    public void ChangeGameState<T>() where T : IState
+    {
+        gameStateMachine.ChangeState<T>();
+    }
+
+    public void PlayerTurnIsFinished()
+    {
+        ChangeGameState<GS_EnemyTurnState>();
+    }
+
+    public void ChangeGameStateToPlayerTurn()
+    {
+        ChangeGameState<GS_PlayerTurnState>();
+    }
+
+    public void BindEvent(GS_EnemyTurnState enemyTurn,GS_PlayerTurnState playerTurn)
+    {
+        enemyTurn.EnemyTurnStartEvent -= waveManager.StartEnemyMoveTurn;
+        enemyTurn.EnemyTurnStartEvent += waveManager.StartEnemyMoveTurn;
+
+        waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
+        waveManager.WaveMoveEndEvent += ChangeGameStateToPlayerTurn;
+
+        playerTurn.PlayerTurnStartEvent -= deckManager.StartDraw;
+        playerTurn.PlayerTurnStartEvent += deckManager.StartDraw;
     }
 }

@@ -23,19 +23,16 @@ public class Unit : MonoBehaviour, IDamageable
     [Header("Command System")]
     protected readonly Queue<ICommand> commandQueue = new Queue<ICommand>();
 
-    protected WaveManager waveManager;
     protected InputManager inputManager;
     protected GameServiceLocator gameServiceLocator;
 
     protected Vector2 moveDirection;
     protected bool bDead = false;
 
-    public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator,
-        WaveManager _waveManager = null, EnemyTypeData _enemyTypeData= null)
+    public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
         gameServiceLocator = _gameServiceLocator;
         inputManager = _inputManager;
-        waveManager = _waveManager;
     }
 
     protected virtual void Awake()
@@ -57,6 +54,9 @@ public class Unit : MonoBehaviour, IDamageable
         rb.gravityScale = 0f;
         rb.linearDamping = 5f;
         rb.angularDamping = 1.5f;
+
+        healthComponent.UnitIsDeadEvent -= HandleDead;
+        healthComponent.UnitIsDeadEvent += HandleDead;
     }
 
     protected virtual void OnDestroy()
@@ -128,6 +128,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     public virtual void OnMove()
     {
+
     }
 
     public virtual void TakeDamage(float damage)
@@ -149,5 +150,10 @@ public class Unit : MonoBehaviour, IDamageable
     public void RegisterDeadListener(Action listener)
     {
         UnitIsDeadEvent += listener;
+    }
+
+    public void HandleDead()
+    {
+        gameObject.SetActive(false);
     }
 }

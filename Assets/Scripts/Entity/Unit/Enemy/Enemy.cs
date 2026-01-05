@@ -7,12 +7,14 @@ public class Enemy : Unit
     private bool bAccelerate = false;
 
     private TrailRenderer trailRenderer;
+    protected WaveManager waveManager;
 
-    public override void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator,
+    public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator,
         WaveManager _waveManager,EnemyTypeData _enemyTypeData)
     {
-        base.Initialize(_inputManager, _gameServiceLocator, _waveManager);
+        base.Initialize(_inputManager, _gameServiceLocator);
 
+        waveManager = _waveManager;
         waveManager.StartMoveEvent += OnMove;
 
         sr.sprite = _enemyTypeData.sprite;
@@ -34,7 +36,7 @@ public class Enemy : Unit
 
     public override void TakeDamage(float damage)
     {
-
+        healthComponent.DecreaseHealth(damage); 
     }
 
     protected override void Update()

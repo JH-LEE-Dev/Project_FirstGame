@@ -280,6 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00409ca2e0e98c49aa16c275d9ff805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  mainCam: {fileID: 693036412966368884}
   vcam: {fileID: 2289888524461908117}
 --- !u!114 &4561437411473133595
 MonoBehaviour:
@@ -296,6 +297,7 @@ MonoBehaviour:
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   drawCardCnt: 5
   cardDrawRate: 1
+  initialCost: 3
 --- !u!1 &4256006090761786137
 GameObject:
   m_ObjectHideFlags: 0

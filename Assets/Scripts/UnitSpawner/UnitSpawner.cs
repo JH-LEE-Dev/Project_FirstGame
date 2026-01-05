@@ -13,6 +13,8 @@ public class UnitSpawner : MonoBehaviour
     private InputManager inputManager;
     private WaveManager waveManager;
     private GameServiceLocator gameServiceLocator;
+    private IDeckProvider deckProvider;
+    private GameController gameController;
 
     private uint curUnitCnt;
 
@@ -25,11 +27,17 @@ public class UnitSpawner : MonoBehaviour
     [Header("Enemy Target Point")]
     [SerializeField] private GameObject enemyTargetPoint;
 
-    public void Initiallize(InputManager _inputManager, WaveManager _waveManager, GameServiceLocator _gameServiceLocator)
+    private GameRuleEventController gameRuleEventController;
+
+    public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
+        GameServiceLocator _gameServiceLocator,IDeckProvider _deckProvider,GameController _gameController)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
         gameServiceLocator = _gameServiceLocator;
+        deckProvider= _deckProvider;
+        gameController = _gameController;
+        gameRuleEventController = new GameRuleEventController();
 
         if (inputManager == null)
         {
@@ -53,7 +61,8 @@ public class UnitSpawner : MonoBehaviour
 
         if (spawnedUnit != null)
         {
-            spawnedUnit.Initialize(inputManager, gameServiceLocator);
+            spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
+            gameRuleEventController.Bind(spawnedUnit, gameController,deckProvider);
         }
     }
 
@@ -114,7 +123,7 @@ public class UnitSpawner : MonoBehaviour
 
                 EnemyTypeData enemyTypeData = enemyTypeDataBase.GetEnemyData(randomInt);
 
-                spawnedUnit.Initialize(inputManager, gameServiceLocator, waveManager, enemyTypeData);
+                spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, waveManager, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
             }
         }

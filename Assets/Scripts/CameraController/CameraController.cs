@@ -4,6 +4,7 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] public Camera mainCam;
     [SerializeField] private CinemachineCamera vcam;
 
     CinemachineBasicMultiChannelPerlin noise;

@@ -25,6 +25,6 @@ public class InputManager : MonoBehaviour
 
     public void OnDestroy()
     {
-        inputReader.Release();
+        inputReader?.Release();
     }
 }

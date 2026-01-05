@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
@@ -41,6 +42,9 @@ public class UIView_CardSystem : UIView
     {
         base.OnShow();
 
+        deckCntText.text = "Deck : " + viewCtx.deckProvider.deckCnt.ToString();
+        graveCntText.text = "Grave : " + viewCtx.deckProvider.graveCnt.ToString();
+
         Refresh();
     }
 
@@ -56,6 +60,7 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(CardInstance cardInstance)
     {
+        cardInstance.gameObject.SetActive(true);
         cardInstance.GetComponent<RectTransform>().SetParent(handRoot, false);
         cardInstance.CardUsedEvent -= CardUsed;
         cardInstance.CardUsedEvent += CardUsed;
@@ -118,10 +123,37 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
         TurnFinishedEvent?.Invoke();
+
+        deckCntText.text = "Deck : " + viewCtx.deckProvider.deckCnt.ToString();
+        graveCntText.text = "Grave : " + viewCtx.deckProvider.graveCnt.ToString();
+
+        ClearAllCards();
+    }
+
+    public void ClearAllCards()
+    {
+        for(int i=  0;i < cards.Count;++i)
+        {
+            RectTransform card = cards[i].GetComponent<RectTransform>();
+
+            card.localPosition = new Vector3(-1000,-1000,card.localPosition.z);
+        }
+
+        cards.Clear();
     }
 
     public void CardDrawFinished()
     {
         turnFinishedButton.gameObject.SetActive(true);
+    }
+
+    public void EnemyTurnStarted()
+    {
+        handRoot.gameObject.SetActive(false);
+    }
+
+    public void PlayerTurnStarted(int waveIdx)
+    {
+        handRoot.gameObject.SetActive(true);
     }
 }

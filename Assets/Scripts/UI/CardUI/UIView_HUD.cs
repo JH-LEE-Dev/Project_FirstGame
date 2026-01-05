@@ -45,6 +45,12 @@ public class UIView_HUD : UIView
         turnProcessIndicatorText.text = "Card Draw";
     }
 
+    public void EnemyTurnStarted()
+    {
+        turnIndicatorText.text = "EnemyTurn";
+        turnProcessIndicatorText.text = "Enemy Moving!";
+    }
+
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";

@@ -15,4 +15,16 @@ public class EffectComponent : EntityComponent
         animator.SetBool("bExplode", true);
         Sound.Play("EnemyExplosion",transform.position,1f,false);
     }
+
+    public void PlayImpactEffect()
+    {
+        animator.SetBool("bImpact", true);
+        Sound.Play("Impact", transform.position, 1f, false);
+    }
+
+    public void PlayFireEffect()
+    {
+        animator.SetBool("bFired", true);
+        Sound.Play("Fire", transform.position, 1f, false);
+    }
 }

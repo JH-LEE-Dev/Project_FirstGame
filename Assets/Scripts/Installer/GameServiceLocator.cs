@@ -20,4 +20,9 @@ public class GameServiceLocator
     {
         return gameController.IsState<T>(); 
     }
+
+    public Camera GetMainCamera()
+    {
+        return cameraController.mainCam;
+    }
 }

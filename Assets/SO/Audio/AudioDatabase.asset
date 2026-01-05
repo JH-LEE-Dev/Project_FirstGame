@@ -28,3 +28,13 @@ MonoBehaviour:
     mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
     defaultVolume: 1
     is3D: 0
+  - id: Impact
+    clip: {fileID: 8300000, guid: bd4620376dfd6dd4b92b5752085c8a07, type: 3}
+    mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
+    defaultVolume: 1
+    is3D: 0
+  - id: Fire
+    clip: {fileID: 8300000, guid: 15939b80e51a83042a578aee53d12c7d, type: 3}
+    mixerGroup: {fileID: 24300002, guid: 6e085a2bac75935498904987e2d9b101, type: 2}
+    defaultVolume: 1
+    is3D: 0

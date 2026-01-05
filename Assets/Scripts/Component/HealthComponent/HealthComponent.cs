@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class HealthComponent : EntityComponent
 {
+    public event Action UnitIsDeadEvent;
+
     [SerializeField] private float health;
 
     protected override void Awake()
@@ -39,6 +42,9 @@ public class HealthComponent : EntityComponent
         health -= damage;
 
         if (health < 0)
+        {
+            UnitIsDeadEvent?.Invoke();
             health = 0;
+        }
     }
 }

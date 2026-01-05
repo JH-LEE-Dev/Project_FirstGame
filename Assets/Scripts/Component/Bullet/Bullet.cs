@@ -1,0 +1,96 @@
+using Mono.Cecil.Cil;
+using System;
+using UnityEngine;
+
+public class Bullet : MonoBehaviour
+{
+    public event Action BulletEffectIsFinishedEvent;
+
+    [SerializeField] float speed = 1f;
+    [SerializeField] float attack = 1f;
+    [SerializeField] private LayerMask targetMask;
+
+    private EffectComponent effectComponent;
+
+    private SpriteRenderer sr;
+    private CircleCollider2D circleCollider;
+
+    private Vector2 flyDir;
+    private Vector2 prevPosition;
+
+    bool bFired = false;
+
+    private void Awake()
+    {
+        circleCollider = GetComponent<CircleCollider2D>();
+        sr = GetComponentInChildren<SpriteRenderer>();
+        effectComponent = GetComponentInChildren<EffectComponent>();
+    }
+
+    private void Update()
+    {
+        Fly();
+    }
+
+    private void Fly()
+    {
+        if (bFired == false)
+            return;
+
+        Vector2 currentPosition = (Vector2)transform.position + flyDir * speed * Time.deltaTime;
+        transform.position = currentPosition;
+
+        Vector2 delta = currentPosition - prevPosition;
+        float distance = delta.magnitude;
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            prevPosition,
+            delta.normalized,
+            distance,
+            targetMask
+        );
+
+        if (hit.collider != null)
+        {
+            ApplyDamage(hit.collider);
+            bFired = false;
+            Sound.Play("Impact", transform.position);
+            sr.gameObject.SetActive(false);
+
+            return;
+        }
+
+        transform.position = currentPosition;
+        prevPosition = currentPosition;
+    }
+
+    private void ApplyDamage(Collider2D other)
+    {
+        // 데미지 처리
+        effectComponent.PlayImpactEffect();
+
+        Unit hit = other.GetComponent<Unit>();
+
+        if (hit != null)
+        {
+            hit.TakeDamage(attack);
+        }
+
+        BulletEffectIsFinishedEvent?.Invoke();
+    }
+
+    public void Fire(Vector2 dir)
+    {
+        sr.gameObject.SetActive(true);
+        effectComponent.gameObject.SetActive(true);
+
+        bFired = true;
+
+        dir.Normalize();
+        flyDir = dir;
+
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        prevPosition = transform.position;
+    }
+}

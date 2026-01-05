@@ -63,4 +63,9 @@ public class UIView_Gameplay : UIView
         viewCtx.inputManager.inputReader.PointerPositionEvent -= PointerMoved;
         viewCtx.inputManager.inputReader.PointerPositionEvent += PointerMoved;
     }
+
+    public void EnemyTurnStarted()
+    {
+        crosshairUI.SetActive(false);
+    }
 }

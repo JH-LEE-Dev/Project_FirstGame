@@ -7,9 +7,8 @@ public class UIInstaller : MonoBehaviour
 {
     private InputManager inputManager;
     private UIManager uiManager;
-
     private IDeckProvider deckProvider;
-
+    private GameController gameController;
     private IGameFlowController gameFlowController;
 
 
@@ -39,9 +38,10 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(IDeckProvider _deckProvider,GameController gameController)
+    public void DependencyInjection_Gameplay(IDeckProvider _deckProvider,GameController _gameController)
     {
         deckProvider = _deckProvider;
+        gameController = _gameController;
 
         SetupUIElement();
 
@@ -50,11 +50,14 @@ public class UIInstaller : MonoBehaviour
         if (playerTurnState != null)
         {
             UIView_HUD uiViewHUD = uiManager.GetView<UIView_HUD>();
+            UIView_CardSystem uIView_CardSystem = uiManager.GetView<UIView_CardSystem>();
 
             if (uiViewHUD != null)
             {
                 playerTurnState.PlayerTurnStartEvent -= uiViewHUD.PlayerTurnStarted;
                 playerTurnState.PlayerTurnStartEvent += uiViewHUD.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent -= uIView_CardSystem.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent += uIView_CardSystem.PlayerTurnStarted;
             }
         }
     }
@@ -124,16 +127,7 @@ public class UIInstaller : MonoBehaviour
         SetAnchorToCanvas(cardSystemObject.transform);
         SetAnchorToCanvas(gameplayObject.transform);
 
-        deckProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
-        deckProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
-        deckProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        deckProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
-        cardSystemObject.TurnFinishedEvent -= deckProvider.CardUsingFinished;
-        cardSystemObject.TurnFinishedEvent += deckProvider.CardUsingFinished;
-        deckProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        deckProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
-        deckProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
-        deckProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
+        BindEvent_Gameplay(HUDObject, cardSystemObject, gameplayObject);
     }
 
     public void ResetVariable()
@@ -151,5 +145,31 @@ public class UIInstaller : MonoBehaviour
 
         rt.offsetMin = Vector2.zero;   // Left, Bottom
         rt.offsetMax = Vector2.zero;   // Right, Top
+    }
+
+    private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
+    {
+        deckProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
+        deckProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
+        deckProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        deckProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardSystemObject.TurnFinishedEvent -= deckProvider.CardUsingFinished;
+        cardSystemObject.TurnFinishedEvent += deckProvider.CardUsingFinished;
+        deckProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        deckProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        deckProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+        deckProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
+
+        GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
+
+        if (enemyTurnState != null)
+        {
+            enemyTurnState.EnemyTurnStartEvent -= HUDObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent += HUDObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= cardSystemObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent += cardSystemObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent += gameplayObject.EnemyTurnStarted;
+        }
     }
 }
