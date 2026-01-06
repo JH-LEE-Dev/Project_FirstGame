@@ -23,7 +23,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public UIView_CardSystem cardSystem;
 
     // Hover
-    [SerializeField] public float hoverScale = 1.5f;
+    [SerializeField] public float hoverScale = 1.3f;
     [SerializeField] public float duration = 0.15f;
     private Tween hoverTween;
     private Vector3 originScale;
@@ -90,7 +90,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         CardUsedEvent?.Invoke(this);
     }
-
 
 
     // UIView_CardSystem을 받아옴. (패 매니저)

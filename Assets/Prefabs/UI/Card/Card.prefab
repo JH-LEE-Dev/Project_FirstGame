@@ -315,6 +315,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardInstance
   additionalEffectData: []
+  cardSystem: {fileID: 0}
+  hoverScale: 1.3
+  duration: 0.15
+  followFreq: 18
+  followDamp: 0.85
+  rotateLerp: 18
+  snapDist: 0.05
+  floatAmplitude: 6
+  floatSpeed: 1.2
+  floatPhaseRandom: 1
+  inHand: 1
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0

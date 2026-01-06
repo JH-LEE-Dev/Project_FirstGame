@@ -24,10 +24,11 @@ public class UIView_CardSystem : UIView
     [SerializeField] private List<CardInstance> cards = new();
 
 
-    [Header("Fan Settings")]
+    [Header("Arc Settings")]
     [SerializeField] private float radius = 2000f;
     [SerializeField] private float minArcAngle = 0f;
     [SerializeField] private float maxArcAngle = 20f;
+    [SerializeField] private float hoverGapWeight = 0.3f;
 
     private int hoveredIndex = -1;
 
@@ -83,7 +84,7 @@ public class UIView_CardSystem : UIView
     public void CardDrawed(CardInstance cardInstance)
     {
         cardInstance.gameObject.SetActive(true);
-        cardInstance.GetComponent<RectTransform>().SetParent(handRoot, false);
+        cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
         cardInstance.CardUsedEvent -= CardUsed;
         cardInstance.CardUsedEvent += CardUsed;
 
@@ -105,66 +106,43 @@ public class UIView_CardSystem : UIView
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
     public void computeArc()
     {
-
-        // 호 계산
         int n = cards.Count;
         if (n <= 0) return;
 
-        // 기준점
         Vector2 basePos = handRoot.anchoredPosition;
 
         // 1장이면 중앙 고정
         if (n == 1)
         {
-            cards[0].UpdateTargetPos(basePos, 0);
+            cards[0].UpdateTargetPos(basePos, 0f);
             return;
         }
 
-        int addSlots =
-        (hoveredIndex < 0) ? 0 :
-        (hoveredIndex == 0 || hoveredIndex == n - 1) ? 1 : 2;
+        float t = Mathf.InverseLerp(0f, 12f, n);
+        float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
 
-        int slotCount = n + addSlots;
-
-
-        float effectiveSlots = n + addSlots * 0.5f;
-
-        float t = Mathf.InverseLerp(0f, 12f, effectiveSlots);
-        float baseArcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
-
-        float arcAngle = baseArcAngle; // 추가 배율 없이도 충분히 자연스러움
-
-        float angleStep = arcAngle / Mathf.Max(1, slotCount - 1);
+        float angleStep = arcAngle / Mathf.Max(1, n - 1);
         float startAngle = -arcAngle * 0.5f;
 
-        int cardIdx = 0;
-
-        for (int slot = 0; slot < slotCount; slot++)
+        for (int i = 0; i < n; i++)
         {
-            bool skipSlot = false;
+            float offset = 0f;
 
-            if (hoveredIndex >= 0)
+            if (hoveredIndex >= 0 && hoverGapWeight > 0f)
             {
-                if (addSlots == 2)
-                {
-                    skipSlot =
-                        slot == hoveredIndex ||
-                        slot == hoveredIndex + 2;
-                }
-                else if (hoveredIndex == 0)
-                {
-                    skipSlot = slot == 1;
-                }
-                else if (hoveredIndex == n - 1)
-                {
-                    skipSlot = slot == hoveredIndex;
-                }
+                if (i > hoveredIndex)
+                    offset += hoverGapWeight;
+                else if (i < hoveredIndex)
+                    offset -= hoverGapWeight;
+
+                if (hoveredIndex == 0 && i > hoveredIndex)
+                    offset -= hoverGapWeight * 0.5f;
+
+                if (hoveredIndex == n - 1 && i < hoveredIndex)
+                    offset += hoverGapWeight * 0.5f;
             }
 
-            if (skipSlot)
-                continue;
-
-            float angle = startAngle + angleStep * slot;
+            float angle = startAngle + angleStep * (i + offset);
             float rad = angle * Mathf.Deg2Rad;
 
             Vector2 pos = basePos + new Vector2(
@@ -174,10 +152,7 @@ public class UIView_CardSystem : UIView
 
             float tiltZ = -angle * 0.8f;
 
-
-            // 여기서 던져주는거임.
-            cards[cardIdx].UpdateTargetPos(pos, tiltZ);
-            cardIdx++;
+            cards[i].UpdateTargetPos(pos, tiltZ);
         }
     }
 

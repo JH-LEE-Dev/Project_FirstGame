@@ -32,7 +32,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -475}
+  m_AnchoredPosition: {x: 0, y: -485}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2727520513207437070
@@ -132,9 +132,9 @@ MonoBehaviour:
   turnFinishedButton: {fileID: 442856584252448782}
   handRoot: {fileID: 2558692794718500451}
   cards: []
-  radius: 100
-  maxAngle: 15
-  verticalOffset: -50
+  radius: 2000
+  minArcAngle: 0
+  maxArcAngle: 20
 --- !u!1 &4436074875557835048
 GameObject:
   m_ObjectHideFlags: 0
