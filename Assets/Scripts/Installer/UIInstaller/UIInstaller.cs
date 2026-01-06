@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 public class UIInstaller : MonoBehaviour
 {

@@ -1,9 +1,12 @@
 using Unity.AppUI.MVVM;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class BootStrap : MonoBehaviour, IGameFlowController
 {
+    [SerializeField] bool bTempScene = false;
+
     private static BootStrap Instance;
 
     private SceneController sceneManager;
@@ -20,7 +23,7 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     private void BootTempScene()
     {
-        SetupMainMenuScene();
+        SetupGameplayScene();
     }
 
     private void Awake()
@@ -50,6 +53,9 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     public void Start()
     {
+        if (bTempScene)
+            BootTempScene();
+
         //Sound.PlayBGM("BGM_MainMenu");
     }
 
@@ -84,6 +90,9 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     public void GoToMainMenuScene()
     {
+        if (bTempScene)
+            return;
+
         sceneManager.ChangeScene(SceneType.MainMenu);
     }
 

@@ -32,13 +32,12 @@ public class UIManager : MonoBehaviour
 
     public void Initialize(InputManager inputManager)
     {
+        viewCtx = new UIViewContext();
         viewCtx.Initialize(inputManager);
     }
 
     private void Awake()
     {
-        viewCtx = new UIViewContext();
-
         // 타입별 Prefab 사전 구성
         foreach (var view in viewPrefabs)
         {
