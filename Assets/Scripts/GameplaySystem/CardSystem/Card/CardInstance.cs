@@ -68,16 +68,10 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(CardDataInstance _cardData)
+    public void Initialize(CardDataInstance _cardData, UIView_CardSystem _cardSystem)
     {
         cardData = _cardData;
-    }
-
-
-    // UIView_CardSystem을 받아옴. (패 매니저)
-    public void SetMaker(UIView_CardSystem cs)
-    {
-        cardSystem = cs;
+        cardSystem = _cardSystem;
     }
 
     // 호버 ON

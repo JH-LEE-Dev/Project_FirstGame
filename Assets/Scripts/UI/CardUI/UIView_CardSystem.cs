@@ -9,9 +9,10 @@ public class UIView_CardSystem : UIView
 {
     public event Action TurnFinishedEvent;
 
+    public event Action cardUsingEvent;
+
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
-    [SerializeField] private GameObject cardUIPrefab;
     [Space]
     [SerializeField] private TMP_Text deckCntText;
     [SerializeField] private TMP_Text graveCntText;
@@ -34,6 +35,24 @@ public class UIView_CardSystem : UIView
     private int hoveredIndex = -1;
 
 
+
+
+    /////////////////////
+    [Header("Pooling")]
+    // 카드 기본 프리팹
+    [SerializeField] private GameObject cardUIPrefab;
+    // 패
+    [SerializeField] private List<CardInstance> handCardPool = new();
+    private int handPoolingIndex = 0;
+
+    // 소멸, 웜홀, 덱
+    [SerializeField] private List<CardInstance> otherCardPool = new();
+
+
+
+
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -42,7 +61,78 @@ public class UIView_CardSystem : UIView
 
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
+
+        cardPooling();
     }
+
+    private void cardPooling()
+    {
+        // hands 20
+        for (int i = 0; i < 20; ++i)
+        {
+            GameObject go = Instantiate(cardUIPrefab, this.transform);
+            CardInstance card = go.GetComponent<CardInstance>();
+            handCardPool.Add(card);
+        }
+
+        // other 50
+        for (int i = 0; i < 50; ++i)
+        {
+            GameObject go = Instantiate(cardUIPrefab, this.transform);
+            CardInstance card = go.GetComponent<CardInstance>();
+            otherCardPool.Add(card);
+        }
+    }
+
+    public void GetDeckCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    public void GetWormholeCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    public void GetExtinctionCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    public void CardDrawed(List<CardDataInstance> cardDataPile)
+    {
+        int n = cardDataPile.Count;
+
+        for (int i = 0; i < n; ++i)
+        {
+        // 패 얻음
+        //handCardPool;
+        //handPoolingIndex++;
+
+        }
+
+        SetText();
+    }
+
+    public void CardUsing()
+    {
+
+        // 마벖카드 일 경우
+
+        // 불릿카드 일 경우
+
+        cardUsingEvent.Invoke();
+    }
+
+
+
+
 
     protected override void OnShow()
     {
@@ -87,28 +177,6 @@ public class UIView_CardSystem : UIView
         computeArc();
     }
 
-    /*수정 요망*/
-    public void CardDrawed(List<CardDataInstance> cardDataPile)
-    {
-        //cardInstance.gameObject.SetActive(true);
-        //cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
-        //cardInstance.CardUsedEvent -= CardUsed;
-        //cardInstance.CardUsedEvent += CardUsed;
-
-
-        // cards 
-        //cards.Add(cardInstance);
-
-        // ★상우★ 일단 여기에 카드가 Active 시작되는 위치.
-        //RectTransform rt = cardInstance.GetComponent<RectTransform>();
-        // rt.anchoredPosition = new Vector2(300f, -150f);
-
-        // ★정현★ 패 매니저를 카드에게 참조시킨다. 
-        //cardInstance.SetMaker(this);
-        //computeArc();
-
-        SetText();
-    }
 
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
     public void computeArc()
