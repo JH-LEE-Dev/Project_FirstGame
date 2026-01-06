@@ -11,7 +11,7 @@ public class UIView_CardSystem : UIView
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
-    [SerializeField] private GameObject uiPrefab;
+    [SerializeField] private GameObject cardUIPrefab;
     [Space]
     [SerializeField] private TMP_Text deckCntText;
     [SerializeField] private TMP_Text graveCntText;
@@ -23,10 +23,15 @@ public class UIView_CardSystem : UIView
     [SerializeField] private RectTransform handRoot;
     [SerializeField] private List<CardInstance> cards = new();
 
-    [Header("Fan Settings")]
-    [SerializeField] private float radius = 100f;          // 부채 반경
-    [SerializeField] private float maxAngle = 15f;         // 최대 벌어지는 각도 (좌우)
-    [SerializeField] private float verticalOffset = -50f;  // 하단 보정
+
+    [Header("Arc Settings")]
+    [SerializeField] private float radius = 2000f;
+    [SerializeField] private float minArcAngle = 0f;
+    [SerializeField] private float maxArcAngle = 20f;
+    [SerializeField] private float hoverGapWeight = 0.3f;
+
+    private int hoveredIndex = -1;
+
 
     protected override void Awake()
     {
@@ -45,7 +50,7 @@ public class UIView_CardSystem : UIView
         deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
         graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
 
-        Refresh();
+        computeArc();
     }
 
     protected override void OnHide()
@@ -58,64 +63,108 @@ public class UIView_CardSystem : UIView
 
     }
 
-    public void CardDrawed(CardInstance cardInstance)
+    // 호버 ON (카드 약간 벌어짐)
+    public void OnCardHoverEnter(CardInstance card)
     {
-        cardInstance.gameObject.SetActive(true);
-        cardInstance.GetComponent<RectTransform>().SetParent(handRoot, false);
-        cardInstance.CardUsedEvent -= CardUsed;
-        cardInstance.CardUsedEvent += CardUsed;
+        hoveredIndex = cards.IndexOf(card);
 
-        cards.Add(cardInstance);
+        computeArc();
+    }
 
-        Refresh();
+    // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
+    public void OnCardHoverExit(CardInstance card)
+    {
+        int idx = cards.IndexOf(card);
+        if (idx == hoveredIndex) hoveredIndex = -1;
+
+        computeArc();
+    }
+
+    /*수정 요망*/
+    public void CardDrawed(CardDataInstance cardInstance)
+    {
+        //cardInstance.gameObject.SetActive(true);
+        //cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
+        //cardInstance.CardUsedEvent -= CardUsed;
+        //cardInstance.CardUsedEvent += CardUsed;
+
+
+        // cards 
+        //cards.Add(cardInstance);
+
+        // ★상우★ 일단 여기에 카드가 Active 시작되는 위치.
+        //RectTransform rt = cardInstance.GetComponent<RectTransform>();
+       // rt.anchoredPosition = new Vector2(300f, -150f);
+
+        // ★정현★ 패 매니저를 카드에게 참조시킨다. 
+        //cardInstance.SetMaker(this);
+        //computeArc();
 
         deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
     }
 
-    public void Refresh()
+    // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
+    public void computeArc()
     {
-        int count = cards.Count;
+        int n = cards.Count;
+        if (n <= 0) return;
 
-        if (count == 0)
-            return;
+        Vector2 basePos = handRoot.anchoredPosition;
 
-        float angleStep = count == 1 ? 0f : (maxAngle * 2f) / (count - 1);
-        float startAngle = -maxAngle;
-
-        for (int i = 0; i < count; i++)
+        // 1장이면 중앙 고정
+        if (n == 1)
         {
-            RectTransform card = cards[i].GetComponent<RectTransform>();
+            cards[0].UpdateTargetPos(basePos, 0f);
+            return;
+        }
 
-            float angle = startAngle + angleStep * i;
-            float rad = angle * Mathf.Deg2Rad;
+        float t = Mathf.InverseLerp(0f, 12f, n);
+        float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
 
-            // 부채꼴 위치 계산
-            Vector2 pos = new Vector2(
-                Mathf.Sin(rad) * radius,
-                Mathf.Cos(rad) * radius + verticalOffset
-            );
+        float angleStep = arcAngle / Mathf.Max(1, n - 1);
+        float startAngle = -arcAngle * 0.5f;
 
-            if (card == null)
+        for (int i = 0; i < n; i++)
+        {
+            float offset = 0f;
+
+            if (hoveredIndex >= 0 && hoverGapWeight > 0f)
             {
-                Debug.Log("Card is null!");
-                return;
+                if (i > hoveredIndex)
+                    offset += hoverGapWeight;
+                else if (i < hoveredIndex)
+                    offset -= hoverGapWeight;
+
+                if (hoveredIndex == 0 && i > hoveredIndex)
+                    offset -= hoverGapWeight * 0.5f;
+
+                if (hoveredIndex == n - 1 && i < hoveredIndex)
+                    offset += hoverGapWeight * 0.5f;
             }
 
-            card.localPosition = pos;
+            float angle = startAngle + angleStep * (i + offset);
+            float rad = angle * Mathf.Deg2Rad;
 
-            // 카드 회전 (부채 방향으로)
-            card.localRotation = Quaternion.Euler(0f, 0f, -angle);
+            Vector2 pos = basePos + new Vector2(
+                Mathf.Sin(rad) * radius,
+                (Mathf.Cos(rad) - 1f) * radius
+            );
+
+            float tiltZ = -angle * 0.8f;
+
+            cards[i].UpdateTargetPos(pos, tiltZ);
         }
     }
 
-    public void CardUsed(CardInstance usedCard)
+    /*수정 요망*/
+    public void CardUsed(CardDataInstance usedCard)
     {
         if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
             return;
 
-        usedCard.gameObject.SetActive(false);
-        cards.Remove(usedCard);
-        Refresh();
+        //usedCard.gameObject.SetActive(false);
+        //cards.Remove(usedCard);
+        computeArc();
         graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
 
@@ -133,7 +182,7 @@ public class UIView_CardSystem : UIView
 
     public void ClearAllCards()
     {
-        for(int i=  0;i < cards.Count;++i)
+        for(int i = 0; i < cards.Count;++i)
         {
             RectTransform card = cards[i].GetComponent<RectTransform>();
 
@@ -141,6 +190,8 @@ public class UIView_CardSystem : UIView
         }
 
         cards.Clear();
+
+        computeArc();
     }
 
     public void CardDrawFinished()

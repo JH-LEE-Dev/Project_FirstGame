@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICardSystemProvider
 {
-    public bool CardUsed(CardInstance usedCard);
+    public bool CardUsed(CardDataInstance usedCard);
     public void CardUsingFinished();
 
     // 현재 손에 들고 있는 카드 데이터 (읽기 전용)
@@ -19,7 +19,7 @@ public interface ICardSystemProvider
     // 데이터가 변경되었을 때 UI에 알릴 이벤트
     event Action HandChangedEvent;
 
-    event Action<CardInstance> CardDrawedEvent;
+    event Action<CardDataInstance> CardDrawedEvent;
     event Action CardDrawFinishedEvent;
     event Action CardUsingFinishedEvent;
 }

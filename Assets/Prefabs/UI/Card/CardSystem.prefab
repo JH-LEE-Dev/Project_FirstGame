@@ -32,7 +32,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -475}
+  m_AnchoredPosition: {x: 0, y: -485}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2727520513207437070
@@ -126,15 +126,16 @@ MonoBehaviour:
   layer: 1
   startHidden: 1
   uiRoot: {fileID: 7524987701192500245}
-  uiPrefab: {fileID: 5863989176703220490, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
+  cardUIPrefab: {fileID: 5863989176703220490, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
   deckCntText: {fileID: 4785913907500166825}
   graveCntText: {fileID: 2311295010843493266}
   turnFinishedButton: {fileID: 442856584252448782}
   handRoot: {fileID: 2558692794718500451}
   cards: []
-  radius: 100
-  maxAngle: 15
-  verticalOffset: -50
+  radius: 2000
+  minArcAngle: 0
+  maxArcAngle: 20
+  hoverGapWeight: 0.3
 --- !u!1 &4436074875557835048
 GameObject:
   m_ObjectHideFlags: 0
