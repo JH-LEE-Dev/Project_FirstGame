@@ -150,8 +150,8 @@ public class UIInstaller : MonoBehaviour
 
     private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
     {
-        cardSystemProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
-        cardSystemProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
+        cardSystemProvider.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardSystemProvider.CardPileDrawedEvent += cardSystemObject.CardDrawed;
         cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
         cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;

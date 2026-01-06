@@ -15,6 +15,7 @@ public class UIView_CardSystem : UIView
     [Space]
     [SerializeField] private TMP_Text deckCntText;
     [SerializeField] private TMP_Text graveCntText;
+    [SerializeField] private TMP_Text handCntText;
     [Space]
     [Header("Buttons")]
     [SerializeField] private Button turnFinishedButton;
@@ -47,10 +48,9 @@ public class UIView_CardSystem : UIView
     {
         base.OnShow();
 
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
-        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
-
         computeArc();
+
+        SetText();
     }
 
     protected override void OnHide()
@@ -61,6 +61,13 @@ public class UIView_CardSystem : UIView
     public void RenderUI()
     {
 
+    }
+
+    private void SetText()
+    {
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
+        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCnt.ToString();
     }
 
     // 호버 ON (카드 약간 벌어짐)
@@ -81,7 +88,7 @@ public class UIView_CardSystem : UIView
     }
 
     /*수정 요망*/
-    public void CardDrawed(CardDataInstance cardInstance)
+    public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
         //cardInstance.gameObject.SetActive(true);
         //cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
@@ -94,13 +101,13 @@ public class UIView_CardSystem : UIView
 
         // ★상우★ 일단 여기에 카드가 Active 시작되는 위치.
         //RectTransform rt = cardInstance.GetComponent<RectTransform>();
-       // rt.anchoredPosition = new Vector2(300f, -150f);
+        // rt.anchoredPosition = new Vector2(300f, -150f);
 
         // ★정현★ 패 매니저를 카드에게 참조시킨다. 
         //cardInstance.SetMaker(this);
         //computeArc();
 
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
+        SetText();
     }
 
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
@@ -173,9 +180,7 @@ public class UIView_CardSystem : UIView
         turnFinishedButton.gameObject.SetActive(false);
         TurnFinishedEvent?.Invoke();
 
-        
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
-        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
+        SetText();
 
         ClearAllCards();
     }

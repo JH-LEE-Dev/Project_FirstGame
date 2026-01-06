@@ -20,16 +20,17 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
     [SerializeField] private float cardDrawRate = 1f;
     [SerializeField] private int initialCost = 3;
 
-    private int curDrawedCardCnt = 0;
 
     public IReadOnlyList<CardData> HandCards => throw new NotImplementedException();
 
     public int deckCnt { get; private set; }
 
     public int graveCnt { get; private set; }
+    public int handCnt { get; private set; }
 
     public event Action HandChangedEvent;
     public event Action<CardDataInstance> CardDrawedEvent;
+    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingFinishedEvent;
 
@@ -106,15 +107,41 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
     private IEnumerator CardDrawCoroutine()
     {
-        while (curDrawedCardCnt < 5)
+        while (handCnt < 5)
         {
             yield return new WaitForSeconds(cardDrawRate);
             DrawOne();
-            ++curDrawedCardCnt;
+            ++handCnt;
         }
 
         CardDrawFinishedEvent?.Invoke();
-        curDrawedCardCnt = 0;
+        handCnt = 0;
+    }
+
+    public void CardPileDraw()
+    {
+        List<CardDataInstance> hands = new List<CardDataInstance>();
+
+        for (int i = 0; i < drawCardCnt; ++i)
+        {
+            var card = drawPile.Pop();
+            handPile.Add(card);
+            hands.Add(card);
+            --deckCnt;
+            ++handCnt;
+        }
+
+        CardPileDrawedEvent?.Invoke(hands);
+    }
+
+    private IEnumerator CardPileDrawCoroutine()
+    {
+        yield return new WaitForSeconds(cardDrawRate);
+
+        CardPileDraw();
+
+        CardDrawFinishedEvent?.Invoke();
+        handCnt = 0;
     }
 
     public bool CardUsed(CardDataInstance usedCard)
@@ -189,6 +216,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
     public void StartDraw(int waveIdx)
     {
-        StartCoroutine(CardDrawCoroutine());
+        //한장씩 드로우 할 때의 기능.
+        //StartCoroutine(CardDrawCoroutine());
+
+        //Pile 드로우.
+        StartCoroutine(CardPileDrawCoroutine());
     }
 }

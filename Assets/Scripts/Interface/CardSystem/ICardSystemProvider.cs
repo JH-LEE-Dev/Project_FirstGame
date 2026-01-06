@@ -13,6 +13,7 @@ public interface ICardSystemProvider
     // 덱에 남은 카드 수, 묘지 카드 수 등 UI에 표시할 정보
     int deckCnt { get; }
     int graveCnt { get; }
+    int handCnt { get; }
 
     int curCost { get; }
 
@@ -20,6 +21,7 @@ public interface ICardSystemProvider
     event Action HandChangedEvent;
 
     event Action<CardDataInstance> CardDrawedEvent;
+    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
     event Action CardDrawFinishedEvent;
     event Action CardUsingFinishedEvent;
 }
