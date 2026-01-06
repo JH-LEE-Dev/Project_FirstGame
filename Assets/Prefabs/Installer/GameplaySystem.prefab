@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 1676362792883218443}
   - component: {fileID: 5479422664643475148}
   - component: {fileID: 6241203287682593722}
-  - component: {fileID: 4561437411473133595}
+  - component: {fileID: 2872902873382345209}
   m_Layer: 0
   m_Name: GameplaySystem
   m_TagString: Untagged
@@ -256,6 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e98ddfa83bfa9a64896e0de8abc9ac22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
+  EnemyMoveDelay: 2
 --- !u!114 &5479422664643475148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5efc31a75de07348a8e6b128fe28a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
+  MoveTurnDelay: 2
 --- !u!114 &6241203287682593722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   mainCam: {fileID: 693036412966368884}
   vcam: {fileID: 2289888524461908117}
---- !u!114 &4561437411473133595
+--- !u!114 &2872902873382345209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,9 +293,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3132615358195672310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bfe1cb4c9dba1a4c8da21ac1486a9fd, type: 3}
+  m_Script: {fileID: 11500000, guid: aa3e1cb51f38f38408c3a9d4561797a4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeckManager
+  m_EditorClassIdentifier: Assembly-CSharp::CardManager
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   drawCardCnt: 5
   cardDrawRate: 1
