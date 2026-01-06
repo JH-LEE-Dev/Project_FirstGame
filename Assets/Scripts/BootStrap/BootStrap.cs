@@ -18,6 +18,11 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
     private GameInstaller gameInstaller;
 
+    private void BootTempScene()
+    {
+        SetupMainMenuScene();
+    }
+
     private void Awake()
     {
         if (Instance != null)
