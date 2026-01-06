@@ -13,7 +13,51 @@ MonoBehaviour:
   m_Name: vHierarchy Data
   m_EditorClassIdentifier: VHierarchy::VHierarchy.VHierarchyData
   sceneDatas_byGuid:
-    keys: []
-    values: []
-  bookmarks: []
+    keys:
+    - 5aab9d38d950c4a48bba492a3571916e
+    - f0a72fc589402e946893f43d0c6d12e7
+    values:
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-4982681446533478644-0
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-618528844524211827-0
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-7892684051287148425-0
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-4575678030717598020-0
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-6864793290722547526-0
+        values:
+        - colorIndex: 4
+          iconNameOrGuid: BoxCollider Icon
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 6
+          iconNameOrGuid: Canvas Icon
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 2
+          iconNameOrGuid: Settings Icon
+          isIconRecursive: 1
+          isColorRecursive: 1
+        - colorIndex: 0
+          iconNameOrGuid: Camera Icon
+          isIconRecursive: 1
+          isColorRecursive: 0
+        - colorIndex: 0
+          iconNameOrGuid: DirectionalLight Icon
+          isIconRecursive: 0
+          isColorRecursive: 0
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-3132615358195672310-1577785712265351415
+        values:
+        - colorIndex: 3
+          iconNameOrGuid: Settings Icon
+          isIconRecursive: 0
+          isColorRecursive: 1
+  bookmarks:
+  - _go: {fileID: 0}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-6864793290722547526-1577785712265351415
+  - _go: {fileID: 0}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-4575678030717598020-1577785712265351415
   bookmarkedScenePaths: []
