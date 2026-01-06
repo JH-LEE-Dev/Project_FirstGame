@@ -8,8 +8,8 @@ using UnityEngine.Pool;
 
 public class CardManager : MonoBehaviour, ICardSystemProvider
 {
-    private Dictionary<string, ObjectPool<CardDataInstance>> cardPools
-    = new Dictionary<string, ObjectPool<CardDataInstance>>();
+    private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
+    = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
     private Stack<CardDataInstance> drawPile = new Stack<CardDataInstance>();
     private List<CardDataInstance> handPile = new List<CardDataInstance>();
@@ -140,7 +140,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
     {
         gravePile.Remove(card);
 
-        string id = card.GetCardData().id;
+        int id = card.GetCardData().id;
         cardPools[id].Release(card);
     }
 

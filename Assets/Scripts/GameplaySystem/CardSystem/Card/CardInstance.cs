@@ -13,10 +13,7 @@ using Range = UnityEngine.RangeAttribute;
 
 public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private CardData cardData;
-    public List<CardEffectData> additionalEffectData;
-    public event Action<CardInstance> CardUsedEvent;
-
+    private CardDataInstance cardData;
 
     // YW
 
@@ -71,24 +68,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(CardData cardData)
+    public void Initialize(CardDataInstance _cardData)
     {
-        this.cardData = cardData;
-    }
-
-    public CardData GetCardData()
-    {
-        return cardData;
-    }
-
-    public void AddCardEffect(CardEffectData effect)
-    {
-        additionalEffectData.Add(effect);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        CardUsedEvent?.Invoke(this);
+        cardData = _cardData;
     }
 
 

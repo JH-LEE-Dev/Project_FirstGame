@@ -11,7 +11,7 @@ public class UIView_CardSystem : UIView
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
-    [SerializeField] private GameObject uiPrefab;
+    [SerializeField] private GameObject cardUIPrefab;
     [Space]
     [SerializeField] private TMP_Text deckCntText;
     [SerializeField] private TMP_Text graveCntText;
@@ -80,25 +80,25 @@ public class UIView_CardSystem : UIView
         computeArc();
     }
 
-
-    public void CardDrawed(CardInstance cardInstance)
+    /*수정 요망*/
+    public void CardDrawed(CardDataInstance cardInstance)
     {
-        cardInstance.gameObject.SetActive(true);
-        cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
-        cardInstance.CardUsedEvent -= CardUsed;
-        cardInstance.CardUsedEvent += CardUsed;
+        //cardInstance.gameObject.SetActive(true);
+        //cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
+        //cardInstance.CardUsedEvent -= CardUsed;
+        //cardInstance.CardUsedEvent += CardUsed;
 
 
         // cards 
-        cards.Add(cardInstance);
+        //cards.Add(cardInstance);
 
         // ★상우★ 일단 여기에 카드가 Active 시작되는 위치.
-        RectTransform rt = cardInstance.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector2(300f, -150f);
+        //RectTransform rt = cardInstance.GetComponent<RectTransform>();
+       // rt.anchoredPosition = new Vector2(300f, -150f);
 
         // ★정현★ 패 매니저를 카드에게 참조시킨다. 
-        cardInstance.SetMaker(this);
-        computeArc();
+        //cardInstance.SetMaker(this);
+        //computeArc();
 
         deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
     }
@@ -156,13 +156,14 @@ public class UIView_CardSystem : UIView
         }
     }
 
-    public void CardUsed(CardInstance usedCard)
+    /*수정 요망*/
+    public void CardUsed(CardDataInstance usedCard)
     {
         if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
             return;
 
-        usedCard.gameObject.SetActive(false);
-        cards.Remove(usedCard);
+        //usedCard.gameObject.SetActive(false);
+        //cards.Remove(usedCard);
         computeArc();
         graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
