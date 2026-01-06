@@ -7,6 +7,8 @@ public class PlayerMoveStrategy : MoveStrategy
     [Header("Ellipse Settings")]
     [SerializeField] private float radiusX = 5f;
     [SerializeField] private float radiusY = 3f;
+    [SerializeField] private float deltaY = 3f;
+    [SerializeField] private float angleLimit = 0.1f;
     private Vector2 InitialPos;
 
     [Header("Movement Settings")]
@@ -33,7 +35,7 @@ public class PlayerMoveStrategy : MoveStrategy
         float x = radiusX * Mathf.Cos(angle);
         float y = radiusY * Mathf.Sin(angle);
 
-        unit.transform.position = new Vector3(x, InitialPos.y + y, 0f);
+        unit.transform.position = new Vector3(x, InitialPos.y+y+deltaY, 0f);
     }
 
     public override void Move(Vector2 direction)
@@ -42,12 +44,12 @@ public class PlayerMoveStrategy : MoveStrategy
 
         angle += direction.x * angleSpeed * Time.deltaTime;
 
-        angle = Mathf.Clamp(angle, Mathf.PI * 0.3f, Mathf.PI * 0.7f);
+        angle = Mathf.Clamp(angle, Mathf.PI * (1-angleLimit), Mathf.PI * angleLimit);
 
         float x = radiusX * Mathf.Cos(angle);
         float y = radiusY * Mathf.Sin(angle);
 
-        unit.transform.position = new Vector3(x, InitialPos.y + y, 0f);
+        unit.transform.position = new Vector3(x, InitialPos.y + y +deltaY, 0f);
     }
 
     public override void Move_Impulse(Vector2 direction, float power)

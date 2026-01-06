@@ -73,7 +73,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void Initialize(CardData cardData)
     {
-        this.cardData = cardData;   
+        this.cardData = cardData;
     }
 
     public CardData GetCardData()
