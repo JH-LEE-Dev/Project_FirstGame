@@ -24,6 +24,7 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-7892684051287148425-0
         - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-4575678030717598020-0
         - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-6864793290722547526-0
+        - globalObjectIdString: GlobalObjectId_V1-1-5aab9d38d950c4a48bba492a3571916e-3132615358195672310-0
         values:
         - colorIndex: 4
           iconNameOrGuid: BoxCollider Icon
@@ -45,12 +46,31 @@ MonoBehaviour:
           iconNameOrGuid: DirectionalLight Icon
           isIconRecursive: 0
           isColorRecursive: 0
+        - colorIndex: 3
+          iconNameOrGuid: Settings Icon
+          isIconRecursive: 0
+          isColorRecursive: 1
     - goDatas_byGlobalId:
         keys:
         - globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-3132615358195672310-1577785712265351415
+        - globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-2804438880554125407-1577785712265351415
+        - globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-548976213-0
+        - globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-330833422-0
         values:
         - colorIndex: 3
           iconNameOrGuid: Settings Icon
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 0
+          iconNameOrGuid: Terrain Icon
+          isIconRecursive: 1
+          isColorRecursive: 0
+        - colorIndex: 9
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 2
+          iconNameOrGuid: 
           isIconRecursive: 0
           isColorRecursive: 1
   bookmarks:
