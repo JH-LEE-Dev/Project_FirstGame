@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class CardEffectManager : MonoBehaviour
 {
-    public void Initialize(UnitSpawner unitSpawner)
+    private UnitSpawner unitSpawner;
+
+    public void Initialize(UnitSpawner _unitSpawner)
+    {
+        unitSpawner = _unitSpawner;
+    }
+
+    public void ExecuteCardEffect()
     {
 
     }
