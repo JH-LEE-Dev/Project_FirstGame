@@ -18,6 +18,8 @@ MonoBehaviour:
     - 109ccfb08b9fd4bf5a9d8deee2ace2ed
     - dd2b9e231b0ec4a9f97e258072ae2b33
     - f54d1bd14bd3ca042bd867b519fee8cc
+    - fa3b78cc0c2aa654f816ff16e06f0cae
+    - dca690d606050c64a937008c5b24bfc0
     values:
     - iconNameOrGuid: SceneAsset Icon
       colorIndex: 10
@@ -35,5 +37,14 @@ MonoBehaviour:
       colorIndex: 10
       isIconRecursive: 0
       isColorRecursive: 1
+    - iconNameOrGuid: TerrainData Icon
+      colorIndex: 5
+      isIconRecursive: 0
+      isColorRecursive: 1
+    - iconNameOrGuid: Prefab Icon
+      colorIndex: 7
+      isIconRecursive: 1
+      isColorRecursive: 1
   bookmarks:
+  - guid: fa3b78cc0c2aa654f816ff16e06f0cae
   - guid: dca690d606050c64a937008c5b24bfc0
