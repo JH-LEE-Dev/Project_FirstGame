@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 public abstract class CardEffectStrategy : ScriptableObject
 {
-    protected Unit unit;
-    public abstract void Initialize(Unit unit);
+    protected Character character;
+    public abstract void Initialize(Character character);
+
+    public abstract void Execute();
 }
