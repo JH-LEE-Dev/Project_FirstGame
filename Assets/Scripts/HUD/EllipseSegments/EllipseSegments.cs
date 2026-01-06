@@ -12,6 +12,12 @@ public class EllipseSegments : MonoBehaviour
 
     void Start()
     {
+        SettingEllipse();
+    }
+
+    [ContextMenu("Ellipse Setting Test")]
+    public void SettingEllipse()
+    {
         for (int i = 0; i < segmentCount; i++)
         {
             float t = (float)i / segmentCount * Mathf.PI;
