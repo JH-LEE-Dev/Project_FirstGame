@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDeckProvider
+public interface ICardSystemProvider
 {
     public bool CardUsed(CardInstance usedCard);
     public void CardUsingFinished();

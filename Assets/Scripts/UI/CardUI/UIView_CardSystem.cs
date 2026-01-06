@@ -42,8 +42,8 @@ public class UIView_CardSystem : UIView
     {
         base.OnShow();
 
-        deckCntText.text = "Deck : " + viewCtx.deckProvider.deckCnt.ToString();
-        graveCntText.text = "Grave : " + viewCtx.deckProvider.graveCnt.ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
+        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
 
         Refresh();
     }
@@ -69,7 +69,7 @@ public class UIView_CardSystem : UIView
 
         Refresh();
 
-        deckCntText.text = "Deck : " + viewCtx.deckProvider.deckCnt.ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
     }
 
     public void Refresh()
@@ -110,13 +110,13 @@ public class UIView_CardSystem : UIView
 
     public void CardUsed(CardInstance usedCard)
     {
-        if (viewCtx.deckProvider.CardUsed(usedCard) == false)
+        if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
             return;
 
         usedCard.gameObject.SetActive(false);
         cards.Remove(usedCard);
         Refresh();
-        graveCntText.text = "Grave : " + viewCtx.deckProvider.graveCnt.ToString();
+        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
 
     public void CardUsingFinished()
@@ -124,8 +124,9 @@ public class UIView_CardSystem : UIView
         turnFinishedButton.gameObject.SetActive(false);
         TurnFinishedEvent?.Invoke();
 
-        deckCntText.text = "Deck : " + viewCtx.deckProvider.deckCnt.ToString();
-        graveCntText.text = "Grave : " + viewCtx.deckProvider.graveCnt.ToString();
+        
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
+        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
 
         ClearAllCards();
     }

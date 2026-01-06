@@ -17,8 +17,8 @@ public enum Dir
 
 public enum CardType
 {
-    Attack,
-    Shield
+    Bullet,
+    Magic,
 }
 
 public enum SceneType
@@ -33,4 +33,8 @@ public enum PlayerTurnStateProcess
     CardUsing,
     Fire,
 }
+
+
+
+
 

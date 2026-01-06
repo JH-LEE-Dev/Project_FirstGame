@@ -7,7 +7,7 @@ public class UIInstaller : MonoBehaviour
 {
     private InputManager inputManager;
     private UIManager uiManager;
-    private IDeckProvider deckProvider;
+    private ICardSystemProvider cardSystemProvider;
     private GameController gameController;
     private IGameFlowController gameFlowController;
 
@@ -38,9 +38,9 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(IDeckProvider _deckProvider,GameController _gameController)
+    public void DependencyInjection_Gameplay(ICardSystemProvider _cardSystemProvider,GameController _gameController)
     {
-        deckProvider = _deckProvider;
+        cardSystemProvider = _cardSystemProvider;
         gameController = _gameController;
 
         SetupUIElement();
@@ -112,7 +112,7 @@ public class UIInstaller : MonoBehaviour
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
         uiManager.SceneChanged(tempRoot);
-        uiManager.Initialize_GameplayScene(deckProvider);
+        uiManager.Initialize_GameplayScene(cardSystemProvider);
 
         OpenGameplayUIView();
     }
@@ -132,7 +132,7 @@ public class UIInstaller : MonoBehaviour
 
     public void ResetVariable()
     {
-        deckProvider = null;
+        cardSystemProvider = null;
         uiManager.ResetVariable();
     }
 
@@ -149,16 +149,16 @@ public class UIInstaller : MonoBehaviour
 
     private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
     {
-        deckProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
-        deckProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
-        deckProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        deckProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
-        cardSystemObject.TurnFinishedEvent -= deckProvider.CardUsingFinished;
-        cardSystemObject.TurnFinishedEvent += deckProvider.CardUsingFinished;
-        deckProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        deckProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
-        deckProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
-        deckProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
+        cardSystemProvider.CardDrawedEvent -= cardSystemObject.CardDrawed;
+        cardSystemProvider.CardDrawedEvent += cardSystemObject.CardDrawed;
+        cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardSystemProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
+        cardSystemObject.TurnFinishedEvent += cardSystemProvider.CardUsingFinished;
+        cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardSystemProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        cardSystemProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+        cardSystemProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 

@@ -156,9 +156,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Initialize_GameplayScene(IDeckProvider deckProvider)
+    public void Initialize_GameplayScene(ICardSystemProvider cardSystemProvider)
     {
-        viewCtx.Initialize_Gameplay(deckProvider);
+        viewCtx.Initialize_Gameplay(cardSystemProvider);
     }
     public void Initialize_MainMenuScene()
     {

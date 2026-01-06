@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class DeckManager : MonoBehaviour, IDeckProvider
+public class CardManager : MonoBehaviour, ICardSystemProvider
 {
     private Dictionary<string, ObjectPool<CardInstance>> cardPools
     = new Dictionary<string, ObjectPool<CardInstance>>();

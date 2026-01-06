@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UIViewContext
 {
-    public IDeckProvider deckProvider;
+    public ICardSystemProvider cardSystemProvider;
     public InputManager inputManager;
 
     public void Initialize(InputManager _inputManager)
@@ -10,13 +10,13 @@ public class UIViewContext
         inputManager = _inputManager;
     }
 
-    public void Initialize_Gameplay(IDeckProvider _deckProvider)
+    public void Initialize_Gameplay(ICardSystemProvider _cardSystemProvider)
     {
-        deckProvider = _deckProvider;
+        cardSystemProvider = _cardSystemProvider;
     }
 
     public void ResetVariable()
     {
-        deckProvider = null;
+        cardSystemProvider = null;
     }
 }
