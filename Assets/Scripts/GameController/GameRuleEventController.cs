@@ -1,6 +1,6 @@
 public class GameRuleEventController
 {
-    public void Bind(Character character, GameController gameController,IDeckProvider deckProvider)
+    public void Bind(Character character, GameController gameController,ICardSystemProvider cardSystemProvider)
     {
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -10,8 +10,8 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent += character.ResetbCanAction;
         }
 
-        deckProvider.CardUsingFinishedEvent -= character.SetbCanAction;
-        deckProvider.CardUsingFinishedEvent += character.SetbCanAction;
+        cardSystemProvider.CardUsingFinishedEvent -= character.SetbCanAction;
+        cardSystemProvider.CardUsingFinishedEvent += character.SetbCanAction;
 
         character.PlayerAttackIsFinishedEvent += OnPlayerAttackFinished;
         this.gameController = gameController;

@@ -13,7 +13,7 @@ public class UnitSpawner : MonoBehaviour
     private InputManager inputManager;
     private WaveManager waveManager;
     private GameServiceLocator gameServiceLocator;
-    private IDeckProvider deckProvider;
+    private ICardSystemProvider cardSystemProvider;
     private GameController gameController;
 
     private uint curUnitCnt;
@@ -30,12 +30,12 @@ public class UnitSpawner : MonoBehaviour
     private GameRuleEventController gameRuleEventController;
 
     public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
-        GameServiceLocator _gameServiceLocator,IDeckProvider _deckProvider,GameController _gameController)
+        GameServiceLocator _gameServiceLocator,ICardSystemProvider _cardSystemProvider,GameController _gameController)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
         gameServiceLocator = _gameServiceLocator;
-        deckProvider= _deckProvider;
+        cardSystemProvider= _cardSystemProvider;
         gameController = _gameController;
         gameRuleEventController = new GameRuleEventController();
 
@@ -62,7 +62,7 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameController,deckProvider);
+            gameRuleEventController.Bind(spawnedUnit, gameController,cardSystemProvider);
         }
     }
 

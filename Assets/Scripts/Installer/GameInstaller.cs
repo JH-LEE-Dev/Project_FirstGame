@@ -8,7 +8,7 @@ public class GameInstaller : MonoBehaviour
     private GameController gameController;
     private CameraController cameraController;
     private GameServiceLocator gameServiceLocator;
-    private DeckManager deckManager;
+    private CardManager cardManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -21,12 +21,12 @@ public class GameInstaller : MonoBehaviour
         waveManager = GetComponent<WaveManager>();
         cameraController = GetComponent<CameraController>();
         gameServiceLocator = new GameServiceLocator();
-        deckManager = GetComponent<DeckManager>();
+        cardManager = GetComponent<CardManager>();
 
         gameServiceLocator.Initialize(cameraController, gameController);
         waveManager.Initialize(waveDatabase);
-        gameController.Initialize(waveManager, inputManager, deckManager);
-        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, deckManager,gameController);
+        gameController.Initialize(waveManager, inputManager, cardManager);
+        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,gameController);
     }
 
     private void Awake()
@@ -46,6 +46,6 @@ public class GameInstaller : MonoBehaviour
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        uiInstaller.DependencyInjection_Gameplay(deckManager, gameController);
+        uiInstaller.DependencyInjection_Gameplay(cardManager, gameController);
     }
 }
