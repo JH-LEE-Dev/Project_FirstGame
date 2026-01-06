@@ -8,12 +8,12 @@ using UnityEngine.Pool;
 
 public class CardManager : MonoBehaviour, ICardSystemProvider
 {
-    private Dictionary<string, ObjectPool<CardInstance>> cardPools
-    = new Dictionary<string, ObjectPool<CardInstance>>();
+    private Dictionary<string, ObjectPool<CardDataInstance>> cardPools
+    = new Dictionary<string, ObjectPool<CardDataInstance>>();
 
-    private Stack<CardInstance> drawPile = new Stack<CardInstance>();
-    private List<CardInstance> handPile = new List<CardInstance>();
-    private List<CardInstance> gravePile = new List<CardInstance>();
+    private Stack<CardDataInstance> drawPile = new Stack<CardDataInstance>();
+    private List<CardDataInstance> handPile = new List<CardDataInstance>();
+    private List<CardDataInstance> gravePile = new List<CardDataInstance>();
 
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int drawCardCnt = 5;
@@ -29,7 +29,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
     public int graveCnt { get; private set; }
 
     public event Action HandChangedEvent;
-    public event Action<CardInstance> CardDrawedEvent;
+    public event Action<CardDataInstance> CardDrawedEvent;
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingFinishedEvent;
 
@@ -43,26 +43,22 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
         {
             CardData cardData = cardDataBase.GetCardData(i);
 
-            ObjectPool<CardInstance> pool = new ObjectPool<CardInstance>(
+            ObjectPool<CardDataInstance> pool = new ObjectPool<CardDataInstance>(
                 createFunc: () =>
                 {
-                    GameObject go = Instantiate(cardData.cardObject);
-                    CardInstance instance = go.GetComponent<CardInstance>();
+                    CardDataInstance instance = new CardDataInstance();
                     instance.Initialize(cardData);
                     return instance;
                 },
                 actionOnGet: card =>
                 {
-                    card.gameObject.SetActive(true);
+                    card.ResetState();
                 },
                 actionOnRelease: card =>
                 {
-                    card.gameObject.SetActive(false);
+                    card.ResetState();
                 },
-                actionOnDestroy: card =>
-                {
-                    Destroy(card.gameObject);
-                },
+                actionOnDestroy: null,
                 collectionCheck: false,
                 defaultCapacity: 5,
                 maxSize: 20
@@ -78,11 +74,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
         if (cardData == null)
             return;
 
-        ObjectPool<CardInstance> pool = cardPools[cardData.id];
+        ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
         for (int i = 0; i < drawCardCnt; ++i)
         {
-            CardInstance card = pool.Get();
+            CardDataInstance card = pool.Get();
             drawPile.Push(card);
             ++deckCnt;
         }
@@ -103,7 +99,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
         var card = drawPile.Pop();
         handPile.Add(card);
-       
+
         --deckCnt;
         CardDrawedEvent?.Invoke(card);
     }
@@ -121,7 +117,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
         curDrawedCardCnt = 0;
     }
 
-    public bool CardUsed(CardInstance usedCard)
+    public bool CardUsed(CardDataInstance usedCard)
     {
         int cost = usedCard.GetCardData().cost;
 
@@ -140,7 +136,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
         return true;
     }
 
-    public void ReleaseCard(CardInstance card)
+    public void ReleaseCard(CardDataInstance card)
     {
         gravePile.Remove(card);
 
