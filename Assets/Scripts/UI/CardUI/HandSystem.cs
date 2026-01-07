@@ -20,10 +20,10 @@ public class HandSystem : MonoBehaviour
 
     [Header("Hand")]
     [SerializeField] private List<CardInstance> cards = new();
-    [SerializeField] Queue<CardDataInstance> drawQueue = new();
-    [SerializeField] private float drawStagger = 0.1f; // 파다다닥 간격
-    private float drawTimer;
 
+    private bool bcanAction = true;
+
+    public bool IscanAction => bcanAction;
 
     public void Init(UIView_CardSystem _cardSystem, PoolingSystem _poolingSystem)
     {
@@ -31,32 +31,25 @@ public class HandSystem : MonoBehaviour
         poolingSystem = _poolingSystem;
     }
 
-    // 데이터만 일단 받아버리기
-    public void EnqueueDraw(List<CardDataInstance> datas)
+    public void UseCard(CardInstance _card)
     {
-        foreach (var d in datas) drawQueue.Enqueue(d);
-    }
-
-    public void UseCard(CardInstance card)
-    {
-        int idx = cards.IndexOf(card);
+        int idx = cards.IndexOf(_card);
         if (idx < 0) return;
 
         UseCardAt(idx);
     }
 
-    public void UseCardAt(int index)
+    public void UseCardAt(int _index)
     {
-        if (index < 0 || index >= cards.Count) return;
+        if (_index < 0 || _index >= cards.Count) return;
 
-        var card = cards[index];
-        cards.RemoveAt(index);
+        var card = cards[_index];
+        cards.RemoveAt(_index);
 
-        if (hoveredIndex == index) hoveredIndex = -1;
-        else if (hoveredIndex > index) hoveredIndex--;
+        if (hoveredIndex == _index) hoveredIndex = -1;
+        else if (hoveredIndex > _index) hoveredIndex--;
 
-        card.inHand = false;
-        card.KillHover();
+        card.ExitHand();
         card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
 
         poolingSystem.ReturnHandCard(card);
@@ -64,57 +57,38 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    private void Update()
+    private void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
     {
-        ProcessDrawQueue();
-    }
-
-    private void ProcessDrawQueue()
-    {
-        if (drawQueue.Count == 0) return;
-
-        drawTimer -= Time.unscaledDeltaTime;
-        if (drawTimer > 0f) return;
-
-        // 상우
-        Vector2 temp = new Vector2(0, -450f);
-
-
-        var data = drawQueue.Dequeue();
-
         var card = poolingSystem.RentHandCard();
         if (card == null) return;
 
-        // 연출 책임
-        card.ApplyData(data);
+        // 카드 조립
+        card.ApplyData(_cardData);
 
         // 손 패로 이동.
         card.gameObject.SetActive(true);
-        card.inHand = true;
+        card.EnterHand();
 
         // 덱 위치에서 시작시키기 (파다다닥 출발점)
         var rt = card.GetComponent<RectTransform>();
-        rt.anchoredPosition = temp;
+        rt.anchoredPosition = _cardSpawnPos;
 
         cards.Add(card);
-
         computeArc();
-
-        drawTimer = drawStagger;
     }
 
     // 호버 ON (카드 약간 벌어짐)
-    public void OnCardHoverEnter(CardInstance card)
+    public void OnCardHoverEnter(CardInstance _card)
     {
-        hoveredIndex = cards.IndexOf(card);
+        hoveredIndex = cards.IndexOf(_card);
 
         computeArc();
     }
 
     // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
-    public void OnCardHoverExit(CardInstance card)
+    public void OnCardHoverExit(CardInstance _card)
     {
-        int idx = cards.IndexOf(card);
+        int idx = cards.IndexOf(_card);
         if (idx == hoveredIndex) hoveredIndex = -1;
 
         computeArc();
@@ -173,4 +147,5 @@ public class HandSystem : MonoBehaviour
             cards[i].UpdateTargetPos(pos, tiltZ);
         }
     }
+
 }

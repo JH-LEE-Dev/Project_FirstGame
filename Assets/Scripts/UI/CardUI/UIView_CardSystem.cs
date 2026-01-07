@@ -75,12 +75,9 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        handSystem.EnqueueDraw(cardDataPile);
+        //handSystem.EnqueueDraw(cardDataPile);
         SetText();
     }
-
-
-
 
 
 
