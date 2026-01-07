@@ -964,6 +964,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9155673763916870877}
     m_Modifications:
+    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
+      propertyPath: drawEffectPrefab
+      value: 
+      objectReference: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
     - target: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
