@@ -16,7 +16,7 @@ public class DrawEffect : MonoBehaviour
 
     public void PlayingDrawEvent(float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
-        Debug.Log("카드 드로우");
+        Debug.Log("카드 한장 드로우");
 
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
@@ -25,7 +25,7 @@ public class DrawEffect : MonoBehaviour
 
         activeSeq.AppendInterval(_spawnDelay);
 
-        activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CatmullRom, PathMode.TopDown2D)
+        activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CatmullRom, PathMode.TopDown2D, 10, Color.green)
             .SetUpdate(false)
             .SetEase(_drawEase)
             .OnComplete(() =>
@@ -35,3 +35,4 @@ public class DrawEffect : MonoBehaviour
             }));
     }
 }
+ 

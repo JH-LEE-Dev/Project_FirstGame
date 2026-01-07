@@ -26,6 +26,8 @@ public class UIView_CardSystem : UIView
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
+    [SerializeField] private ClickCatchSystem clickCatchSystem;
+
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
@@ -50,6 +52,7 @@ public class UIView_CardSystem : UIView
         poolingSystem?.Init(this);
         handSystem?.Init(this);
         deckSystem?.Init(this);
+        clickCatchSystem?.Init(this);
 
         BindingFunction();
     }
@@ -58,8 +61,6 @@ public class UIView_CardSystem : UIView
     {
         if(null != handSystem)
         {
-            Debug.Log("호출");
-
             drawEvent += handSystem.ProcessDraw;
         }
     }
@@ -102,6 +103,10 @@ public class UIView_CardSystem : UIView
         handSystem?.OnCardHoverExit(_card);
     }
 
+    public void CancelPreview()
+    {
+        handSystem?.CancelPreview();
+    }
     /////////////////
 
 
@@ -130,22 +135,12 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        ////////////////////////////////////////// 임시
-        if (handSystem == null) return;
+        if (null == deckSystem)
+            return;
 
-        for (int i = 0; i < cardDataPile.Count; i++)
-        {
-            handSystem.ProcessDraw(new Vector2(0, -450f), cardDataPile[i]);
-        }
-        /////////////////////////////////////////////////
-
-
+        deckSystem.CardDrawEffect(cardDataPile);
         SetText();
     }
-
-
-
-
 
     /////////////////////////////////////////////////
 

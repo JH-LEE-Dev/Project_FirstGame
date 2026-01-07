@@ -42,26 +42,16 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public bool IgnoreHandLayout => ignoreHandLayout;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
-
-
-
-    [SerializeField] private bool bInHand = true;
-    public bool IsInHand => bInHand;
+    private Tween previewRotateTween;
 
     public void EnterHand()
     {
-        if (bInHand) return;
-
-        bInHand = true;
         ignoreHandLayout = false;
         velocity = Vector2.zero;
     }
 
     public void ExitHand()
     {
-        if (!bInHand) return;
-
-        bInHand = false;
         ignoreHandLayout = false;
         velocity = Vector2.zero;
         KillHover();
@@ -83,7 +73,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void Initialize(UIView_CardSystem _cardSystem)
     {
         cardSystem = _cardSystem;
-        bInHand = false;
     }
 
     void Update()
@@ -109,8 +98,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void InHand()
     {
-        if (bInHand == false) return;
-
         // 프리뷰 중일때.
         if (ignoreHandLayout) return;
 
@@ -167,6 +154,8 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         previewMoveTween?.Kill();
         previewScaleTween?.Kill();
+        previewRotateTween?.Kill();
+
 
         previewMoveTween = rt.DOAnchorPos(centerPos, moveDur)
             .SetEase(Ease.OutCubic)
@@ -174,6 +163,12 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         previewScaleTween = transform.DOScale(originScale * scale, scaleDur)
             .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+
+        targetAngleZ = 0f;
+
+        previewRotateTween = rt.DOLocalRotate(Vector3.zero, moveDur)
+            .SetEase(Ease.OutCubic)
             .SetUpdate(true);
     }
 
@@ -184,6 +179,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         previewMoveTween?.Kill();
         previewScaleTween?.Kill();
+        previewRotateTween?.Kill();
 
         transform.localScale = originScale;
     }
