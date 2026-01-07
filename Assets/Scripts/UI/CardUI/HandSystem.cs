@@ -19,9 +19,6 @@ public class HandSystem : MonoBehaviour
 
     [Header("Preview")]
     [SerializeField] private RectTransform previewRoot;
-    [SerializeField] private float previewScale = 3f;
-    [SerializeField] private float previewMoveDuration = 0.12f;
-    [SerializeField] private float previewScaleDuration = 0.12f;
     private CardInstance previewCard;   // 현재 미리보기 카드
 
     [Header("Hand")]
@@ -65,7 +62,7 @@ public class HandSystem : MonoBehaviour
         previewCard = card;
 
         // 프리뷰 시작(센터 이동 + 확대)
-        previewCard.StartPreview(previewRoot.anchoredPosition, previewScale, previewMoveDuration, previewScaleDuration);
+        previewCard.StartPreview(previewRoot.anchoredPosition);
 
 
 
