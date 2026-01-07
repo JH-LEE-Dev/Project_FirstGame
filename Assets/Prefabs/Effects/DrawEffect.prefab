@@ -29,14 +29,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5707691401458737054}
+  m_Children: []
   m_Father: {fileID: 7010803520990550035}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7863307054723880587
 CanvasRenderer:
@@ -106,7 +105,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8361226392868321097}
+  m_Father: {fileID: 7010803520990550035}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &5227449141249179317
 TrailRenderer:
@@ -167,7 +166,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.5409851
+        value: 0.2509079
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -253,11 +252,12 @@ Transform:
   m_GameObject: {fileID: 4116877401703609468}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 52311.105, y: 28005.393, z: -8343.781}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8361226392868321097}
+  - {fileID: 5707691401458737054}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8901908941886302109
