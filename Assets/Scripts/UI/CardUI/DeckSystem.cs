@@ -25,6 +25,7 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private float drawDuration = 1f;
     [SerializeField] private float drawFirstPointDist = 2f;
     [SerializeField] private float drawMidPointPower = 2f;
+    [SerializeField] private float drawEndPointPower = 2f;
     [SerializeField] private Ease drawEase = Ease.OutQuad;
 
     [Header("Enter Event Settings")]
@@ -121,14 +122,6 @@ public class DeckSystem : MonoBehaviour,
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
         RectTransform endPoint = cardSystem.DrawEndPoint;
 
-        // 첫 번째 경로를 자연스럽게 하기 위한 인위적인 경로
-        Vector3 firstPointPos = transform.position + transform.up * drawFirstPointDist;
-        Vector3 midPointPos = midPoint.position * Random.Range(-1f, 1f) * drawMidPointPower;
-        Vector3 endPointPos = endPoint.position;
-        endPointPos.x += Random.Range(-1f, 1f) * 3f;
-
-        Vector3[] pathPoints = { firstPointPos, midPointPos, endPointPos };
-
         int cnt = dataList.Count;
         for (int i = 0; i < cnt; i++)
         {
@@ -136,6 +129,19 @@ public class DeckSystem : MonoBehaviour,
             DrawEffect script = performer?.GetComponent<DrawEffect>();
             if (null == script)
                 continue;
+
+            Vector3 firstPointPos = topRect.position + Vector3.up * drawFirstPointDist;
+            Vector3 midPointPos = midPoint.position;
+            Vector3 endPointPos = endPoint.position;
+
+            // mid
+            midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
+            midPointPos.y += Random.Range(-1f, 1f) * drawMidPointPower;
+
+            // end
+            endPointPos.x += Random.Range(-1f, 1f) * drawEndPointPower;
+
+            Vector3[] pathPoints = { firstPointPos, midPointPos, endPointPos };
 
             script.CardDataInstance = dataList[i];
             script.PlayingDrawEvent(i * drawDelay, drawDuration, drawEase, pathPoints);
@@ -204,15 +210,18 @@ public class DeckSystem : MonoBehaviour,
         bPlayingUpEvent = true;
     }
 
-    public void CallOneCardDrawCompleted(Vector2 _endPos, CardDataInstance _data, GameObject _performer)
+    public void CallOneCardDrawCompleted(Vector3 _endPos, CardDataInstance _data, GameObject _performer)
     {
-        drawEffectParticle.Release(_performer);
         cardSystem?.drawEvent.Invoke(_endPos, _data);
+        drawEffectParticle.Release(_performer);
     }
 
     private GameObject CreateDrawEffect()
     {
-        GameObject newObj = Instantiate(drawEffectPrefab, transform.position, Quaternion.identity);
+        GameObject newObj = Instantiate(drawEffectPrefab, topRect);
+        DrawEffect script = newObj?.GetComponent<DrawEffect>();
+        script?.Init(this);
+
         return newObj;
     }
 
@@ -228,7 +237,11 @@ public class DeckSystem : MonoBehaviour,
 
     private void DeActivateDrawEffect(GameObject obj)
     {
-        obj?.SetActive(false);
+        if (null == obj)
+            return;
+
+        obj.transform.position = topRect.position;
+        obj.SetActive(false);
     }
 
     public void OnPointerDown(PointerEventData _eventData)
