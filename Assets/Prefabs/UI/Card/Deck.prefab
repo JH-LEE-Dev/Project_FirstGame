@@ -240,9 +240,9 @@ MonoBehaviour:
   wealthyEase: 4
   drawDelay: 0.15
   drawDuration: 1.5
-  drawFirstPointDist: 300
-  drawMidPointPower: 150
-  drawEndPointPower: 300
+  drawFirstPointDist: 3
+  drawMidPointPower: 5
+  drawEndPointPower: 5
   drawEase: 6
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15
