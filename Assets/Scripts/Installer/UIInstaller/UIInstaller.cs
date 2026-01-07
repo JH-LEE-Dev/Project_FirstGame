@@ -113,7 +113,6 @@ public class UIInstaller : MonoBehaviour
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
         uiManager.SceneChanged(tempRoot);
-        uiManager.Initialize_GameplayScene(cardSystemProvider);
 
         OpenGameplayUIView();
     }
@@ -134,7 +133,6 @@ public class UIInstaller : MonoBehaviour
     public void ResetVariable()
     {
         cardSystemProvider = null;
-        uiManager.ResetVariable();
     }
 
     private void SetAnchorToCanvas(Transform transform)

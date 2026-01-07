@@ -4,6 +4,14 @@ using UnityEngine;
 
 public interface ICardSystemProvider
 {
+    // 데이터가 변경되었을 때 UI에 알릴 이벤트
+    event Action HandChangedEvent;
+
+    event Action<CardDataInstance> CardDrawedEvent;
+    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
+    event Action CardDrawFinishedEvent;
+    event Action CardUsingFinishedEvent;
+
     public bool CardUsed(CardDataInstance usedCard);
     public void CardUsingFinished();
 
@@ -14,14 +22,4 @@ public interface ICardSystemProvider
     int deckCnt { get; }
     int graveCnt { get; }
     int handCnt { get; }
-
-    int curCost { get; }
-
-    // 데이터가 변경되었을 때 UI에 알릴 이벤트
-    event Action HandChangedEvent;
-
-    event Action<CardDataInstance> CardDrawedEvent;
-    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
-    event Action CardDrawFinishedEvent;
-    event Action CardUsingFinishedEvent;
 }

@@ -6,8 +6,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider
+public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
 {
+    public event Action HandChangedEvent;
+    public event Action<CardDataInstance> CardDrawedEvent;
+    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
+    public event Action CardDrawFinishedEvent;
+    public event Action CardUsingFinishedEvent;
+    public event Action<CardData> CardUsedEvent;
+
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
@@ -18,7 +25,6 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int drawCardCnt = 5;
     [SerializeField] private float cardDrawRate = 1f;
-    [SerializeField] private int initialCost = 3;
 
 
     public IReadOnlyList<CardData> HandCards => throw new NotImplementedException();
@@ -28,18 +34,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
     public int graveCnt { get; private set; }
     public int handCnt { get; private set; }
 
-    public event Action HandChangedEvent;
-    public event Action<CardDataInstance> CardDrawedEvent;
-    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
-    public event Action CardDrawFinishedEvent;
-    public event Action CardUsingFinishedEvent;
+    private Queue<CardEffectStrategy> cardSystemEffects = new Queue<CardEffectStrategy>();
 
-    public int curCost { get; private set; }
 
     public void Awake()
     {
-        curCost = initialCost;
-
         for (int i = 0; i < cardDataBase.cardData.Count; ++i)
         {
             CardData cardData = cardDataBase.GetCardData(i);
@@ -146,19 +145,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
     public bool CardUsed(CardDataInstance usedCard)
     {
-        int cost = usedCard.GetCardData().cost;
-
-        if (curCost < cost)
-        {
-            Debug.Log("Not Enough Cost");
-            return false;
-        }
-
         handPile.Remove(usedCard);
         gravePile.Add(usedCard);
         ++graveCnt;
 
-        curCost -= cost;
+        CardUsedEvent.Invoke(usedCard.GetCardData());
 
         return true;
     }
@@ -189,8 +180,6 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
     public void CardUsingFinished()
     {
-        curCost = initialCost;
-
         CardUsingFinishedEvent?.Invoke();
 
         for (int i = 0; i < handPile.Count; ++i)
@@ -221,5 +210,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider
 
         //Pile µå·Î¿ì.
         StartCoroutine(CardPileDrawCoroutine());
+    }
+
+    public void DrawAgain(int Amount)
+    {
+        
     }
 }

@@ -93,8 +93,6 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void CloseAll()
     {
-        ResetVariable();
-
         foreach (var kv in instanceByType)
         {
             UIView view = kv.Value;
@@ -155,16 +153,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Initialize_GameplayScene(ICardSystemProvider cardSystemProvider)
-    {
-        viewCtx.Initialize_Gameplay(cardSystemProvider);
-    }
     public void Initialize_MainMenuScene()
     {
-    }
-
-    public void ResetVariable()
-    {
-        viewCtx.ResetVariable();
     }
 }

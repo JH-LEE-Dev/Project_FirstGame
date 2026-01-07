@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CombatComponent : EntityComponent
+public class CombatComponent : EntityComponent, ICombatEffectReceiver
 {
     [SerializeField] private Bullet bulletPrefab;
     private Bullet bulletObject;
@@ -47,5 +48,10 @@ public class CombatComponent : EntityComponent
     public void BulletEffectIsFinished()
     {
         BulletEffectIsFinishedEvent?.Invoke();
+    }
+
+    public void ApplyAttackModifier(float bonusDamage)
+    {
+        throw new NotImplementedException();
     }
 }

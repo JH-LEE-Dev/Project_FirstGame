@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Character : Unit
 {
+    public ICombatEffectReceiver combatEffectReceiver => combatComponent;
+
     public event Action PlayerAttackIsFinishedEvent;
 
     [Header("Arrow Object")]
