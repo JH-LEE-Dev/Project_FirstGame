@@ -16,7 +16,7 @@ public class DrawEffect : MonoBehaviour
 
     public void PlayingDrawEvent(float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
-        Debug.Log("카드 드로우");
+        Debug.Log("카드 한장 드로우");
 
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
