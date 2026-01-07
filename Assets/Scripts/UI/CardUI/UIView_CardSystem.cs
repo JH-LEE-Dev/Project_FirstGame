@@ -21,38 +21,21 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
+    public Action<Vector3, CardDataInstance> drawEvent;
 
+    [Header("Systems")]
+    [SerializeField] private PoolingSystem poolingSystem;
+    [SerializeField] private HandSystem handSystem;
+    public HandSystem HandSystem => handSystem;
+    [SerializeField] private DeckSystem deckSystem;
+    // [SerializeField] private WormholeSystem WormholeSystem;
 
-    // 패 기능
-    [Header("References")]
-    [SerializeField] private RectTransform handRoot;
-    [Header("Arc Settings")]
-    [SerializeField] private float radius = 2000f;
-    [SerializeField] private float minArcAngle = 0f;
-    [SerializeField] private float maxArcAngle = 20f;
-    [SerializeField] private float hoverGapWeight = 0.3f;
-    private int hoveredIndex = -1;
-    // 실제 나의 패
-    [SerializeField] private List<CardInstance> cards = new();
-
-
-
-
-    // for System
-    [Header("Pooling")]
-    // 카드 기본 프리팹
-    [SerializeField] private GameObject cardUIPrefab;
-
-    // 비활성중인 패
-    [SerializeField] private List<CardInstance> inactiveHandPool = new();
-    // 활성중인 패
-    [SerializeField] private List<CardInstance> activeHandCards = new();
-    private int maxHandPool = 20;
-
-    // 소멸, 웜홀, 덱
-    [SerializeField] private List<CardInstance> otherCardPool = new();
-    private int maxOtherCardPool = 50;
-
+    // 덱
+    [Header("Deck Settings")]
+    [SerializeField] private List<RectTransform> drawPathPoints = new();
+    [SerializeField] private RectTransform drawEndPoint = null;
+    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
+    public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
     protected override void Awake()
     {
@@ -63,118 +46,118 @@ public class UIView_CardSystem : UIView
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
-        cardPooling();
+        poolingSystem?.Init(this);
+        handSystem?.Init(this);
+        deckSystem?.Init(this);
 
+        BindingFunction();
     }
 
-    private void cardPooling()
+    private void BindingFunction()
     {
-        // hands
-        for (int i = 0; i < maxHandPool; ++i)
+        if(null != handSystem)
         {
-            GameObject go = Instantiate(cardUIPrefab, this.transform);
-            CardInstance card = go.GetComponent<CardInstance>();
-            card.gameObject.SetActive(false);
+            Debug.Log("호출");
 
-            card.Initialize(this);
-            inactiveHandPool.Add(card);
-
-        }
-
-        // other
-        for (int i = 0; i < maxOtherCardPool; ++i)
-        {
-            GameObject go = Instantiate(cardUIPrefab, this.transform);
-            CardInstance card = go.GetComponent<CardInstance>();
-            card.gameObject.SetActive(false);
-
-            card.Initialize(this);
-            otherCardPool.Add(card);
+            drawEvent += handSystem.ProcessDraw;
         }
     }
+
+    // For PoolingSystem
+    public CardInstance RentHandCard()
+    {
+        return poolingSystem?.RentHandCard();
+    }
+    public void ReturnHandCard(CardInstance card)
+    {
+        poolingSystem?.ReturnHandCard(card);
+    }
+    /////////////////
+
+
+
+    // For HandSystem
+    public void TryUseCard(CardInstance _card)
+    {
+        //if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
+        //    return;
+
+        // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
+        handSystem?.TryUseCard(_card);
+    }
+    public void OnCardLeftClick(CardInstance _card)
+    {
+        // 좌클릭을 했을 때 이쪽으로 온다. (프리뷰)
+        handSystem?.OnCardLeftClick(_card);
+    }
+
+    public void OnCardHoverEnter(CardInstance _card)
+    {
+        // 호버 ON (벌어지는 연출위함)
+        handSystem?.OnCardHoverEnter(_card);
+    }
+    public void OnCardHoverExit(CardInstance _card)
+    {
+        // 호버 OFF (축소되는 연출 위함)
+        handSystem?.OnCardHoverExit(_card);
+    }
+
+    /////////////////
+
+
+
 
     public void GetDeckCards()
     {
         List<CardDataInstance> temp;
 
-        // 수정 요망
+        // 추후 구현
     }
 
     public void GetWormholeCards()
     {
         List<CardDataInstance> temp;
 
-        // 수정 요망
+        // 추후 구현
     }
 
     public void GetExtinctionCards()
     {
         List<CardDataInstance> temp;
 
-        // 수정 요망
+        // 추후 구현
     }
 
-    // 카드 드로우 (패 입성)
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        foreach (var data in cardDataPile)
+        ////////////////////////////////////////// 임시
+        if (handSystem == null) return;
+
+        for (int i = 0; i < cardDataPile.Count; i++)
         {
-            if (inactiveHandPool.Count <= 0) return;
-
-            // 앞에서 부터 사용.
-            CardInstance card = inactiveHandPool[0];
-            inactiveHandPool.RemoveAt(0);
-
-            //card.gameObject.SetActive(true);
-            card.ApplyData(data);
-
-            activeHandCards.Add(card);
+            handSystem.ProcessDraw(new Vector2(0, -450f), cardDataPile[i]);
         }
+        /////////////////////////////////////////////////
+
 
         SetText();
     }
 
-    // 전체 초기화
-    public void ReleaseAllHand()
-    {
-        foreach (var card in activeHandCards)
-        {
-            card.Clear();
-            //card.gameObject.SetActive(false);
-            inactiveHandPool.Add(card);
-        }
 
-        activeHandCards.Clear();
-    }
 
-    // 하나 제거
-    public void ReleaseHandAt(int index)
-    {
-        if (index < 0 || index >= activeHandCards.Count)
-            return;
 
-        CardInstance card = activeHandCards[index];
-        activeHandCards.RemoveAt(index);
 
-        card.Clear();
-        //card.gameObject.SetActive(false);
+    /////////////////////////////////////////////////
 
-        inactiveHandPool.Add(card);
-    }
+
 
     private void SetText()
     {
     }
 
-
-
-
-
     protected override void OnShow()
     {
         base.OnShow();
-
-        //computeArc();
 
         SetText();
     }
@@ -188,8 +171,6 @@ public class UIView_CardSystem : UIView
     {
 
     }
-
-    // 수정 요망
 
     public void CardUsed(CardDataInstance usedCard)
     {
@@ -233,34 +214,11 @@ public class UIView_CardSystem : UIView
 
     public void EnemyTurnStarted()
     {
-        handRoot.gameObject.SetActive(false);
+        //handRoot.gameObject.SetActive(false);
     }
 
     public void PlayerTurnStarted(int waveIdx)
     {
-        handRoot.gameObject.SetActive(true);
+        //handRoot.gameObject.SetActive(true);
     }
-
-
-
-
-
-    // 호버 ON (카드 약간 벌어짐)
-    public void OnCardHoverEnter(CardInstance card)
-    {
-        hoveredIndex = cards.IndexOf(card);
-
-        //computeArc();
-    }
-
-    // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
-    public void OnCardHoverExit(CardInstance card)
-    {
-        int idx = cards.IndexOf(card);
-        if (idx == hoveredIndex) hoveredIndex = -1;
-
-        //computeArc();
-    }
-
-
 }

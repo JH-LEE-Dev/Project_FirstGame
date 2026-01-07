@@ -11,16 +11,12 @@ using Range = UnityEngine.RangeAttribute;
 
 
 
-public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private CardDataInstance cardData;
+    public CardDataInstance CardData => cardData;
 
-
-
-
-    // YW
-
-    public UIView_CardSystem cardSystem;
+    private UIView_CardSystem cardSystem;
 
     // Hover
     [SerializeField] public float hoverScale = 1.3f;
@@ -41,13 +37,36 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] float snapDist = 0.05f;   // 미세 떨림 제거용
 
 
-    [Header("Float")]
-    [SerializeField] float floatAmplitude = 6f;   // 픽셀 단위 (아주 작게!)
-    [SerializeField] float floatSpeed = 1.2f;     // 느리게
-    [SerializeField] float floatPhaseRandom = 1f; // 카드마다 위상 차이
-    float floatPhase;
+    // Preview
+    [SerializeField] private bool ignoreHandLayout = false; // 프리뷰 중이면 true
+    public bool IgnoreHandLayout => ignoreHandLayout;
+    private Tween previewMoveTween;
+    private Tween previewScaleTween;
 
-    public bool inHand;
+
+
+    [SerializeField] private bool bInHand = true;
+    public bool IsInHand => bInHand;
+
+    public void EnterHand()
+    {
+        if (bInHand) return;
+
+        bInHand = true;
+        ignoreHandLayout = false;
+        velocity = Vector2.zero;
+    }
+
+    public void ExitHand()
+    {
+        if (!bInHand) return;
+
+        bInHand = false;
+        ignoreHandLayout = false;
+        velocity = Vector2.zero;
+        KillHover();
+        transform.localScale = originScale; // 수정 필요.
+    }
 
     /// ////////////////
 
@@ -60,7 +79,11 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // DoTween 움직임을 위한 변수들
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
-        floatPhase = Random.value * Mathf.PI * 2f * floatPhaseRandom;
+    }
+    public void Initialize(UIView_CardSystem _cardSystem)
+    {
+        cardSystem = _cardSystem;
+        bInHand = false;
     }
 
     void Update()
@@ -71,11 +94,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(UIView_CardSystem _cardSystem)
-    {
-        cardSystem = _cardSystem;
-        inHand = false;
-    }
 
     public void ApplyData(CardDataInstance _cardData)
     {
@@ -89,35 +107,12 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     //////////////////////// 연출
 
-    // 호버 ON
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        cardSystem?.OnCardHoverEnter(this);
-
-
-        hoverTween?.Kill();
-        hoverTween = transform.DOScale(originScale * hoverScale, duration)
-            .SetEase(Ease.OutBack)
-            .SetUpdate(true);
-    }
-
-    // 호버 OFF
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        cardSystem?.OnCardHoverExit(this);
-
-
-        hoverTween?.Kill();
-        hoverTween = transform.DOScale(originScale, duration)
-            .SetEase(Ease.OutBack)
-            .SetUpdate(true);
-    }
-
-
     public void InHand()
     {
-        if (inHand == false) return;
+        if (bInHand == false) return;
 
+        // 프리뷰 중일때.
+        if (ignoreHandLayout) return;
 
         float dt = Time.unscaledDeltaTime;
 
@@ -154,5 +149,96 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         targetPos = (Vector2)tp;
         targetAngleZ = angleZ;
+    }
+
+    public void KillHover()
+    {
+        hoverTween?.Kill();
+        transform.localScale = originScale;
+    }
+
+    // 프리뷰 시작
+    public void StartPreview(Vector2 centerPos, float scale, float moveDur, float scaleDur)
+    {
+        ignoreHandLayout = true;
+
+        // 호버 트윈 파괴
+        KillHover();
+
+        previewMoveTween?.Kill();
+        previewScaleTween?.Kill();
+
+        previewMoveTween = rt.DOAnchorPos(centerPos, moveDur)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
+
+        previewScaleTween = transform.DOScale(originScale * scale, scaleDur)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // 프리뷰 종료
+    public void EndPreview()
+    {
+        ignoreHandLayout = false;
+
+        previewMoveTween?.Kill();
+        previewScaleTween?.Kill();
+
+        transform.localScale = originScale;
+    }
+
+
+
+    ///////////////////// 입력
+
+    // 호버 ON
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (ignoreHandLayout) return;
+
+
+        cardSystem?.OnCardHoverEnter(this);
+
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(originScale * hoverScale, duration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // 호버 OFF
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (ignoreHandLayout) return;
+
+
+        cardSystem?.OnCardHoverExit(this);
+
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(originScale, duration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // 클릭
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // 상우 : 뽑는 연출 중에는 모든 카드를 사용할 수 없게 해줘
+
+        // 마우스 우클릭
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            cardSystem?.TryUseCard(this);
+            return;
+        }
+
+        // 마우스 좌클릭
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            cardSystem?.OnCardLeftClick(this);
+            return;
+        }
     }
 }

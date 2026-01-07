@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Env_Earth
+  m_Name: VFX_StarTrail_01
   m_Shader: {fileID: -6465566751694194690, guid: fcfb25fafa0ec3f4c91d6da452d02392, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -41,11 +41,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dfe6e0ac3e5f24740a17e14b65e08406, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
-        m_Texture: {fileID: 2800000, guid: 91cc760a291a04c4a8618c24e75a622a, type: 3}
+        m_Texture: {fileID: 2800000, guid: d72810d8cf99a684281fc8d987fe5c6e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -72,11 +72,11 @@ Material:
     m_Floats:
     - _Amount: 2
     - _EnableExternalAlpha: 0
-    - _GlowAmount: 1
+    - _GlowAmount: 1.5
     - _ZWrite: 0
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0, g: 0.6864166, b: 16, a: 1}
+    - _Color: {r: 5.9921575, g: 5.9921575, b: 5.9921575, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
