@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class HandSystem : MonoBehaviour
 {
-    private UIView_CardSystem owner;
-    private PoolingSystem poolingSystem;
+    private UIView_CardSystem cardSystem;
 
     [Header("References")]
     [SerializeField] private RectTransform handRoot;
@@ -25,10 +24,9 @@ public class HandSystem : MonoBehaviour
 
     public bool IscanAction => bcanAction;
 
-    public void Init(UIView_CardSystem _cardSystem, PoolingSystem _poolingSystem)
+    public void Init(UIView_CardSystem _cardSystem)
     {
-        owner = _cardSystem;
-        poolingSystem = _poolingSystem;
+        cardSystem = _cardSystem;
     }
 
     public void UseCard(CardInstance _card)
@@ -52,14 +50,14 @@ public class HandSystem : MonoBehaviour
         card.ExitHand();
         card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
 
-        poolingSystem.ReturnHandCard(card);
+        cardSystem.ReturnHandCard(card);
 
         computeArc();
     }
 
-    private void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
+    public void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
     {
-        var card = poolingSystem.RentHandCard();
+        var card = cardSystem.RentHandCard();
         if (card == null) return;
 
         // 카드 조립

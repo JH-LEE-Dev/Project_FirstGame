@@ -27,6 +27,7 @@ public class UIView_CardSystem : UIView
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private HandSystem handSystem;
+    public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
@@ -47,10 +48,40 @@ public class UIView_CardSystem : UIView
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
-        poolingSystem?.Init(this, handSystem);
-        handSystem?.Init(this, poolingSystem);
+        poolingSystem?.Init(this);
+        handSystem?.Init(this);
         deckSystem?.Init(this, poolingSystem);
     }
+
+    // For PoolingSystem
+    public CardInstance RentHandCard()
+    {
+        return poolingSystem?.RentHandCard();
+    }
+    public void ReturnHandCard(CardInstance card)
+    {
+        poolingSystem?.ReturnHandCard(card);
+    }
+
+
+    // For HandSystem
+    public void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
+    {
+        handSystem?.ProcessDraw(_cardSpawnPos, _cardData);
+    }
+
+    public void UseCard(CardInstance _card)
+    {
+        if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
+            return;
+
+        handSystem?.UseCard(_card);
+    }
+
+
+
+
+
 
     public void GetDeckCards()
     {
