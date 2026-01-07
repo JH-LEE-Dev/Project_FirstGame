@@ -14,6 +14,8 @@ using Range = UnityEngine.RangeAttribute;
 public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private CardDataInstance cardData;
+    public CardDataInstance CardData => cardData;
+
 
     private HandSystem handSystem;
 

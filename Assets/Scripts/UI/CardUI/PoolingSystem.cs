@@ -4,7 +4,6 @@ using UnityEngine;
 public class PoolingSystem : MonoBehaviour
 {
     UIView_CardSystem cardSystem;
-    HandSystem handSystem;
 
 
     [Header("Prefab & Root")]
@@ -26,10 +25,9 @@ public class PoolingSystem : MonoBehaviour
 
     }
 
-    public void Init(UIView_CardSystem owner, HandSystem _handSystem)
+    public void Init(UIView_CardSystem owner)
     {
         cardSystem = owner;
-        handSystem = _handSystem;
         cardPooling();
     }
 
@@ -42,7 +40,7 @@ public class PoolingSystem : MonoBehaviour
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(handSystem);
+            card.Initialize(cardSystem.HandSystem);
             inactiveHandPool.Add(card);
 
         }
@@ -54,7 +52,7 @@ public class PoolingSystem : MonoBehaviour
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(handSystem);
+            card.Initialize(cardSystem.HandSystem);
             otherCardPool.Add(card);
         }
     }
