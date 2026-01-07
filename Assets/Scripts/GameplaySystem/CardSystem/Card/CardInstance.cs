@@ -145,4 +145,10 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         targetPos = (Vector2)tp;
         targetAngleZ = angleZ;
     }
+
+    public void KillHover()
+    {
+        hoverTween?.Kill();
+        transform.localScale = originScale;
+    }
 }
