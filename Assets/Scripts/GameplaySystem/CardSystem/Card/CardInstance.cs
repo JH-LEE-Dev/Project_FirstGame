@@ -15,6 +15,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     private CardDataInstance cardData;
 
+
+
+
     // YW
 
     public UIView_CardSystem cardSystem;
@@ -44,7 +47,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] float floatPhaseRandom = 1f; // 카드마다 위상 차이
     float floatPhase;
 
-    public bool inHand = true;
+    public bool inHand;
 
     /// ////////////////
 
@@ -68,17 +71,23 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(CardDataInstance _cardData)
+    public void Initialize(UIView_CardSystem _cardSystem)
+    {
+        cardSystem = _cardSystem;
+        inHand = false;
+    }
+
+    public void ApplyData(CardDataInstance _cardData)
     {
         cardData = _cardData;
     }
 
-
-    // UIView_CardSystem을 받아옴. (패 매니저)
-    public void SetMaker(UIView_CardSystem cs)
+    public void Clear()
     {
-        cardSystem = cs;
+        cardData = null;
     }
+
+    //////////////////////// 연출
 
     // 호버 ON
     public void OnPointerEnter(PointerEventData eventData)

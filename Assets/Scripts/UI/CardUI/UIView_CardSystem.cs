@@ -7,11 +7,11 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    // 신경 쓰지 말기
     public event Action TurnFinishedEvent;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
-    [SerializeField] private GameObject cardUIPrefab;
     [Space]
     [SerializeField] private TMP_Text deckCntText;
     [SerializeField] private TMP_Text graveCntText;
@@ -19,19 +19,39 @@ public class UIView_CardSystem : UIView
     [Space]
     [Header("Buttons")]
     [SerializeField] private Button turnFinishedButton;
+    ////////////
 
+
+
+    // 패 기능
     [Header("References")]
     [SerializeField] private RectTransform handRoot;
-    [SerializeField] private List<CardInstance> cards = new();
-
-
     [Header("Arc Settings")]
     [SerializeField] private float radius = 2000f;
     [SerializeField] private float minArcAngle = 0f;
     [SerializeField] private float maxArcAngle = 20f;
     [SerializeField] private float hoverGapWeight = 0.3f;
-
     private int hoveredIndex = -1;
+    // 실제 나의 패
+    [SerializeField] private List<CardInstance> cards = new();
+
+
+
+
+    // for System
+    [Header("Pooling")]
+    // 카드 기본 프리팹
+    [SerializeField] private GameObject cardUIPrefab;
+
+    // 비활성중인 패
+    [SerializeField] private List<CardInstance> inactiveHandPool = new();
+    // 활성중인 패
+    [SerializeField] private List<CardInstance> activeHandCards = new();
+    private int maxHandPool = 20;
+
+    // 소멸, 웜홀, 덱
+    [SerializeField] private List<CardInstance> otherCardPool = new();
+    private int maxOtherCardPool = 50;
 
 
     protected override void Awake()
@@ -42,13 +62,122 @@ public class UIView_CardSystem : UIView
 
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
+
+        cardPooling();
+
     }
+
+    private void cardPooling()
+    {
+        // hands
+        for (int i = 0; i < maxHandPool; ++i)
+        {
+            GameObject go = Instantiate(cardUIPrefab, this.transform);
+            CardInstance card = go.GetComponent<CardInstance>();
+            card.gameObject.SetActive(false);
+
+            card.Initialize(this);
+            inactiveHandPool.Add(card);
+
+        }
+
+        // other
+        for (int i = 0; i < maxOtherCardPool; ++i)
+        {
+            GameObject go = Instantiate(cardUIPrefab, this.transform);
+            CardInstance card = go.GetComponent<CardInstance>();
+            card.gameObject.SetActive(false);
+
+            card.Initialize(this);
+            otherCardPool.Add(card);
+        }
+    }
+
+    public void GetDeckCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    public void GetWormholeCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    public void GetExtinctionCards()
+    {
+        List<CardDataInstance> temp;
+
+        // 수정 요망
+    }
+
+    // 카드 드로우 (패 입성)
+    public void CardDrawed(List<CardDataInstance> cardDataPile)
+    {
+        foreach (var data in cardDataPile)
+        {
+            if (inactiveHandPool.Count <= 0) return;
+
+            // 앞에서 부터 사용.
+            CardInstance card = inactiveHandPool[0];
+            inactiveHandPool.RemoveAt(0);
+
+            //card.gameObject.SetActive(true);
+            card.ApplyData(data);
+
+            activeHandCards.Add(card);
+        }
+
+        SetText();
+    }
+
+    // 전체 초기화
+    public void ReleaseAllHand()
+    {
+        foreach (var card in activeHandCards)
+        {
+            card.Clear();
+            //card.gameObject.SetActive(false);
+            inactiveHandPool.Add(card);
+        }
+
+        activeHandCards.Clear();
+    }
+
+    // 하나 제거
+    public void ReleaseHandAt(int index)
+    {
+        if (index < 0 || index >= activeHandCards.Count)
+            return;
+
+        CardInstance card = activeHandCards[index];
+        activeHandCards.RemoveAt(index);
+
+        card.Clear();
+        //card.gameObject.SetActive(false);
+
+        inactiveHandPool.Add(card);
+    }
+
+    private void SetText()
+    {
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
+        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCnt.ToString();
+    }
+
+
+
+
 
     protected override void OnShow()
     {
         base.OnShow();
 
-        computeArc();
+        //computeArc();
 
         SetText();
     }
@@ -63,107 +192,8 @@ public class UIView_CardSystem : UIView
 
     }
 
-    private void SetText()
-    {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
-        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCnt.ToString();
-    }
+    // 수정 요망
 
-    // 호버 ON (카드 약간 벌어짐)
-    public void OnCardHoverEnter(CardInstance card)
-    {
-        hoveredIndex = cards.IndexOf(card);
-
-        computeArc();
-    }
-
-    // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
-    public void OnCardHoverExit(CardInstance card)
-    {
-        int idx = cards.IndexOf(card);
-        if (idx == hoveredIndex) hoveredIndex = -1;
-
-        computeArc();
-    }
-
-    /*수정 요망*/
-    public void CardDrawed(List<CardDataInstance> cardDataPile)
-    {
-        //cardInstance.gameObject.SetActive(true);
-        //cardInstance.GetComponent<RectTransform>().SetParent(this.transform, false);
-        //cardInstance.CardUsedEvent -= CardUsed;
-        //cardInstance.CardUsedEvent += CardUsed;
-
-
-        // cards 
-        //cards.Add(cardInstance);
-
-        // ★상우★ 일단 여기에 카드가 Active 시작되는 위치.
-        //RectTransform rt = cardInstance.GetComponent<RectTransform>();
-        // rt.anchoredPosition = new Vector2(300f, -150f);
-
-        // ★정현★ 패 매니저를 카드에게 참조시킨다. 
-        //cardInstance.SetMaker(this);
-        //computeArc();
-
-        SetText();
-    }
-
-    // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
-    public void computeArc()
-    {
-        int n = cards.Count;
-        if (n <= 0) return;
-
-        Vector2 basePos = handRoot.anchoredPosition;
-
-        // 1장이면 중앙 고정
-        if (n == 1)
-        {
-            cards[0].UpdateTargetPos(basePos, 0f);
-            return;
-        }
-
-        float t = Mathf.InverseLerp(0f, 12f, n);
-        float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
-
-        float angleStep = arcAngle / Mathf.Max(1, n - 1);
-        float startAngle = -arcAngle * 0.5f;
-
-        for (int i = 0; i < n; i++)
-        {
-            float offset = 0f;
-
-            if (hoveredIndex >= 0 && hoverGapWeight > 0f)
-            {
-                if (i > hoveredIndex)
-                    offset += hoverGapWeight;
-                else if (i < hoveredIndex)
-                    offset -= hoverGapWeight;
-
-                if (hoveredIndex == 0 && i > hoveredIndex)
-                    offset -= hoverGapWeight * 0.5f;
-
-                if (hoveredIndex == n - 1 && i < hoveredIndex)
-                    offset += hoverGapWeight * 0.5f;
-            }
-
-            float angle = startAngle + angleStep * (i + offset);
-            float rad = angle * Mathf.Deg2Rad;
-
-            Vector2 pos = basePos + new Vector2(
-                Mathf.Sin(rad) * radius,
-                (Mathf.Cos(rad) - 1f) * radius
-            );
-
-            float tiltZ = -angle * 0.8f;
-
-            cards[i].UpdateTargetPos(pos, tiltZ);
-        }
-    }
-
-    /*수정 요망*/
     public void CardUsed(CardDataInstance usedCard)
     {
         if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
@@ -171,7 +201,7 @@ public class UIView_CardSystem : UIView
 
         //usedCard.gameObject.SetActive(false);
         //cards.Remove(usedCard);
-        computeArc();
+        //computeArc();
         graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
 
@@ -187,16 +217,16 @@ public class UIView_CardSystem : UIView
 
     public void ClearAllCards()
     {
-        for(int i = 0; i < cards.Count;++i)
-        {
-            RectTransform card = cards[i].GetComponent<RectTransform>();
+        //for(int i = 0; i < cards.Count;++i)
+        //{
+        //    RectTransform card = cards[i].GetComponent<RectTransform>();
 
-            card.localPosition = new Vector3(-1000,-1000,card.localPosition.z);
-        }
+        //    card.localPosition = new Vector3(-1000,-1000,card.localPosition.z);
+        //}
 
-        cards.Clear();
+        //cards.Clear();
 
-        computeArc();
+        //computeArc();
     }
 
     public void CardDrawFinished()
@@ -213,4 +243,27 @@ public class UIView_CardSystem : UIView
     {
         handRoot.gameObject.SetActive(true);
     }
+
+
+
+
+
+    // 호버 ON (카드 약간 벌어짐)
+    public void OnCardHoverEnter(CardInstance card)
+    {
+        hoveredIndex = cards.IndexOf(card);
+
+        //computeArc();
+    }
+
+    // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
+    public void OnCardHoverExit(CardInstance card)
+    {
+        int idx = cards.IndexOf(card);
+        if (idx == hoveredIndex) hoveredIndex = -1;
+
+        //computeArc();
+    }
+
+
 }
