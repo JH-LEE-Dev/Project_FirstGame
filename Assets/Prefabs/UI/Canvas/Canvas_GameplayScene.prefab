@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1108041376251214764}
   - component: {fileID: 5956430147093206247}
   - component: {fileID: 1003888638118372207}
-  - component: {fileID: 4742481448763746951}
+  - component: {fileID: 2084279323363629050}
   m_Layer: 5
   m_Name: Canvas_GameplayScene
   m_TagString: Untagged
@@ -48,7 +48,7 @@ Canvas:
   m_GameObject: {fileID: 2252223581660313642}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4742481448763746951
+--- !u!114 &2084279323363629050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

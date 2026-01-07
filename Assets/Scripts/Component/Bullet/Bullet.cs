@@ -20,7 +20,10 @@ public class Bullet : MonoBehaviour
     private Vector2 flyDir;
     private Vector2 prevPosition;
 
-    bool bFired = false;
+    private bool bFired = false;
+
+    private int currentEffectSlotCnt = 0;
+    private int effectSlotCnt = 2;
 
     private void Awake()
     {
