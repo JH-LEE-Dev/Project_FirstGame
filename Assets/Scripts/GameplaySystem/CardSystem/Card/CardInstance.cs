@@ -11,13 +11,12 @@ using Range = UnityEngine.RangeAttribute;
 
 
 
-public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private CardDataInstance cardData;
 
+    private HandSystem handSystem;
 
-    // YW
-    public HandSystem handSystem;
 
 
     // Hover
@@ -38,7 +37,25 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] float rotateLerp = 18f;   // 회전 추종 속도
     [SerializeField] float snapDist = 0.05f;   // 미세 떨림 제거용
 
-    public bool inHand;
+    private bool inHand;
+    public bool bInHand => inHand;
+    public void EnterHand()
+    {
+        if (inHand) return;
+
+        inHand = true;
+        velocity = Vector2.zero;
+    }
+
+    public void ExitHand()
+    {
+        if (!inHand) return;
+
+        inHand = false;
+        velocity = Vector2.zero;
+        KillHover();
+        transform.localScale = originScale; // 수정 필요.
+    }
 
     /// ////////////////
 
@@ -52,6 +69,11 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
     }
+    public void Initialize(HandSystem _handSystem)
+    {
+        handSystem = _handSystem;
+        inHand = false;
+    }
 
     void Update()
     {
@@ -61,11 +83,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(HandSystem _handSystem)
-    {
-        handSystem = _handSystem;
-        inHand = false;
-    }
 
     public void ApplyData(CardDataInstance _cardData)
     {
@@ -78,31 +95,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     //////////////////////// 연출
-
-    // 호버 ON
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        handSystem?.OnCardHoverEnter(this);
-
-
-        hoverTween?.Kill();
-        hoverTween = transform.DOScale(originScale * hoverScale, duration)
-            .SetEase(Ease.OutBack)
-            .SetUpdate(true);
-    }
-
-    // 호버 OFF
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        handSystem?.OnCardHoverExit(this);
-
-
-        hoverTween?.Kill();
-        hoverTween = transform.DOScale(originScale, duration)
-            .SetEase(Ease.OutBack)
-            .SetUpdate(true);
-    }
-
 
     public void InHand()
     {
@@ -150,5 +142,54 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         hoverTween?.Kill();
         transform.localScale = originScale;
+    }
+
+
+
+    // 입력
+
+    // 호버 ON
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        handSystem?.OnCardHoverEnter(this);
+
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(originScale * hoverScale, duration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // 호버 OFF
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        handSystem?.OnCardHoverExit(this);
+
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(originScale, duration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // 클릭
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!handSystem.IscanAction) return;
+
+        // 마우스 우클릭
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            handSystem.UseCard(this);
+        }
+
+        // 마우스 좌클릭
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            // 임시
+            handSystem.UseCard(this);
+
+            // 확대 및 옵션 연출 해야함.
+        }
     }
 }
