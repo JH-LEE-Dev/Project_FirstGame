@@ -16,10 +16,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private CardDataInstance cardData;
     public CardDataInstance CardData => cardData;
 
-
-    private HandSystem handSystem;
-
-
+    private UIView_CardSystem cardSystem;
 
     // Hover
     [SerializeField] public float hoverScale = 1.3f;
@@ -71,9 +68,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
     }
-    public void Initialize(HandSystem _handSystem)
+    public void Initialize(UIView_CardSystem _cardSystem)
     {
-        handSystem = _handSystem;
+        cardSystem = _cardSystem;
         inHand = false;
     }
 
@@ -153,7 +150,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 호버 ON
     public void OnPointerEnter(PointerEventData eventData)
     {
-        handSystem?.OnCardHoverEnter(this);
+        cardSystem?.OnCardHoverEnter(this);
 
 
         hoverTween?.Kill();
@@ -165,7 +162,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 호버 OFF
     public void OnPointerExit(PointerEventData eventData)
     {
-        handSystem?.OnCardHoverExit(this);
+        cardSystem?.OnCardHoverExit(this);
 
 
         hoverTween?.Kill();
@@ -177,19 +174,20 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 클릭
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!handSystem.IscanAction) return;
+        // 상우 : 뽑는 연출 중에는 모든 카드를 사용할 수 없게 해줘
+
 
         // 마우스 우클릭
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            handSystem.UseCard(this);
+            cardSystem.UseCard(this);
         }
 
         // 마우스 좌클릭
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             // 임시
-            handSystem.UseCard(this);
+            cardSystem.UseCard(this);
 
             // 확대 및 옵션 연출 해야함.
         }

@@ -40,7 +40,7 @@ public class PoolingSystem : MonoBehaviour
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(cardSystem.HandSystem);
+            card.Initialize(cardSystem);
             inactiveHandPool.Add(card);
 
         }
@@ -52,7 +52,7 @@ public class PoolingSystem : MonoBehaviour
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(cardSystem.HandSystem);
+            card.Initialize(cardSystem);
             otherCardPool.Add(card);
         }
     }
