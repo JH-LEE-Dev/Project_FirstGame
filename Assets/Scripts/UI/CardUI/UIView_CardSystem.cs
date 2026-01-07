@@ -9,6 +9,7 @@ public class UIView_CardSystem : UIView
 {
     // 신경 쓰지 말기
     public event Action TurnFinishedEvent;
+    public event Action<CardDataInstance> CardUsedEvent;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -79,8 +80,7 @@ public class UIView_CardSystem : UIView
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
-        //if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
-        //    return;
+        CardUsedEvent?.Invoke(_card.CardData);
 
         // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
         handSystem?.TryUseCard(_card);
@@ -170,17 +170,6 @@ public class UIView_CardSystem : UIView
     public void RenderUI()
     {
 
-    }
-
-    public void CardUsed(CardDataInstance usedCard)
-    {
-        //if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
-        //    return;
-
-        //usedCard.gameObject.SetActive(false);
-        //cards.Remove(usedCard);
-        //computeArc();
-        //graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
 
     public void CardUsingFinished()
