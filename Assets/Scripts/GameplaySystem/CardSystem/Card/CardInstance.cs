@@ -16,11 +16,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private CardDataInstance cardData;
 
 
-
-
     // YW
+    public HandSystem handSystem;
 
-    public UIView_CardSystem cardSystem;
 
     // Hover
     [SerializeField] public float hoverScale = 1.3f;
@@ -40,13 +38,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] float rotateLerp = 18f;   // 회전 추종 속도
     [SerializeField] float snapDist = 0.05f;   // 미세 떨림 제거용
 
-
-    [Header("Float")]
-    [SerializeField] float floatAmplitude = 6f;   // 픽셀 단위 (아주 작게!)
-    [SerializeField] float floatSpeed = 1.2f;     // 느리게
-    [SerializeField] float floatPhaseRandom = 1f; // 카드마다 위상 차이
-    float floatPhase;
-
     public bool inHand;
 
     /// ////////////////
@@ -60,7 +51,6 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // DoTween 움직임을 위한 변수들
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
-        floatPhase = Random.value * Mathf.PI * 2f * floatPhaseRandom;
     }
 
     void Update()
@@ -71,9 +61,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     }
 
-    public void Initialize(UIView_CardSystem _cardSystem)
+    public void Initialize(HandSystem _handSystem)
     {
-        cardSystem = _cardSystem;
+        handSystem = _handSystem;
         inHand = false;
     }
 
@@ -92,7 +82,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 호버 ON
     public void OnPointerEnter(PointerEventData eventData)
     {
-        cardSystem?.OnCardHoverEnter(this);
+        handSystem?.OnCardHoverEnter(this);
 
 
         hoverTween?.Kill();
@@ -104,7 +94,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     // 호버 OFF
     public void OnPointerExit(PointerEventData eventData)
     {
-        cardSystem?.OnCardHoverExit(this);
+        handSystem?.OnCardHoverExit(this);
 
 
         hoverTween?.Kill();
