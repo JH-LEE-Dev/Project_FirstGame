@@ -330,7 +330,7 @@ MonoBehaviour:
   deckSystem: {fileID: 4229179034747352173}
   drawPathPoints:
   - {fileID: 4997572091456650835}
-  drawEndPoint: {fileID: 5082536235293513785}
+  drawEndPoint: {fileID: 2558692794718500451}
 --- !u!1 &4436074875557835048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,7 +1140,8 @@ PrefabInstance:
       value: DeckSystem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3985930604425416069, guid: c951083fd26865445939431699493136, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c951083fd26865445939431699493136, type: 3}
@@ -1158,11 +1159,6 @@ MonoBehaviour:
 --- !u!224 &4997572091456650835 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4924247403232587697, guid: c951083fd26865445939431699493136, type: 3}
-  m_PrefabInstance: {fileID: 75577932398760418}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &5082536235293513785 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5153325777231808987, guid: c951083fd26865445939431699493136, type: 3}
   m_PrefabInstance: {fileID: 75577932398760418}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &5199692094062942720 stripped

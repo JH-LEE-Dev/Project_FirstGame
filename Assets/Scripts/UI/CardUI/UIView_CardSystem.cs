@@ -60,8 +60,6 @@ public class UIView_CardSystem : UIView
     {
         if(null != handSystem)
         {
-            Debug.Log("호출");
-
             drawEvent += handSystem.ProcessDraw;
         }
     }
@@ -137,22 +135,12 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        ////////////////////////////////////////// 임시
-        if (handSystem == null) return;
+        if (null == deckSystem)
+            return;
 
-        for (int i = 0; i < cardDataPile.Count; i++)
-        {
-            handSystem.ProcessDraw(new Vector2(0, -450f), cardDataPile[i]);
-        }
-        /////////////////////////////////////////////////
-
-
+        deckSystem.CardDrawEffect(cardDataPile);
         SetText();
     }
-
-
-
-
 
     /////////////////////////////////////////////////
 
