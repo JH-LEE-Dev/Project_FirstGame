@@ -32,7 +32,6 @@ public class UIView_CardSystem : UIView
 
     // 덱
     [Header("Deck Settings")]
-    [SerializeField] private GameObject deckPrefab = null;                  // 덱을 표현할 프리팹 ( 카드 뒷면 )
     [SerializeField] private List<RectTransform> drawPathPoints = new();    // 경로
     [SerializeField] private RectTransform drawEndPoint = null;             // 끝 지점 
     public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }    // 변수 값 얻기
@@ -47,11 +46,10 @@ public class UIView_CardSystem : UIView
 
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
-        
-        CreateCardsforNeedSystem();
 
         poolingSystem.Init(this, handSystem);
         handSystem.Init(this, poolingSystem);
+        deckSystem.Init(this, poolingSystem);
     }
 
     public void GetDeckCards()
@@ -79,17 +77,6 @@ public class UIView_CardSystem : UIView
     {
         handSystem.EnqueueDraw(cardDataPile);
         SetText();
-    }
-
-
-    private void CreateCardsforNeedSystem()
-    {
-        if (null != deckPrefab)
-        {
-            GameObject Deck = Instantiate(deckPrefab, this.transform);
-            deckSystem = Deck?.GetComponent<DeckSystem>();
-            deckSystem.Initialize(this);
-        }
     }
 
 

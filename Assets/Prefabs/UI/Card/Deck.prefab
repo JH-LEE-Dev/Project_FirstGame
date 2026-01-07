@@ -120,7 +120,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5270766083236416482}
-  - component: {fileID: 3527566122688614154}
   - component: {fileID: 4304753320680596879}
   m_Layer: 0
   m_Name: Deck
@@ -149,29 +148,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3527566122688614154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5863989176703220490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd15e503bd82a1a4582006b3e0a6760d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardInstance
-  cardSystem: {fileID: 0}
-  hoverScale: 1.3
-  duration: 0.15
-  followFreq: 18
-  followDamp: 0.85
-  rotateLerp: 18
-  snapDist: 0.05
-  floatAmplitude: 6
-  floatSpeed: 1.2
-  floatPhaseRandom: 1
-  inHand: 1
 --- !u!114 &4304753320680596879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,4 +163,9 @@ MonoBehaviour:
   wealthyRect: {fileID: 102396723257274795}
   cardBackRect: {fileID: 7900133915466477456}
   wealthyDuration: 1
+  wealthyAngle: 5
   wealthyEase: 1
+  drawDuration: 1
+  drawFirstPointDist: 2
+  drawMidPointPower: 2
+  drawEase: 6

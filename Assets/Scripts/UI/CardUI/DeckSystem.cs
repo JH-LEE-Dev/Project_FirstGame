@@ -12,6 +12,7 @@ public class DeckSystem : MonoBehaviour,
     public RectTransform wealthyRect = null;
     public RectTransform cardBackRect = null;
     private UIView_CardSystem cardSystem = null;
+    private PoolingSystem poolingSystem = null;
 
     [Header("Wealthy Settings")]
     [SerializeField] private float wealthyDuration = 1f;
@@ -45,9 +46,10 @@ public class DeckSystem : MonoBehaviour,
         cardBackRect.DOKill();
     }
 
-    public void Initialize(UIView_CardSystem _cardSystem)
+    public void Init(UIView_CardSystem _cardSystem, PoolingSystem _poolSystem)
     {
         cardSystem = _cardSystem;
+        poolingSystem = _poolSystem;
     }
 
     private void WealthyMotion()
