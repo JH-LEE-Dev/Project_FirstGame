@@ -244,4 +244,26 @@ public class UIView_CardSystem : UIView
         handRoot.gameObject.SetActive(true);
     }
 
+
+
+
+
+    // 호버 ON (카드 약간 벌어짐)
+    public void OnCardHoverEnter(CardInstance card)
+    {
+        hoveredIndex = cards.IndexOf(card);
+
+        //computeArc();
+    }
+
+    // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
+    public void OnCardHoverExit(CardInstance card)
+    {
+        int idx = cards.IndexOf(card);
+        if (idx == hoveredIndex) hoveredIndex = -1;
+
+        //computeArc();
+    }
+
+
 }
