@@ -44,6 +44,8 @@ public class UIInstaller : MonoBehaviour
         cardSystemProvider = _cardSystemProvider;
         gameController = _gameController;
 
+        uiManager.Initialize_GameplayScene(_cardSystemProvider);
+
         SetupUIElement();
 
         GS_PlayerTurnState playerTurnState = gameController.GetGameState<GS_PlayerTurnState>();
@@ -65,6 +67,7 @@ public class UIInstaller : MonoBehaviour
 
     public void Release_Gameplay()
     {
+        ReleaseDependency_GameplayScene();
         ReleaseEvent_Gameplay();
     }
 
@@ -222,5 +225,10 @@ public class UIInstaller : MonoBehaviour
         UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
 
         mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
+    }
+
+    public void ReleaseDependency_GameplayScene()
+    {
+        uiManager.ReleaseDependency_GameplayScene();
     }
 }

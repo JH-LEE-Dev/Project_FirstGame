@@ -11,7 +11,5 @@ public class CanvasSystem : MonoBehaviour
 
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
-
-        Debug.Log("Awake!");
     }
 }
