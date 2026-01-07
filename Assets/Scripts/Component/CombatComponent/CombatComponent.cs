@@ -52,6 +52,6 @@ public class CombatComponent : EntityComponent, ICombatEffectReceiver
 
     public void ApplyAttackModifier(float bonusDamage)
     {
-        throw new NotImplementedException();
+        Debug.Log("ApplyAttack!");
     }
 }
