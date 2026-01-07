@@ -25,6 +25,8 @@ public class UIView_CardSystem : UIView
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
+    [SerializeField] private ClickCatchSystem clickCatchSystem;
+
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
@@ -49,6 +51,7 @@ public class UIView_CardSystem : UIView
         poolingSystem?.Init(this);
         handSystem?.Init(this);
         deckSystem?.Init(this);
+        clickCatchSystem?.Init(this);
 
         BindingFunction();
     }
@@ -102,6 +105,10 @@ public class UIView_CardSystem : UIView
         handSystem?.OnCardHoverExit(_card);
     }
 
+    public void CancelPreview()
+    {
+        handSystem?.CancelPreview();
+    }
     /////////////////
 
 
