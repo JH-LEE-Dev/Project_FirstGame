@@ -236,5 +236,12 @@ public class HandSystem : MonoBehaviour
             layoutIndex++;
         }
 
+        SortZ_RightIsTop();
+    }
+
+    private void SortZ_RightIsTop()
+    {
+        for (int i = 0; i < cards.Count; i++)
+            cards[i].transform.SetAsLastSibling();
     }
 }
