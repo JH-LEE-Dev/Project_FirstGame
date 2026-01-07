@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PoolingSystem : MonoBehaviour
 {
-
     UIView_CardSystem cardSystem;
     HandSystem handSystem;
 

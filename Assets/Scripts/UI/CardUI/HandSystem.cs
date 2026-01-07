@@ -24,9 +24,10 @@ public class HandSystem : MonoBehaviour
     private float drawTimer;
 
 
-    public void Init(UIView_CardSystem cardSystem)
+    public void Init(UIView_CardSystem _cardSystem, PoolingSystem _poolingSystem)
     {
-        owner = cardSystem;
+        owner = _cardSystem;
+        poolingSystem = _poolingSystem;
     }
 
     public void EnqueueDraw(List<CardDataInstance> datas)
