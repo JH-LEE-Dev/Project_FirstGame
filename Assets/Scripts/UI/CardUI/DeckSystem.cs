@@ -46,7 +46,6 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
-    private bool bPlayingUpEvent = false;
     private bool bHoveringEvent = false;
 
     private Sequence wealthySeq = null;
@@ -200,19 +199,18 @@ public class DeckSystem : MonoBehaviour,
             .SetEase(upEventEase)
             .OnComplete(() =>
             {
-                bPlayingUpEvent = false;
                 topRect.localRotation = originQuat;
 
                 if (!bHoveringEvent)
                     ExitEvent();
             }));
 
-        bPlayingUpEvent = true;
+        cardSystem?.CallCardPannel(true);
     }
 
     public void CallOneCardDrawCompleted(Vector3 _endPos, CardDataInstance _data, GameObject _performer)
     {
-        cardSystem?.drawEvent.Invoke(_endPos, _data);
+        cardSystem?.DrawEvent.Invoke(_endPos, _data);
         drawEffectParticle.Release(_performer);
     }
 
