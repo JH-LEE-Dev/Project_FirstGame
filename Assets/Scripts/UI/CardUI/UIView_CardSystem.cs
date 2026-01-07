@@ -7,8 +7,6 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
-
-
     // 신경 쓰지 말기
     public event Action TurnFinishedEvent;
 
@@ -29,7 +27,7 @@ public class UIView_CardSystem : UIView
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private HandSystem handSystem;
-    // [SerializeField] private DeckSystem deckSystem;
+    [SerializeField] private DeckSystem deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
     // 덱
@@ -84,13 +82,15 @@ public class UIView_CardSystem : UIView
     }
 
 
-
-
-
-
-
-
-
+    private void CreateCardsforNeedSystem()
+    {
+        if (null != deckPrefab)
+        {
+            GameObject Deck = Instantiate(deckPrefab, this.transform);
+            deckSystem = Deck?.GetComponent<DeckSystem>();
+            deckSystem.Initialize(this);
+        }
+    }
 
 
 
