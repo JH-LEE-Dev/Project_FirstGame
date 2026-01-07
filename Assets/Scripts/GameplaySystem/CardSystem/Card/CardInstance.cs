@@ -18,31 +18,47 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private UIView_CardSystem cardSystem;
 
-    // Hover
-    [SerializeField] public float hoverScale = 1.3f;
-    [SerializeField] public float duration = 0.15f;
-    private Tween hoverTween;
-    private Vector3 originScale;
-    Vector2 velocity; // 스프링 속도(내부 상태)
-
     RectTransform rt;
 
-    // position
+    [Header("MainMoving")]
     Vector2 targetPos;
     float targetAngleZ;
-
     [SerializeField] float followFreq = 18f;
     [SerializeField, Range(0f, 1.2f)] float followDamp = 0.85f;
     [SerializeField] float rotateLerp = 18f;   // 회전 추종 속도
     [SerializeField] float snapDist = 0.05f;   // 미세 떨림 제거용
 
 
-    // Preview
+    [Header("Hover")]
+    [SerializeField] public float hoverScale = 1.3f;
+    [SerializeField] public float duration = 0.15f;
+    private Tween hoverTween;
+    private Vector3 originScale;
+    Vector2 velocity; // 스프링 속도(내부 상태)
+
+
+    [Header("Preview")]
     [SerializeField] private bool ignoreHandLayout = false; // 프리뷰 중이면 true
-    public bool IgnoreHandLayout => ignoreHandLayout;
+    [SerializeField] private float previewScale = 3f;
+    [SerializeField] private float previewMoveDuration = 0.3f;
+    [SerializeField] private float previewScaleDuration = 0.3f;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
     private Tween previewRotateTween;
+    [SerializeField] private float previewEndScaleDur = 0.5f;
+    private Tween previewEndScaleTween;
+
+    [Header("Visual")]
+    private Vector2 visualBaseLocalPos;
+    private float seed;
+    [SerializeField] private RectTransform visual;
+    [SerializeField] private float handFloatPosAmp = 1f;
+    [SerializeField] private float handFloatRotAmp = 0.3f;
+    [SerializeField] private float handFloatFreq = 0.4f;
+    [SerializeField] private float previewFloatPosAmp = 0.5f;
+    [SerializeField] private float previewFloatRotAmp = 0.15f;
+    [SerializeField] private float previewFloatFreq = 0.2f;
+
 
     public void EnterHand()
     {
@@ -65,10 +81,13 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         rt = GetComponent<RectTransform>();
 
-
-        // DoTween 움직임을 위한 변수들
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
+
+        if (visual != null)
+            visualBaseLocalPos = visual.anchoredPosition;
+
+        seed = Random.Range(0f, 1000f); // 카드마다 흔들림 타이밍이 다르게
     }
     public void Initialize(UIView_CardSystem _cardSystem)
     {
@@ -77,10 +96,10 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     void Update()
     {
-
         // 패에 있을 때, 연출
         InHand();
 
+        Floating();
     }
 
 
@@ -128,8 +147,49 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         );
 
         rt.localRotation = Quaternion.Euler(0, 0, z);
+    }
 
-        ///
+    private void Floating()
+    {
+        if (visual == null) return;
+
+        if (ignoreHandLayout) PreviewFloating();
+        else HandFloating();
+    }
+
+    private void HandFloating()
+    {
+        float t = Time.unscaledTime + seed;
+
+        float posAmp = handFloatPosAmp;
+        float rotAmp = handFloatRotAmp;
+        float w = handFloatFreq * Mathf.PI * 2f;
+
+        // 좌, 상하
+        float x = Mathf.Sin(t * w) * posAmp;
+        float y = Mathf.Cos(t * w * 1.13f) * (posAmp * 0.8f);
+
+        // 미세한 Z회전
+        float rz = Mathf.Sin(t * w * 0.9f) * rotAmp;
+
+        visual.anchoredPosition = visualBaseLocalPos + new Vector2(x, y);
+        visual.localRotation = Quaternion.Euler(0f, 0f, rz);
+    }
+
+    private void PreviewFloating()
+    {
+        float t = Time.unscaledTime + seed;
+
+        float posAmp = previewFloatPosAmp;
+        float rotAmp = previewFloatRotAmp;
+        float w = previewFloatFreq * Mathf.PI * 2f;
+
+        float x = Mathf.Sin(t * w) * posAmp;
+        float y = Mathf.Cos(t * w * 1.07f) * (posAmp * 0.8f);
+        float rz = Mathf.Sin(t * w * 0.85f) * rotAmp;
+
+        visual.anchoredPosition = visualBaseLocalPos + new Vector2(x, y);
+        visual.localRotation = Quaternion.Euler(0f, 0f, rz);
     }
 
     public void UpdateTargetPos(Vector3 tp, float angleZ)
@@ -145,7 +205,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     // 프리뷰 시작
-    public void StartPreview(Vector2 centerPos, float scale, float moveDur, float scaleDur)
+    public void StartPreview(Vector2 centerPos)
     {
         ignoreHandLayout = true;
 
@@ -156,18 +216,17 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         previewScaleTween?.Kill();
         previewRotateTween?.Kill();
 
-
-        previewMoveTween = rt.DOAnchorPos(centerPos, moveDur)
+        previewMoveTween = rt.DOAnchorPos(centerPos, previewMoveDuration)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true);
 
-        previewScaleTween = transform.DOScale(originScale * scale, scaleDur)
+        previewScaleTween = transform.DOScale(originScale * previewScale, previewScaleDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
 
         targetAngleZ = 0f;
 
-        previewRotateTween = rt.DOLocalRotate(Vector3.zero, moveDur)
+        previewRotateTween = rt.DOLocalRotate(Vector3.zero, previewMoveDuration)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true);
     }
@@ -180,8 +239,15 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         previewMoveTween?.Kill();
         previewScaleTween?.Kill();
         previewRotateTween?.Kill();
+        hoverTween?.Kill();
 
-        transform.localScale = originScale;
+        velocity = Vector2.zero;
+
+        previewEndScaleTween?.Kill();
+        previewEndScaleTween = transform.DOScale(originScale, previewEndScaleDur)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
+
     }
 
 
@@ -237,4 +303,5 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             return;
         }
     }
+
 }
