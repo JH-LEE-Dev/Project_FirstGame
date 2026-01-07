@@ -32,11 +32,10 @@ public class UIView_CardSystem : UIView
 
     // 덱
     [Header("Deck Settings")]
-    [SerializeField] private List<RectTransform> drawPathPoints = new();    // 경로
-    [SerializeField] private RectTransform drawEndPoint = null;             // 끝 지점 
-    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }    // 변수 값 얻기
+    [SerializeField] private List<RectTransform> drawPathPoints = new();
+    [SerializeField] private RectTransform drawEndPoint = null;
+    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
     public RectTransform DrawEndPoint { get { return drawEndPoint; } }
-
 
     protected override void Awake()
     {
@@ -50,6 +49,16 @@ public class UIView_CardSystem : UIView
         poolingSystem?.Init(this);
         handSystem?.Init(this);
         deckSystem?.Init(this);
+
+        BindingFunction();
+    }
+
+    private void BindingFunction()
+    {
+        if(null != handSystem)
+        {
+            drawEvent += handSystem.ProcessDraw;
+        }
     }
 
     // For PoolingSystem
@@ -62,13 +71,6 @@ public class UIView_CardSystem : UIView
         poolingSystem?.ReturnHandCard(card);
     }
 
-
-    // For HandSystem
-    public void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
-    {
-        handSystem?.ProcessDraw(_cardSpawnPos, _cardData);
-    }
-
     public void UseCard(CardInstance _card)
     {
         if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
@@ -76,11 +78,6 @@ public class UIView_CardSystem : UIView
 
         handSystem?.UseCard(_card);
     }
-
-
-
-
-
 
     public void GetDeckCards()
     {

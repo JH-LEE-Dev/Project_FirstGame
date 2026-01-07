@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f644eca35f63a49be56c1be9c607b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
+  drawEffectPrefab: {fileID: 599737310554635610, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
   wealthyRect: {fileID: 102396723257274795}
   cardBackRect: {fileID: 7900133915466477456}
   wealthyDuration: 1
@@ -169,3 +170,13 @@ MonoBehaviour:
   drawFirstPointDist: 2
   drawMidPointPower: 2
   drawEase: 6
+  enterEventDuration: 0.4
+  enterEventSizeMulti: 1.15
+  enterEventEase: 18
+  exitEventDuration: 0.4
+  exitEventEase: 18
+  downEventDuration: 0.4
+  downEventEase: 18
+  upEventDuration: 0.4
+  upEventPunchPower: {x: 0, y: 0, z: 0}
+  upEventEase: 18

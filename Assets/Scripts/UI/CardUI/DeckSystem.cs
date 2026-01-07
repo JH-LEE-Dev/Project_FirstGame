@@ -9,6 +9,7 @@ public class DeckSystem : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [Header("Main Binding")]
+    public GameObject drawEffectPrefab = null;
     public RectTransform wealthyRect = null;
     public RectTransform cardBackRect = null;
     private RectTransform topRect = null;
@@ -60,6 +61,18 @@ public class DeckSystem : MonoBehaviour,
 
         originScale = topRect.localScale;
         originQuat = topRect.localRotation;
+
+        drawEffectParticle = new ObjectPool<GameObject>(
+            createFunc: CreateDrawEffect,
+            actionOnGet: ActivateDrawEffect,
+            actionOnRelease: DeActivateDrawEffect,
+            actionOnDestroy: DestroyPoolObj,
+            maxSize: 15);
+
+        for (int i = 0; i < 15; ++i)
+        {
+            drawEffectParticle.Get();
+        }
     }
 
     private void Start()
@@ -95,7 +108,7 @@ public class DeckSystem : MonoBehaviour,
         wealthySeq.SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void CardDrawEffect()
+    private void CardDrawEffect(List<CardDataInstance> dataList)
     {
         if (null == cardSystem)
         {
@@ -177,6 +190,29 @@ public class DeckSystem : MonoBehaviour,
             }));
 
         bPlayingUpEvent = true;
+    }
+
+    private GameObject CreateDrawEffect()
+    {
+        GameObject newObj = Instantiate(drawEffectPrefab, transform.position, Quaternion.identity);
+        newObj.SetActive(false);
+
+        return newObj;
+    }
+
+    private void DestroyPoolObj(GameObject obj)
+    {
+        Destroy(obj);
+    }
+
+    private void ActivateDrawEffect(GameObject obj)
+    {
+        obj?.SetActive(true);
+    }
+
+    private void DeActivateDrawEffect(GameObject obj)
+    {
+        obj?.SetActive(false);
     }
 
     public void OnPointerDown(PointerEventData _eventData)

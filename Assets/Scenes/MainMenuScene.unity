@@ -282,6 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1eb5730887bfa048a4f96924b17be9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BootStrap
+  bTempScene: 0
   gameInstaller_Prefab: {fileID: 8604905100499276182, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
 --- !u!4 &416587338
 Transform:
