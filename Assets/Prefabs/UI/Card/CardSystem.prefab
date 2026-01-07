@@ -930,11 +930,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: wealthyAngle
-      value: 2.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: wealthyDuration
-      value: 2
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
+      propertyPath: upEventPunchPower.z
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Pivot.x
