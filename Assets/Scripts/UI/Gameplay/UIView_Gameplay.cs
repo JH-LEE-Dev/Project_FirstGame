@@ -68,4 +68,9 @@ public class UIView_Gameplay : UIView
     {
         crosshairUI.SetActive(false);
     }
+
+    public override void OnDestroy()
+    {
+        viewCtx.inputManager.inputReader.PointerPositionEvent -= PointerMoved;
+    }
 }

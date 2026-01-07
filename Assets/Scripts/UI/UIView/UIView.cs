@@ -25,6 +25,11 @@ public abstract class UIView : MonoBehaviour
         }
     }
 
+    public virtual void OnDestroy()
+    {
+
+    }
+
     public virtual void Update()
     {
         

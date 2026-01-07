@@ -134,6 +134,7 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
 
     public void OnDestroy()
     {
+        gameRuleEventController.Release(characterUnit, gameController, cardSystemProvider);
         waveManager.SpawnWaveEvent -= SpawnWave;
     }
 

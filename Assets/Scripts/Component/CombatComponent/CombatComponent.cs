@@ -20,7 +20,7 @@ public class CombatComponent : EntityComponent, ICombatEffectReceiver
 
     protected override void OnDestroy()
     {
-
+        bulletObject.BulletEffectIsFinishedEvent -= BulletEffectIsFinished;
     }
 
     protected override void FixedUpdate()

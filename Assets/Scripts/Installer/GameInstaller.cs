@@ -46,7 +46,7 @@ public class GameInstaller : MonoBehaviour
 
     private void OnDestroy()
     {
-
+        cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
     }
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
