@@ -54,6 +54,13 @@ public enum CardName
     DrawAgain
 }
 
+public enum CardEffectApplyType
+{
+    Status,
+    System
+}
+
+
 public enum CardEffectType
 {
     BonusDamage,

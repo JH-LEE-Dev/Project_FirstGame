@@ -26,7 +26,16 @@ public class CardEffectManager : MonoBehaviour
 
         for(int i = 0; i < cardEffectTypes.Count; ++i)
         {
-            cardEffects[(int)cardEffectTypes[i]].Execute();
+            CardEffectStrategy effectStrategy = cardEffects[(int)cardEffectTypes[i]];
+
+            if(effectStrategy.GetCardEffectApplyType() == CardEffectApplyType.System)
+            {
+                cardLogicSystem.StrategyForwarding(effectStrategy);
+            }
+            else
+            {
+                effectStrategy.Execute_Status();
+            }
         }
     }
 }
