@@ -326,8 +326,9 @@ MonoBehaviour:
   poolingSystem: {fileID: 4063027610150049034}
   handSystem: {fileID: 6061865260737894705}
   deckSystem: {fileID: 4229179034747352173}
-  drawPathPoints: []
-  drawEndPoint: {fileID: 0}
+  drawPathPoints:
+  - {fileID: 4997572091456650835}
+  drawEndPoint: {fileID: 5082536235293513785}
 --- !u!1 &4436074875557835048
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,7 +916,6 @@ MonoBehaviour:
   maxArcAngle: 20
   hoverGapWeight: 0.3
   cards: []
-  drawStagger: 0.06
 --- !u!1001 &75577932398760418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -924,22 +924,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9155673763916870877}
     m_Modifications:
-    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
-      propertyPath: wealthyEase
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
-      propertyPath: wealthyAngle
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
-      propertyPath: wealthyDuration
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
-      propertyPath: upEventPunchPower.z
-      value: 2.5
-      objectReference: {fileID: 0}
     - target: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1024,8 +1008,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeckSystem
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3527566122688614154, guid: c951083fd26865445939431699493136, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1041,6 +1024,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f644eca35f63a49be56c1be9c607b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
+--- !u!224 &4997572091456650835 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4924247403232587697, guid: c951083fd26865445939431699493136, type: 3}
+  m_PrefabInstance: {fileID: 75577932398760418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5082536235293513785 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5153325777231808987, guid: c951083fd26865445939431699493136, type: 3}
+  m_PrefabInstance: {fileID: 75577932398760418}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5199692094062942720 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}

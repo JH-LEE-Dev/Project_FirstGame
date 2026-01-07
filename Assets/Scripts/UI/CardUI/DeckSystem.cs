@@ -21,6 +21,7 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Ease wealthyEase = Ease.Linear;
 
     [Header("Draw Effect Settings")]
+    [SerializeField] private float drawDelay = 0.15f;
     [SerializeField] private float drawDuration = 1f;
     [SerializeField] private float drawFirstPointDist = 2f;
     [SerializeField] private float drawMidPointPower = 2f;
@@ -71,7 +72,8 @@ public class DeckSystem : MonoBehaviour,
 
         for (int i = 0; i < 15; ++i)
         {
-            drawEffectParticle.Get();
+            GameObject newObj = drawEffectParticle.Get();
+            drawEffectParticle.Release(newObj);
         }
     }
 
@@ -108,7 +110,7 @@ public class DeckSystem : MonoBehaviour,
         wealthySeq.SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void CardDrawEffect(List<CardDataInstance> dataList)
+    public void CardDrawEffect(List<CardDataInstance> dataList)
     {
         if (null == cardSystem)
         {
@@ -127,7 +129,17 @@ public class DeckSystem : MonoBehaviour,
 
         Vector3[] pathPoints = { firstPointPos, midPointPos, endPointPos };
 
-        // 파티클 풀링한 거 여기서 차례대로 꺼내서 위치 이동 시키기
+        int cnt = dataList.Count;
+        for (int i = 0; i < cnt; i++)
+        {
+            GameObject performer = drawEffectParticle.Get();
+            DrawEffect script = performer?.GetComponent<DrawEffect>();
+            if (null == script)
+                continue;
+
+            script.CardDataInstance = dataList[i];
+            script.PlayingDrawEvent(i * drawDelay, drawDuration, drawEase, pathPoints);
+        }
     }
 
     private void EnterEvent()
@@ -192,11 +204,15 @@ public class DeckSystem : MonoBehaviour,
         bPlayingUpEvent = true;
     }
 
+    public void CallOneCardDrawCompleted(Vector2 _endPos, CardDataInstance _data, GameObject _performer)
+    {
+        drawEffectParticle.Release(_performer);
+        cardSystem?.drawEvent.Invoke(_endPos, _data);
+    }
+
     private GameObject CreateDrawEffect()
     {
         GameObject newObj = Instantiate(drawEffectPrefab, transform.position, Quaternion.identity);
-        newObj.SetActive(false);
-
         return newObj;
     }
 

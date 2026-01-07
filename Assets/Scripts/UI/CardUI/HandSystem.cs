@@ -51,8 +51,10 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    public void ProcessDraw(Vector2 _cardSpawnPos, CardDataInstance _cardData)
+    public void ProcessDraw(Vector3 _cardSpawnPos, CardDataInstance _cardData)
     {
+        Debug.Log("호출");
+
         var card = cardSystem.RentHandCard();
         if (card == null) return;
 
@@ -65,7 +67,7 @@ public class HandSystem : MonoBehaviour
 
         // 덱 위치에서 시작시키기 (파다다닥 출발점)
         var rt = card.GetComponent<RectTransform>();
-        rt.anchoredPosition = _cardSpawnPos;
+        rt.position = _cardSpawnPos;
 
         cards.Add(card);
         computeArc();

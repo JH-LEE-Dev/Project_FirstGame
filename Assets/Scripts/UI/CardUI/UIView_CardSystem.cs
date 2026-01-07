@@ -21,7 +21,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
-    public Action<Vector2, CardDataInstance> drawEvent;
+    public Action<Vector3, CardDataInstance> drawEvent;
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
@@ -114,11 +114,9 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        
+        deckSystem?.CardDrawEffect(cardDataPile);
         SetText();
     }
-
-
 
     /////////////////////////////////////////////////
 
