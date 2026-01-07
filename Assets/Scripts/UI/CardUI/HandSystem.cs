@@ -76,6 +76,10 @@ public class HandSystem : MonoBehaviour
         drawTimer -= Time.unscaledDeltaTime;
         if (drawTimer > 0f) return;
 
+        // 상우
+        Vector2 temp = new Vector2(0, -450f);
+
+
         var data = drawQueue.Dequeue();
 
         var card = poolingSystem.RentHandCard();
@@ -90,7 +94,7 @@ public class HandSystem : MonoBehaviour
 
         // 덱 위치에서 시작시키기 (파다다닥 출발점)
         var rt = card.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector2(0, -450f);
+        rt.anchoredPosition = temp;
 
         cards.Add(card);
 
