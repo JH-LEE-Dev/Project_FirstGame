@@ -77,8 +77,15 @@ public class UIView_CardSystem : UIView
 
         handSystem?.UseCard(_card);
     }
+    public void OnCardHoverEnter(CardInstance _card)
+    {
+        handSystem?.OnCardHoverEnter(_card);
+    }
 
-
+    public void OnCardHoverExit(CardInstance _card)
+    {
+        handSystem?.OnCardHoverExit(_card);
+    }
 
 
 

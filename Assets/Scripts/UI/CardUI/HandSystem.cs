@@ -20,10 +20,6 @@ public class HandSystem : MonoBehaviour
     [Header("Hand")]
     [SerializeField] private List<CardInstance> cards = new();
 
-    private bool bcanAction = true;
-
-    public bool IscanAction => bcanAction;
-
     public void Init(UIView_CardSystem _cardSystem)
     {
         cardSystem = _cardSystem;
@@ -92,9 +88,8 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
-    public void computeArc()
+    private void computeArc()
     {
         int n = cards.Count;
         if (n <= 0) return;
