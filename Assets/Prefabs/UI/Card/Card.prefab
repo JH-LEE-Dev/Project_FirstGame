@@ -314,18 +314,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd15e503bd82a1a4582006b3e0a6760d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardInstance
-  additionalEffectData: []
-  cardSystem: {fileID: 0}
-  hoverScale: 1.3
-  duration: 0.15
   followFreq: 18
   followDamp: 0.85
   rotateLerp: 18
   snapDist: 0.05
-  floatAmplitude: 6
-  floatSpeed: 1.2
-  floatPhaseRandom: 1
-  inHand: 1
+  hoverScale: 1.3
+  duration: 0.15
+  ignoreHandLayout: 0
+  previewScale: 3
+  previewMoveDuration: 0.3
+  previewScaleDuration: 0.3
+  previewEndScaleDur: 0.5
+  visual: {fileID: 102396723257274795}
+  handFloatPosAmp: 1
+  handFloatRotAmp: 0.3
+  handFloatFreq: 0.4
+  previewFloatPosAmp: 0.5
+  previewFloatRotAmp: 0.15
+  previewFloatFreq: 0.2
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public interface ICardSystemProvider
     event Action CardDrawFinishedEvent;
     event Action CardUsingFinishedEvent;
 
-    public bool CardUsed(CardDataInstance usedCard);
+    public void CardUsed(CardDataInstance usedCard);
     public void CardUsingFinished();
 
     // 현재 손에 들고 있는 카드 데이터 (읽기 전용)

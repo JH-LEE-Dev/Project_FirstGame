@@ -19,9 +19,6 @@ public class HandSystem : MonoBehaviour
 
     [Header("Preview")]
     [SerializeField] private RectTransform previewRoot;
-    [SerializeField] private float previewScale = 3f;
-    [SerializeField] private float previewMoveDuration = 0.12f;
-    [SerializeField] private float previewScaleDuration = 0.12f;
     private CardInstance previewCard;   // 현재 미리보기 카드
 
     [Header("Hand")]
@@ -65,7 +62,7 @@ public class HandSystem : MonoBehaviour
         previewCard = card;
 
         // 프리뷰 시작(센터 이동 + 확대)
-        previewCard.StartPreview(previewRoot.anchoredPosition, previewScale, previewMoveDuration, previewScaleDuration);
+        previewCard.StartPreview(previewRoot.anchoredPosition);
 
 
 
@@ -88,18 +85,30 @@ public class HandSystem : MonoBehaviour
         int idx = cards.IndexOf(_card);
         if (idx < 0) return;
 
-        var card = cards[idx];
-        cards.RemoveAt(idx);
+
+        if (previewCard == _card)
+        {
+            // 프리뷰 상태 종료 (ignoreHandLayout false로 복귀)
+            previewCard.EndPreview();
+            previewCard = null;
+        }
+        else if (previewCard != null)
+        {
+            // 다른 카드 프리뷰 중인데 다른 카드를 사용한다? : 프리뷰 취소
+            CancelPreview();
+        }
 
         // 호버링 초기화.
         hoveredIndex = -1;
 
-        // 전부 초기화 한다.
-        card.ExitHand();
-        card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
 
+        cards.RemoveAt(idx);
+
+        // 전부 초기화 한다.
+        _card.ExitHand();
+        _card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
         // 풀링 반납
-        cardSystem.ReturnHandCard(card);
+        cardSystem.ReturnHandCard(_card);
 
         // 호 재계산
         computeArc();
@@ -145,43 +154,71 @@ public class HandSystem : MonoBehaviour
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
     private void computeArc()
     {
-        int n = cards.Count;
-        if (n <= 0) return;
+        // 프리뷰 방어코드
+        if (previewCard != null && !cards.Contains(previewCard))
+            previewCard = null;
+
+        int total = cards.Count;
+        if (total <= 0) return;
 
         Vector2 basePos = handRoot.anchoredPosition;
 
-        // 1장이면 중앙 고정
-        if (n == 1)
+        // 프리뷰 중이면 해당 카드는 레이아웃에서 제외
+        bool hasPreview = (previewCard != null);
+        int layoutCount = hasPreview ? (total - 1) : total;
+
+        // 레이아웃에 배치할 카드가 0장인 경우 (프리뷰만 있는 경우)
+        if (layoutCount <= 0) return;
+
+        // 프리뷰 중엔 호버 벌리기 기능 끄기
+        int effectiveHoveredIndex = hasPreview ? -1 : hoveredIndex;
+
+        // 1장이면 중앙
+        if (layoutCount == 1)
         {
-            cards[0].UpdateTargetPos(basePos, 0f);
+            // preview 아닌 카드 1장 찾아서 중앙
+            for (int i = 0; i < total; i++)
+            {
+                var c = cards[i];
+                if (hasPreview && c == previewCard) continue;
+                c.UpdateTargetPos(basePos, 0f);
+                break;
+            }
             return;
         }
 
-        float t = Mathf.InverseLerp(0f, 12f, n);
+        float t = Mathf.InverseLerp(0f, 12f, layoutCount);
         float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
 
-        float angleStep = arcAngle / Mathf.Max(1, n - 1);
+        float angleStep = arcAngle / Mathf.Max(1, layoutCount - 1);
         float startAngle = -arcAngle * 0.5f;
 
-        for (int i = 0; i < n; i++)
+        int layoutIndex = 0;
+
+        for (int i = 0; i < total; i++)
         {
+            var card = cards[i];
+
+            // 프리뷰 카드는 레이아웃에서 제외
+            if (hasPreview && card == previewCard)
+                continue;
+
             float offset = 0f;
 
-            if (hoveredIndex >= 0 && hoverGapWeight > 0f)
+            // 호버 벌리기 (프리뷰 중엔 꺼짐)
+            if (effectiveHoveredIndex >= 0 && hoverGapWeight > 0f)
             {
-                if (i > hoveredIndex)
-                    offset += hoverGapWeight;
-                else if (i < hoveredIndex)
-                    offset -= hoverGapWeight;
+                if (layoutIndex > effectiveHoveredIndex) offset += hoverGapWeight;
+                else if (layoutIndex < effectiveHoveredIndex) offset -= hoverGapWeight;
 
-                if (hoveredIndex == 0 && i > hoveredIndex)
+                if (effectiveHoveredIndex == 0 && layoutIndex > effectiveHoveredIndex)
                     offset -= hoverGapWeight * 0.5f;
 
-                if (hoveredIndex == n - 1 && i < hoveredIndex)
+                if (effectiveHoveredIndex == layoutCount - 1 && layoutIndex < effectiveHoveredIndex)
                     offset += hoverGapWeight * 0.5f;
             }
 
-            float angle = startAngle + angleStep * (i + offset);
+            float angle = startAngle + angleStep * (layoutIndex + offset);
             float rad = angle * Mathf.Deg2Rad;
 
             Vector2 pos = basePos + new Vector2(
@@ -191,8 +228,17 @@ public class HandSystem : MonoBehaviour
 
             float tiltZ = -angle * 0.8f;
 
-            cards[i].UpdateTargetPos(pos, tiltZ);
+            card.UpdateTargetPos(pos, tiltZ);
+
+            layoutIndex++;
         }
+
+        SortZ_RightIsTop();
     }
 
+    private void SortZ_RightIsTop()
+    {
+        for (int i = 0; i < cards.Count; i++)
+            cards[i].transform.SetAsLastSibling();
+    }
 }

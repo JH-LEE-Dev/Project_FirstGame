@@ -158,6 +158,8 @@ public class UIInstaller : MonoBehaviour
         cardSystemProvider.CardPileDrawedEvent += cardSystemObject.CardDrawed;
         cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardSystemObject.CardUsedEvent -= cardSystemProvider.CardUsed;
+        cardSystemObject.CardUsedEvent += cardSystemProvider.CardUsed;
         cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
         cardSystemObject.TurnFinishedEvent += cardSystemProvider.CardUsingFinished;
         cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
@@ -187,6 +189,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemProvider.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
         cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
+        cardSystemObject.CardUsedEvent -= cardSystemProvider.CardUsed;
         cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
 

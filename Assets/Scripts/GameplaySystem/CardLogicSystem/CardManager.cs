@@ -36,7 +36,6 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
 
     private Queue<CardEffectStrategy> cardSystemEffects = new Queue<CardEffectStrategy>();
 
-
     public void Awake()
     {
         for (int i = 0; i < cardDataBase.cardData.Count; ++i)
@@ -143,15 +142,13 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         handCnt = 0;
     }
 
-    public bool CardUsed(CardDataInstance usedCard)
+    public void CardUsed(CardDataInstance usedCard)
     {
         handPile.Remove(usedCard);
         gravePile.Add(usedCard);
         ++graveCnt;
 
-        CardUsedEvent.Invoke(usedCard.GetCardData());
-
-        return true;
+        CardUsedEvent?.Invoke(usedCard.GetCardData());
     }
 
     public void ReleaseCard(CardDataInstance card)
@@ -212,8 +209,13 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         StartCoroutine(CardPileDrawCoroutine());
     }
 
-    public void DrawAgain(int Amount)
+    public void StrategyForwarding(CardEffectStrategy effectStrategy)
     {
-        
+        cardSystemEffects.Enqueue(effectStrategy);
+    }
+
+    public void DrawAgain(int drawAmount)
+    {
+
     }
 }

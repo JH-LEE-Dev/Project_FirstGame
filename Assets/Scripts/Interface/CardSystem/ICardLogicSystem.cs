@@ -2,5 +2,7 @@ using UnityEngine;
 
 public interface ICardLogicSystem
 {
-    void DrawAgain(int Amount);
+    void StrategyForwarding(CardEffectStrategy effectStrategy);
+
+    void DrawAgain(int drawAmount);
 }
