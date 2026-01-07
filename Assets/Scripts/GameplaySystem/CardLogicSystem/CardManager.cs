@@ -212,8 +212,13 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         StartCoroutine(CardPileDrawCoroutine());
     }
 
-    public void DrawAgain(int Amount)
+    public void StrategyForwarding(CardEffectStrategy effectStrategy)
     {
-        
+        cardSystemEffects.Enqueue(effectStrategy);
+    }
+
+    public void DrawAgain(int drawAmount)
+    {
+
     }
 }

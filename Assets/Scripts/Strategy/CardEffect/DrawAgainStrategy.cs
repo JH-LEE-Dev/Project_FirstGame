@@ -5,18 +5,13 @@ public class DrawAgainStrategy : CardEffectStrategy
 {
     [SerializeField] private int drawAmount = 0;
 
-    public override void Execute()
+    public override void Execute_Status()
     {
 
     }
 
-    protected override void Execute_Status()
+    public override void Execute_System()
     {
-
-    }
-
-    protected override void Execute_System()
-    {
-
+        cardLogicSystem.DrawAgain(drawAmount);
     }
 }
