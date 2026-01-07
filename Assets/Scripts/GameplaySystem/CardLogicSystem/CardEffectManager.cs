@@ -9,7 +9,7 @@ public class CardEffectManager : MonoBehaviour
         unitSpawner = _unitSpawner;
     }
 
-    public void ExecuteCardEffect()
+    public void ExecuteCardEffect(CardDataInstance cardDataIntance)
     {
 
     }

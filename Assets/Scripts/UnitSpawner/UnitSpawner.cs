@@ -18,6 +18,8 @@ public class UnitSpawner : MonoBehaviour
 
     private uint curUnitCnt;
 
+    public Character characterUnit { get; private set; }
+
     [Header("Wave Spawn Settings")]
     [SerializeField] private GameObject waveSpawnPoint;
     public float radiusX = 7f;        // 타원의 가로 반지름
@@ -63,6 +65,7 @@ public class UnitSpawner : MonoBehaviour
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
             gameRuleEventController.Bind(spawnedUnit, gameController,cardSystemProvider);
+            characterUnit = spawnedUnit;
         }
     }
 
