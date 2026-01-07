@@ -7,8 +7,6 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
-
-
     // 신경 쓰지 말기
     public event Action TurnFinishedEvent;
 
@@ -29,9 +27,15 @@ public class UIView_CardSystem : UIView
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private HandSystem handSystem;
-    // [SerializeField] private DeckSystem deckSystem;
+    [SerializeField] private DeckSystem deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
+    // 덱
+    [Header("Deck Settings")]
+    [SerializeField] private List<RectTransform> drawPathPoints = new();    // 경로
+    [SerializeField] private RectTransform drawEndPoint = null;             // 끝 지점 
+    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }    // 변수 값 얻기
+    public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
 
     protected override void Awake()
@@ -45,6 +49,7 @@ public class UIView_CardSystem : UIView
 
         poolingSystem.Init(this, handSystem);
         handSystem.Init(this, poolingSystem);
+        deckSystem.Init(this, poolingSystem);
     }
 
     public void GetDeckCards()
@@ -73,6 +78,10 @@ public class UIView_CardSystem : UIView
         handSystem.EnqueueDraw(cardDataPile);
         SetText();
     }
+
+
+
+
 
 
     /////////////////////////////////////////////////
