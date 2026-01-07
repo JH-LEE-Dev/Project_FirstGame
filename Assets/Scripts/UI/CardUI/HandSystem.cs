@@ -15,12 +15,13 @@ public class HandSystem : MonoBehaviour
     [SerializeField] private float minArcAngle = 0f;
     [SerializeField] private float maxArcAngle = 20f;
     [SerializeField] private float hoverGapWeight = 0.3f;
+    // 호버된 카드 인덱스
     private int hoveredIndex = -1;
 
     [Header("Hand")]
     [SerializeField] private List<CardInstance> cards = new();
     [SerializeField] Queue<CardDataInstance> drawQueue = new();
-    [SerializeField] private float drawStagger = 0.06f; // 파다다닥 간격
+    [SerializeField] private float drawStagger = 0.1f; // 파다다닥 간격
     private float drawTimer;
 
 
@@ -30,19 +31,42 @@ public class HandSystem : MonoBehaviour
         poolingSystem = _poolingSystem;
     }
 
+    // 데이터만 일단 받아버리기
     public void EnqueueDraw(List<CardDataInstance> datas)
     {
         foreach (var d in datas) drawQueue.Enqueue(d);
     }
 
+    public void UseCard(CardInstance card)
+    {
+        int idx = cards.IndexOf(card);
+        if (idx < 0) return;
+
+        UseCardAt(idx);
+    }
+
+    public void UseCardAt(int index)
+    {
+        if (index < 0 || index >= cards.Count) return;
+
+        var card = cards[index];
+        cards.RemoveAt(index);
+
+        if (hoveredIndex == index) hoveredIndex = -1;
+        else if (hoveredIndex > index) hoveredIndex--;
+
+        card.inHand = false;
+        card.KillHover();
+        card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
+
+        poolingSystem.ReturnHandCard(card);
+
+        computeArc();
+    }
+
     private void Update()
     {
-        // 임시로 매프레임으로 하는중 신경 ㄴㄴ
         ProcessDrawQueue();
-
-        // 임시 신경 ㄴㄴ
-        computeArc();
-
     }
 
     private void ProcessDrawQueue()
@@ -57,10 +81,10 @@ public class HandSystem : MonoBehaviour
         var card = poolingSystem.RentHandCard();
         if (card == null) return;
 
-        // 여기서부터가 연출 책임
+        // 연출 책임
         card.ApplyData(data);
 
-        // 아직 손패 연출로 들어가기 전 상태 세팅
+        // 손 패로 이동.
         card.gameObject.SetActive(true);
         card.inHand = true;
 
@@ -69,15 +93,10 @@ public class HandSystem : MonoBehaviour
         rt.anchoredPosition = new Vector2(0, -450f);
 
         cards.Add(card);
-        //computeArc();
+
+        computeArc();
 
         drawTimer = drawStagger;
-    }
-
-
-    public void AddCards(List<CardInstance> newCards)
-    {
-        cards.AddRange(newCards);
     }
 
     // 호버 ON (카드 약간 벌어짐)
@@ -85,7 +104,7 @@ public class HandSystem : MonoBehaviour
     {
         hoveredIndex = cards.IndexOf(card);
 
-        //computeArc();
+        computeArc();
     }
 
     // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
@@ -94,7 +113,7 @@ public class HandSystem : MonoBehaviour
         int idx = cards.IndexOf(card);
         if (idx == hoveredIndex) hoveredIndex = -1;
 
-        //computeArc();
+        computeArc();
     }
 
 
