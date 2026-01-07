@@ -36,7 +36,13 @@ public class UIView_CardSystem : UIView
     [SerializeField] private List<CardInstance> cards = new();
 
 
-
+    // 덱
+    [Header("Deck Settings")]
+    [SerializeField] private GameObject deckPrefab = null;                  // 덱을 표현할 프리팹 ( 카드 뒷면 )
+    [SerializeField] private List<RectTransform> drawPathPoints = new();    // 경로
+    [SerializeField] private RectTransform drawEndPoint = null;             // 끝 지점 
+    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }    // 변수 값 얻기
+    public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
     // for System
     [Header("Pooling")]
@@ -62,9 +68,10 @@ public class UIView_CardSystem : UIView
 
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
+        
+        CreateCardsforNeedSystem();
 
         cardPooling();
-
     }
 
     private void cardPooling()
@@ -244,9 +251,15 @@ public class UIView_CardSystem : UIView
         handRoot.gameObject.SetActive(true);
     }
 
-
-
-
+    private void CreateCardsforNeedSystem()
+    {
+        if (null != deckPrefab)
+        {
+            GameObject newobj = Instantiate(deckPrefab, this.transform);
+            Deck script = newobj?.GetComponent<Deck>();
+            script?.Initialize(this);
+        }
+    }
 
     // 호버 ON (카드 약간 벌어짐)
     public void OnCardHoverEnter(CardInstance card)
