@@ -21,8 +21,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
-
-
+    public Action<Vector2, CardDataInstance> drawEvent;
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
@@ -49,7 +48,7 @@ public class UIView_CardSystem : UIView
 
         poolingSystem?.Init(this, handSystem);
         handSystem?.Init(this, poolingSystem);
-        deckSystem?.Init(this, poolingSystem);
+        deckSystem?.Init(this);
     }
 
     public void GetDeckCards()
@@ -75,7 +74,7 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        //handSystem.EnqueueDraw(cardDataPile);
+        
         SetText();
     }
 
