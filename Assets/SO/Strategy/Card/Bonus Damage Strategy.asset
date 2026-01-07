@@ -10,5 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 106dc9c8d3c9aa1408169cfab9ae5f1b, type: 3}
-  m_Name: ST_Normal Attack Card Effect
-  m_EditorClassIdentifier: Assembly-CSharp::ST_NormalAttackCardEffect
+  m_Name: Bonus Damage Strategy
+  m_EditorClassIdentifier: Assembly-CSharp::BonusDamageStrategy
+  bonusDamage: 0

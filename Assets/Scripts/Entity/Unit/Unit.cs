@@ -61,6 +61,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected virtual void OnDestroy()
     {
+        healthComponent.UnitIsDeadEvent -= HandleDead;
         UnitIsDeadEvent = null;
     }
 
@@ -145,11 +146,6 @@ public class Unit : MonoBehaviour, IDamageable
     protected void InvokeUnitIsDead()
     {
         UnitIsDeadEvent?.Invoke();
-    }
-
-    public void RegisterDeadListener(Action listener)
-    {
-        UnitIsDeadEvent += listener;
     }
 
     public void HandleDead()

@@ -1,10 +1,24 @@
 using UnityEngine;
-using System.Threading.Tasks;
 
 public abstract class CardEffectStrategy : ScriptableObject
 {
-    protected Character character;
-    public abstract void Initialize(Character character);
+    protected ICardLogicSystem cardLogicSystem;
+    protected IUnitLogicSystem unitLogicSystem;
+
+    bool bUpgrade = false;
+
+    public void Initialize(ICardLogicSystem _cardLogicSystem,IUnitLogicSystem _unitLogicSystem)
+    {
+        cardLogicSystem = _cardLogicSystem;
+        unitLogicSystem = _unitLogicSystem;
+    }
 
     public abstract void Execute();
+    protected abstract void Execute_Status();
+    protected abstract void Execute_System();
+
+    public void SetbUpgrade(bool boolean)
+    {
+        bUpgrade = boolean;
+    }
 }

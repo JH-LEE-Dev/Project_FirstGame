@@ -153,9 +153,6 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCnt.ToString();
-        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCnt.ToString();
     }
 
     protected override void OnShow()
@@ -177,15 +174,13 @@ public class UIView_CardSystem : UIView
 
     public void CardUsed(CardDataInstance usedCard)
     {
-        if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
-            return;
+        //if (viewCtx.cardSystemProvider.CardUsed(usedCard) == false)
+        //    return;
 
-
-
-        // 추후 구현
-
-
-        graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
+        //usedCard.gameObject.SetActive(false);
+        //cards.Remove(usedCard);
+        //computeArc();
+        //graveCntText.text = "Warmhole : " + viewCtx.cardSystemProvider.graveCnt.ToString();
     }
 
     public void CardUsingFinished()

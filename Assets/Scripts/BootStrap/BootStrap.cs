@@ -37,6 +37,7 @@ public class BootStrap : MonoBehaviour, IGameFlowController
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         audioManager = GetComponent<AudioManager>();
@@ -45,7 +46,7 @@ public class BootStrap : MonoBehaviour, IGameFlowController
         inputManager = GetComponent<InputManager>();
 
         inputManager.Initialize();
-        uiInstaller.Initialize(this,inputManager);
+        uiInstaller.Initialize(this, inputManager);
 
         inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
         inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
@@ -62,6 +63,9 @@ public class BootStrap : MonoBehaviour, IGameFlowController
     public void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (inputManager != null)
+            inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
     }
 
     public void SetupGameplayScene()
@@ -79,7 +83,7 @@ public class BootStrap : MonoBehaviour, IGameFlowController
 
         if (sceneName == "GameplayScene")
             SetupGameplayScene();
-        else if(sceneName == "MainMenuScene")
+        else if (sceneName == "MainMenuScene")
             SetupMainMenuScene();
     }
 
@@ -93,11 +97,13 @@ public class BootStrap : MonoBehaviour, IGameFlowController
         if (bTempScene)
             return;
 
+        uiInstaller.Release_Gameplay();
         sceneManager.ChangeScene(SceneType.MainMenu);
     }
 
     public void GoToGameplayScene()
     {
+        uiInstaller.Release_MainMenu();
         sceneManager.ChangeScene(SceneType.Gameplay);
     }
 }

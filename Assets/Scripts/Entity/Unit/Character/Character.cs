@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Character : Unit
 {
+    public ICombatEffectReceiver combatEffectReceiver => combatComponent;
+
     public event Action PlayerAttackIsFinishedEvent;
 
     [Header("Arrow Object")]
@@ -63,6 +65,8 @@ public class Character : Unit
     {
         inputManager.inputReader.MoveEvent -= OnMove;
         inputManager.inputReader.PointerPositionEvent -= SetArrowObjectTransform;
+        inputManager.inputReader.FireButtonPressedEvent -= Fire;
+        combatComponent.BulletEffectIsFinishedEvent -= PlayeShotEffectIsFinished;
     }
 
     public void SetbCanAction()
@@ -94,7 +98,9 @@ public class Character : Unit
 
     private void BindEvent()
     {
+        inputManager.inputReader.MoveEvent -= OnMove;
         inputManager.inputReader.MoveEvent += OnMove;
+        inputManager.inputReader.PointerPositionEvent -= SetArrowObjectTransform;
         inputManager.inputReader.PointerPositionEvent += SetArrowObjectTransform;
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
         inputManager.inputReader.FireButtonPressedEvent += Fire;

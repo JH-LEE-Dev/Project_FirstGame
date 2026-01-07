@@ -8,10 +8,10 @@ using UnityEngine.EventSystems;
 [Serializable]
 public class CardDataInstance : IPointerClickHandler
 {
-    private CardData cardData;
-    public List<CardEffectData> additionalEffectData;
     public event Action<CardDataInstance> CardUsedEvent;
 
+    private CardData cardData;
+    public bool bUpgrade = false;
     public void Initialize(CardData cardData)
     {
         this.cardData = cardData;
@@ -29,9 +29,9 @@ public class CardDataInstance : IPointerClickHandler
         return cardData;
     }
 
-    public void AddCardEffect(CardEffectData effect)
+    public void AddCardEffect(CardEffectType effectType)
     {
-        additionalEffectData.Add(effect);
+        cardData.cardEffects.Add(effectType);
     }
 
     public void OnPointerClick(PointerEventData eventData)
