@@ -57,6 +57,8 @@ public class UIView_CardSystem : UIView
     {
         if(null != handSystem)
         {
+            Debug.Log("»£√‚");
+
             drawEvent += handSystem.ProcessDraw;
         }
     }

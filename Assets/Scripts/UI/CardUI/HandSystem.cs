@@ -53,8 +53,6 @@ public class HandSystem : MonoBehaviour
 
     public void ProcessDraw(Vector3 _cardSpawnPos, CardDataInstance _cardData)
     {
-        Debug.Log("»£√‚");
-
         var card = cardSystem.RentHandCard();
         if (card == null) return;
 
