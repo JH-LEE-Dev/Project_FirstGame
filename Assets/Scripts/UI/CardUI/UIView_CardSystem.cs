@@ -72,23 +72,37 @@ public class UIView_CardSystem : UIView
     {
         poolingSystem?.ReturnHandCard(card);
     }
+    /////////////////
 
-    public void UseCard(CardInstance _card)
+
+
+    // For HandSystem
+    public void TryUseCard(CardInstance _card)
     {
         if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
             return;
 
-        handSystem?.UseCard(_card);
+        // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
+        handSystem?.TryUseCard(_card);
     }
-    public void OnCardHoverEnter(CardInstance _card)
+    public void OnCardLeftClick(CardInstance _card)
     {
-        handSystem?.OnCardHoverEnter(_card);
+        // 좌클릭을 했을 때 이쪽으로 온다. (프리뷰)
+        handSystem?.OnCardLeftClick(_card);
     }
 
+    public void OnCardHoverEnter(CardInstance _card)
+    {
+        // 호버 ON (벌어지는 연출위함)
+        handSystem?.OnCardHoverEnter(_card);
+    }
     public void OnCardHoverExit(CardInstance _card)
     {
+        // 호버 OFF (축소되는 연출 위함)
         handSystem?.OnCardHoverExit(_card);
     }
+
+    /////////////////
 
 
 
@@ -116,9 +130,22 @@ public class UIView_CardSystem : UIView
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
-        deckSystem?.CardDrawEffect(cardDataPile);
+        ////////////////////////////////////////// 임시
+        if (handSystem == null) return;
+
+        for (int i = 0; i < cardDataPile.Count; i++)
+        {
+            handSystem.ProcessDraw(new Vector2(0, -450f), cardDataPile[i]);
+        }
+        /////////////////////////////////////////////////
+
+
         SetText();
     }
+
+
+
+
 
     /////////////////////////////////////////////////
 

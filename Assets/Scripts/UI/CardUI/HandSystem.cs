@@ -17,6 +17,13 @@ public class HandSystem : MonoBehaviour
     // 호버된 카드 인덱스
     private int hoveredIndex = -1;
 
+    [Header("Preview")]
+    [SerializeField] private RectTransform previewRoot;
+    [SerializeField] private float previewScale = 3f;
+    [SerializeField] private float previewMoveDuration = 0.12f;
+    [SerializeField] private float previewScaleDuration = 0.12f;
+    private CardInstance previewCard;   // 현재 미리보기 카드
+
     [Header("Hand")]
     [SerializeField] private List<CardInstance> cards = new();
 
@@ -25,29 +32,76 @@ public class HandSystem : MonoBehaviour
         cardSystem = _cardSystem;
     }
 
-    public void UseCard(CardInstance _card)
+    // 우클릭 해서 들어온 카드.
+    public void TryUseCard(CardInstance _card)
+    {
+        // 이미 다른 카드 프리뷰 중이라면 종료 후 사용.
+        if (previewCard != null && previewCard != _card)
+            CancelPreview();
+
+        UseCard(_card);
+    }
+    // 좌클릭 해서 들어온 카드
+    public void OnCardLeftClick(CardInstance _card)
+    {
+        // 만약, 좌클릭한 상태인 카드가 프리뷰 상태일 경우 즉시 사용.
+        if (previewCard == _card)
+        {
+            cardSystem.TryUseCard(_card);
+            return;
+        }
+
+        // 이 카드의 프리뷰 시작.
+        StartPreview(_card);
+    }
+
+    private void StartPreview(CardInstance card)
+    {
+        // 프리뷰 중인 카드가 이미 존재할 경우, 기존 카드의 프리뷰를 종료한다.
+        if (previewCard != null && previewCard != card)
+            previewCard.EndPreview();
+
+        // 새로운것으로 교체.
+        previewCard = card;
+
+        // 프리뷰 시작(센터 이동 + 확대)
+        previewCard.StartPreview(previewRoot.anchoredPosition, previewScale, previewMoveDuration, previewScaleDuration);
+
+
+
+        computeArc();
+    }
+
+    public void CancelPreview()
+    {
+        if (previewCard == null) return;
+
+        // 카드 비주얼만 원래대로
+        previewCard.EndPreview();
+        previewCard = null;
+
+        computeArc();
+    }
+
+    private void UseCard(CardInstance _card)
     {
         int idx = cards.IndexOf(_card);
         if (idx < 0) return;
 
-        UseCardAt(idx);
-    }
+        var card = cards[idx];
+        cards.RemoveAt(idx);
 
-    public void UseCardAt(int _index)
-    {
-        if (_index < 0 || _index >= cards.Count) return;
+        // 호버링 초기화.
+        hoveredIndex = -1;
 
-        var card = cards[_index];
-        cards.RemoveAt(_index);
-
-        if (hoveredIndex == _index) hoveredIndex = -1;
-        else if (hoveredIndex > _index) hoveredIndex--;
-
+        // 전부 초기화 한다.
         card.ExitHand();
         card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
 
+        // 풀링 반납
         cardSystem.ReturnHandCard(card);
 
+        // 호 재계산
         computeArc();
     }
 
