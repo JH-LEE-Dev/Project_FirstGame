@@ -1,8 +1,10 @@
+using NUnit.Framework;
 using System;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
+using System.Collections.Generic;
 
-public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
+public class UnitSpawner : MonoBehaviour
 {
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
@@ -15,6 +17,7 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
     private GameServiceLocator gameServiceLocator;
     private ICardSystemProvider cardSystemProvider;
     private GameController gameController;
+    private UnitLogicSystem unitLogicSystem;
 
     private uint curUnitCnt;
 
@@ -31,8 +34,11 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
 
     private GameRuleEventController gameRuleEventController;
 
+    private List<Enemy> enemies = new List<Enemy>();
+
     public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
-        GameServiceLocator _gameServiceLocator,ICardSystemProvider _cardSystemProvider,GameController _gameController)
+        GameServiceLocator _gameServiceLocator,ICardSystemProvider _cardSystemProvider,
+        GameController _gameController,UnitLogicSystem _unitLogicSystem)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
@@ -40,6 +46,7 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
         cardSystemProvider= _cardSystemProvider;
         gameController = _gameController;
         gameRuleEventController = new GameRuleEventController();
+        unitLogicSystem = _unitLogicSystem;
 
         if (inputManager == null)
         {
@@ -50,6 +57,11 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
         waveManager.SpawnWaveEvent += SpawnWave;
 
         SpawnCharacter();
+    }
+    public void OnDestroy()
+    {
+        gameRuleEventController.Release(characterUnit, gameController, cardSystemProvider);
+        waveManager.SpawnWaveEvent -= SpawnWave;
     }
 
     private void SpawnCharacter()
@@ -128,23 +140,16 @@ public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
 
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, waveManager, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
+
+                enemies.Add(spawnedUnit);
             }
         }
+
+        SetUnitLogicSystem();
     }
 
-    public void OnDestroy()
+    private void SetUnitLogicSystem()
     {
-        gameRuleEventController.Release(characterUnit, gameController, cardSystemProvider);
-        waveManager.SpawnWaveEvent -= SpawnWave;
-    }
-
-    public void ApplyShieldModifier(float bonusShield)
-    {
-
-    }
-
-    public void ApplyAttackModifier(float bonusDamage)
-    {
-        characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
+        unitLogicSystem.Initialize(characterUnit, enemies);
     }
 }

@@ -3,12 +3,12 @@ using UnityEngine;
 public abstract class CardEffectStrategy : ScriptableObject
 {
     protected ICardLogicSystem cardLogicSystem;
-    protected IUnitLogicSystem unitLogicSystem;
+    protected IUnitLogicSystemProvider unitLogicSystem;
 
     [SerializeField] protected CardEffectApplyType effectApplyType;
     protected bool bUpgrade = false;
 
-    public void Initialize(ICardLogicSystem _cardLogicSystem,IUnitLogicSystem _unitLogicSystem)
+    public void Initialize(ICardLogicSystem _cardLogicSystem,IUnitLogicSystemProvider _unitLogicSystem)
     {
         cardLogicSystem = _cardLogicSystem;
         unitLogicSystem = _unitLogicSystem;

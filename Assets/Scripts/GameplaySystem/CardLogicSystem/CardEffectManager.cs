@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CardEffectManager : MonoBehaviour
 {
-    private IUnitLogicSystem unitLogicSystem;
+    private IUnitLogicSystemProvider unitLogicSystem;
     private ICardLogicSystem cardLogicSystem;
 
     [SerializeField] private List<CardEffectStrategy> cardEffects = new List<CardEffectStrategy>();
 
-    public void Initialize(IUnitLogicSystem _unitLogicSystem,ICardLogicSystem _cardLogicSystem)
+    public void Initialize(IUnitLogicSystemProvider _unitLogicSystem,ICardLogicSystem _cardLogicSystem)
     {
         unitLogicSystem = _unitLogicSystem;
         cardLogicSystem = _cardLogicSystem;

@@ -15,6 +15,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
     public event Action CardUsingFinishedEvent;
     public event Action<CardData> CardUsedEvent;
 
+    private IUnitLogicSystemProvider unitLogicSystem;
+
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
@@ -35,6 +37,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
     public int handCnt { get; private set; }
 
     private Queue<CardEffectStrategy> cardSystemEffects = new Queue<CardEffectStrategy>();
+
+    public void Initialize(IUnitLogicSystemProvider _unitLogicSystem)
+    {
+        unitLogicSystem = _unitLogicSystem;
+    }
 
     public void Awake()
     {
@@ -147,6 +154,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         handPile.Remove(usedCard);
         gravePile.Add(usedCard);
         ++graveCnt;
+
+        //unitLogicSystem에 현재 불릿 카드가 사용 가능한 상태인지 물어봐야 함.
 
         CardUsedEvent?.Invoke(usedCard.GetCardData());
     }

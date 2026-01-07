@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IUnitLogicSystem
+public interface IUnitLogicSystemProvider
 {
     void ApplyShieldModifier(float bonusShield);
 
