@@ -79,8 +79,8 @@ public class UIView_CardSystem : UIView
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
-        if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
-            return;
+        //if (viewCtx.cardSystemProvider.CardUsed(_card.CardData) == false)
+        //    return;
 
         // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
         handSystem?.TryUseCard(_card);

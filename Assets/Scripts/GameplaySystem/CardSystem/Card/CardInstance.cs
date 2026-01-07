@@ -38,14 +38,14 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 
     // Preview
-    private bool ignoreHandLayout; // 프리뷰 중이면 true
+    [SerializeField] private bool ignoreHandLayout = false; // 프리뷰 중이면 true
     public bool IgnoreHandLayout => ignoreHandLayout;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
 
 
 
-    private bool bInHand;
+    [SerializeField] private bool bInHand = true;
     public bool IsInHand => bInHand;
 
     public void EnterHand()
@@ -53,6 +53,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (bInHand) return;
 
         bInHand = true;
+        ignoreHandLayout = false;
         velocity = Vector2.zero;
     }
 
@@ -61,6 +62,7 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (!bInHand) return;
 
         bInHand = false;
+        ignoreHandLayout = false;
         velocity = Vector2.zero;
         KillHover();
         transform.localScale = originScale; // 수정 필요.
