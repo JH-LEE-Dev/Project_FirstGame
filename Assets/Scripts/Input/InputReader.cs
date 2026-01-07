@@ -33,6 +33,8 @@ public class InputReader
         actions.Combat.Move.performed -= OnMove;
         actions.Combat.Move.canceled -= OnMove;
         actions.Combat.PointerPositioned.canceled -= OnPointerPosition;
+        actions.Combat.Fire.performed -= OnFireButtonPressed;
+        actions.Combat.ESC.performed -= OnESCButtonPressed;
     }
 
     public void OnMove(InputAction.CallbackContext context)

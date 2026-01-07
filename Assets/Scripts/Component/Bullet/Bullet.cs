@@ -1,6 +1,8 @@
 using Mono.Cecil.Cil;
+using NUnit.Framework;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Bullet : MonoBehaviour
 {
@@ -92,5 +94,10 @@ public class Bullet : MonoBehaviour
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
         prevPosition = transform.position;
+    }
+
+    public void ApplyAttackModifier(float bonusDamage)
+    {
+        attack += bonusDamage;
     }
 }

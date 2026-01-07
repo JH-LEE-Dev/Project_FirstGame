@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
-public class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour, IUnitLogicSystem
 {
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
@@ -17,6 +17,8 @@ public class UnitSpawner : MonoBehaviour
     private GameController gameController;
 
     private uint curUnitCnt;
+
+    public Character characterUnit { get; private set; }
 
     [Header("Wave Spawn Settings")]
     [SerializeField] private GameObject waveSpawnPoint;
@@ -63,6 +65,7 @@ public class UnitSpawner : MonoBehaviour
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
             gameRuleEventController.Bind(spawnedUnit, gameController,cardSystemProvider);
+            characterUnit = spawnedUnit;
         }
     }
 
@@ -131,6 +134,17 @@ public class UnitSpawner : MonoBehaviour
 
     public void OnDestroy()
     {
+        gameRuleEventController.Release(characterUnit, gameController, cardSystemProvider);
         waveManager.SpawnWaveEvent -= SpawnWave;
+    }
+
+    public void ApplyShieldModifier(float bonusShield)
+    {
+
+    }
+
+    public void ApplyAttackModifier(float bonusDamage)
+    {
+        characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
     }
 }

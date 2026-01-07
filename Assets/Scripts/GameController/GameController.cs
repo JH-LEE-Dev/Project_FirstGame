@@ -22,7 +22,6 @@ public class GameController : MonoBehaviour
         gameStateMachine = new GameStateMachine();
 
         GS_PlayerTurnState playerTurn = new GS_PlayerTurnState();
-        waveIdxDeclareEvent += playerTurn.SetWaveIdx;
         gameStateMachine.AddState(playerTurn);
 
         GS_EnemyTurnState enemyTurn = new GS_EnemyTurnState();
@@ -47,9 +46,9 @@ public class GameController : MonoBehaviour
         return gameStateMachine.GetState<T>();
     }
 
-    public void OnDisable()
+    public void OnDestroy()
     {
-
+        ReleaseEvent();
     }
 
     public void ChangeGameState<T>() where T : IState
@@ -77,5 +76,17 @@ public class GameController : MonoBehaviour
 
         playerTurn.PlayerTurnStartEvent -= cardManager.StartDraw;
         playerTurn.PlayerTurnStartEvent += cardManager.StartDraw;
+    }
+
+    public void ReleaseEvent()
+    {
+        GS_PlayerTurnState playerTurn = gameStateMachine.GetState<GS_PlayerTurnState>();
+        GS_EnemyTurnState enemyTurn = gameStateMachine.GetState<GS_EnemyTurnState>();
+
+        enemyTurn.EnemyTurnStartEvent -= waveManager.StartEnemyMoveTurn;
+
+        waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
+
+        playerTurn.PlayerTurnStartEvent -= cardManager.StartDraw;
     }
 }

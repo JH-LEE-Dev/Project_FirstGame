@@ -34,9 +34,6 @@ public enum UsingType
     Nesting // ÁßÃ¸
 }
 
-
-
-
 public enum SceneType
 {
     MainMenu,
@@ -50,7 +47,16 @@ public enum PlayerTurnStateProcess
     Fire,
 }
 
+//cardID¿Í È£È¯µÊ.
+public enum CardName
+{
+    BonusDamage,
+    DrawAgain
+}
 
-
-
+public enum CardEffectType
+{
+    BonusDamage,
+    DrawAgain,
+}
 

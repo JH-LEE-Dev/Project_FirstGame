@@ -63,9 +63,14 @@ public class UIInstaller : MonoBehaviour
         }
     }
 
-    public void Release()
+    public void Release_Gameplay()
     {
+        ReleaseEvent_Gameplay();
+    }
 
+    public void Release_MainMenu()
+    {
+        ReleaseEvent_MainMenu();
     }
 
     public void MainMenuLevelStarted()
@@ -88,6 +93,7 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize_MainMenuScene();
 
         UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
+
         mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
         mainMenuUIView.PlayButtonClickedEvent += gameFlowController.GoToGameplayScene;
     }
@@ -113,7 +119,6 @@ public class UIInstaller : MonoBehaviour
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
         uiManager.SceneChanged(tempRoot);
-        uiManager.Initialize_GameplayScene(cardSystemProvider);
 
         OpenGameplayUIView();
     }
@@ -134,7 +139,6 @@ public class UIInstaller : MonoBehaviour
     public void ResetVariable()
     {
         cardSystemProvider = null;
-        uiManager.ResetVariable();
     }
 
     private void SetAnchorToCanvas(Transform transform)
@@ -172,5 +176,48 @@ public class UIInstaller : MonoBehaviour
             enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
             enemyTurnState.EnemyTurnStartEvent += gameplayObject.EnemyTurnStarted;
         }
+    }
+
+    private void ReleaseEvent_Gameplay()
+    {
+        UIView_HUD HUDObject = uiManager.GetView<UIView_HUD>();
+        UIView_CardSystem cardSystemObject = uiManager.GetView<UIView_CardSystem>();
+        UIView_Gameplay gameplayObject = uiManager.GetView<UIView_Gameplay>();
+
+        cardSystemProvider.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
+        cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardSystemProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+
+        GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
+
+        if (enemyTurnState != null)
+        {
+            enemyTurnState.EnemyTurnStartEvent -= HUDObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= cardSystemObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
+        }
+
+        GS_PlayerTurnState playerTurnState = gameController.GetGameState<GS_PlayerTurnState>();
+
+        if (playerTurnState != null)
+        {
+            UIView_HUD uiViewHUD = uiManager.GetView<UIView_HUD>();
+            UIView_CardSystem uIView_CardSystem = uiManager.GetView<UIView_CardSystem>();
+
+            if (uiViewHUD != null)
+            {
+                playerTurnState.PlayerTurnStartEvent -= uiViewHUD.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent -= uIView_CardSystem.PlayerTurnStarted;
+            }
+        }
+    }
+
+    public void ReleaseEvent_MainMenu()
+    {
+        UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
+
+        mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
     }
 }

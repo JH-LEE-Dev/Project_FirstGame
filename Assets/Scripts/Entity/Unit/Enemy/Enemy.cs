@@ -15,8 +15,6 @@ public class Enemy : Unit
         base.Initialize(_inputManager, _gameServiceLocator);
 
         waveManager = _waveManager;
-        waveManager.StartMoveEvent += OnMove;
-
         sr.sprite = _enemyTypeData.sprite;
 
         float scale = _enemyTypeData.scale;
@@ -32,6 +30,8 @@ public class Enemy : Unit
         trailRenderer.material.color = c;
 
         healthComponent.SetHealth(_enemyTypeData.health);
+
+        waveManager.StartMoveEvent += OnMove;
     }
 
     public override void TakeDamage(float damage)
