@@ -47,9 +47,9 @@ public class UIView_CardSystem : UIView
         turnFinishedButton.onClick.AddListener(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
-        poolingSystem.Init(this, handSystem);
-        handSystem.Init(this, poolingSystem);
-        deckSystem.Init(this, poolingSystem);
+        poolingSystem?.Init(this, handSystem);
+        handSystem?.Init(this, poolingSystem);
+        deckSystem?.Init(this, poolingSystem);
     }
 
     public void GetDeckCards()

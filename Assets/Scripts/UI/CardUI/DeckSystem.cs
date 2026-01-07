@@ -60,10 +60,14 @@ public class DeckSystem : MonoBehaviour,
         wealthySeq = DOTween.Sequence();
 
         wealthySeq.Append(wealthyRect.DOLocalRotate(new Vector3(0f, 0f, wealthyAngle), wealthyDuration, RotateMode.Fast)
-          .SetEase(Ease.InOutSine));
+          .SetEase(wealthyEase));
+
+        wealthySeq.AppendInterval(0.15f);
 
         wealthySeq.Append(wealthyRect.DOLocalRotate(new Vector3(0f, 0f, -wealthyAngle), wealthyDuration, RotateMode.Fast)
-          .SetEase(Ease.InOutSine));
+          .SetEase(wealthyEase));
+
+        wealthySeq.AppendInterval(0.15f);
 
         wealthySeq.SetLoops(-1, LoopType.Yoyo);
     }
