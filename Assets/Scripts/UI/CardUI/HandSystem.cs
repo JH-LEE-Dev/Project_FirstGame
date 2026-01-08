@@ -24,6 +24,11 @@ public class HandSystem : MonoBehaviour
     [Header("Hand")]
     [SerializeField] private List<CardInstance> cards = new();
 
+    [Header("BulletTest")]
+    [SerializeField] private RectTransform BulletRoot_First;
+    [SerializeField] private RectTransform BulletRoot_Second;
+
+
     public void Init(UIView_CardSystem _cardSystem)
     {
         cardSystem = _cardSystem;
@@ -105,41 +110,40 @@ public class HandSystem : MonoBehaviour
         switch (type)
         {
             case CardType.Bullet:
-                UseBulletCard();
+                UseBulletCard(idx, _card);
                 break;
 
             case CardType.Magic:
-                UseMagicCard();
+                UseMagicCard(idx, _card);
                 break;
         }
 
-        // 호버링 초기화.
-        hoveredIndex = -1;
-
-
-        cards.RemoveAt(idx);
-
-        // 전부 초기화 한다.
-        _card.Motion.ExitHand();
-        _card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
-        // 풀링 반납
-        cardSystem.ReturnHandCard(_card);
-
-        // 호 재계산
-        computeArc();
-
-
     }
-    private void UseBulletCard()
+    private void UseBulletCard(int _idx, CardInstance _card)
     {
 
+        // 불릿카드 자리에 들러붙는 연출 구현
+
+
+
+
+
+        // 쏠 때, 장착했던 카드들을 전부 반납할 예정. 아직 쏘는것은 구현안함
+
+
     }
 
-    private void UseMagicCard()
+    private void UseMagicCard(int _idx, CardInstance _card)
     {
 
+        // 마법카드 연출 구현
+
+        // CardVisualFloat로 연출하고 다 끝나면 아래서 삭제시키는 코드. 코루틴써야하나.
+
+        ReturnCard(_idx, _card);
     }
 
+    // 패 풀링으로부터 생성
     public void ProcessDraw(Vector3 _cardSpawnPos, CardDataInstance _cardData)
     {
         var card = cardSystem.RentHandCard();
@@ -158,6 +162,23 @@ public class HandSystem : MonoBehaviour
         rt.position = _cardSpawnPos;
 
         cards.Add(card);
+        computeArc();
+    }
+    // 패 풀링한테 반납
+    private void ReturnCard(int _idx, CardInstance _card)
+    {
+        // 호버링 초기화.
+        hoveredIndex = -1;
+
+        cards.RemoveAt(_idx);
+
+        // 전부 초기화 한다.
+        _card.Motion.ExitHand();
+        _card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
+        // 풀링 반납
+        cardSystem.ReturnHandCard(_card);
+
+        // 호 재계산
         computeArc();
     }
 

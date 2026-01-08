@@ -101,8 +101,6 @@ public class UIView_CardSystem : UIView
         viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
     }
 
-
-
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
     {
         if (boolean)
