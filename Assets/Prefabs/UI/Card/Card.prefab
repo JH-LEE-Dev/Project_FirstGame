@@ -326,9 +326,9 @@ MonoBehaviour:
   previewScaleDuration: 0.3
   previewEndScaleDur: 0.5
   visual: {fileID: 102396723257274795}
-  handFloatPosAmp: 1
-  handFloatRotAmp: 0.3
-  handFloatFreq: 0.4
+  handFloatPosAmp: 0.5
+  handFloatRotAmp: 0.2
+  handFloatFreq: 0.2
   previewFloatPosAmp: 0.5
   previewFloatRotAmp: 0.15
   previewFloatFreq: 0.2

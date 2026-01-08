@@ -52,9 +52,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private Vector2 visualBaseLocalPos;
     private float seed;
     [SerializeField] private RectTransform visual;
-    [SerializeField] private float handFloatPosAmp = 1f;
-    [SerializeField] private float handFloatRotAmp = 0.3f;
-    [SerializeField] private float handFloatFreq = 0.4f;
+    [SerializeField] private float handFloatPosAmp = 0.5f;
+    [SerializeField] private float handFloatRotAmp = 0.2f;
+    [SerializeField] private float handFloatFreq = 0.2f;
     [SerializeField] private float previewFloatPosAmp = 0.5f;
     [SerializeField] private float previewFloatRotAmp = 0.15f;
     [SerializeField] private float previewFloatFreq = 0.2f;
