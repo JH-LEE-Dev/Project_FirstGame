@@ -18,7 +18,7 @@ public class CardInstance : MonoBehaviour
     private static readonly Color BulletColor = new Color32(255, 210, 102, 255);
     private static readonly Color MagicColor = new Color32(102, 190, 255, 255);
 
-    private CardInstanceType cardInstanceType = CardInstanceType.END;
+    public CardInstanceType cardInstanceType { get; private set; }
 
 
     // 데이터
@@ -50,6 +50,7 @@ public class CardInstance : MonoBehaviour
     public void Initialize(UIView_CardSystem system, CardInstanceType type)
     {
         cardSystem = system;
+        cardInstanceType = type;
     }
 
     // “옷 입히기”

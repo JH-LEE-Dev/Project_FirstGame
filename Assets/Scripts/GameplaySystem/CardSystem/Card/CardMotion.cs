@@ -86,6 +86,7 @@ public class CardMotion : MonoBehaviour
     public void Tick(float dt)
     {
         if (IgnoreHandLayout) return;
+        if (owner.cardInstanceType != CardInstanceType.Hand) return;
 
         Vector2 pos = rt.anchoredPosition;
 
