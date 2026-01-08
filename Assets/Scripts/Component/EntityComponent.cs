@@ -8,8 +8,7 @@ public class EntityComponent : MonoBehaviour
     public virtual void Initialize(UnitContext _ctx)
     {
         ctx = _ctx;
-        ctx.unit.UnitIsDeadEvent -= UnitIsDead;
-        ctx.unit.UnitIsDeadEvent += UnitIsDead;
+        BindEvent();
     }
 
     protected virtual void Awake()
@@ -18,6 +17,17 @@ public class EntityComponent : MonoBehaviour
     }
 
     protected virtual void OnDestroy()
+    {
+        ReleaseEvent();
+    }
+
+    private void BindEvent()
+    {
+        ctx.unit.UnitIsDeadEvent -= UnitIsDead;
+        ctx.unit.UnitIsDeadEvent += UnitIsDead;
+    }
+
+    private void ReleaseEvent()
     {
         if (ctx != null)
             ctx.unit.UnitIsDeadEvent -= UnitIsDead;

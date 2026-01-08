@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 [CreateAssetMenu(menuName = "Strategy/Move/Player")]
 public class PlayerMoveStrategy : MoveStrategy
 {
+    /// <summary>
+    /// 속성 존. ---------------------------------------
+    /// </summary>
     [Header("Ellipse Settings")]
     [SerializeField] private float radiusX = 5f;
     [SerializeField] private float radiusY = 3f;
@@ -16,15 +19,33 @@ public class PlayerMoveStrategy : MoveStrategy
 
     private float angle = Mathf.PI / 2;
 
+
+
+    /// <summary>
+    /// 구현 코드 존. --------------------------------------
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="acceleration"></param>
+    /// <param name="maxSpeed"></param>
+
+    //거의 Enemy 전용. 신경쓰지 마셈.
     public override void Accelerate(Vector2 direction,float acceleration, float maxSpeed)
     {
     }
 
+    //거의 Enemy 전용, 신경 끄쇼.
+    public override void Move_Impulse(Vector2 direction, float power)
+    {
+        return;
+    }
+
+    //미구현. 신경 끄쇼.
     public override async Task AsyncMove(Vector2 direction)
     {
         await Task.Yield();
     }
 
+    //이니셜라이즈 함수.
     public override void Initialize(Unit _unit)
     {
         unit = _unit;
@@ -38,6 +59,7 @@ public class PlayerMoveStrategy : MoveStrategy
         unit.transform.position = new Vector3(x, InitialPos.y+y+deltaY, 0f);
     }
 
+    //MoveComponent측에서 매 프레임마다 호출하는 함수. 실질적인 움직임을 담당하는 코드임.
     public override void Move(Vector2 direction)
     {
         direction.x = -direction.x;
@@ -50,10 +72,5 @@ public class PlayerMoveStrategy : MoveStrategy
         float y = radiusY * Mathf.Sin(angle);
 
         unit.transform.position = new Vector3(x, InitialPos.y + y +deltaY, 0f);
-    }
-
-    public override void Move_Impulse(Vector2 direction, float power)
-    {
-        return;
     }
 }

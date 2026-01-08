@@ -2,8 +2,9 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemProvider
+public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions
 {
+    //의존성 DIP적용 검토하기.
     private Character characterUnit;
     private List<Enemy> enemyUnits;
 
