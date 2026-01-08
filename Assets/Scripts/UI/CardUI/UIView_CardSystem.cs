@@ -98,7 +98,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        viewCtx?.cardSystemStatus.CardUsed(_card.CardData);
+        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
     }
 
 
@@ -145,7 +145,7 @@ public class UIView_CardSystem : UIView
 
     public void GetDeckCards()
     {
-        ActivatePannel(viewCtx.cardSystemStatus.deckCards);
+        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
     }
 
     public void GetWormholeCards()
@@ -205,9 +205,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemStatus.GetDeckCnt().ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemStatus.GetGraveCnt().ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemStatus.GetHandCnt().ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
+        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
     }
 
     protected override void OnShow()
@@ -231,7 +231,7 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
 
-        viewCtx.cardSystemStatus.CardUsingFinished();
+        viewCtx.cardSystemProvider.CardUsingFinished();
 
         SetText();
 

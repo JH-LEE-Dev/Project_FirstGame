@@ -8,7 +8,7 @@ public class UIInstaller : MonoBehaviour
 {
     //외부 의존성
     private InputManager inputManager;
-    private ICardSystemStatus cardSystemStatus;
+    private ICardSystemProvider cardSystemProvider;
     private ICardSystemEvent cardSystemEvent;
     private IGameFlowProvider gameFlowProvider;
     private IBootStrapProvider bootStrapProvider;
@@ -44,13 +44,13 @@ public class UIInstaller : MonoBehaviour
     }
 
     public void DependencyInjection_Gameplay(ICardSystemEvent _cardSystemEvent,
-        ICardSystemStatus _cardSystemStatus,IGameFlowProvider _gameFlowProvider)
+        ICardSystemProvider _cardSystemProvider,IGameFlowProvider _gameFlowProvider)
     {
         cardSystemEvent = _cardSystemEvent;
-        cardSystemStatus = _cardSystemStatus;
+        cardSystemProvider = _cardSystemProvider;
         gameFlowProvider = _gameFlowProvider;
 
-        uiManager.Initialize_GameplayScene(cardSystemStatus);
+        uiManager.Initialize_GameplayScene(cardSystemProvider);
 
         SetupUIElement();
 
@@ -147,7 +147,7 @@ public class UIInstaller : MonoBehaviour
 
     public void ResetVariable()
     {
-        cardSystemStatus = null;
+        cardSystemProvider = null;
     }
 
     private void SetAnchorToCanvas(Transform transform)

@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandler, ICardSystemEvent, ICardSystemActions
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, ICardSystemEvent, ICardSystemActions
 {
     public event Action<CardDataInstance> CardDrawedEvent;
     public event Action<List<CardDataInstance>> CardPileDrawedEvent;
@@ -25,7 +25,7 @@ public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandle
     private List<CardDataInstance> handPile = new List<CardDataInstance>();
     private List<CardDataInstance> gravePile = new List<CardDataInstance>();
 
-    IReadOnlyList<CardDataInstance> ICardSystemStatus.deckCards => deckPile;
+    IReadOnlyList<CardDataInstance> ICardSystemProvider.deckCards => deckPile;
 
     private Queue<CardEffectStrategy> cardSystemActions_BeforeAttack = new Queue<CardEffectStrategy>();
     private Queue<CardEffectStrategy> cardSystemActions_AfterAttack = new Queue<CardEffectStrategy>();
