@@ -52,17 +52,19 @@ public class HandSystem : MonoBehaviour
         StartPreview(_card);
     }
 
+
+
     private void StartPreview(CardInstance card)
     {
         // 프리뷰 중인 카드가 이미 존재할 경우, 기존 카드의 프리뷰를 종료한다.
         if (previewCard != null && previewCard != card)
-            previewCard.EndPreview();
+            previewCard.Motion.EndPreview();
 
         // 새로운것으로 교체.
         previewCard = card;
 
         // 프리뷰 시작(센터 이동 + 확대)
-        previewCard.StartPreview(previewRoot.anchoredPosition);
+        previewCard.Motion.StartPreview(previewRoot.anchoredPosition);
 
 
 
@@ -74,7 +76,7 @@ public class HandSystem : MonoBehaviour
         if (previewCard == null) return;
 
         // 카드 비주얼만 원래대로
-        previewCard.EndPreview();
+        previewCard.Motion.EndPreview();
         previewCard = null;
 
         computeArc();
@@ -88,14 +90,27 @@ public class HandSystem : MonoBehaviour
 
         if (previewCard == _card)
         {
-            // 프리뷰 상태 종료 (ignoreHandLayout false로 복귀)
-            previewCard.EndPreview();
+            // 프리뷰 상태 종료
+            previewCard.Motion.EndPreview();
             previewCard = null;
         }
         else if (previewCard != null)
         {
-            // 다른 카드 프리뷰 중인데 다른 카드를 사용한다? : 프리뷰 취소
+            // 다른 카드 프리뷰 중인데 다른 카드를 사용한다? : 기존 카드 프리뷰 취소
             CancelPreview();
+        }
+
+        CardType type = _card.CardData.GetCardData().cardType;
+
+        switch (type)
+        {
+            case CardType.Bullet:
+                UseBulletCard();
+                break;
+
+            case CardType.Magic:
+                UseMagicCard();
+                break;
         }
 
         // 호버링 초기화.
@@ -105,13 +120,24 @@ public class HandSystem : MonoBehaviour
         cards.RemoveAt(idx);
 
         // 전부 초기화 한다.
-        _card.ExitHand();
+        _card.Motion.ExitHand();
         _card.gameObject.SetActive(false); // 임시, 연출 후 비활성으로...
         // 풀링 반납
         cardSystem.ReturnHandCard(_card);
 
         // 호 재계산
         computeArc();
+
+
+    }
+    private void UseBulletCard()
+    {
+
+    }
+
+    private void UseMagicCard()
+    {
+
     }
 
     public void ProcessDraw(Vector3 _cardSpawnPos, CardDataInstance _cardData)
@@ -124,7 +150,7 @@ public class HandSystem : MonoBehaviour
 
         // 손 패로 이동.
         card.gameObject.SetActive(true);
-        card.EnterHand();
+        card.Motion.EnterHand();
 
         // 덱 위치에서 시작시키기 (파다다닥 출발점)
         var rt = card.GetComponent<RectTransform>();
@@ -181,7 +207,7 @@ public class HandSystem : MonoBehaviour
             {
                 var c = cards[i];
                 if (hasPreview && c == previewCard) continue;
-                c.UpdateTargetPos(basePos, 0f);
+                c.Motion.SetTarget(basePos, 0f);
                 break;
             }
             return;
@@ -228,7 +254,7 @@ public class HandSystem : MonoBehaviour
 
             float tiltZ = -angle * 0.8f;
 
-            card.UpdateTargetPos(pos, tiltZ);
+            card.Motion.SetTarget(pos, tiltZ);
 
             layoutIndex++;
         }

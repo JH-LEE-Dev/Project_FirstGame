@@ -95,11 +95,13 @@ public class UIView_CardSystem : UIView
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
-        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
-
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
+
+        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
     }
+
+
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
     {
@@ -148,15 +150,11 @@ public class UIView_CardSystem : UIView
 
     public void GetWormholeCards()
     {
-        List<CardDataInstance> temp;
-
         // 추후 구현
     }
 
     public void GetExtinctionCards()
     {
-        List<CardDataInstance> temp;
-
         // 추후 구현
     }
 
