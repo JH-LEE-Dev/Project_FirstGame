@@ -137,7 +137,7 @@ MonoBehaviour:
   previewFloatFreq: 0.2
   drawColor: {r: 1, g: 1, b: 0.07, a: 1}
   colorDuration: 0.9
-  drawOverlay: {fileID: 0}
+  drawOverlay: {fileID: 575462182875157013}
 --- !u!1 &4476822077776002057
 GameObject:
   m_ObjectHideFlags: 0
