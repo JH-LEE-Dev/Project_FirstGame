@@ -44,8 +44,8 @@ public class UIView_CardSystem : UIView
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent {  get { return pannelContent; } }
 
-    private bool bBlockWorking = false;
-    public bool BlockWorking { get { return bBlockWorking; } set { bBlockWorking = value; } }
+    private bool bWorkingBlock = false;
+    public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
     protected override void Awake()
     {
@@ -175,7 +175,7 @@ public class UIView_CardSystem : UIView
         if (null == deckSystem)
             return;
 
-        bBlockWorking = true;
+        bWorkingBlock = true;
         deckSystem.CardDrawEffect(cardDataPile);
         SetText();
     }

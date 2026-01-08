@@ -226,7 +226,7 @@ public class DeckSystem : MonoBehaviour,
             return;
 
         if (currentDrawCount - 1 == _idx)
-            cardSystem.BlockWorking = false;
+            cardSystem.WorkingBlock = false;
 
         cardSystem.DrawEvent.Invoke(_endPos, _data);
         drawEffectParticle.Release(_performer);

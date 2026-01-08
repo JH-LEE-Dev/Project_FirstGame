@@ -81,6 +81,8 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         get { return originParentTransform; } 
         set { originParentTransform = value; } 
     }
+
+    //public bool 
     ///////////////////////////////////////////////
     
     public void RollbackParent()
@@ -399,6 +401,8 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerClick(PointerEventData eventData)
     {
         // 상우 : 뽑는 연출 중에는 모든 카드를 사용할 수 없게 해줘
+        if (true == cardSystem?.WorkingBlock)
+            return;
 
         // 마우스 우클릭
         if (eventData.button == PointerEventData.InputButton.Right)
