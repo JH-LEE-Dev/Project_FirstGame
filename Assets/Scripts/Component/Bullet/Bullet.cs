@@ -22,8 +22,9 @@ public class Bullet : MonoBehaviour
 
     private bool bFired = false;
 
-    private int currentEffectSlotCnt = 0;
+    private int currentOccupiedSlotCnt = 0;
     private int effectSlotCnt = 2;
+    bool bCanApplyEffect = true;
 
     private void Awake()
     {
@@ -102,5 +103,22 @@ public class Bullet : MonoBehaviour
     public void ApplyAttackModifier(float bonusDamage)
     {
         attack += bonusDamage;
+
+        IncreaseOccupiedSlotCnt();
+    }
+
+    public void IncreaseOccupiedSlotCnt()
+    {
+        ++currentOccupiedSlotCnt;
+
+        if(currentOccupiedSlotCnt >= effectSlotCnt)
+        {
+            bCanApplyEffect = false;
+        }
+    }
+
+    public bool CanApplyBulletEffect()
+    {
+        return bCanApplyEffect;
     }
 }

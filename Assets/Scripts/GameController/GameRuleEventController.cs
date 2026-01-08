@@ -12,8 +12,8 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent += character.ResetbCanAction;
         }
 
-        cardEventSetter.CardUsingFinishedEvent -= character.SetbCanAction;
-        cardEventSetter.CardUsingFinishedEvent += character.SetbCanAction;
+        cardEventSetter.CardUsingTurnFinished -= character.SetbCanAction;
+        cardEventSetter.CardUsingTurnFinished += character.SetbCanAction;
 
         character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
         character.PlayerAttackIsFinishedEvent += OnPlayerAttackFinished;
@@ -29,7 +29,7 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
         }
 
-        cardEventSetter.CardUsingFinishedEvent -= character.SetbCanAction;
+        cardEventSetter.CardUsingTurnFinished -= character.SetbCanAction;
 
         character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
     }

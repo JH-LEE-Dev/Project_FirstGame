@@ -3,10 +3,6 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private float EnemyMoveDelay = 2f;
-
-    public event Action<int> waveIdxDeclareEvent;
-
     private WaveManager waveManager;
     private GameStateMachine gameStateMachine;
     private InputManager inputManager;

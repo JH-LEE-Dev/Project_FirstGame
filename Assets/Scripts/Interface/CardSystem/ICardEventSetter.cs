@@ -4,9 +4,9 @@ using UnityEngine;
 
 public interface ICardEventSetter
 {
-    event Action HandChangedEvent;
     event Action<CardDataInstance> CardDrawedEvent;
-    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
+    event Action<List<CardDataInstance>> CardPileDrawedEvent;
     event Action CardDrawFinishedEvent;
-    event Action CardUsingFinishedEvent;
+    event Action CardUsingTurnFinished;
+    event Action<bool> CardUsingVerificationEvent;
 }

@@ -9,6 +9,9 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    //사용 승인을 받은 카드
+    private CardInstance verificationWaitCard;
+
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
     [Space]
@@ -42,7 +45,7 @@ public class UIView_CardSystem : UIView
     [Header("Pannel")]
     [SerializeField] private GameObject cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
-    public GameObject PannelContent {  get { return pannelContent; } }
+    public GameObject PannelContent { get { return pannelContent; } }
 
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
@@ -66,7 +69,7 @@ public class UIView_CardSystem : UIView
 
     private void BindingFunction()
     {
-        if(null != handSystem)
+        if (null != handSystem)
         {
             DrawEvent += handSystem.ProcessDraw;
         }
@@ -90,9 +93,24 @@ public class UIView_CardSystem : UIView
     {
         viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
 
-        // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
-        handSystem?.TryUseCard(_card);
+        //카드 사용 승인 대기 카드
+        verificationWaitCard = _card;
     }
+
+    public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
+    {
+        if (boolean)
+        {
+            // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
+            handSystem?.TryUseCard(verificationWaitCard);
+        }
+        else
+        {
+            //카드 사용 실패.
+            Debug.Log("이 카드를 사용할 수 없습니다.");
+        }
+    }
+
     public void OnCardLeftClick(CardInstance _card)
     {
         // 좌클릭을 했을 때 이쪽으로 온다. (프리뷰)
