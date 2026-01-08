@@ -668,7 +668,7 @@ MonoBehaviour:
   deckSystem: {fileID: 4229179034747352173}
   drawPathPoints:
   - {fileID: 4997572091456650835}
-  drawEndPoint: {fileID: 2558692794718500451}
+  drawEndPoint: {fileID: 5082536235293513785}
   cardPannel: {fileID: 3014680100241126493}
   pannelContent: {fileID: 1618857870683622363}
 --- !u!1 &4291138023601622407
@@ -1619,10 +1619,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9155673763916870877}
     m_Modifications:
-    - target: {fileID: 4304753320680596879, guid: c951083fd26865445939431699493136, type: 3}
-      propertyPath: drawEffectPrefab
-      value: 
-      objectReference: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
+    - target: {fileID: 5153325777231808987, guid: c951083fd26865445939431699493136, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -202
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153325777231808987, guid: c951083fd26865445939431699493136, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -87
+      objectReference: {fileID: 0}
     - target: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1708,8 +1712,7 @@ PrefabInstance:
       value: DeckSystem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 3985930604425416069, guid: c951083fd26865445939431699493136, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c951083fd26865445939431699493136, type: 3}
@@ -1727,6 +1730,11 @@ MonoBehaviour:
 --- !u!224 &4997572091456650835 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4924247403232587697, guid: c951083fd26865445939431699493136, type: 3}
+  m_PrefabInstance: {fileID: 75577932398760418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5082536235293513785 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5153325777231808987, guid: c951083fd26865445939431699493136, type: 3}
   m_PrefabInstance: {fileID: 75577932398760418}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &5199692094062942720 stripped

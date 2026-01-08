@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -42,6 +43,9 @@ public class UIView_CardSystem : UIView
     [SerializeField] private GameObject cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent {  get { return pannelContent; } }
+
+    private bool bBlockWorking = false;
+    public bool BlockWorking { get { return bBlockWorking; } set { bBlockWorking = value; } }
 
     protected override void Awake()
     {
@@ -117,8 +121,7 @@ public class UIView_CardSystem : UIView
 
     public void GetDeckCards()
     {
-        List<CardDataInstance> temp = new();
-        ActivatePannel(temp);
+        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
     }
 
     public void GetWormholeCards()
@@ -135,7 +138,7 @@ public class UIView_CardSystem : UIView
         // 추후 구현
     }
 
-    private void ActivatePannel(List<CardDataInstance> _inCards)
+    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -172,13 +175,15 @@ public class UIView_CardSystem : UIView
         if (null == deckSystem)
             return;
 
+        bBlockWorking = true;
         deckSystem.CardDrawEffect(cardDataPile);
         SetText();
     }
 
-    public void CallCardPannel(bool _activate)
+    public void CallDeckPannel(bool _activate)
     {
         cardPannel?.SetActive(_activate);
+        GetDeckCards();
     }
     /////////////////////////////////////////////////
 

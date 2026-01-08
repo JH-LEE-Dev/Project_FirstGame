@@ -143,7 +143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -411.11115, y: -33.333313}
+  m_AnchoredPosition: {x: -411.11115, y: -79}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5184474827845888027
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f644eca35f63a49be56c1be9c607b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
-  drawEffectPrefab: {fileID: 599737310554635610, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
+  drawEffectPrefab: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
   wealthyRect: {fileID: 102396723257274795}
   cardBackRect: {fileID: 7900133915466477456}
   wealthyDuration: 2.5
@@ -241,7 +241,9 @@ MonoBehaviour:
   drawDelay: 0.15
   drawDuration: 1.5
   drawFirstPointDist: 3
+  bMidPointRandom: 1
   drawMidPointPower: 5
+  bEndPointRandom: 0
   drawEndPointPower: 5
   drawEase: 6
   enterEventDuration: 0.4
