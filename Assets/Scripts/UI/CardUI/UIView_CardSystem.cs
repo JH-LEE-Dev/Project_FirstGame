@@ -41,6 +41,10 @@ public class UIView_CardSystem : UIView
     public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
     public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
+    // ¹¦Áö
+    [Header("Graveyard Settings")]
+    [SerializeField] private GameObject gravePrefab = null;
+
     // µ¦, ¹¦Áö, ¼Ò¸ê °ø¿ë
     [Header("Pannel")]
     [SerializeField] private GameObject cardPannel = null;
