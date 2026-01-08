@@ -82,9 +82,11 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         set { originParentTransform = value; } 
     }
 
+    public bool IgnoreHandLayout { get { return ignoreHandLayout; } set { ignoreHandLayout = value; } }
+
     //public bool 
     ///////////////////////////////////////////////
-    
+
     public void RollbackParent()
     {
         if (null == originParentTransform)

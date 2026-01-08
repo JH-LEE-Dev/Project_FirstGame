@@ -127,10 +127,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2529118001574126904, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3014680100241126493, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4146666310136882343, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}

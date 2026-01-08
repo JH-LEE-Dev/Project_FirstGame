@@ -54,8 +54,10 @@ public class PoolingSystem : MonoBehaviour
         for (int i = 0; i < otherPoolSize; ++i)
         {
             GameObject go = Instantiate(cardUIPrefab, this.transform);
+            go.transform.localScale = new Vector3(3.7f, 3.7f, 1f);
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
+            card.IgnoreHandLayout = true;
             card.Initialize(cardSystem);
 
             otherCardPool.Add(card);
