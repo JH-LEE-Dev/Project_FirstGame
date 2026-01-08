@@ -3,7 +3,7 @@ using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Strategy/CardEffect/Bullet/MeteorShower")]
-public class MeteorShower : CardEffectStrategy
+public class MeteorShowerStrategy : CardEffectStrategy
 {
     public override void Execute_Status()
     {

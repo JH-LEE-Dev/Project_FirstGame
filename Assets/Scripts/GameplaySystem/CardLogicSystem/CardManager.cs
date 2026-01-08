@@ -6,7 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, ICardSystemEvent, ICardSystemActions
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, 
+    ICardSystemEvent, ICardSystemActions
 {
     public event Action<CardDataInstance> CardDrawedEvent;
     public event Action<List<CardDataInstance>> CardPileDrawedEvent;
