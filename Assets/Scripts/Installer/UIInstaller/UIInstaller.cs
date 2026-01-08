@@ -8,10 +8,10 @@ public class UIInstaller : MonoBehaviour
 {
     private InputManager inputManager;
     private UIManager uiManager;
-    private ICardSystemProvider cardSystemProvider;
-    private ICardEventSetter cardEventSetter;
+    private ICardSystemStatus cardSystemStatus;
+    private ICardSystemEvent cardSystemEvent;
     private GameController gameController;
-    private IGameFlowController gameFlowController;
+    private IBootStrapProvider bootStrapProvider;
 
 
     [Header("MainMenu Scene Objects")]
@@ -31,23 +31,23 @@ public class UIInstaller : MonoBehaviour
     private Canvas canvas_GamplayScene;
 
 
-    public void Initialize(IGameFlowController _gameFlowController,InputManager _inputManager)
+    public void Initialize(IBootStrapProvider _bootStrapProvider,InputManager _inputManager)
     {
         inputManager = _inputManager;
         uiManager = GetComponent<UIManager>();
-        gameFlowController = _gameFlowController;
+        bootStrapProvider = _bootStrapProvider;
 
         uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(ICardEventSetter _cardEventSetter,
-        ICardSystemProvider _cardSystemProvider,GameController _gameController)
+    public void DependencyInjection_Gameplay(ICardSystemEvent _cardSystemEvent,
+        ICardSystemStatus _cardSystemStatus,GameController _gameController)
     {
-        cardEventSetter = _cardEventSetter;
-        cardSystemProvider = _cardSystemProvider;
+        cardSystemEvent = _cardSystemEvent;
+        cardSystemStatus = _cardSystemStatus;
         gameController = _gameController;
 
-        uiManager.Initialize_GameplayScene(cardSystemProvider);
+        uiManager.Initialize_GameplayScene(cardSystemStatus);
 
         SetupUIElement();
 
@@ -100,8 +100,8 @@ public class UIInstaller : MonoBehaviour
 
         UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
 
-        mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
-        mainMenuUIView.PlayButtonClickedEvent += gameFlowController.GoToGameplayScene;
+        mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
+        mainMenuUIView.PlayButtonClickedEvent += bootStrapProvider.GoToGameplayScene;
     }
 
     public void GameplayLevelStarted()
@@ -144,7 +144,7 @@ public class UIInstaller : MonoBehaviour
 
     public void ResetVariable()
     {
-        cardSystemProvider = null;
+        cardSystemStatus = null;
     }
 
     private void SetAnchorToCanvas(Transform transform)
@@ -160,16 +160,16 @@ public class UIInstaller : MonoBehaviour
 
     private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
     {
-        cardEventSetter.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
-        cardEventSetter.CardPileDrawedEvent += cardSystemObject.CardDrawed;
-        cardEventSetter.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardEventSetter.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
-        cardEventSetter.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
-        cardEventSetter.CardUsingVerificationEvent += cardSystemObject.CardUsingApproved;
-        cardEventSetter.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        cardEventSetter.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
-        cardEventSetter.CardUsingTurnFinished -= gameplayObject.CardUsingFinished;
-        cardEventSetter.CardUsingTurnFinished += gameplayObject.CardUsingFinished;
+        cardSystemEvent.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardSystemEvent.CardPileDrawedEvent += cardSystemObject.CardDrawed;
+        cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardSystemEvent.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
+        cardSystemEvent.CardUsingVerificationEvent += cardSystemObject.CardUsingApproved;
+        cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
+        cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -190,11 +190,11 @@ public class UIInstaller : MonoBehaviour
         UIView_CardSystem cardSystemObject = uiManager.GetView<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.GetView<UIView_Gameplay>();
 
-        cardEventSetter.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
-        cardEventSetter.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardEventSetter.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
-        cardEventSetter.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        cardEventSetter.CardUsingTurnFinished -= gameplayObject.CardUsingFinished;
+        cardSystemEvent.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
+        cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -224,7 +224,7 @@ public class UIInstaller : MonoBehaviour
     {
         UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
 
-        mainMenuUIView.PlayButtonClickedEvent -= gameFlowController.GoToGameplayScene;
+        mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
     }
 
     public void ReleaseDependency_GameplayScene()

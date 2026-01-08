@@ -53,7 +53,8 @@ public enum PlayerTurnStateProcess
 public enum CardName
 {
     BonusDamage,
-    DrawAgain
+    DrawAgain,
+    MeteorShower
 }
 
 public enum CardEffectApplyType
@@ -67,6 +68,14 @@ public enum CardEffectType
 {
     BonusDamage,
     DrawAgain,
+    MeteorShower,
+}
+
+public enum CardSystemActionTimingType
+{
+    BeforeAttack,
+    AfterAttack,
+    NextTurn
 }
 
 public enum CardInstanceType

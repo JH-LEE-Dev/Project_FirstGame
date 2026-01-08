@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICardSystemProvider
+public interface ICardSystemStatus
 {
     public void CardUsed(CardDataInstance usedCard);
     public void CardUsingFinished();

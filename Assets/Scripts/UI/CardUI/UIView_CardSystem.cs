@@ -210,9 +210,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemStatus.GetDeckCnt().ToString();
+        graveCntText.text = "Grave : " + viewCtx.cardSystemStatus.GetGraveCnt().ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemStatus.GetHandCnt().ToString();
     }
 
     protected override void OnShow()
@@ -236,7 +236,7 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
 
-        viewCtx.cardSystemProvider.CardUsingFinished();
+        viewCtx.cardSystemStatus.CardUsingFinished();
 
         SetText();
 

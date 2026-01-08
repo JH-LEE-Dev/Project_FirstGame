@@ -2,13 +2,14 @@ using UnityEngine;
 
 public abstract class CardEffectStrategy : ScriptableObject
 {
-    protected ICardLogicSystem cardLogicSystem;
+    protected ICardStrategyHandler cardLogicSystem;
     protected IUnitLogicSystemProvider unitLogicSystem;
 
     [SerializeField] protected CardEffectApplyType effectApplyType;
+    [SerializeField] protected CardSystemActionTimingType cardSystemActionTimingType;
     protected bool bUpgrade = false;
 
-    public void Initialize(ICardLogicSystem _cardLogicSystem,IUnitLogicSystemProvider _unitLogicSystem)
+    public void Initialize(ICardStrategyHandler _cardLogicSystem,IUnitLogicSystemProvider _unitLogicSystem)
     {
         cardLogicSystem = _cardLogicSystem;
         unitLogicSystem = _unitLogicSystem;
@@ -25,5 +26,10 @@ public abstract class CardEffectStrategy : ScriptableObject
     public CardEffectApplyType GetCardEffectApplyType()
     {
         return effectApplyType;
+    }
+
+    public CardSystemActionTimingType GetCardSystemActionTimingType()
+    {
+        return cardSystemActionTimingType;
     }
 }

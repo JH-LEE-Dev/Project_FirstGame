@@ -16,7 +16,7 @@ public class UIView_Gameplay : UIView
         base.Awake();
 
         if (crosshairUIPrefab != null)
-            crosshairUI = Instantiate(crosshairUIPrefab, uiRoot);
+            crosshairUI = Instantiate(crosshairUIPrefab, this.transform);
 
         crosshairUI.SetActive(false);
     }
@@ -53,7 +53,7 @@ public class UIView_Gameplay : UIView
     public void PointerMoved(Vector2 move)
     {
         RectTransform uiRect = crosshairUI.GetComponent<RectTransform>();
-        uiRect.position = move;
+        uiRect.anchoredPosition = move;
     }
 
     public override void SetupUI()

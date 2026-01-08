@@ -1,10 +1,9 @@
 public class GameRuleEventController
 {
-    private GameController gameController;
-
-    public void Bind(Character character, GameController gameController,ICardEventSetter cardEventSetter)
+    public void Bind(Character character, IGameFlowProvider gameFlowProvider,ICardSystemEvent cardSystemEvent,
+        ICardSystemActions cardSystemActions)
     {
-        GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
+        GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
         if (enemyTurnState != null)
         {
@@ -12,15 +11,15 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent += character.ResetbCanAction;
         }
 
-        cardEventSetter.CardUsingTurnFinished -= character.SetbCanAction;
-        cardEventSetter.CardUsingTurnFinished += character.SetbCanAction;
+        cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
+        cardSystemEvent.CardUsingTurnFinishedEvent += character.SetbCanAction;
 
-        character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
-        character.PlayerAttackIsFinishedEvent += OnPlayerAttackFinished;
-        this.gameController = gameController;
+        character.PlayerAttackIsFinishedEvent -= cardSystemActions.PlayerTurnFinished;
+        character.PlayerAttackIsFinishedEvent += cardSystemActions.PlayerTurnFinished;
     }
 
-    public void Release(Character character, GameController gameController, ICardEventSetter cardEventSetter)
+    public void Release(Character character, GameController gameController, ICardSystemEvent cardEventSetter
+        ,ICardSystemActions cardSystemActions)
     {
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -29,13 +28,8 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
         }
 
-        cardEventSetter.CardUsingTurnFinished -= character.SetbCanAction;
+        cardEventSetter.CardUsingTurnFinishedEvent -= character.SetbCanAction;
 
-        character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
-    }
-
-    private void OnPlayerAttackFinished()
-    {
-        gameController.PlayerTurnIsFinished();
+        character.PlayerAttackIsFinishedEvent -= cardSystemActions.PlayerTurnFinished;
     }
 }

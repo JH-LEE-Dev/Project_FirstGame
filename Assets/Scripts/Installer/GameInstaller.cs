@@ -30,12 +30,12 @@ public class GameInstaller : MonoBehaviour
         gameServiceLocator.Initialize(cameraController, gameController);
         waveManager.Initialize(waveDatabase);
         gameController.Initialize(waveManager, inputManager, cardManager);
-        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,
+        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem);
         cardEffectManager.Initialize(unitLogicSystem, cardManager);
-        cardManager.Initialize(unitLogicSystem);
+        cardManager.Initialize(unitLogicSystem,gameController);
 
-        Bind(cardManager, cardEffectManager);
+        BindEvent(cardManager, cardEffectManager);
     }
 
     private void Awake()
@@ -50,7 +50,7 @@ public class GameInstaller : MonoBehaviour
 
     private void OnDestroy()
     {
-        cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
+        ReleaseEvent();
     }
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
@@ -58,9 +58,14 @@ public class GameInstaller : MonoBehaviour
         uiInstaller.DependencyInjection_Gameplay(cardManager,cardManager, gameController);
     }
 
-    public void Bind(CardManager _cardManager, CardEffectManager _cardEffectManager)
+    public void BindEvent(CardManager _cardManager, CardEffectManager _cardEffectManager)
     {
         cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
         cardManager.CardUsedEvent += cardEffectManager.ExecuteCardEffect;
+    }
+
+    public void ReleaseEvent()
+    {
+        cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
     }
 }

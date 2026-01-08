@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class BootStrap : MonoBehaviour, IGameFlowController
+public class BootStrap : MonoBehaviour, IBootStrapProvider
 {
     [SerializeField] bool bTempScene = false;
 
