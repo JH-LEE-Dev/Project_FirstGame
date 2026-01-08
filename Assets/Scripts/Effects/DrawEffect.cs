@@ -20,7 +20,7 @@ public class DrawEffect : MonoBehaviour
         deckSystem = _deckSystem; 
     }
 
-    public void PlayingDrawEvent(float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
+    public void PlayingDrawEvent(int _idx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
@@ -29,14 +29,14 @@ public class DrawEffect : MonoBehaviour
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.AppendInterval(_spawnDelay);
+        activeSeq.AppendInterval(_idx * _spawnDelay);
 
         activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CatmullRom, PathMode.TopDown2D, 10, Color.green)
             .SetUpdate(false)
             .SetEase(_drawEase)
             .OnComplete(() =>
             {
-                deckSystem?.CallOneCardDrawCompleted(transform.position, cardDataInstance, gameObject);
+                deckSystem?.CallOneCardDrawCompleted(_idx, transform.position, cardDataInstance, gameObject);
                 activeRotate.Kill();
             }));
     }

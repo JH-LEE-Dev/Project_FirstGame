@@ -78,3 +78,10 @@ public enum CardSystemActionTimingType
     NextTurn
 }
 
+public enum CardInstanceType
+{
+    Hand,
+    Other,
+    END
+}
+

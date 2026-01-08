@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,11 +41,18 @@ public class UIView_CardSystem : UIView
     public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
     public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
+    // 묘지
+    [Header("Graveyard Settings")]
+    [SerializeField] private GameObject gravePrefab = null;
+
     // 덱, 묘지, 소멸 공용
     [Header("Pannel")]
     [SerializeField] private GameObject cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
+
+    private bool bWorkingBlock = false;
+    public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
     protected override void Awake()
     {
@@ -87,11 +95,13 @@ public class UIView_CardSystem : UIView
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
-        viewCtx?.cardSystemStatus.CardUsed(_card.CardData);
-
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
+
+        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
     }
+
+
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
     {
@@ -135,25 +145,20 @@ public class UIView_CardSystem : UIView
 
     public void GetDeckCards()
     {
-        List<CardDataInstance> temp = new();
-        ActivatePannel(temp);
+        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
     }
 
     public void GetWormholeCards()
     {
-        List<CardDataInstance> temp;
-
         // 추후 구현
     }
 
     public void GetExtinctionCards()
     {
-        List<CardDataInstance> temp;
-
         // 추후 구현
     }
 
-    private void ActivatePannel(List<CardDataInstance> _inCards)
+    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -166,23 +171,17 @@ public class UIView_CardSystem : UIView
         if (0 >= poolCount || inCount > poolCount)
             return;
 
-        for (int i = 0; i < inCount; ++i)
+        for (int i = 0; i < poolCount; ++i)
         {
-            pool[i].ApplyData(_inCards[i]);
-            pool[i].transform.SetParent(pannelContent.transform);
-            pool[i].gameObject.SetActive(true);
+            if(i < inCount)
+            {
+                pool[i].ApplyData(_inCards[i]);
+                pool[i].transform.SetParent(pannelContent.transform);
+                pool[i].gameObject.SetActive(true);
+            }
+            else
+                pool[i].gameObject.SetActive(false);
         }
-    }
-
-    private void DeActivatePannel()
-    {
-        if (null == poolingSystem)
-            return;
-
-        var pool = poolingSystem.OtherCardPool;
-
-        for (int i = 0; i < pool.Count; ++i)
-            pool[i].gameObject.SetActive(false);
     }
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
@@ -190,13 +189,15 @@ public class UIView_CardSystem : UIView
         if (null == deckSystem)
             return;
 
+        bWorkingBlock = true;
         deckSystem.CardDrawEffect(cardDataPile);
         SetText();
     }
 
-    public void CallCardPannel(bool _activate)
+    public void CallDeckPannel(bool _activate)
     {
         cardPannel?.SetActive(_activate);
+        GetDeckCards();
     }
     /////////////////////////////////////////////////
 

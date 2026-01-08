@@ -24,7 +24,11 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private float drawDelay = 0.15f;
     [SerializeField] private float drawDuration = 1f;
     [SerializeField] private float drawFirstPointDist = 2f;
+    [Space]
+    [SerializeField] private bool bMidPointRandom = false;
     [SerializeField] private float drawMidPointPower = 2f;
+    [Space]
+    [SerializeField] private bool bEndPointRandom = false;
     [SerializeField] private float drawEndPointPower = 2f;
     [SerializeField] private Ease drawEase = Ease.OutQuad;
 
@@ -55,6 +59,8 @@ public class DeckSystem : MonoBehaviour,
 
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
+
+    private int currentDrawCount = 0;
 
     protected void Awake()
     {
@@ -121,8 +127,8 @@ public class DeckSystem : MonoBehaviour,
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
         RectTransform endPoint = cardSystem.DrawEndPoint;
 
-        int cnt = dataList.Count;
-        for (int i = 0; i < cnt; i++)
+        currentDrawCount = dataList.Count;
+        for (int i = 0; i < currentDrawCount; i++)
         {
             GameObject performer = drawEffectParticle.Get();
             DrawEffect script = performer?.GetComponent<DrawEffect>();
@@ -134,16 +140,20 @@ public class DeckSystem : MonoBehaviour,
             Vector3 endPointPos = endPoint.position;
 
             // mid
-            midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
-            midPointPos.y += Random.Range(-1f, 1f) * drawMidPointPower;
+            if (bMidPointRandom)
+            {
+                midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
+                midPointPos.y += Random.Range(-0.25f, 0.25f) * drawMidPointPower;
+            }
 
             // end
-            endPointPos.x += Random.Range(-1f, 1f) * drawEndPointPower;
+            if (bEndPointRandom)
+                endPointPos.x += Random.Range(-1f, 1f) * drawEndPointPower;
 
             Vector3[] pathPoints = { firstPointPos, midPointPos, endPointPos };
 
             script.CardDataInstance = dataList[i];
-            script.PlayingDrawEvent(i * drawDelay, drawDuration, drawEase, pathPoints);
+            script.PlayingDrawEvent(i, drawDelay, drawDuration, drawEase, pathPoints);
         }
     }
 
@@ -207,12 +217,18 @@ public class DeckSystem : MonoBehaviour,
                     ExitEvent();
             }));
 
-        cardSystem?.CallCardPannel(true);
+        cardSystem?.CallDeckPannel(true);
     }
 
-    public void CallOneCardDrawCompleted(Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    public void CallOneCardDrawCompleted(int _idx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
     {
-        cardSystem?.DrawEvent.Invoke(_endPos, _data);
+        if (null == cardSystem)
+            return;
+
+        if (currentDrawCount - 1 == _idx)
+            cardSystem.WorkingBlock = false;
+
+        cardSystem.DrawEvent.Invoke(_endPos, _data);
         drawEffectParticle.Release(_performer);
     }
 
