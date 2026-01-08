@@ -54,7 +54,8 @@ public enum CardName
 {
     BonusDamage,
     DrawAgain,
-    MeteorShower
+    MeteorShower,
+    Flare
 }
 
 public enum CardEffectApplyType
@@ -69,13 +70,14 @@ public enum CardEffectType
     BonusDamage,
     DrawAgain,
     MeteorShower,
+    Flare,
 }
 
 public enum CardSystemActionTimingType
 {
     BeforeAttack,
     AfterAttack,
-    NextTurn
+    NextTurn,
 }
 
 public enum CardInstanceType
