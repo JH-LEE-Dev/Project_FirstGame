@@ -114,8 +114,6 @@ public class Bullet : MonoBehaviour
         {
             hit.TakeDamage(attack);
         }
-
-        BulletEffectIsFinishedEvent?.Invoke();
     }
 
     public void Fire(Vector2 dir)
@@ -153,5 +151,10 @@ public class Bullet : MonoBehaviour
     public bool CanApplyBulletEffect()
     {
         return bCanApplyEffect;
+    }
+
+    public void BulletEffectIsFinished()
+    {
+        BulletEffectIsFinishedEvent?.Invoke();
     }
 }

@@ -28,4 +28,14 @@ public class EMoveComponent : MoveComponent
     {
         moveStrategy.Accelerate(moveDirection, acceleration, maxSpeed);
     }
+
+    public override void SetImpulsePower(float power)
+    {
+        impulsePower = power;
+    }
+
+    public override void SetAccelerate(bool boolean)
+    {
+        bAccelerate = boolean;
+    }
 }
