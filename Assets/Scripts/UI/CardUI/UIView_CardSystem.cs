@@ -198,7 +198,7 @@ public class UIView_CardSystem : UIView
         Camera cam = Camera.main;
 
         int currHandCnt = handSystem.GetCurrentHandCardCount();
-        Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + currentDrawIdx + 1);
+        Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
 
         return NextEndPos;
     }

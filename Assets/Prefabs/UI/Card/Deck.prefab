@@ -239,13 +239,13 @@ MonoBehaviour:
   wealthyAngle: 1.5
   wealthyEase: 4
   drawDelay: 0.15
-  drawDuration: 1.5
+  drawDuration: 0.5
   drawFirstPointDist: 3
   bMidPointRandom: 1
   drawMidPointPower: 5
   bEndPointRandom: 0
   drawEndPointPower: 5
-  drawEase: 6
+  drawEase: 1
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15
   enterEventEase: 18

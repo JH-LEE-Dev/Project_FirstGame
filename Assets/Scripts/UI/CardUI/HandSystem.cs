@@ -273,7 +273,7 @@ public class HandSystem : MonoBehaviour
 
     public Vector2 PredictRightmostPosForCount(int nextCount)
     {
-        Vector2 basePos = handRoot.anchoredPosition;
+        Vector2 basePos = handRoot.position;
         if (nextCount <= 1) return basePos;
 
         float t = Mathf.InverseLerp(0f, 12f, nextCount);
