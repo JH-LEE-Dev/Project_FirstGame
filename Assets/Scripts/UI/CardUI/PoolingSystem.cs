@@ -27,7 +27,7 @@ public class PoolingSystem : MonoBehaviour
 
     private void OnDisable()
     {
-        ReturnParentforOtherPool();
+        
     }
 
     public void Init(UIView_CardSystem owner)
@@ -53,8 +53,8 @@ public class PoolingSystem : MonoBehaviour
         // other
         for (int i = 0; i < otherPoolSize; ++i)
         {
-            GameObject go = Instantiate(cardUIPrefab, this.transform);
-            go.transform.localScale = new Vector3(3.7f, 3.7f, 1f);
+            GameObject go = Instantiate(cardUIPrefab, cardSystem?.PannelContent.transform);
+            go.transform.localScale = new Vector3(4.4f, 4.4f, 1f);
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
             card.IgnoreHandLayout = true;
@@ -86,19 +86,5 @@ public class PoolingSystem : MonoBehaviour
 
         card.Clear();
         inactiveHandPool.Add(card);
-    }
-
-    public void ReturnParentforOtherPool()
-    {
-        for(int i = 0; i < otherPoolSize; ++i)
-        {
-            Transform currParent = otherCardPool[i].transform.parent;
-            Transform originParent = otherCardPool[i].OriginParentTrasnform;
-
-            if (currParent == originParent)
-                continue;
-
-            otherCardPool[i].RollbackParent();
-        }
     }
 }

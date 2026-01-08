@@ -169,23 +169,17 @@ public class UIView_CardSystem : UIView
         if (0 >= poolCount || inCount > poolCount)
             return;
 
-        for (int i = 0; i < inCount; ++i)
+        for (int i = 0; i < poolCount; ++i)
         {
-            pool[i].ApplyData(_inCards[i]);
-            pool[i].transform.SetParent(pannelContent.transform);
-            pool[i].gameObject.SetActive(true);
+            if(i < inCount)
+            {
+                pool[i].ApplyData(_inCards[i]);
+                pool[i].transform.SetParent(pannelContent.transform);
+                pool[i].gameObject.SetActive(true);
+            }
+            else
+                pool[i].gameObject.SetActive(false);
         }
-    }
-
-    private void DeActivatePannel()
-    {
-        if (null == poolingSystem)
-            return;
-
-        var pool = poolingSystem.OtherCardPool;
-
-        for (int i = 0; i < pool.Count; ++i)
-            pool[i].gameObject.SetActive(false);
     }
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)
