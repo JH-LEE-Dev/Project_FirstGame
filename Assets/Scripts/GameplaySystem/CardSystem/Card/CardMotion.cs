@@ -24,17 +24,20 @@ public class CardMotion : MonoBehaviour
     private Vector3 originScale;
 
     [Header("Preview")]
-    [SerializeField] private float previewScale = 3f;
+    [SerializeField] private float previewScale = 2.5f;
     [SerializeField] private float previewMoveDuration = 0.3f;
     [SerializeField] private float previewScaleDuration = 0.3f;
-    [SerializeField] private float previewEndScaleDur = 0.5f;
-
+    [SerializeField] private float previewEndScaleDur = 0.6f;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
     private Tween previewRotateTween;
     private Tween previewEndScaleTween;
 
-
+    [Header("Reject Shake")]
+    [SerializeField] private float rejectTotal = 0.2f;  
+    [SerializeField] private float rejectScale = 0.95f;   
+    [SerializeField] private float rejectAngle = 5f;    
+    private Sequence rejectSeq;
 
     // 이거 키면 패쪽으로 안빨려감.
     public bool IgnoreHandLayout = true;
@@ -111,6 +114,32 @@ public class CardMotion : MonoBehaviour
     }
 
 
+    // 못 쓸때.
+    public void PlayReject()
+    {
+        rejectSeq?.Kill();
+
+        Vector3 baseScale = transform.localScale;
+        float baseZ = transform.localEulerAngles.z;
+
+        float t1 = rejectTotal * 0.45f;
+        float t2 = rejectTotal * 0.55f;
+
+        float a1 = rejectAngle;
+        float a2 = -rejectAngle * 0.60f;
+        float a3 = rejectAngle * 0.25f;
+
+        rejectSeq = DOTween.Sequence()
+            .SetUpdate(true) 
+                             
+            .Join(transform.DOScale(baseScale * rejectScale, t1).SetEase(Ease.OutQuad))
+            .Append(transform.DOScale(baseScale, t2).SetEase(Ease.OutQuad))
+
+            .Insert(0f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a1), rejectTotal * 0.25f).SetEase(Ease.OutQuad))
+            .Insert(rejectTotal * 0.25f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a2), rejectTotal * 0.25f).SetEase(Ease.InOutQuad))
+            .Insert(rejectTotal * 0.50f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a3), rejectTotal * 0.20f).SetEase(Ease.InOutQuad))
+            .Insert(rejectTotal * 0.70f, transform.DOLocalRotate(new Vector3(0, 0, baseZ), rejectTotal * 0.30f).SetEase(Ease.OutQuad));
+    }
 
 
     // Hover
