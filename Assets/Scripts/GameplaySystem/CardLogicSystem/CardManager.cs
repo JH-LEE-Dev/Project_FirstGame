@@ -6,14 +6,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem,ICardEventSetter
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardLogicSystem, ICardEventSetter
 {
-    public event Action HandChangedEvent;
     public event Action<CardDataInstance> CardDrawedEvent;
     public event Action<List<CardDataInstance>> CardPileDrawedEvent;
     public event Action CardDrawFinishedEvent;
-    public event Action CardUsingFinishedEvent;
+    public event Action CardUsingTurnFinished;
     public event Action<CardData> CardUsedEvent;
+    public event Action<bool> CardUsingVerificationEvent;
 
     private IUnitLogicSystemProvider unitLogicSystem;
 
@@ -153,17 +153,20 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem,I
 
     public void CardUsed(CardDataInstance usedCard)
     {
+        //unitLogicSystem에 현재 불릿 카드가 사용 가능한 상태인지 물어봐야 함.
+        if (usedCard.GetCardData().cardType == CardType.Bullet)
+        {
+            if (unitLogicSystem.CanApplyBulletEffect() == false)
+            {
+                CardUsingVerificationEvent?.Invoke(false);
+                return; // 불릿 카드를 더 이상 적용할 수 없는 상태임.
+            }
+        }
+
         handPile.Remove(usedCard);
         gravePile.Add(usedCard);
         ++graveCnt;
-
-        //unitLogicSystem에 현재 불릿 카드가 사용 가능한 상태인지 물어봐야 함.
-        if(usedCard.GetCardData().cardType == CardType.Bullet)
-        {
-            if (unitLogicSystem.CanApplyBulletEffect() == false)
-                return; // 불릿 카드를 더 이상 적용할 수 없는 상태임.
-        }
-
+        CardUsingVerificationEvent?.Invoke(true);
         CardUsedEvent?.Invoke(usedCard.GetCardData());
     }
 
@@ -193,7 +196,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem,I
 
     public void CardUsingFinished()
     {
-        CardUsingFinishedEvent?.Invoke();
+        CardUsingTurnFinished?.Invoke();
 
         for (int i = 0; i < handPile.Count; ++i)
         {

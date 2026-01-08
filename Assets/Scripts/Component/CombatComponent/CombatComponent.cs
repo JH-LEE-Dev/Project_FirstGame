@@ -52,6 +52,11 @@ public class CombatComponent : EntityComponent, ICombatEffectReceiver
 
     public void ApplyAttackModifier(float bonusDamage)
     {
-        Debug.Log("ApplyAttack!");
+        bulletObject.ApplyAttackModifier(bonusDamage);
+    }
+
+    public bool CanApplyBulletEffect()
+    {
+        return bulletObject.CanApplyBulletEffect();
     }
 }

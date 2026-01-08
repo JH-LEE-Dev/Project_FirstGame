@@ -25,6 +25,6 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemProvider
 
     public bool CanApplyBulletEffect()
     {
-        return true;
+        return characterUnit.combatEffectReceiver.CanApplyBulletEffect();
     }
 }
