@@ -183,7 +183,6 @@ public class UIView_CardSystem : UIView
     public void CallCardPannel(bool _activate)
     {
         cardPannel?.SetActive(_activate);
-        Debug.Log("»£√‚");
     }
     /////////////////////////////////////////////////
 

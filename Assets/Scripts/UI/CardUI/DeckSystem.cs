@@ -162,6 +162,8 @@ public class DeckSystem : MonoBehaviour,
 
     private void ExitEvent()
     {
+        topRect.localRotation = originQuat;
+
         CancelPrevMotion(activeSeq);
 
         activeSeq = DOTween.Sequence();
@@ -186,6 +188,8 @@ public class DeckSystem : MonoBehaviour,
 
     private void UpEvent()
     {
+        topRect.localRotation = originQuat;
+
         CancelPrevMotion(activeSeq);
 
         activeSeq = DOTween.Sequence();
@@ -199,8 +203,6 @@ public class DeckSystem : MonoBehaviour,
             .SetEase(upEventEase)
             .OnComplete(() =>
             {
-                topRect.localRotation = originQuat;
-
                 if (!bHoveringEvent)
                     ExitEvent();
             }));

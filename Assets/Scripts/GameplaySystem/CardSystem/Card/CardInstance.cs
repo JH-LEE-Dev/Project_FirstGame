@@ -70,6 +70,9 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     
     public void RollbackParent()
     {
+        if (null == originParentTransform)
+            return;
+
         transform.SetParent(originParentTransform);
     }
 
