@@ -107,11 +107,16 @@ public class UIView_CardSystem : UIView
         {
             // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
             handSystem?.TryUseCard(verificationWaitCard);
+
+
         }
         else
         {
             //카드 사용 실패.
             Debug.Log("이 카드를 사용할 수 없습니다.");
+
+            verificationWaitCard.Motion.PlayReject();
+
         }
     }
 
@@ -203,9 +208,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemStatus.GetDeckCnt().ToString();
+        graveCntText.text = "Grave : " + viewCtx.cardSystemStatus.GetGraveCnt().ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemStatus.GetHandCnt().ToString();
     }
 
     protected override void OnShow()
@@ -229,7 +234,7 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
 
-        viewCtx.cardSystemProvider.CardUsingFinished();
+        viewCtx.cardSystemStatus.CardUsingFinished();
 
         SetText();
 

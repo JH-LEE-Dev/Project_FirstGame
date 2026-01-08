@@ -5,18 +5,18 @@ using UnityEngine;
 public class CardEffectManager : MonoBehaviour
 {
     private IUnitLogicSystemProvider unitLogicSystem;
-    private ICardLogicSystem cardLogicSystem;
+    private ICardStrategyHandler cardStrategyHandler;
 
     [SerializeField] private List<CardEffectStrategy> cardEffects = new List<CardEffectStrategy>();
 
-    public void Initialize(IUnitLogicSystemProvider _unitLogicSystem,ICardLogicSystem _cardLogicSystem)
+    public void Initialize(IUnitLogicSystemProvider _unitLogicSystem,ICardStrategyHandler _cardStrategyHandler)
     {
         unitLogicSystem = _unitLogicSystem;
-        cardLogicSystem = _cardLogicSystem;
+        cardStrategyHandler = _cardStrategyHandler;
 
         for (int i = 0; i < cardEffects.Count; ++i)
         {
-            cardEffects[i].Initialize(cardLogicSystem, unitLogicSystem);
+            cardEffects[i].Initialize(cardStrategyHandler, unitLogicSystem);
         }
     }
 
@@ -30,7 +30,7 @@ public class CardEffectManager : MonoBehaviour
 
             if(effectStrategy.GetCardEffectApplyType() == CardEffectApplyType.System)
             {
-                cardLogicSystem.StrategyForwarding(effectStrategy);
+                cardStrategyHandler.StrategyForwarding(effectStrategy);
             }
             else
             {

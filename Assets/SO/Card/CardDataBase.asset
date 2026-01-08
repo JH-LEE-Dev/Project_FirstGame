@@ -20,3 +20,17 @@ MonoBehaviour:
     usingType: 0
     bFlash: 0
     cardEffects: 00000000
+  - id: 1
+    cardName: 1
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    bFlash: 0
+    cardEffects: 01000000
+  - id: 2
+    cardName: 2
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    bFlash: 0
+    cardEffects: 02000000

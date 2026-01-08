@@ -13,6 +13,8 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (owner == null || owner.CardSystem == null) return;
         if (owner.Motion != null && owner.Motion.IgnoreHandLayout) return;
 
+        if (CardInstanceType.Hand != owner.cardInstanceType) return;
+
         owner.CardSystem.OnCardHoverEnter(owner);
         owner.Motion?.HoverOn();
     }
@@ -22,6 +24,9 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (owner == null || owner.CardSystem == null) return;
         if (owner.Motion != null && owner.Motion.IgnoreHandLayout) return;
 
+        if (CardInstanceType.Hand != owner.cardInstanceType) return;
+
+
         owner.CardSystem.OnCardHoverExit(owner);
         owner.Motion?.HoverOff();
     }
@@ -30,6 +35,8 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (owner == null || owner.CardSystem == null) return;
         if (owner.CardSystem.WorkingBlock) return;
+        if (CardInstanceType.Hand != owner.cardInstanceType) return;
+
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {

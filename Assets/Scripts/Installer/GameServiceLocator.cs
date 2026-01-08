@@ -3,12 +3,12 @@ using UnityEngine;
 public class GameServiceLocator
 {
     private CameraController cameraController;
-    private GameController gameController;
+    private IGameFlowProvider gameFlowProvider;
 
-    public void Initialize(CameraController _cameraController,GameController _gameController)
+    public void Initialize(CameraController _cameraController,IGameFlowProvider _gameFlowProvider)
     {
         cameraController = _cameraController;
-        gameController = _gameController;
+        gameFlowProvider = _gameFlowProvider;
     }
 
     public void PlayCameraShake()
@@ -18,7 +18,7 @@ public class GameServiceLocator
 
     public bool IsGameState<T>() where T : IState
     {
-        return gameController.IsState<T>(); 
+        return gameFlowProvider.IsState<T>(); 
     }
 
     public Camera GetMainCamera()

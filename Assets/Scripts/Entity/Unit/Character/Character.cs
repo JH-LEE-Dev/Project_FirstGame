@@ -12,7 +12,6 @@ public class Character : Unit
     [SerializeField] private float aimLength = 10f;
 
     private Vector2 mousePos;
-    private bool bCanAction = false;
     private Vector2 fireDir;
 
     public void Initialize_Character(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
@@ -69,13 +68,13 @@ public class Character : Unit
         combatComponent.BulletEffectIsFinishedEvent -= PlayeShotEffectIsFinished;
     }
 
-    public void SetbCanAction()
+    public override void SetbCanAction()
     {
         lineRenderer.enabled = true;
         bCanAction = true;
     }
 
-    public void ResetbCanAction()
+    public override void ResetbCanAction()
     {
         lineRenderer.enabled = false;
         bCanAction = false;
@@ -85,6 +84,8 @@ public class Character : Unit
     {
         if (bCanAction == true)
         {
+            moveComponent.SetMoveDirection(Vector2.zero);
+            bCanAction = false;
             combatComponent.Fire(fireDir);
             //Sound.Play("Fire", transform.position);
         }

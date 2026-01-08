@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IGameFlowController
 {
     private WaveManager waveManager;
     private GameStateMachine gameStateMachine;
