@@ -396,9 +396,11 @@ public class HandSystem : MonoBehaviour
         }
     }
 
+    public int GetCurrentHandCardCount() => cards.Count;
+
     public Vector2 PredictRightmostPosForCount(int nextCount)
     {
-        Vector2 basePos = handRoot.anchoredPosition;
+        Vector2 basePos = handRoot.position;
         if (nextCount <= 1) return basePos;
 
         float t = Mathf.InverseLerp(0f, 12f, nextCount);
@@ -412,10 +414,8 @@ public class HandSystem : MonoBehaviour
         float angle = startAngle + angleStep * rightIndex;
         float rad = angle * Mathf.Deg2Rad;
 
-        return basePos + new Vector2(
-            Mathf.Sin(rad) * radius,
-            (Mathf.Cos(rad) - 1f) * radius
-        );
+        Vector2 localOffset = new Vector2(Mathf.Sin(rad) * radius, (Mathf.Cos(rad) - 1f) * radius);
+        return handRoot.TransformPoint(localOffset);
     }
 
     public int CurrentHandCount()

@@ -25,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3090676842776048231}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 3d7fc9e17669e344d8e6b6ef9aa6f434, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7025b705c956e584c80f29a32cc43f5a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3ca55063654a7c1428b74eb3300e19b8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -101,7 +101,7 @@ RectTransform:
   m_GameObject: {fileID: 5178301261254129050}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2791329265426629269}
@@ -125,6 +125,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 892db319aa7647e4bad70b9f0684564a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GraveyardSystem
+  enterEventDuration: 0.4
+  enterEventSizeMulti: 1.15
+  enterEventEase: 18
+  exitEventDuration: 0.4
+  exitEventEase: 18
+  downEventDuration: 0.4
+  downEventEase: 18
+  upEventDuration: 0.2
+  upEventPunchPower: {x: 0, y: 0, z: 3.5}
+  upEventEase: 18
 --- !u!1 &7431671688047830151
 GameObject:
   m_ObjectHideFlags: 0

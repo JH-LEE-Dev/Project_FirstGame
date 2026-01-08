@@ -239,13 +239,13 @@ MonoBehaviour:
   wealthyAngle: 1.5
   wealthyEase: 4
   drawDelay: 0.15
-  drawDuration: 1.5
+  drawDuration: 0.5
   drawFirstPointDist: 3
-  bMidPointRandom: 1
+  bMidPointRandom: 0
   drawMidPointPower: 5
   bEndPointRandom: 0
   drawEndPointPower: 5
-  drawEase: 6
+  drawEase: 1
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15
   enterEventEase: 18
@@ -253,6 +253,6 @@ MonoBehaviour:
   exitEventEase: 18
   downEventDuration: 0.4
   downEventEase: 18
-  upEventDuration: 0.4
-  upEventPunchPower: {x: 0, y: 0, z: 2.5}
+  upEventDuration: 0.2
+  upEventPunchPower: {x: 0, y: 0, z: 3.5}
   upEventEase: 18

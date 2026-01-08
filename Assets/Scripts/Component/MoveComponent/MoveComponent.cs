@@ -6,7 +6,9 @@ public class MoveComponent : EntityComponent
     /// <summary>
     /// 시스템 속성 존. -------------------------------------------
     /// </summary>
-    [SerializeField] protected MoveStrategy moveStrategyAsset;
+    
+    //움직임 행동을 정의하는 객체. 원하는 MoveStrategy를 인스펙터에서 넣어주면 됨.
+    [SerializeField] protected MoveStrategy moveStrategyAsset; 
     protected MoveStrategy moveStrategy;
 
     /// <summary>
