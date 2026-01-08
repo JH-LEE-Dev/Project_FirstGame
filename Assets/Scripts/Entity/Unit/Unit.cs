@@ -6,8 +6,21 @@ using UnityEngine.InputSystem;
 
 public class Unit : MonoBehaviour, IDamageable
 {
+    /// <summary>
+    /// 시스템 속성 존. ----------------------------------------
+    /// </summary>
     public event Action UnitIsDeadEvent;
+    [Header("Command System")]
+    protected readonly Queue<ICommand> commandQueue = new Queue<ICommand>();
 
+    protected InputManager inputManager;
+    protected GameServiceLocator gameServiceLocator;
+    protected bool bDead = false;
+    protected bool bCanAction = false;
+
+    /// <summary>
+    /// 구현 속성 존. -----------------------------------------
+    /// </summary>
     [Header("Components")]
     protected Rigidbody2D rb;
     protected Collider2D col;
@@ -17,73 +30,38 @@ public class Unit : MonoBehaviour, IDamageable
     protected EffectComponent effectComponent;
     protected HealthComponent healthComponent;
     protected CombatComponent combatComponent;
-
     public Animator animator { get; private set; }
 
-    [Header("Command System")]
-    protected readonly Queue<ICommand> commandQueue = new Queue<ICommand>();
-
-    protected InputManager inputManager;
-    protected GameServiceLocator gameServiceLocator;
-
     protected Vector2 moveDirection;
-    protected bool bDead = false;
-    protected bool bCanAction = false;
 
+
+    /// <summary>
+    /// 시스템 코드 존. --------------------------------------
+    /// </summary>
+    
     public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
         gameServiceLocator = _gameServiceLocator;
         inputManager = _inputManager;
     }
 
-    protected virtual void Awake()
+    private void BindEvent()
     {
-        animator = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        sr = GetComponentInChildren<SpriteRenderer>();
-        col = GetComponent<Collider2D>();
-        moveComponent = GetComponent<MoveComponent>();
-        effectComponent = GetComponent<EffectComponent>();
-        healthComponent = GetComponent<HealthComponent>();
-        combatComponent = GetComponent<CombatComponent>();
-
-        ctx = new UnitContext();
-        ctx.Initialize(this);
-
-        moveComponent.Initialize(ctx);
-
-        rb.gravityScale = 0f;
-        rb.linearDamping = 5f;
-        rb.angularDamping = 1.5f;
-
         healthComponent.UnitIsDeadEvent -= HandleDead;
         healthComponent.UnitIsDeadEvent += HandleDead;
     }
 
-    protected virtual void OnDestroy()
+    private void ReleaseEvent()
     {
         healthComponent.UnitIsDeadEvent -= HandleDead;
         UnitIsDeadEvent = null;
     }
 
-    protected virtual void Start()
+    public void HandleDead()
     {
-
+        gameObject.SetActive(false);
     }
 
-    protected virtual void OnEnable()
-    {
-
-    }
-    protected virtual void Update()
-    {
-        ProcessNextCommand();
-    }
-
-    protected virtual void PollInit()
-    {
-
-    }
 
     public void ProcessNextCommand()
     {
@@ -118,32 +96,9 @@ public class Unit : MonoBehaviour, IDamageable
         commandQueue.Enqueue(command);
     }
 
-    public virtual void OnMove(Vector2 move)
+    protected virtual void OnDestroy()
     {
-        if (bCanAction == false)
-        {
-            return;
-        }
-
-        moveDirection = move;
-
-        moveComponent.SetMoveDirection(moveDirection);
-    }
-
-    public virtual void OnMove()
-    {
-
-    }
-
-    public virtual void TakeDamage(float damage)
-    {
-        healthComponent.DecreaseHealth(damage);
-    }
-
-    public void ResetDamping()
-    {
-        rb.linearDamping = 0f;
-        rb.angularDamping = 0f;
+        ReleaseEvent();
     }
 
     protected void InvokeUnitIsDead()
@@ -151,10 +106,7 @@ public class Unit : MonoBehaviour, IDamageable
         UnitIsDeadEvent?.Invoke();
     }
 
-    public void HandleDead()
-    {
-        gameObject.SetActive(false);
-    }
+
     public virtual void SetbCanAction()
     {
         bCanAction = true;
@@ -163,5 +115,87 @@ public class Unit : MonoBehaviour, IDamageable
     public virtual void ResetbCanAction()
     {
         bCanAction = false;
+    }
+
+
+
+
+
+    /// <summary>
+    /// 구현 코드 존.----------------------------------------------
+    /// </summary>
+
+    protected virtual void Awake()
+    {
+        ctx = new UnitContext();
+        ctx.Initialize(this);
+
+        animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponentInChildren<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
+        moveComponent = GetComponent<MoveComponent>();
+        effectComponent = GetComponent<EffectComponent>();
+        healthComponent = GetComponent<HealthComponent>();
+        combatComponent = GetComponent<CombatComponent>();
+
+
+        moveComponent.Initialize(ctx);
+
+        rb.gravityScale = 0f;
+        rb.linearDamping = 5f;
+        rb.angularDamping = 1.5f;
+
+        BindEvent();
+    }
+
+    protected virtual void Start()
+    {
+
+    }
+
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void Update()
+    {
+        //미구현. 신경쓰지 마쇼
+        ProcessNextCommand();
+    }
+
+    //입력 시스템에 의해서 호출되는 움직임 함수.
+    public virtual void OnMove(Vector2 move)
+    {
+        //시스템에 의해 플레이어가 공격 가능한 턴/타이밍에만 실행되게 적용.
+        if (bCanAction == false)
+        {
+            return;
+        }
+
+        //키보드 <-, -> 에 따른 이동 방향임. Vector2(1,0) Vector2(-1,0)
+        moveDirection = move;
+        moveComponent.SetMoveDirection(moveDirection);
+    }
+
+    //이 함수는 입력에 의해 작동하지 않는 움직임에 필요한 함수.
+    //ex. Enemy
+    public virtual void OnMove()
+    {
+
+    }
+
+    //체력 깎이는 함수.
+    public virtual void TakeDamage(float damage)
+    {
+        healthComponent.DecreaseHealth(damage);
+    }
+
+    //RigidBody의 Damping 설정하는 함수. Character는 무관.
+    public void ResetDamping()
+    {
+        rb.linearDamping = 0f;
+        rb.angularDamping = 0f;
     }
 }

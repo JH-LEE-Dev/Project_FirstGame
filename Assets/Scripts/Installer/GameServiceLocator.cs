@@ -4,9 +4,12 @@ public class GameServiceLocator
 {
     private CameraController cameraController;
     private IGameFlowProvider gameFlowProvider;
+    public IWaveSystemProvider waveSystemProvider {  get; private set; }    
 
-    public void Initialize(CameraController _cameraController,IGameFlowProvider _gameFlowProvider)
+    public void Initialize(CameraController _cameraController,IGameFlowProvider _gameFlowProvider
+        ,IWaveSystemProvider _waveSystemProvider)
     {
+        waveSystemProvider = _waveSystemProvider;
         cameraController = _cameraController;
         gameFlowProvider = _gameFlowProvider;
     }

@@ -3,20 +3,20 @@ using UnityEngine;
 public class UIViewContext
 {
     public InputManager inputManager { get; private set; }
-    public ICardSystemStatus cardSystemStatus { get; private set; }
+    public ICardSystemProvider cardSystemProvider { get; private set; }
 
     public void Initialize(InputManager _inputManager)
     {
         inputManager = _inputManager;
     }
 
-    public void Initialize_Gameplay(ICardSystemStatus _cardSystemStatus)
+    public void Initialize_Gameplay(ICardSystemProvider _cardSystemProvider)
     {
-        cardSystemStatus = _cardSystemStatus;
+        cardSystemProvider = _cardSystemProvider;
     }
 
     public void ReleaseDependency_GameplayScene()
     {
-        cardSystemStatus = null;
+        cardSystemProvider = null;
     }
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 
-public class WaveManager : MonoBehaviour 
+public class WaveManager : MonoBehaviour,IWaveSystemProvider,IWaveSystemActions
 {
     [SerializeField] private float MoveTurnDelay = 2f;
 

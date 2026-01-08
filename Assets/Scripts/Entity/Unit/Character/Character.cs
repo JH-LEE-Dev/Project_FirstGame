@@ -3,16 +3,34 @@ using UnityEngine;
 
 public class Character : Unit
 {
+    /// <summary>
+    /// 시스템 속성 존.----------------------------------
+    /// </summary>
     public ICombatEffectReceiver combatEffectReceiver => combatComponent;
+    public event Action PlayerAttackFinishedEvent;
 
-    public event Action PlayerAttackIsFinishedEvent;
-
-    [Header("Arrow Object")]
+    [Header("aim Object")]
     private LineRenderer lineRenderer;
     [SerializeField] private float aimLength = 10f;
 
+
+
+
+    /// <summary>
+    /// 구현 속성 존 ------------------------------------------
+    /// </summary>
     private Vector2 mousePos;
     private Vector2 fireDir;
+
+
+
+
+
+
+
+    /// <summary>
+    ///  시스템 코드 존.-----------------------------------------
+    /// </summary>
 
     public void Initialize_Character(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
@@ -23,10 +41,49 @@ public class Character : Unit
         BindEvent();
     }
 
-    public override void TakeDamage(float damage)
+    private void BindEvent()
     {
+        inputManager.inputReader.MoveEvent -= OnMove;
+        inputManager.inputReader.MoveEvent += OnMove;
+        inputManager.inputReader.PointerPositionEvent -= SetMousePos;
+        inputManager.inputReader.PointerPositionEvent += SetMousePos;
+        inputManager.inputReader.FireButtonPressedEvent -= Fire;
+        inputManager.inputReader.FireButtonPressedEvent += Fire;
 
+        combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
+        combatComponent.BulletEffectIsFinishedEvent += PlayerAttackFinished;
     }
+
+    private void ReleaseEvent()
+    {
+        inputManager.inputReader.MoveEvent -= OnMove;
+        inputManager.inputReader.PointerPositionEvent -= SetMousePos;
+        inputManager.inputReader.FireButtonPressedEvent -= Fire;
+        combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
+    }
+    protected override void OnDestroy()
+    {
+        ReleaseEvent();
+    }
+
+    //bCanAction이 True일 때만 캐릭터가 움직이거나 발사할 수 있음.
+    //이 여부는 상위 시스템에 의해 결정.
+    public override void SetbCanAction()
+    {
+        lineRenderer.enabled = true;
+        bCanAction = true;
+    }
+
+    public override void ResetbCanAction()
+    {
+        lineRenderer.enabled = false;
+        bCanAction = false;
+    }
+
+
+    /// <summary>
+    /// 구현 코드 존.--------------------------------------------
+    /// </summary>
 
     protected override void Update()
     {
@@ -35,6 +92,13 @@ public class Character : Unit
         UpdateAimLine();
     }
 
+    //데미지 입는 함수 - 미구현.
+    public override void TakeDamage(float damage)
+    {
+
+    }
+
+    // 캐릭터 조준선 그리는 함수
     public void UpdateAimLine()
     {
         if (bCanAction == false)
@@ -55,58 +119,33 @@ public class Character : Unit
         lineRenderer.SetPosition(1, endPos);
     }
 
-    public void SetArrowObjectTransform(Vector2 move)
+    //마우스 좌표 받아오는 함수 -> 마우스 좌표가 바뀔 때마다 호출됨.
+    public void SetMousePos(Vector2 move)
     {
         mousePos = move;
     }
 
-    protected override void OnDestroy()
-    {
-        inputManager.inputReader.MoveEvent -= OnMove;
-        inputManager.inputReader.PointerPositionEvent -= SetArrowObjectTransform;
-        inputManager.inputReader.FireButtonPressedEvent -= Fire;
-        combatComponent.BulletEffectIsFinishedEvent -= PlayeShotEffectIsFinished;
-    }
-
-    public override void SetbCanAction()
-    {
-        lineRenderer.enabled = true;
-        bCanAction = true;
-    }
-
-    public override void ResetbCanAction()
-    {
-        lineRenderer.enabled = false;
-        bCanAction = false;
-    }
-
+    //발사하는 함수, 공격턴에 마우스 좌클릭을 누르면 호출됨.
     private void Fire()
     {
         if (bCanAction == true)
         {
+            //발사가 끝나면 움직임을 제한해야 하므로 zero를 넣어줌.
             moveComponent.SetMoveDirection(Vector2.zero);
             bCanAction = false;
+
+            //combatComponent에서 실질적인 발사를 함.
             combatComponent.Fire(fireDir);
+
             //Sound.Play("Fire", transform.position);
         }
     }
 
-    private void PlayeShotEffectIsFinished()
+    //combatComponent에서 총알의 공격 작업이 모두 끝나면 호출됨.
+    //그리고 이 신호를 상위 모듈로 전파함.
+    private void PlayerAttackFinished()
     {
         bCanAction = false;
-        PlayerAttackIsFinishedEvent?.Invoke();
-    }
-
-    private void BindEvent()
-    {
-        inputManager.inputReader.MoveEvent -= OnMove;
-        inputManager.inputReader.MoveEvent += OnMove;
-        inputManager.inputReader.PointerPositionEvent -= SetArrowObjectTransform;
-        inputManager.inputReader.PointerPositionEvent += SetArrowObjectTransform;
-        inputManager.inputReader.FireButtonPressedEvent -= Fire;
-        inputManager.inputReader.FireButtonPressedEvent += Fire;
-
-        combatComponent.BulletEffectIsFinishedEvent -= PlayeShotEffectIsFinished;
-        combatComponent.BulletEffectIsFinishedEvent += PlayeShotEffectIsFinished;
+        PlayerAttackFinishedEvent?.Invoke();
     }
 }

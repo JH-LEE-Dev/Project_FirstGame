@@ -18,17 +18,17 @@ public class GameInstaller : MonoBehaviour
     {
         inputManager = _inputManager;
 
-        gameController = GetComponent<GameController>();
+        gameController = GetComponentInChildren<GameController>();
         unitSpawner = GetComponent<UnitSpawner>();
-        waveManager = GetComponent<WaveManager>();
+        waveManager = GetComponentInChildren<WaveManager>();
         cameraController = GetComponent<CameraController>();
         gameServiceLocator = new GameServiceLocator();
         cardManager = GetComponent<CardManager>();
         cardEffectManager = GetComponent<CardEffectManager>();
         unitLogicSystem = GetComponent<UnitLogicSystem>();
 
-        gameServiceLocator.Initialize(cameraController, gameController);
         waveManager.Initialize(waveDatabase);
+        gameServiceLocator.Initialize(cameraController, gameController, waveManager);
         gameController.Initialize(waveManager, inputManager, cardManager);
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem);

@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandler, ICardSystemEvent, ICardSystemActions
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, ICardSystemEvent, ICardSystemActions
 {
     public event Action<CardDataInstance> CardDrawedEvent;
     public event Action<List<CardDataInstance>> CardPileDrawedEvent;
@@ -15,7 +15,7 @@ public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandle
     public event Action<CardData> CardUsedEvent;
     public event Action<bool> CardUsingVerificationEvent;
 
-    private IUnitLogicSystemProvider unitLogicSystem;
+    private IUnitLogicSystemActions unitLogicSystem;
     private IGameFlowController gameFlowController;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
@@ -25,6 +25,13 @@ public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandle
     private List<CardDataInstance> handPile = new List<CardDataInstance>();
     private List<CardDataInstance> gravePile = new List<CardDataInstance>();
 
+    IReadOnlyList<CardDataInstance> ICardSystemProvider.deckCards => deckPile;
+
+    private Queue<CardEffectStrategy> cardSystemActions_BeforeAttack = new Queue<CardEffectStrategy>();
+    private Queue<CardEffectStrategy> cardSystemActions_AfterAttack = new Queue<CardEffectStrategy>();
+    private Queue<CardEffectStrategy> cardSystemActions_NextTurn = new Queue<CardEffectStrategy>();
+
+
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int drawCardCnt = 5;
     [SerializeField] private int initialDeckCnt = 40;
@@ -32,17 +39,10 @@ public class CardManager : MonoBehaviour, ICardSystemStatus, ICardStrategyHandle
     [SerializeField] private float systemActionRate = 1f;
 
     public int deckCnt { get; private set; }
-
     public int graveCnt { get; private set; }
     public int handCnt { get; private set; }
 
-    IReadOnlyList<CardDataInstance> ICardSystemStatus.deckCards => deckPile;
-
-    private Queue<CardEffectStrategy> cardSystemActions_BeforeAttack = new Queue<CardEffectStrategy>();
-    private Queue<CardEffectStrategy> cardSystemActions_AfterAttack = new Queue<CardEffectStrategy>();
-    private Queue<CardEffectStrategy> cardSystemActions_NextTurn = new Queue<CardEffectStrategy>();
-
-    public void Initialize(IUnitLogicSystemProvider _unitLogicSystem, IGameFlowController _gameFlowController)
+    public void Initialize(IUnitLogicSystemActions _unitLogicSystem, IGameFlowController _gameFlowController)
     {
         unitLogicSystem = _unitLogicSystem;
         gameFlowController = _gameFlowController;
