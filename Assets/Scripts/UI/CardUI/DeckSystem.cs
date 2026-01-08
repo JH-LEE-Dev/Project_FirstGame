@@ -125,7 +125,7 @@ public class DeckSystem : MonoBehaviour,
         }
 
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
-        RectTransform endPoint = cardSystem.DrawEndPoint;
+        //RectTransform endPoint = cardSystem.DrawEndPoint;
 
         currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
@@ -137,7 +137,7 @@ public class DeckSystem : MonoBehaviour,
 
             Vector3 firstPointPos = topRect.position + Vector3.up * drawFirstPointDist;
             Vector3 midPointPos = midPoint.position;
-            Vector3 endPointPos = endPoint.position;
+            Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
 
             // mid
             if (bMidPointRandom)

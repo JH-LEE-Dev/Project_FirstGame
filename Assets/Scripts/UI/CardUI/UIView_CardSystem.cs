@@ -39,7 +39,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private List<RectTransform> drawPathPoints = new();
     [SerializeField] private RectTransform drawEndPoint = null;
     public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
-    public RectTransform DrawEndPoint { get { return drawEndPoint; } }
+    //public RectTransform DrawEndPoint { get { return drawEndPoint; } }
 
     // 묘지
     [Header("Graveyard Settings")]
@@ -185,6 +185,22 @@ public class UIView_CardSystem : UIView
             else
                 pool[i].gameObject.SetActive(false);
         }
+    }
+
+    // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
+    // 
+
+    public Vector2 GetHandTargetEndPos(int currentDrawIdx)
+    {
+        if (null == handSystem)
+            return Vector2.zero;
+
+        Camera cam = Camera.main;
+
+        int currHandCnt = handSystem.GetCurrentHandCardCount();
+        Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + currentDrawIdx + 1);
+
+        return NextEndPos;
     }
 
     public void CardDrawed(List<CardDataInstance> cardDataPile)

@@ -269,10 +269,10 @@ public class HandSystem : MonoBehaviour
             cards[i].transform.SetAsLastSibling();
     }
 
+    public int GetCurrentHandCardCount() => cards.Count;
+
     public Vector2 PredictRightmostPosForCount(int nextCount)
     {
-        // cards.Count -> 찐으로 현재 내 패에 있는 카드 개수 (날아오는건 고려 안됨)
-
         Vector2 basePos = handRoot.anchoredPosition;
         if (nextCount <= 1) return basePos;
 
@@ -287,9 +287,7 @@ public class HandSystem : MonoBehaviour
         float angle = startAngle + angleStep * rightIndex;
         float rad = angle * Mathf.Deg2Rad;
 
-        return basePos + new Vector2(
-            Mathf.Sin(rad) * radius,
-            (Mathf.Cos(rad) - 1f) * radius
-        );
+        Vector2 localOffset = new Vector2(Mathf.Sin(rad) * radius, (Mathf.Cos(rad) - 1f) * radius);
+        return handRoot.TransformPoint(localOffset);
     }
 }
