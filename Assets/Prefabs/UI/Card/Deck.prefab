@@ -253,6 +253,6 @@ MonoBehaviour:
   exitEventEase: 18
   downEventDuration: 0.4
   downEventEase: 18
-  upEventDuration: 0.4
-  upEventPunchPower: {x: 0, y: 0, z: 2.5}
+  upEventDuration: 0.2
+  upEventPunchPower: {x: 0, y: 0, z: 3.5}
   upEventEase: 18

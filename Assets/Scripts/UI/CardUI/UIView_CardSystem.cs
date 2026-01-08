@@ -43,7 +43,7 @@ public class UIView_CardSystem : UIView
 
     // 묘지
     [Header("Graveyard Settings")]
-    [SerializeField] private GameObject gravePrefab = null;
+    [SerializeField] private GraveyardSystem graveSystem = null;
 
     // 덱, 묘지, 소멸 공용
     [Header("Pannel")]
@@ -66,6 +66,7 @@ public class UIView_CardSystem : UIView
         poolingSystem?.Init(this);
         handSystem?.Init(this);
         deckSystem?.Init(this);
+        graveSystem?.Init(this);
         clickCatchSystem?.Init(this);
 
         BindingFunction();
@@ -91,7 +92,6 @@ public class UIView_CardSystem : UIView
     /////////////////
 
 
-
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
@@ -100,8 +100,6 @@ public class UIView_CardSystem : UIView
 
         viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
     }
-
-
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
     {

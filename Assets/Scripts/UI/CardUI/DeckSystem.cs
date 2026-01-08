@@ -50,8 +50,6 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
-    private bool bHoveringEvent = false;
-
     private Sequence wealthySeq = null;
     private Sequence activeSeq = null;
 
@@ -61,6 +59,8 @@ public class DeckSystem : MonoBehaviour,
     private Quaternion originQuat = Quaternion.identity;
 
     private int currentDrawCount = 0;
+
+    private bool bClickedEvent = false;
 
     protected void Awake()
     {
@@ -166,12 +166,13 @@ public class DeckSystem : MonoBehaviour,
         activeSeq.Append(topRect.DOScale(originScale * enterEventSizeMulti, enterEventDuration)
             .SetUpdate(false)
             .SetEase(enterEventEase));
-
-        bHoveringEvent = true;
     }
 
     private void ExitEvent()
     {
+        if (bClickedEvent)
+            return;
+
         topRect.localRotation = originQuat;
 
         CancelPrevMotion(activeSeq);
@@ -181,8 +182,6 @@ public class DeckSystem : MonoBehaviour,
         activeSeq.Append(topRect.DOScale(originScale, exitEventDuration)
             .SetUpdate(false)
             .SetEase(exitEventEase));
-
-        bHoveringEvent = false;
     }
 
     private void DownEvent()
@@ -198,23 +197,24 @@ public class DeckSystem : MonoBehaviour,
 
     private void UpEvent()
     {
+        bClickedEvent = true;
+
         topRect.localRotation = originQuat;
 
         CancelPrevMotion(activeSeq);
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(topRect.DOScale(originScale * enterEventSizeMulti, upEventDuration)
+        activeSeq.Append(topRect.DOScale(originScale, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase));
 
         activeSeq.Join(topRect.DOPunchRotation(upEventPunchPower, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase)
-            .OnComplete(() =>
+            .OnComplete(()=>
             {
-                if (!bHoveringEvent)
-                    ExitEvent();
+                bClickedEvent = false;
             }));
 
         cardSystem?.CallDeckPannel(true);

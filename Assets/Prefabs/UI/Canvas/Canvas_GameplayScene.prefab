@@ -125,6 +125,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1185052730947343870}
     m_Modifications:
+    - target: {fileID: 975329256300798439, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2529118001574126904, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -132,6 +136,14 @@ PrefabInstance:
     - target: {fileID: 4146666310136882343, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
       propertyPath: m_Name
       value: CardSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 8004459324530729153, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+      propertyPath: graveSystem
+      value: 
+      objectReference: {fileID: 2550312986173625629}
+    - target: {fileID: 8356947880062379578, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+      propertyPath: upEventPunchPower.z
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 9155673763916870877, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
       propertyPath: m_Pivot.x
@@ -218,6 +230,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+--- !u!114 &2550312986173625629 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8356947880062379578, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+  m_PrefabInstance: {fileID: 5808904612922766119}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 892db319aa7647e4bad70b9f0684564a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GraveyardSystem
 --- !u!224 &3427840957507389434 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9155673763916870877, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
