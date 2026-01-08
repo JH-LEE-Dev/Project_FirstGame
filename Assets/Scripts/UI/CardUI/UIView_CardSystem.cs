@@ -109,11 +109,16 @@ public class UIView_CardSystem : UIView
         {
             // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
             handSystem?.TryUseCard(verificationWaitCard);
+
+
         }
         else
         {
             //카드 사용 실패.
             Debug.Log("이 카드를 사용할 수 없습니다.");
+
+            verificationWaitCard.Motion.PlayReject();
+
         }
     }
 

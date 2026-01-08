@@ -151,6 +151,7 @@ public class HandSystem : MonoBehaviour
         // 손 패로 이동.
         card.gameObject.SetActive(true);
         card.Motion.EnterHand();
+        card.VisualFloat.PlayDrawColor();
 
         // 덱 위치에서 시작시키기 (파다다닥 출발점)
         var rt = card.GetComponent<RectTransform>();
@@ -266,5 +267,29 @@ public class HandSystem : MonoBehaviour
     {
         for (int i = 0; i < cards.Count; i++)
             cards[i].transform.SetAsLastSibling();
+    }
+
+    public Vector2 PredictRightmostPosForCount(int nextCount)
+    {
+        // cards.Count -> 찐으로 현재 내 패에 있는 카드 개수 (날아오는건 고려 안됨)
+
+        Vector2 basePos = handRoot.anchoredPosition;
+        if (nextCount <= 1) return basePos;
+
+        float t = Mathf.InverseLerp(0f, 12f, nextCount);
+        float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
+
+        float angleStep = arcAngle / Mathf.Max(1, nextCount - 1);
+        float startAngle = -arcAngle * 0.5f;
+
+        int rightIndex = nextCount - 1;
+
+        float angle = startAngle + angleStep * rightIndex;
+        float rad = angle * Mathf.Deg2Rad;
+
+        return basePos + new Vector2(
+            Mathf.Sin(rad) * radius,
+            (Mathf.Cos(rad) - 1f) * radius
+        );
     }
 }

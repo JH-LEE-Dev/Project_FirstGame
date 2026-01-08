@@ -53,7 +53,7 @@ public class CardInstance : MonoBehaviour
         cardInstanceType = type;
     }
 
-    // ¡°¿Ê ÀÔÈ÷±â¡±
+    // ¿Ê ÀÔÈ÷±â
     public void ApplyData(CardDataInstance dataInstance)
     {
         ResetVisual();
