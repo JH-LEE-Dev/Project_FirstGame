@@ -18,8 +18,16 @@ public class CardInstance : MonoBehaviour
     private static readonly Color BulletColor = new Color32(255, 210, 102, 255);
     private static readonly Color MagicColor = new Color32(102, 190, 255, 255);
 
+    // 이 카드의 풀링 전용이 HandSystem인가 아니면 Other인가에 대한 열거
     public CardInstanceType cardInstanceType { get; private set; }
 
+    // HandSystem전용. 상태를 나타냄.
+    public CardState cardState { get; private set; } = CardState.Hidden;
+
+    public void SetUIState(CardState state)
+    {
+        cardState = state;
+    }
 
     // 데이터
     private CardDataInstance cardData;

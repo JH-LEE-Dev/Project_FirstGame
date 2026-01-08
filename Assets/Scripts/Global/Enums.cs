@@ -85,3 +85,11 @@ public enum CardInstanceType
     END
 }
 
+public enum CardState
+{
+    InHand,
+    Preview,
+    Equipped,
+    Other,
+    Hidden
+}
