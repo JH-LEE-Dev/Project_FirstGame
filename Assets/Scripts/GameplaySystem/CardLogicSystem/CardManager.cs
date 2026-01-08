@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
+public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem,ICardEventSetter
 {
     public event Action HandChangedEvent;
     public event Action<CardDataInstance> CardDrawedEvent;
@@ -20,21 +20,21 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
-    private Stack<CardDataInstance> drawPile = new Stack<CardDataInstance>();
+    private List<CardDataInstance> deckPile = new List<CardDataInstance>();
     private List<CardDataInstance> handPile = new List<CardDataInstance>();
     private List<CardDataInstance> gravePile = new List<CardDataInstance>();
 
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int drawCardCnt = 5;
+    [SerializeField] private int initialDeckCnt = 40;
     [SerializeField] private float cardDrawRate = 1f;
-
-
-    public IReadOnlyList<CardData> HandCards => throw new NotImplementedException();
 
     public int deckCnt { get; private set; }
 
     public int graveCnt { get; private set; }
     public int handCnt { get; private set; }
+
+    IReadOnlyList<CardDataInstance> ICardSystemProvider.deckCards => deckPile;
 
     private Queue<CardEffectStrategy> cardSystemEffects = new Queue<CardEffectStrategy>();
 
@@ -66,8 +66,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
                 },
                 actionOnDestroy: null,
                 collectionCheck: false,
-                defaultCapacity: 5,
-                maxSize: 20
+                defaultCapacity: 40,
+                maxSize: 40
             );
 
             cardPools.Add(cardData.id, pool);
@@ -82,10 +82,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
 
         ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        for (int i = 0; i < drawCardCnt; ++i)
+        for (int i = 0; i < initialDeckCnt; ++i)
         {
             CardDataInstance card = pool.Get();
-            drawPile.Push(card);
+            deckPile.Add(card);
             ++deckCnt;
         }
     }
@@ -103,7 +103,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         // if (drawPile.Count == 0)
         //Reshuffle();
 
-        var card = drawPile.Pop();
+        var card = deckPile[deckPile.Count - 1];
+        deckPile.RemoveAt(deckPile.Count - 1);
         handPile.Add(card);
 
         --deckCnt;
@@ -129,7 +130,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
 
         for (int i = 0; i < drawCardCnt; ++i)
         {
-            var card = drawPile.Pop();
+            var card = deckPile[deckPile.Count - 1];
+            deckPile.RemoveAt(deckPile.Count - 1);
             handPile.Add(card);
             hands.Add(card);
             --deckCnt;
@@ -156,6 +158,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         ++graveCnt;
 
         //unitLogicSystem에 현재 불릿 카드가 사용 가능한 상태인지 물어봐야 함.
+        if(usedCard.GetCardData().cardType == CardType.Bullet)
+        {
+            if (unitLogicSystem.CanApplyBulletEffect() == false)
+                return; // 불릿 카드를 더 이상 적용할 수 없는 상태임.
+        }
 
         CardUsedEvent?.Invoke(usedCard.GetCardData());
     }
@@ -178,7 +185,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
 
         handPile.Clear();
         gravePile.Clear();
-        drawPile.Clear();
+        deckPile.Clear();
 
         deckCnt = 0;
         graveCnt = 0;
@@ -200,12 +207,12 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
         for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
-            drawPile.Push(card);
+            deckPile.Add(card);
         }
 
         gravePile.Clear();
 
-        deckCnt = drawPile.Count;
+        deckCnt = deckPile.Count;
         graveCnt = gravePile.Count;
     }
 
@@ -226,5 +233,20 @@ public class CardManager : MonoBehaviour, ICardSystemProvider,ICardLogicSystem
     public void DrawAgain(int drawAmount)
     {
 
+    }
+
+    public int GetDeckCnt()
+    {
+        return deckCnt;
+    }
+
+    public int GetHandCnt()
+    {
+        return handCnt;
+    }
+
+    public int GetGraveCnt()
+    {
+        return graveCnt;
     }
 }

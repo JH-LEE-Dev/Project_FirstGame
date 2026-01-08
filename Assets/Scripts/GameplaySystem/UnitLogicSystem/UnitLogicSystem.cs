@@ -22,4 +22,9 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemProvider
     {
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
     }
+
+    public bool CanApplyBulletEffect()
+    {
+        return true;
+    }
 }

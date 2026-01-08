@@ -7,10 +7,6 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
-    // 신경 쓰지 말기
-    public event Action TurnFinishedEvent;
-    public event Action<CardDataInstance> CardUsedEvent;
-
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
     [Space]
@@ -81,7 +77,7 @@ public class UIView_CardSystem : UIView
     // For HandSystem
     public void TryUseCard(CardInstance _card)
     {
-        CardUsedEvent?.Invoke(_card.CardData);
+        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
 
         // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
         handSystem?.TryUseCard(_card);
@@ -148,6 +144,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
+        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
     }
 
     protected override void OnShow()
@@ -170,7 +169,8 @@ public class UIView_CardSystem : UIView
     public void CardUsingFinished()
     {
         turnFinishedButton.gameObject.SetActive(false);
-        TurnFinishedEvent?.Invoke();
+
+        viewCtx.cardSystemProvider.CardUsingFinished();
 
         SetText();
 

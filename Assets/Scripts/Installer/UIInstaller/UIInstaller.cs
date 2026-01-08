@@ -9,6 +9,7 @@ public class UIInstaller : MonoBehaviour
     private InputManager inputManager;
     private UIManager uiManager;
     private ICardSystemProvider cardSystemProvider;
+    private ICardEventSetter cardEventSetter;
     private GameController gameController;
     private IGameFlowController gameFlowController;
 
@@ -39,12 +40,14 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(ICardSystemProvider _cardSystemProvider,GameController _gameController)
+    public void DependencyInjection_Gameplay(ICardEventSetter _cardEventSetter,
+        ICardSystemProvider _cardSystemProvider,GameController _gameController)
     {
+        cardEventSetter = _cardEventSetter;
         cardSystemProvider = _cardSystemProvider;
         gameController = _gameController;
 
-        uiManager.Initialize_GameplayScene(_cardSystemProvider);
+        uiManager.Initialize_GameplayScene(cardSystemProvider);
 
         SetupUIElement();
 
@@ -157,18 +160,14 @@ public class UIInstaller : MonoBehaviour
 
     private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
     {
-        cardSystemProvider.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
-        cardSystemProvider.CardPileDrawedEvent += cardSystemObject.CardDrawed;
-        cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardSystemProvider.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
-        cardSystemObject.CardUsedEvent -= cardSystemProvider.CardUsed;
-        cardSystemObject.CardUsedEvent += cardSystemProvider.CardUsed;
-        cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
-        cardSystemObject.TurnFinishedEvent += cardSystemProvider.CardUsingFinished;
-        cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        cardSystemProvider.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
-        cardSystemProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
-        cardSystemProvider.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
+        cardEventSetter.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardEventSetter.CardPileDrawedEvent += cardSystemObject.CardDrawed;
+        cardEventSetter.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardEventSetter.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
+        cardEventSetter.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardEventSetter.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        cardEventSetter.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+        cardEventSetter.CardUsingFinishedEvent += gameplayObject.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -189,12 +188,10 @@ public class UIInstaller : MonoBehaviour
         UIView_CardSystem cardSystemObject = uiManager.GetView<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.GetView<UIView_Gameplay>();
 
-        cardSystemProvider.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
-        cardSystemProvider.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardSystemObject.TurnFinishedEvent -= cardSystemProvider.CardUsingFinished;
-        cardSystemObject.CardUsedEvent -= cardSystemProvider.CardUsed;
-        cardSystemProvider.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        cardSystemProvider.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
+        cardEventSetter.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
+        cardEventSetter.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
+        cardEventSetter.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        cardEventSetter.CardUsingFinishedEvent -= gameplayObject.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 

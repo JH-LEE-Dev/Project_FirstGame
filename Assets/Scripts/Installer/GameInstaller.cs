@@ -55,7 +55,7 @@ public class GameInstaller : MonoBehaviour
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        uiInstaller.DependencyInjection_Gameplay(cardManager, gameController);
+        uiInstaller.DependencyInjection_Gameplay(cardManager,cardManager, gameController);
     }
 
     public void Bind(CardManager _cardManager, CardEffectManager _cardEffectManager)

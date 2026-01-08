@@ -2,7 +2,7 @@ public class GameRuleEventController
 {
     private GameController gameController;
 
-    public void Bind(Character character, GameController gameController,ICardSystemProvider cardSystemProvider)
+    public void Bind(Character character, GameController gameController,ICardEventSetter cardEventSetter)
     {
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -12,15 +12,15 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent += character.ResetbCanAction;
         }
 
-        cardSystemProvider.CardUsingFinishedEvent -= character.SetbCanAction;
-        cardSystemProvider.CardUsingFinishedEvent += character.SetbCanAction;
+        cardEventSetter.CardUsingFinishedEvent -= character.SetbCanAction;
+        cardEventSetter.CardUsingFinishedEvent += character.SetbCanAction;
 
         character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
         character.PlayerAttackIsFinishedEvent += OnPlayerAttackFinished;
         this.gameController = gameController;
     }
 
-    public void Release(Character character, GameController gameController, ICardSystemProvider cardSystemProvider)
+    public void Release(Character character, GameController gameController, ICardEventSetter cardEventSetter)
     {
         GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
 
@@ -29,7 +29,7 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
         }
 
-        cardSystemProvider.CardUsingFinishedEvent -= character.SetbCanAction;
+        cardEventSetter.CardUsingFinishedEvent -= character.SetbCanAction;
 
         character.PlayerAttackIsFinishedEvent -= OnPlayerAttackFinished;
     }

@@ -15,7 +15,7 @@ public class UnitSpawner : MonoBehaviour
     private InputManager inputManager;
     private WaveManager waveManager;
     private GameServiceLocator gameServiceLocator;
-    private ICardSystemProvider cardSystemProvider;
+    private ICardEventSetter cardEventSetter;
     private GameController gameController;
     private UnitLogicSystem unitLogicSystem;
 
@@ -37,13 +37,13 @@ public class UnitSpawner : MonoBehaviour
     private List<Enemy> enemies = new List<Enemy>();
 
     public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
-        GameServiceLocator _gameServiceLocator,ICardSystemProvider _cardSystemProvider,
+        GameServiceLocator _gameServiceLocator,ICardEventSetter _cardEventSetter,
         GameController _gameController,UnitLogicSystem _unitLogicSystem)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
         gameServiceLocator = _gameServiceLocator;
-        cardSystemProvider= _cardSystemProvider;
+        cardEventSetter= _cardEventSetter;
         gameController = _gameController;
         gameRuleEventController = new GameRuleEventController();
         unitLogicSystem = _unitLogicSystem;
@@ -60,7 +60,7 @@ public class UnitSpawner : MonoBehaviour
     }
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameController, cardSystemProvider);
+        gameRuleEventController.Release(characterUnit, gameController, cardEventSetter);
         waveManager.SpawnWaveEvent -= SpawnWave;
     }
 
@@ -76,7 +76,7 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameController,cardSystemProvider);
+            gameRuleEventController.Bind(spawnedUnit, gameController, cardEventSetter);
             characterUnit = spawnedUnit;
         }
     }
