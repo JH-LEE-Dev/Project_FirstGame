@@ -74,6 +74,19 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private float previewFloatRotAmp = 0.15f;
     [SerializeField] private float previewFloatFreq = 0.2f;
 
+    // 카드 부모를 옮길 때 복구용으로 사용할 변수들임
+    private Transform originParentTransform;
+    public Transform OriginParentTrasnform 
+    {  
+        get { return originParentTransform; } 
+        set { originParentTransform = value; } 
+    }
+    ///////////////////////////////////////////////
+    
+    public void RollbackParent()
+    {
+        transform.SetParent(originParentTransform);
+    }
 
     public void EnterHand()
     {
@@ -103,6 +116,8 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             visualBaseLocalPos = visual.anchoredPosition;
 
         seed = Random.Range(0f, 1000f); // 카드마다 흔들림 타이밍이 다르게
+
+        originParentTransform = transform.parent;
     }
     public void Initialize(UIView_CardSystem _cardSystem)
     {
