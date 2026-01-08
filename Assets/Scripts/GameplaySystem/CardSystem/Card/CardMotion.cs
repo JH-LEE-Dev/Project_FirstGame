@@ -35,24 +35,6 @@ public class CardMotion : MonoBehaviour
     private Tween previewEndScaleTween;
 
 
-    public Transform originParentTransform;
-
-    public Transform OriginParentTrasnform
-    {
-        get { return originParentTransform; }
-        set { originParentTransform = value; }
-    }
-
-    public void RollbackParent()
-    {
-        if (null == originParentTransform)
-            return;
-
-        transform.SetParent(originParentTransform);
-    }
-
-
-
 
     // 이거 키면 패쪽으로 안빨려감.
     public bool IgnoreHandLayout = true;

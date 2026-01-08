@@ -69,3 +69,10 @@ public enum CardEffectType
     DrawAgain,
 }
 
+public enum CardInstanceType
+{
+    Hand,
+    Other,
+    END
+}
+

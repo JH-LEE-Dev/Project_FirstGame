@@ -45,7 +45,7 @@ public class PoolingSystem : MonoBehaviour
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(cardSystem);
+            card.Initialize(cardSystem, CardInstanceType.Hand);
             inactiveHandPool.Add(card);
 
         }
@@ -57,7 +57,7 @@ public class PoolingSystem : MonoBehaviour
             go.transform.localScale = new Vector3(4.4f, 4.4f, 1f);
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
-            card.Initialize(cardSystem);
+            card.Initialize(cardSystem, CardInstanceType.Other);
 
             otherCardPool.Add(card);
         }

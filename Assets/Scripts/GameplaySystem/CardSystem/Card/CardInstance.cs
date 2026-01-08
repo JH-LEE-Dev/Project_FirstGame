@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
+
 public class CardInstance : MonoBehaviour
 {
     [Header("Refs: View")]
@@ -16,6 +18,7 @@ public class CardInstance : MonoBehaviour
     private static readonly Color BulletColor = new Color32(255, 210, 102, 255);
     private static readonly Color MagicColor = new Color32(102, 190, 255, 255);
 
+    private CardInstanceType cardInstanceType = CardInstanceType.END;
 
 
     // 데이터
@@ -28,10 +31,6 @@ public class CardInstance : MonoBehaviour
     public UIView_CardSystem CardSystem => cardSystem;
 
 
-
-    //public bool 
-    ///////////////////////////////////////////////
-    public bool IgnoreHandLayout { get { return ignoreHandLayout; } set { ignoreHandLayout = value; } }
     // 컴포넌트
     public CardMotion Motion { get; private set; }
     public CardVisualFloat VisualFloat { get; private set; }
@@ -48,7 +47,7 @@ public class CardInstance : MonoBehaviour
         if (VisualFloat) VisualFloat.Bind(this);
     }
 
-    public void Initialize(UIView_CardSystem system)
+    public void Initialize(UIView_CardSystem system, CardInstanceType type)
     {
         cardSystem = system;
     }
