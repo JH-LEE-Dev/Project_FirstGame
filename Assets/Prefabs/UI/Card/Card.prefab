@@ -314,6 +314,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd15e503bd82a1a4582006b3e0a6760d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardInstance
+  cardImage: {fileID: 5545467125092109145}
+  cardFrame: {fileID: 7268042661200779867}
+  cardIcon: {fileID: 4890697203593287301}
+  cardName: {fileID: 2010789194705691865}
+  cardDescription: {fileID: 4219192507650260008}
+  rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
+  extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
   followFreq: 18
   followDamp: 0.85
   rotateLerp: 18

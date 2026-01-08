@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public enum UILayer
 {
     Screen,     // 전체 화면 (인벤토리, 설정, 메인메뉴 등)

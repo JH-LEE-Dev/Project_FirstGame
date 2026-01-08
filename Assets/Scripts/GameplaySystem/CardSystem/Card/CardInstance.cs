@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 using Random = UnityEngine.Random;
 using Range = UnityEngine.RangeAttribute;
@@ -19,6 +21,19 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private UIView_CardSystem cardSystem;
 
     RectTransform rt;
+
+
+    [SerializeField] private Image cardImage;
+    [SerializeField] private Image cardFrame;
+    [SerializeField] private Image cardIcon;
+    [SerializeField] private TextMeshProUGUI cardName;
+    [SerializeField] private TextMeshProUGUI cardDescription;
+    [SerializeField] private Sprite rotationIcon;
+    [SerializeField] private Sprite extinctionIcon;
+
+    private static readonly Color BulletColor = new Color32(255, 210, 102, 255); // #FFD266
+    private static readonly Color MagicColor = new Color32(102, 190, 255, 255); // #66BEFF
+
 
     [Header("MainMoving")]
     Vector2 targetPos;
@@ -98,20 +113,98 @@ public class CardInstance : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         // 패에 있을 때, 연출
         InHand();
-
         Floating();
     }
 
 
     public void ApplyData(CardDataInstance _cardData)
     {
+        ResetVisual();
+
+
         cardData = _cardData;
+
+        CardData data = cardData.GetCardData();
+
+        // 카드 이미지 교체
+        CardImageChange(data.id);
+
+        // 카드 타입에 따른 프레임 색상 교체
+        CardFrameChange(data.cardType);
+
+        // 카드 속성에 따른 아이콘 교체
+        CardIconChange(data.elementType);
+
+        // 카드 이름 교체
+        CardNameChange(data.id);
+
+        // 카드 설명 교체
+        CardDescriptionChange(data.id);
     }
+
+
+    private void CardImageChange(int _id)
+    {
+        // cardImage.sprite = newsprite
+    }
+
+    private void CardFrameChange(CardType _type)
+    {
+        switch (_type)
+        {
+            case CardType.Bullet:
+                cardFrame.color = BulletColor;
+                break;
+
+            case CardType.Magic:
+                cardFrame.color = MagicColor;
+                break;
+        }
+    }
+
+    private void CardIconChange(ElementType _type)
+    {
+        switch (_type)
+        {
+            case ElementType.Rotation:
+                cardIcon.sprite = rotationIcon;
+                break;
+
+            case ElementType.Extinction:
+                cardIcon.sprite = extinctionIcon;
+                break;
+        }
+    }
+
+    private void CardNameChange(int _id)
+    {
+        cardName.SetText("Name Test");
+    }
+
+    private void CardDescriptionChange(int _id)
+    {
+        cardDescription.SetText("Description Change OK");
+    }
+
+
 
     public void Clear()
     {
         cardData = null;
     }
+
+    private void ResetVisual()
+    {
+        cardFrame.color = Color.white;
+
+        cardImage.sprite = null;
+        cardIcon.sprite = null;
+
+        cardName.text = string.Empty;
+        cardDescription.text = string.Empty;
+    }
+
+
 
     //////////////////////// 연출
 
