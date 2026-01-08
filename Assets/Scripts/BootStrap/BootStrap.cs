@@ -48,8 +48,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
         inputManager.Initialize();
         uiInstaller.Initialize(this, inputManager);
 
-        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
-        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
+        BindEvent();
     }
 
     public void Start()
@@ -61,6 +60,19 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     }
 
     public void OnDestroy()
+    {
+        ReleaseEvent();
+    }
+
+    private void BindEvent()
+    {
+        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
+        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
+        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
+        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
+    }
+
+    private void ReleaseEvent()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
 

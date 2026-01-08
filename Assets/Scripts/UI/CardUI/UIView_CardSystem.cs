@@ -98,7 +98,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
+        viewCtx?.cardSystemStatus.CardUsed(_card.CardData);
     }
 
 
@@ -145,7 +145,7 @@ public class UIView_CardSystem : UIView
 
     public void GetDeckCards()
     {
-        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
+        ActivatePannel(viewCtx.cardSystemStatus.deckCards);
     }
 
     public void GetWormholeCards()

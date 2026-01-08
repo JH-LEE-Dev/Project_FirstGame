@@ -6,12 +6,15 @@ using UnityEngine.Rendering.Universal;
 
 public class UIInstaller : MonoBehaviour
 {
+    //외부 의존성
     private InputManager inputManager;
-    private UIManager uiManager;
     private ICardSystemStatus cardSystemStatus;
     private ICardSystemEvent cardSystemEvent;
-    private GameController gameController;
+    private IGameFlowProvider gameFlowProvider;
     private IBootStrapProvider bootStrapProvider;
+
+    //내부 의존성
+    private UIManager uiManager;
 
 
     [Header("MainMenu Scene Objects")]
@@ -41,17 +44,17 @@ public class UIInstaller : MonoBehaviour
     }
 
     public void DependencyInjection_Gameplay(ICardSystemEvent _cardSystemEvent,
-        ICardSystemStatus _cardSystemStatus,GameController _gameController)
+        ICardSystemStatus _cardSystemStatus,IGameFlowProvider _gameFlowProvider)
     {
         cardSystemEvent = _cardSystemEvent;
         cardSystemStatus = _cardSystemStatus;
-        gameController = _gameController;
+        gameFlowProvider = _gameFlowProvider;
 
         uiManager.Initialize_GameplayScene(cardSystemStatus);
 
         SetupUIElement();
 
-        GS_PlayerTurnState playerTurnState = gameController.GetGameState<GS_PlayerTurnState>();
+        GS_PlayerTurnState playerTurnState = gameFlowProvider.GetGameState<GS_PlayerTurnState>();
 
         if (playerTurnState != null)
         {
@@ -171,7 +174,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
 
-        GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
+        GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
         if (enemyTurnState != null)
         {
@@ -196,7 +199,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
 
-        GS_EnemyTurnState enemyTurnState = gameController.GetGameState<GS_EnemyTurnState>();
+        GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
         if (enemyTurnState != null)
         {
@@ -205,7 +208,7 @@ public class UIInstaller : MonoBehaviour
             enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
         }
 
-        GS_PlayerTurnState playerTurnState = gameController.GetGameState<GS_PlayerTurnState>();
+        GS_PlayerTurnState playerTurnState = gameFlowProvider.GetGameState<GS_PlayerTurnState>();
 
         if (playerTurnState != null)
         {

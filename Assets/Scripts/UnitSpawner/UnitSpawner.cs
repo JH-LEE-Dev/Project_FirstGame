@@ -12,13 +12,17 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField] private GameObject enemyUnitPrefab;
     [SerializeField] private GameObject spawnPoint;
 
+    //외부 의존성
     private InputManager inputManager;
-    private WaveManager waveManager;
+    private IWaveSystemActions waveSystemActions;
     private GameServiceLocator gameServiceLocator;
     private ICardSystemEvent cardSystemEvent;
     private ICardSystemActions cardSystemActions;
-    private GameController gameController;
-    private UnitLogicSystem unitLogicSystem;
+    private IGameFlowProvider gameFlowProvider;
+    private IUnitLogicSystemActions unitLogicSystemActions;
+
+    //내부 의존성
+    private GameRuleEventController gameRuleEventController;
 
     private uint curUnitCnt;
 
@@ -33,38 +37,41 @@ public class UnitSpawner : MonoBehaviour
     [Header("Enemy Target Point")]
     [SerializeField] private GameObject enemyTargetPoint;
 
-    private GameRuleEventController gameRuleEventController;
 
     private List<Enemy> enemies = new List<Enemy>();
 
-    public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
+    public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions, 
         GameServiceLocator _gameServiceLocator,ICardSystemEvent _cardSystemEvent,
         ICardSystemActions _cardSystemActions,GameController _gameController,
         UnitLogicSystem _unitLogicSystem)
     {
         inputManager = _inputManager;
-        waveManager = _waveManager;
+        waveSystemActions = _waveSystemActions;
         gameServiceLocator = _gameServiceLocator;
         cardSystemEvent = _cardSystemEvent;
         cardSystemActions = _cardSystemActions;
-        gameController = _gameController;
+        gameFlowProvider = _gameController;
+        unitLogicSystemActions = _unitLogicSystem;
+
         gameRuleEventController = new GameRuleEventController();
-        unitLogicSystem = _unitLogicSystem;
 
-        if (inputManager == null)
-        {
-            Debug.Log("inputReader is null -> UnitSpawner::Initialize");
-            return;
-        }
-
-        waveManager.SpawnWaveEvent += SpawnWave;
-
+        BindEvent();
         SpawnCharacter();
     }
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameController, cardSystemEvent,cardSystemActions);
-        waveManager.SpawnWaveEvent -= SpawnWave;
+        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
+        ReleaseEvent();
+    }
+
+    private void BindEvent()
+    {
+        waveSystemActions.SpawnWaveEvent += SpawnWave;
+    }
+
+    private void ReleaseEvent()
+    {
+        waveSystemActions.SpawnWaveEvent -= SpawnWave;
     }
 
     private void SpawnCharacter()
@@ -79,7 +86,7 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameController, cardSystemEvent,cardSystemActions);
+            gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
             characterUnit = spawnedUnit;
         }
     }
@@ -141,7 +148,7 @@ public class UnitSpawner : MonoBehaviour
 
                 EnemyTypeData enemyTypeData = enemyTypeDataBase.GetEnemyData(randomInt);
 
-                spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, waveManager, enemyTypeData);
+                spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
 
                 enemies.Add(spawnedUnit);
@@ -153,6 +160,6 @@ public class UnitSpawner : MonoBehaviour
 
     private void SetUnitLogicSystem()
     {
-        unitLogicSystem.Initialize(characterUnit, enemies);
+        unitLogicSystemActions.Initialize(characterUnit, enemies);
     }
 }
