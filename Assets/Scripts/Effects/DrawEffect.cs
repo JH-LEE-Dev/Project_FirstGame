@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class DrawEffect : MonoBehaviour
 {
+    [Header("Visual Settings")]
+    [SerializeField] private Transform visual = null;
+    [SerializeField] private float rotateDuration = 1f;
+
     private DeckSystem deckSystem = null;
+
     private Sequence activeSeq = null;
+    private Tween activeRotate = null;
 
     private CardDataInstance cardDataInstance = null;
     public CardDataInstance CardDataInstance { set { cardDataInstance = value; } }
@@ -16,10 +22,10 @@ public class DrawEffect : MonoBehaviour
 
     public void PlayingDrawEvent(float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
-        Debug.Log("카드 한장 드로우");
-
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
+
+        LoopRotate();
 
         activeSeq = DOTween.Sequence();
 
@@ -31,8 +37,19 @@ public class DrawEffect : MonoBehaviour
             .OnComplete(() =>
             {
                 deckSystem?.CallOneCardDrawCompleted(transform.position, cardDataInstance, gameObject);
-                Debug.Log("한장 끝");
+                activeRotate.Kill();
             }));
+    }
+
+    private void LoopRotate()
+    {
+        if (null != activeRotate && activeRotate.IsActive())
+            activeRotate.Kill();
+
+        activeRotate = visual.DORotate(new Vector3(0f, 0f, 360f), rotateDuration, RotateMode.FastBeyond360)
+            .SetUpdate(false)
+            .SetLoops(-1)
+            .SetEase(Ease.Linear);
     }
 }
  

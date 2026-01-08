@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
@@ -18,7 +19,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
-    public Action<Vector3, CardDataInstance> drawEvent;
+    public Action<Vector3, CardDataInstance> DrawEvent;
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
@@ -35,6 +36,12 @@ public class UIView_CardSystem : UIView
     [SerializeField] private RectTransform drawEndPoint = null;
     public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
     public RectTransform DrawEndPoint { get { return drawEndPoint; } }
+
+    // µ¦, ¹¦Áö, ¼Ò¸ê °ø¿ë
+    [Header("Pannel")]
+    [SerializeField] private GameObject cardPannel = null;
+    [SerializeField] private GameObject pannelContent = null;
+    public GameObject PannelContent {  get { return pannelContent; } }
 
     protected override void Awake()
     {
@@ -57,7 +64,7 @@ public class UIView_CardSystem : UIView
     {
         if(null != handSystem)
         {
-            drawEvent += handSystem.ProcessDraw;
+            DrawEvent += handSystem.ProcessDraw;
         }
     }
 
@@ -110,9 +117,8 @@ public class UIView_CardSystem : UIView
 
     public void GetDeckCards()
     {
-        List<CardDataInstance> temp;
-
-        // ÃßÈÄ ±¸Çö
+        List<CardDataInstance> temp = new();
+        ActivatePannel(temp);
     }
 
     public void GetWormholeCards()
@@ -129,6 +135,38 @@ public class UIView_CardSystem : UIView
         // ÃßÈÄ ±¸Çö
     }
 
+    private void ActivatePannel(List<CardDataInstance> _inCards)
+    {
+        if (null == poolingSystem || null == pannelContent)
+            return;
+
+        var pool = poolingSystem.OtherCardPool;
+
+        int inCount = _inCards.Count;
+        int poolCount = pool.Count;
+
+        if (0 >= poolCount || inCount > poolCount)
+            return;
+
+        for (int i = 0; i < inCount; ++i)
+        {
+            pool[i].ApplyData(_inCards[i]);
+            pool[i].transform.SetParent(pannelContent.transform);
+            pool[i].gameObject.SetActive(true);
+        }
+    }
+
+    private void DeActivatePannel()
+    {
+        if (null == poolingSystem)
+            return;
+
+        var pool = poolingSystem.OtherCardPool;
+
+        for (int i = 0; i < pool.Count; ++i)
+            pool[i].gameObject.SetActive(false);
+    }
+
     public void CardDrawed(List<CardDataInstance> cardDataPile)
     {
         if (null == deckSystem)
@@ -138,6 +176,10 @@ public class UIView_CardSystem : UIView
         SetText();
     }
 
+    public void CallCardPannel(bool _activate)
+    {
+        cardPannel?.SetActive(_activate);
+    }
     /////////////////////////////////////////////////
 
 

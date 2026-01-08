@@ -15,14 +15,19 @@ public class PoolingSystem : MonoBehaviour
 
     // ¼Ò¸ê, ¿úÈ¦, µ¦
     [SerializeField] private List<CardInstance> otherCardPool = new();
+    public List<CardInstance> OtherCardPool { get { return otherCardPool; } }
 
     [SerializeField] private int handPoolSize = 20;
     [SerializeField] private int otherPoolSize = 50;
 
-
     private void Awake()
     {
 
+    }
+
+    private void OnDisable()
+    {
+        ReturnParentforOtherPool();
     }
 
     public void Init(UIView_CardSystem owner)
@@ -51,8 +56,8 @@ public class PoolingSystem : MonoBehaviour
             GameObject go = Instantiate(cardUIPrefab, this.transform);
             CardInstance card = go.GetComponent<CardInstance>();
             card.gameObject.SetActive(false);
-
             card.Initialize(cardSystem);
+
             otherCardPool.Add(card);
         }
     }
@@ -79,5 +84,19 @@ public class PoolingSystem : MonoBehaviour
 
         card.Clear();
         inactiveHandPool.Add(card);
+    }
+
+    public void ReturnParentforOtherPool()
+    {
+        for(int i = 0; i < otherPoolSize; ++i)
+        {
+            Transform currParent = otherCardPool[i].transform.parent;
+            Transform originParent = otherCardPool[i].OriginParentTrasnform;
+
+            if (currParent == originParent)
+                continue;
+
+            otherCardPool[i].RollbackParent();
+        }
     }
 }
