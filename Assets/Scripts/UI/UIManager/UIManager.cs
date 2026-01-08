@@ -157,9 +157,9 @@ public class UIManager : MonoBehaviour
     {
     }
 
-    public void Initialize_GameplayScene(ICardSystemProvider _cardSystemProvider)
+    public void Initialize_GameplayScene(ICardSystemStatus _cardSystemStatus)
     {
-        viewCtx.Initialize_Gameplay(_cardSystemProvider);
+        viewCtx.Initialize_Gameplay(_cardSystemStatus);
     }
 
     public void ReleaseDependency_GameplayScene()

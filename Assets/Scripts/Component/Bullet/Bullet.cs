@@ -1,8 +1,9 @@
 using Mono.Cecil.Cil;
 using NUnit.Framework;
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] float speed = 1f;
     [SerializeField] float attack = 1f;
     [SerializeField] private LayerMask targetMask;
+    [SerializeField] private LayerMask outOfRangeMask;
 
     private EffectComponent effectComponent;
 
@@ -45,10 +47,21 @@ public class Bullet : MonoBehaviour
 
         Vector2 currentPosition = (Vector2)transform.position + flyDir * speed * Time.deltaTime;
         transform.position = currentPosition;
-
         Vector2 delta = currentPosition - prevPosition;
         float distance = delta.magnitude;
 
+        if (CheckCollision_Enemy(delta,distance) == true)
+            return;
+
+        if (CheckCollision_OutofRange(delta, distance) == true)
+            return;
+
+        transform.position = currentPosition;
+        prevPosition = currentPosition;
+    }
+
+    private bool CheckCollision_Enemy(Vector2 delta,float distance)
+    {
         RaycastHit2D hit = Physics2D.Raycast(
             prevPosition,
             delta.normalized,
@@ -63,11 +76,31 @@ public class Bullet : MonoBehaviour
             Sound.Play("Impact", transform.position);
             sr.gameObject.SetActive(false);
 
-            return;
+            return true;
         }
 
-        transform.position = currentPosition;
-        prevPosition = currentPosition;
+        return false;
+    }
+
+    private bool CheckCollision_OutofRange(Vector2 delta,float distance)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(
+            prevPosition,
+            delta.normalized,
+            distance,
+            outOfRangeMask
+        );
+
+        if (hit.collider != null)
+        {
+            sr.gameObject.SetActive(false);
+            bFired = false;
+            BulletEffectIsFinishedEvent?.Invoke();
+
+            return true;
+        }
+
+        return false;
     }
 
     private void ApplyDamage(Collider2D other)
@@ -111,7 +144,7 @@ public class Bullet : MonoBehaviour
     {
         ++currentOccupiedSlotCnt;
 
-        if(currentOccupiedSlotCnt >= effectSlotCnt)
+        if (currentOccupiedSlotCnt >= effectSlotCnt)
         {
             bCanApplyEffect = false;
         }

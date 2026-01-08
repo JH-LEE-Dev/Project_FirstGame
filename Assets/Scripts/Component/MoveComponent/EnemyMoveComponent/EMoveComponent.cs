@@ -10,6 +10,7 @@ public class EMoveComponent : MoveComponent
         if (moveDirection.x == 0)
             return;
     }
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();

@@ -15,7 +15,8 @@ public class UnitSpawner : MonoBehaviour
     private InputManager inputManager;
     private WaveManager waveManager;
     private GameServiceLocator gameServiceLocator;
-    private ICardEventSetter cardEventSetter;
+    private ICardSystemEvent cardSystemEvent;
+    private ICardSystemActions cardSystemActions;
     private GameController gameController;
     private UnitLogicSystem unitLogicSystem;
 
@@ -37,13 +38,15 @@ public class UnitSpawner : MonoBehaviour
     private List<Enemy> enemies = new List<Enemy>();
 
     public void Initiallize(InputManager _inputManager, WaveManager _waveManager, 
-        GameServiceLocator _gameServiceLocator,ICardEventSetter _cardEventSetter,
-        GameController _gameController,UnitLogicSystem _unitLogicSystem)
+        GameServiceLocator _gameServiceLocator,ICardSystemEvent _cardSystemEvent,
+        ICardSystemActions _cardSystemActions,GameController _gameController,
+        UnitLogicSystem _unitLogicSystem)
     {
         inputManager = _inputManager;
         waveManager = _waveManager;
         gameServiceLocator = _gameServiceLocator;
-        cardEventSetter= _cardEventSetter;
+        cardSystemEvent = _cardSystemEvent;
+        cardSystemActions = _cardSystemActions;
         gameController = _gameController;
         gameRuleEventController = new GameRuleEventController();
         unitLogicSystem = _unitLogicSystem;
@@ -60,7 +63,7 @@ public class UnitSpawner : MonoBehaviour
     }
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameController, cardEventSetter);
+        gameRuleEventController.Release(characterUnit, gameController, cardSystemEvent,cardSystemActions);
         waveManager.SpawnWaveEvent -= SpawnWave;
     }
 
@@ -76,7 +79,7 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameController, cardEventSetter);
+            gameRuleEventController.Bind(spawnedUnit, gameController, cardSystemEvent,cardSystemActions);
             characterUnit = spawnedUnit;
         }
     }

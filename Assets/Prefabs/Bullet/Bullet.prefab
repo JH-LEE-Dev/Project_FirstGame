@@ -189,6 +189,9 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 64
+  outOfRangeMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &4855813227552774735
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected Vector2 moveDirection;
     protected bool bDead = false;
+    protected bool bCanAction = false;
 
     public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
@@ -119,8 +120,10 @@ public class Unit : MonoBehaviour, IDamageable
 
     public virtual void OnMove(Vector2 move)
     {
-        if (gameServiceLocator.IsGameState<GS_PlayerTurnState>() == false)
+        if (bCanAction == false)
+        {
             return;
+        }
 
         moveDirection = move;
 
@@ -151,5 +154,14 @@ public class Unit : MonoBehaviour, IDamageable
     public void HandleDead()
     {
         gameObject.SetActive(false);
+    }
+    public virtual void SetbCanAction()
+    {
+        bCanAction = true;
+    }
+
+    public virtual void ResetbCanAction()
+    {
+        bCanAction = false;
     }
 }

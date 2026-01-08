@@ -9,11 +9,3 @@ public struct CanvasRoot
    public Transform overlayLayerRoot;
    public Transform tooltipLayerRoot;
 }
-
-namespace SystemAction
-{
-    public struct DrawAgain
-    {
-        public int drawAmount;
-    }
-}

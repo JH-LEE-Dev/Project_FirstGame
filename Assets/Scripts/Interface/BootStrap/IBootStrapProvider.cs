@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IGameFlowController
+public interface IBootStrapProvider
 {
     void GoToMainMenuScene();
 
