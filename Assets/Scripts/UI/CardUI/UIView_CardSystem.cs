@@ -9,6 +9,9 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    //외부 의존성
+    private ICardSystemProvider cardSystemProvider;
+
     //사용 승인을 받은 카드
     private CardInstance verificationWaitCard;
 
@@ -23,8 +26,6 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
-    public Action<Vector3, CardDataInstance> DrawEvent;
-
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private ClickCatchSystem clickCatchSystem;
@@ -32,6 +33,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
+    public DeckSystem DeckSystem => deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
     // 덱
@@ -45,14 +47,27 @@ public class UIView_CardSystem : UIView
     [Header("Graveyard Settings")]
     [SerializeField] private GraveyardSystem graveSystem = null;
 
+    // 소멸
+    [Header("Extinction Settings")]
+    [SerializeField] private ExtinctionSystem extinctionSystem = null;
+
     // 덱, 묘지, 소멸 공용
     [Header("Pannel")]
-    [SerializeField] private GameObject cardPannel = null;
+    [SerializeField] private CardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
 
+    // 드로우 중 작업 중지
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
+
+    //UIJobQueue
+    private List<Job_CardSystemUI> uiJobQueue;
+
+    public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
+    {
+        cardSystemProvider = _cardSystemProvider;
+    }
 
     protected override void Awake()
     {
@@ -67,17 +82,8 @@ public class UIView_CardSystem : UIView
         handSystem?.Init(this);
         deckSystem?.Init(this);
         graveSystem?.Init(this);
+        extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
-
-        BindingFunction();
-    }
-
-    private void BindingFunction()
-    {
-        if (null != handSystem)
-        {
-            DrawEvent += handSystem.ProcessDraw;
-        }
     }
 
     // For PoolingSystem
@@ -98,7 +104,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
+        cardSystemProvider.CardUsed(_card.CardData);
     }
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
@@ -156,7 +162,7 @@ public class UIView_CardSystem : UIView
     }
     public void GetDeckCards()
     {
-        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
+        ActivatePannel(cardSystemProvider.deckCards);
     }
 
     public void GetWormholeCards()
@@ -211,30 +217,63 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
-    public void CardDrawed(List<CardDataInstance> cardDataPile)
+    public void CallPannel(CurrentPannel _setType)
     {
-        if (null == deckSystem)
+        if (null == cardPannel)
             return;
 
-        bWorkingBlock = true;
-        deckSystem.CardDrawEffect(cardDataPile);
-        SetText();
+        cardPannel.CurrPannelType = _setType;
+        cardPannel.gameObject.SetActive(true);
+
+        switch(_setType)
+        {
+            case CurrentPannel.Deck: 
+                ActivatePannel(cardSystemProvider.deckCards); 
+                break;
+
+            case CurrentPannel.Grave:
+                break;
+
+            case CurrentPannel.Extinction:
+                break;
+        }
     }
 
-    public void CallDeckPannel(bool _activate)
+    public void ForceDeActivatePannelSelf(CurrentPannel callType)
     {
-        cardPannel?.SetActive(_activate);
-        GetDeckCards();
+        if (null == cardPannel || callType != cardPannel.CurrPannelType)
+            return;
+
+        cardPannel.gameObject.SetActive(false);
     }
+
+    public void CallOneCardDrawed(int currIdx, int _lastIdx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    {
+        if (currIdx == _lastIdx)
+            WorkingBlock = false;
+
+        handSystem?.ProcessDraw(_endPos, _data);
+        poolingSystem?.StarEffects.Release(_performer);
+    }
+
+    public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
+
+    public Vector3 GetDeckWorldPos()
+    {
+        if (null == deckSystem)
+            return Vector3.zero;
+
+        return deckSystem.transform.position;
+    }
+
+    public GameObject GetStarPerformerFromPool() => poolingSystem?.StarEffects.Get();
     /////////////////////////////////////////////////
-
-
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
+        deckCntText.text = "Deck : " + cardSystemProvider.deckCards.Count.ToString();
+        graveCntText.text = "Grave : " + cardSystemProvider.graveCards.Count.ToString();
+        handCntText.text = "Hand : " + cardSystemProvider.handCards.Count.ToString();
     }
 
     protected override void OnShow()
@@ -258,7 +297,7 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
 
-        viewCtx.cardSystemProvider.CardUsingFinished();
+        cardSystemProvider.CardUsingFinished();
 
         SetText();
 
@@ -292,5 +331,55 @@ public class UIView_CardSystem : UIView
     public void PlayerTurnStarted(int waveIdx)
     {
         //handRoot.gameObject.SetActive(true);
+    }
+
+    public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    {
+        uiJobQueue = _jobQueue;
+
+        // 시작 대기
+        //await Awaitable.WaitForSecondsAsync(2f);
+
+        int size = _jobQueue.Count;
+        for (int i = 0; i < size; ++i)
+        {
+            Job_CardSystemUI currentJob = uiJobQueue[i];
+            JobType_CardSystemUI currenType = currentJob.jobType;
+
+            switch(currenType)
+            {
+                case JobType_CardSystemUI.Draw: 
+                    DrawedCardsFromTurn(currentJob.cards);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                case JobType_CardSystemUI.GraveToDeck:
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                case JobType_CardSystemUI.AdditionalDraw:
+                    DrawedCardsFromTurn(currentJob.cards);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+                case JobType_CardSystemUI.HandToGrave:
+
+                    AllCardReturnToPool(CardState.InHand);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                default: break;
+            }
+        }
+
+        SetText();
+    }
+
+    void DrawedCardsFromTurn(List<CardDataInstance> _datas)
+    {
+        if (null == deckSystem)
+            return;
+
+        bWorkingBlock = true;
+        deckSystem.CardDrawEffect(_datas);
     }
 }

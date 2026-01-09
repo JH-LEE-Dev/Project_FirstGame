@@ -95,3 +95,19 @@ public enum CardState
     Other,
     Hidden
 }
+
+public enum CurrentPannel
+{
+    Deck,
+    Grave,
+    Extinction,
+    NONE
+}
+
+public enum JobType_CardSystemUI
+{
+    Draw,
+    AdditionalDraw,
+    GraveToDeck,
+    HandToGrave
+}

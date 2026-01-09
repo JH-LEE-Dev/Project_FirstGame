@@ -10,8 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8497442654334660815}
   - component: {fileID: 5834490878684711373}
+  - component: {fileID: -4757043121124196522}
+  - component: {fileID: -8925837441652621538}
   m_Layer: 9
-  m_Name: EarthCollider
+  m_Name: Earth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,12 +71,39 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -2.5370872, y: -1.4128243}
-  - {x: -1.7406781, y: -0.9090219}
-  - {x: 0.0921098, y: -0.5654125}
-  - {x: 1.6205463, y: -0.82913256}
-  - {x: 2.551347, y: -1.4326452}
+  - {x: -3.3466637, y: -1.4693066}
+  - {x: -1.7124369, y: -0.7301617}
+  - {x: -0.039681733, y: -0.49951696}
+  - {x: 1.8370607, y: -0.7538233}
+  - {x: 3.1632361, y: -1.4232315}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!114 &-4757043121124196522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7657409726134063642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5ec4854091f7c149830bca82eed4278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Earth
+--- !u!114 &-8925837441652621538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7657409726134063642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c574d97ffd75ed147a85622accba197e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  maxHealth: 0
+  currentHealth: 50
+  currentShield: 0

@@ -9,10 +9,6 @@ public interface ICardSystemProvider
 
     //덱에 있는 카드 
     IReadOnlyList<CardDataInstance> deckCards { get; }
-
-    public int GetDeckCnt();
-
-    public int GetHandCnt();
-
-    public int GetGraveCnt();
+    IReadOnlyList<CardDataInstance> handCards { get; }
+    IReadOnlyList<CardDataInstance> graveCards { get; }
 }

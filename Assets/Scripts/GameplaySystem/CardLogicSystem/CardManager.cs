@@ -3,30 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.Pool;
+
 
 public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler,
     ICardSystemEvent, ICardSystemActions
 {
-    public event Action<CardDataInstance> CardDrawedEvent;
-    public event Action<List<CardDataInstance>> CardPileDrawedEvent;
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingTurnFinishedEvent;
     public event Action<CardData> CardUsedEvent;
     public event Action<bool> CardUsingVerificationEvent;
 
+    //외부 의존성
     private IUnitLogicSystemActions unitLogicSystem;
     private IGameFlowController gameFlowController;
+    private ICardUICommandSystem cardUICommandSystem;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
-    private List<CardDataInstance> deckPile = new List<CardDataInstance>();
-    private List<CardDataInstance> handPile = new List<CardDataInstance>();
-    private List<CardDataInstance> gravePile = new List<CardDataInstance>();
+    private List<CardDataInstance> deckPile = new List<CardDataInstance>(50);
+    private List<CardDataInstance> handPile = new List<CardDataInstance>(20);
+    private List<CardDataInstance> gravePile = new List<CardDataInstance>(50);
 
     IReadOnlyList<CardDataInstance> ICardSystemProvider.deckCards => deckPile;
+    IReadOnlyList<CardDataInstance> ICardSystemProvider.handCards => handPile;
+    IReadOnlyList<CardDataInstance> ICardSystemProvider.graveCards => gravePile;
 
     private Queue<CardEffectStrategy> cardSystemActions_BeforeAttack = new Queue<CardEffectStrategy>();
     private Queue<CardEffectStrategy> cardSystemActions_AfterAttack = new Queue<CardEffectStrategy>();
@@ -36,17 +40,17 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int drawCardCnt = 5;
     [SerializeField] private int initialDeckCnt = 40;
-    [SerializeField] private float cardDrawRate = 1f;
-    [SerializeField] private float systemActionRate = 1f;
 
     public int deckCnt { get; private set; }
     public int graveCnt { get; private set; }
     public int handCnt { get; private set; }
 
-    public void Initialize(IUnitLogicSystemActions _unitLogicSystem, IGameFlowController _gameFlowController)
+    public void Initialize(IUnitLogicSystemActions _unitLogicSystem, IGameFlowController _gameFlowController,
+        ICardUICommandSystem _cardUICommandSystem)
     {
         unitLogicSystem = _unitLogicSystem;
         gameFlowController = _gameFlowController;
+        cardUICommandSystem = _cardUICommandSystem;
     }
 
     public void Awake()
@@ -96,70 +100,34 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
     }
 
-    public void Draw(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            DrawOne();
-        }
-    }
-
-    private void DrawOne()
-    {
-        // if (drawPile.Count == 0)
-        //Reshuffle();
-
-        var card = deckPile[deckPile.Count - 1];
-        deckPile.RemoveAt(deckPile.Count - 1);
-        handPile.Add(card);
-
-        --deckCnt;
-        CardDrawedEvent?.Invoke(card);
-    }
-
-    private IEnumerator CardDrawCoroutine()
-    {
-        while (handCnt < 5)
-        {
-            yield return new WaitForSeconds(cardDrawRate);
-            DrawOne();
-            ++handCnt;
-        }
-
-        CardDrawFinishedEvent?.Invoke();
-        handCnt = 0;
-    }
-
     public void CardPileDraw(int amount)
     {
-        List<CardDataInstance> hands = new List<CardDataInstance>();
+        using var temp = new RentalScope<CardDataInstance>(amount);
+
+        Span<CardDataInstance> writeBuffer = temp.Span;
 
         for (int i = 0; i < amount; ++i)
         {
             var card = deckPile[deckPile.Count - 1];
             deckPile.RemoveAt(deckPile.Count - 1);
+
             handPile.Add(card);
-            hands.Add(card);
-            --deckCnt;
-            ++handCnt;
+            writeBuffer[i] = card;
         }
 
-        CardPileDrawedEvent?.Invoke(hands);
+        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
     }
 
-    private IEnumerator CardPileDrawCoroutine(int amount)
+    private void StartCardPileDraw(int amount)
     {
-        yield return new WaitForSeconds(cardDrawRate);
-
         CardPileDraw(amount);
 
+        cardUICommandSystem.DispatchCommand();
         CardDrawFinishedEvent?.Invoke();
     }
 
-    private IEnumerator CardAdditionalPileDrawCoroutine(int amount)
+    private void CardAdditionalPileDraw(int amount)
     {
-        yield return new WaitForSeconds(cardDrawRate);
-
         CardPileDraw(amount);
     }
 
@@ -181,7 +149,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         CardUsingVerificationEvent?.Invoke(true);
         CardUsedEvent?.Invoke(usedCard.GetCardData());
 
-        StartCoroutine(ExecuteSystemAction_BeforeAttack());
+        ExecuteSystemAction_BeforeAttack();
     }
 
     public void ReleaseCard(CardDataInstance card)
@@ -208,19 +176,20 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         graveCnt = 0;
     }
 
-    public void CardUsingFinished()
-    {
-        CardUsingTurnFinishedEvent?.Invoke();
 
+    public void HandToGrave()
+    {
         for (int i = 0; i < handPile.Count; ++i)
         {
             var card = handPile[i];
             gravePile.Add(card);
-
         }
 
         handPile.Clear();
+    }
 
+    private void GraveToDeckMove(int moveAmount)
+    {
         for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
@@ -228,18 +197,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
 
         gravePile.Clear();
-
-        deckCnt = deckPile.Count;
-        graveCnt = gravePile.Count;
     }
 
-    public void StartDraw(int waveIdx)
+    public void StartCardDrawTurn(int waveIdx)
     {
-        //한장씩 드로우 할 때의 기능.
-        //StartCoroutine(CardDrawCoroutine());
-
-        //Pile 드로우.
-        StartCoroutine(ExecuteSystemAction_NextTurn());
+        ExecuteSystemAction_BeforeTurn();
     }
 
     public void StrategyForwarding(CardEffectStrategy effectStrategy)
@@ -262,7 +224,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void DrawAgain(int drawAmount)
     {
-        StartCoroutine(CardAdditionalPileDrawCoroutine(drawAmount));
+        CardAdditionalPileDraw(drawAmount);
     }
 
     public int GetDeckCnt()
@@ -280,54 +242,51 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         return graveCnt;
     }
 
-    private IEnumerator ExecuteSystemAction_BeforeAttack()
+    private void ExecuteSystemAction_BeforeAttack()
     {
         while (true)
         {
             if (cardSystemActions_BeforeAttack.Count == 0)
-                yield break; // 코루틴 정상 종료
+                return;
 
             var systemAction = cardSystemActions_BeforeAttack.Dequeue();
 
             systemAction.Execute_System();
-
-            yield return new WaitForSeconds(systemActionRate);
         }
     }
 
-    private IEnumerator ExecuteSystemAction_AfterAttack()
+    private void ExecuteSystemAction_AfterAttack()
     {
-        while(true)
+        while (true)
         {
             if (cardSystemActions_AfterAttack.Count == 0)
             {
+                HandToGrave();
                 gameFlowController.PlayerTurnIsFinished();
-                yield break; // 코루틴 정상 종료
+                cardUICommandSystem.CreateCommand(JobType_CardSystemUI.HandToGrave);
+                cardUICommandSystem.DispatchCommand();
+                return;
             }
 
             var systemAction = cardSystemActions_AfterAttack.Dequeue();
 
             systemAction.Execute_System();
-
-            yield return new WaitForSeconds(systemActionRate);
         }
     }
 
-    private IEnumerator ExecuteSystemAction_NextTurn()
+    private void ExecuteSystemAction_BeforeTurn()
     {
-        while(true)
+        while (true)
         {
             if (cardSystemActions_NextTurn.Count == 0)
             {
-                StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
-                yield break; // 코루틴 정상 종료
+                StartCardPileDraw(drawCardCnt);
+                return;
             }
 
             var systemAction = cardSystemActions_NextTurn.Dequeue();
 
             systemAction.Execute_System();
-
-            yield return new WaitForSeconds(systemActionRate);
         }
     }
 
@@ -338,6 +297,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void PlayerTurnFinished()
     {
-        StartCoroutine(ExecuteSystemAction_AfterAttack());
+        ExecuteSystemAction_AfterAttack();
+    }
+
+    public void CardUsingFinished()
+    {
+        CardUsingTurnFinishedEvent?.Invoke();
     }
 }

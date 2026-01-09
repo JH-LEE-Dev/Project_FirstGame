@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 58848309}
   - component: {fileID: 58848310}
   - component: {fileID: 58848311}
+  - component: {fileID: 58848312}
   m_Layer: 0
   m_Name: UIInstaller
   m_TagString: Untagged
@@ -193,6 +194,18 @@ MonoBehaviour:
     tooltipLayerRoot: {fileID: 0}
   canvas_GamplayScene_Prefab: {fileID: 1108041376251214764, guid: e1f21de538dc67948b2b4ac655e74f3f, type: 3}
   canvas_MainMenuScene_Prefab: {fileID: 3575439225224453345, guid: 23f2fb711168ae6409b1e173bace7179, type: 3}
+--- !u!114 &58848312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58848308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
 --- !u!1 &352378094
 GameObject:
   m_ObjectHideFlags: 0

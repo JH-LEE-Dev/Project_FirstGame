@@ -4,6 +4,7 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 public class DeckSystem : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
@@ -50,15 +51,22 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
+    [Header("CardBack Event for Drawed")]
+    [SerializeField] private Vector2 drawedCardBackPunchPosMulti = Vector3.zero;
+    [SerializeField] private Vector3 drawedCardBackPunchScale = Vector3.zero;
+    [SerializeField] private Vector3 drawedCardBackPunchRot = Vector3.zero;
+    [SerializeField] private Ease drawedCardBackEase = Ease.OutExpo;
+
     private Sequence wealthySeq = null;
     private Sequence activeSeq = null;
-
-    private ObjectPool<GameObject> drawEffectParticle;
+    private Sequence cardbackSeq = null;
 
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
 
-    private int currentDrawCount = 0;
+    private Vector3 cardbackOriginPos = Vector3.zero;
+    private Vector3 cardbackOriginScale = Vector3.zero;
+    private Quaternion cardbackOriginRot = Quaternion.identity;
 
     private bool bClickedEvent = false;
 
@@ -69,17 +77,11 @@ public class DeckSystem : MonoBehaviour,
         originScale = topRect.localScale;
         originQuat = topRect.localRotation;
 
-        drawEffectParticle = new ObjectPool<GameObject>(
-            createFunc: CreateDrawEffect,
-            actionOnGet: ActivateDrawEffect,
-            actionOnRelease: DeActivateDrawEffect,
-            actionOnDestroy: DestroyPoolObj,
-            maxSize: 15);
-
-        for (int i = 0; i < 15; ++i)
+        if (null != cardBackRect)
         {
-            GameObject newObj = drawEffectParticle.Get();
-            drawEffectParticle.Release(newObj);
+            cardbackOriginPos = cardBackRect.anchoredPosition;
+            cardbackOriginScale = cardBackRect.localScale;
+            cardbackOriginRot = cardBackRect.rotation;
         }
     }
 
@@ -119,21 +121,22 @@ public class DeckSystem : MonoBehaviour,
     public void CardDrawEffect(List<CardDataInstance> dataList)
     {
         if (null == cardSystem)
-        {
-            Debug.Log("오류: 카드 시스템 바인딩 안 되어있음.");
             return;
-        }
+
+        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
+        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
 
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
-        //RectTransform endPoint = cardSystem.DrawEndPoint;
 
-        currentDrawCount = dataList.Count;
+        int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
-            GameObject performer = drawEffectParticle.Get();
-            DrawEffect script = performer?.GetComponent<DrawEffect>();
+            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
+
+            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
@@ -156,8 +159,38 @@ public class DeckSystem : MonoBehaviour,
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
 
             script.CardDataInstance = dataList[i];
-            script.PlayingDrawEvent(i, drawDelay, drawDuration, drawEase, pathPoints);
+            script.PlayingEventforDeck(i, dataList.Count - 1, drawDelay, drawDuration, drawEase, pathPoints);
         }
+    }
+
+    public void CardBackDrawedEffect()
+    {
+        if (null == cardBackRect)
+            return;
+
+        cardBackRect.anchoredPosition = cardbackOriginPos;
+        cardBackRect.localScale = cardbackOriginScale;
+
+        CancelPrevMotion(cardbackSeq);
+
+        cardbackSeq = DOTween.Sequence();
+
+        float randPosX = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.x;
+        float randPosY = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.y;
+
+        Vector3 randomPos = new Vector3(randPosX, randPosY);
+
+        cardbackSeq.Append(cardBackRect.DOPunchAnchorPos(randomPos, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase)
+            .OnComplete(() =>
+            {
+                
+            }));
+
+        cardbackSeq.Join(cardBackRect.DOPunchScale(drawedCardBackPunchScale, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase));
     }
 
     private void EnterEvent()
@@ -220,56 +253,22 @@ public class DeckSystem : MonoBehaviour,
                 bClickedEvent = false;
             }));
 
-        cardSystem?.CallDeckPannel(true);
-    }
-
-    public void CallOneCardDrawCompleted(int _idx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
-    {
-        if (null == cardSystem)
-            return;
-
-        if (currentDrawCount - 1 == _idx)
-            cardSystem.WorkingBlock = false;
-
-        cardSystem.DrawEvent.Invoke(_endPos, _data);
-        drawEffectParticle.Release(_performer);
-    }
-
-    private GameObject CreateDrawEffect()
-    {
-        GameObject newObj = Instantiate(drawEffectPrefab, topRect);
-        DrawEffect script = newObj?.GetComponent<DrawEffect>();
-        script?.Init(this);
-
-        return newObj;
-    }
-
-    private void DestroyPoolObj(GameObject obj)
-    {
-        Destroy(obj);
-    }
-
-    private void ActivateDrawEffect(GameObject obj)
-    {
-        obj?.SetActive(true);
-    }
-
-    private void DeActivateDrawEffect(GameObject obj)
-    {
-        if (null == obj)
-            return;
-
-        obj.transform.position = topRect.position;
-        obj.SetActive(false);
+        cardSystem?.CallPannel(CurrentPannel.Deck);
     }
 
     public void OnPointerDown(PointerEventData _eventData)
     {
+        if (true == cardSystem?.WorkingBlock)
+            return;
+
         DownEvent();
     }
 
     public void OnPointerUp(PointerEventData _eventData)
     {
+        if (true == cardSystem?.WorkingBlock)
+            return;
+
         UpEvent();
     }
 

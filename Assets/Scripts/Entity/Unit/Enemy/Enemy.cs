@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Unit
+public class Enemy : Unit,IEnemyData
 {
     /// <summary>
     /// 시스템 속성 존 .-----------------------------------
@@ -8,6 +8,8 @@ public class Enemy : Unit
     [SerializeField] private LayerMask gravityLayerMask;
     private EnemyTypeData enemyTypeData;
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
+
+    private ECombatComponent combatComponent;
 
     /// <summary>
     /// 구현 속성 존. ------------------------------------
@@ -21,6 +23,14 @@ public class Enemy : Unit
     /// <summary>
     /// 시스템 코드 존. -------------------------------------
     /// </summary>
+    /// 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        combatComponent = GetComponent<ECombatComponent>();
+    }
+
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
@@ -48,6 +58,7 @@ public class Enemy : Unit
         transform.localScale = new Vector3(scaleDelta + scale, scaleDelta + scale, 1f);
         moveComponent.SetImpulsePower(enemyTypeData.moveForce);
         healthComponent.SetHealth(enemyTypeData.health);
+        combatComponent.Initialize(enemyTypeData.attack);
     }
 
     private void BindEvent()
@@ -126,6 +137,8 @@ public class Enemy : Unit
             InvokeUnitIsDead();
             gameServiceLocator.PlayCameraShake();
 
+            combatComponent.ApplyAttack(other);
+
             return;
         }
 
@@ -137,5 +150,25 @@ public class Enemy : Unit
 
             return;
         }
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    public float GetMaxHealth()
+    {
+        return healthComponent.GetMaxHealth();
+    }
+
+    public float GetCurrentHealth()
+    {
+        return healthComponent.GetCurrentHealth();
+    }
+
+    public float GetHealth()
+    {
+        throw new System.NotImplementedException();
     }
 }
