@@ -19,9 +19,12 @@ public class Character : Unit
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
     /// </summary>
+
+
     private Vector2 mousePos;
     private Vector2 fireDir;
 
+    [SerializeField] private Character_Visual character_Visual;
 
 
 
@@ -90,6 +93,8 @@ public class Character : Unit
         base.Update();
 
         UpdateAimLine();
+
+
     }
 
     //데미지 입는 함수 - 미구현.
