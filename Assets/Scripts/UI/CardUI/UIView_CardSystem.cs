@@ -106,7 +106,7 @@ public class UIView_CardSystem : UIView
         if (boolean)
         {
             // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
-            handSystem?.TryUseCard(verificationWaitCard);
+            handSystem?.UseCard(verificationWaitCard);
 
 
         }

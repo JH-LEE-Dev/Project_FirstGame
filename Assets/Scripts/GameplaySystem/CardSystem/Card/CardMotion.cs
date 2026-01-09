@@ -39,10 +39,6 @@ public class CardMotion : MonoBehaviour
     [SerializeField] private float rejectAngle = 5f;    
     private Sequence rejectSeq;
 
-    // 이거 키면 패쪽으로 안빨려감.
-    public bool IgnoreHandLayout = true;
-
-
     public void Bind(CardInstance card)
     {
         owner = card;
@@ -62,7 +58,7 @@ public class CardMotion : MonoBehaviour
 
     public void EnterHand()
     {
-        IgnoreHandLayout = false;
+        owner.SetUIState(CardState.InHand);
         velocity = Vector2.zero;
     }
 
@@ -70,7 +66,6 @@ public class CardMotion : MonoBehaviour
 
     public void ExitHand()
     {
-        IgnoreHandLayout = false;
         velocity = Vector2.zero;
         KillHoverOnly();
         transform.localScale = originScale;
@@ -88,8 +83,8 @@ public class CardMotion : MonoBehaviour
 
     public void Tick(float dt)
     {
-        if (IgnoreHandLayout) return;
         if (owner.cardInstanceType != CardInstanceType.Hand) return;
+        if (owner.cardState != CardState.InHand) return;
 
         Vector2 pos = rt.anchoredPosition;
 
@@ -145,7 +140,7 @@ public class CardMotion : MonoBehaviour
     // Hover
     public void HoverOn()
     {
-        if (IgnoreHandLayout) return;
+        if (owner.cardState != CardState.InHand) return;
 
         hoverTween?.Kill();
         hoverTween = transform.DOScale(originScale * hoverScale, hoverDuration)
@@ -155,7 +150,7 @@ public class CardMotion : MonoBehaviour
 
     public void HoverOff()
     {
-        if (IgnoreHandLayout) return;
+        if (owner.cardState != CardState.InHand) return;
 
         hoverTween?.Kill();
         hoverTween = transform.DOScale(originScale, hoverDuration)
@@ -173,8 +168,6 @@ public class CardMotion : MonoBehaviour
     // Preview
     public void StartPreview(Vector2 centerPos)
     {
-        IgnoreHandLayout = true;
-
         KillHoverOnly();
 
         previewMoveTween?.Kill();
@@ -199,8 +192,6 @@ public class CardMotion : MonoBehaviour
 
     public void EndPreview()
     {
-        IgnoreHandLayout = false;
-
         previewMoveTween?.Kill();
         previewScaleTween?.Kill();
         previewRotateTween?.Kill();

@@ -2,14 +2,25 @@ using UnityEngine;
 
 public class Enemy : Unit
 {
+    /// <summary>
+    /// 시스템 속성 존 .-----------------------------------
+    /// </summary>
     [SerializeField] private LayerMask gravityLayerMask;
-
-    private Vector2 targetPoint;
-    private bool bAccelerate = false;
     private EnemyTypeData enemyTypeData;
-    private TrailRenderer trailRenderer;
+    private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
 
-    //의존성 DIP적용 검토하기.
+    /// <summary>
+    /// 구현 속성 존. ------------------------------------
+    /// </summary>
+    private Vector2 targetPoint; //지구를 뜻함.
+    private bool bAccelerate = false; // true -> 지구로 돌진할 때를 의미.
+
+
+
+
+    /// <summary>
+    /// 시스템 코드 존. -------------------------------------
+    /// </summary>
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
@@ -54,16 +65,29 @@ public class Enemy : Unit
         healthComponent.DecreaseHealth(damage); 
     }
 
-    protected override void Update()
-    {
-        base.Update();
-    }
-
+    //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
     public override void OnMove()
     {
         moveComponent.ApplyImpulse();
     }
 
+
+
+
+
+
+
+
+    /// <summary>
+    /// 구현 코드 존. ------------------------------------------
+    /// </summary>
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+   
     protected override void OnDestroy()
     {
         ReleaseEvent();
@@ -83,6 +107,7 @@ public class Enemy : Unit
         moveComponent.ApplyImpulse();
     }
 
+    //지구에 충돌했을 때 호출됨.
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.isTrigger) 
