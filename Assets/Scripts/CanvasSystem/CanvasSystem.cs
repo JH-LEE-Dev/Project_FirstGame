@@ -28,6 +28,7 @@ public class CanvasSystem : MonoBehaviour
                 continue;
 
             children[i].overrideSorting = true;
+            children[i].sortingLayerID = canvas.sortingLayerID;
             children[i].sortingOrder = canvas.sortingOrder + i;
         }
     }
