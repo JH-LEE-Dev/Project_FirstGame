@@ -144,11 +144,19 @@ public class UIView_CardSystem : UIView
     {
         handSystem?.CancelPreview();
     }
+
+    // state에 맞는 카드들이 묘지로 빨려들어가는 기능
+    public void AllCardReturnToPool(CardState state)
+    {
+        handSystem?.AllCardReturnToPool(state);
+    }
     /////////////////
 
-
-
-
+    public Vector3 GetGraveAnchoredPos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.GetComponent<RectTransform>().anchoredPosition;
+    }
     public void GetDeckCards()
     {
         ActivatePannel(viewCtx.cardSystemProvider.deckCards);

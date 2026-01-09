@@ -31,7 +31,7 @@ public class DrawEffect : MonoBehaviour
 
         activeSeq.AppendInterval(_idx * _spawnDelay);
 
-        activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CatmullRom, PathMode.TopDown2D, 10, Color.green)
+        activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CubicBezier, PathMode.TopDown2D, 10, Color.green)
             .SetUpdate(false)
             .SetEase(_drawEase)
             .OnComplete(() =>

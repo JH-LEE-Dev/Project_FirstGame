@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1c31e148adce0bd4a9c7e3cefc666816
+guid: 067e424d183b38746bd005ca924271ff
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8491795983015280101
-    second: cara_1_0
+      213: 1225243763244706485
+    second: cara - 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,24 +96,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cara_1_0
+      name: cara - 1_0
       rect:
         serializedVersion: 2
         x: 7
@@ -128,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b12094f7b84172a80800000000000000
-      internalID: -8491795983015280101
+      spriteID: 5baa67706b0f00110800000000000000
+      internalID: 1225243763244706485
       vertices: []
       indices: 
       edges: []
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      cara_1_0: -8491795983015280101
+      cara - 1_0: 1225243763244706485
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
