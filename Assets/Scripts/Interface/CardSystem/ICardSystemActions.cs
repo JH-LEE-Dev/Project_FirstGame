@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface ICardSystemActions
 {
-    void StartDraw(int waveIdx);
+    void StartCardDrawTurn(int waveIdx);
 
     void PlayerTurnFinished();
 }

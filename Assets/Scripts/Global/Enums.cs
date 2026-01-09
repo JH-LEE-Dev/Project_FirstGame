@@ -103,3 +103,10 @@ public enum CurrentPannel
     Extinction,
     NONE
 }
+
+public enum JobType_CardSystemUI
+{
+    Draw,
+    AdditionalDraw,
+    GraveToDeck
+}

@@ -44,8 +44,8 @@ public class GameController : MonoBehaviour, IGameFlowController
         waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
         waveManager.WaveMoveEndEvent += ChangeGameStateToPlayerTurn;
 
-        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartDraw;
-        playerTurn.PlayerTurnStartEvent += cardSystemActions.StartDraw;
+        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
+        playerTurn.PlayerTurnStartEvent += cardSystemActions.StartCardDrawTurn;
     }
 
     public void ReleaseEvent()
@@ -57,7 +57,7 @@ public class GameController : MonoBehaviour, IGameFlowController
 
         waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
 
-        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartDraw;
+        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
     }
     public void OnDestroy()
     {

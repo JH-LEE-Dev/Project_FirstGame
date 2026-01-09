@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,9 @@ public class HandSystem : MonoBehaviour
 
     // 호버된 카드 인덱스
     private CardInstance hoveredCard = null;
+
+    [Header("ToGrave")]
+    [SerializeField] private float discardInterval = 0.09f;
 
 
 
@@ -431,5 +435,50 @@ public class HandSystem : MonoBehaviour
         }
 
         return Count;
+    }
+
+    public void AllCardReturnToPool(CardState state)
+    {
+        if (previewCard != null) CancelPreview();
+        hoveredCard = null;
+
+        Vector3 GravePosition = cardSystem.GetGraveAnchoredPos();
+
+        Debug.Log(GravePosition);
+
+
+        // 현재 손패(InHand)만 스냅샷
+        List<CardInstance> toDiscard = new();
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            var c = cards[i];
+            if (c != null && c.cardState == state)
+                toDiscard.Add(c);
+        }
+
+        float delay = 0f;
+
+        foreach (var card in toDiscard)
+        {
+            DOVirtual.DelayedCall(delay, () =>
+            {
+                if (card == null) return;
+                if (card.cardState != CardState.InHand) return;
+
+                // 손패 레이아웃에서 즉시 제외
+                card.SetUIState(CardState.Other);
+                computeArc();
+
+                card.Motion.FlyToGrave(GravePosition, () =>
+                {
+                    ReturnToPool(card);
+                });
+
+            }).SetUpdate(true);
+
+            delay += discardInterval;
+        }
+
     }
 }

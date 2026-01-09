@@ -59,6 +59,9 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
+    //UIJobQueue
+    private List<Job_CardSystemUI> uiJobQueue;
+
     protected override void Awake()
     {
         base.Awake();
@@ -147,8 +150,23 @@ public class UIView_CardSystem : UIView
     {
         handSystem?.CancelPreview();
     }
+
+    // state에 맞는 카드들이 묘지로 빨려들어가는 기능
+    public void AllCardReturnToPool(CardState state)
+    {
+        handSystem?.AllCardReturnToPool(state);
+    }
     /////////////////
 
+    public Vector3 GetGraveAnchoredPos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.GetComponent<RectTransform>().anchoredPosition;
+    }
+    public void GetDeckCards()
+    {
+        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
+    }
 
     public void GetWormholeCards()
     {
@@ -202,15 +220,15 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
-    public void CardDrawed(List<CardDataInstance> cardDataPile)
-    {
-        if (null == deckSystem)
-            return;
+    //public void CardDrawed(List<CardDataInstance> cardDataPile)
+    //{
+    //    if (null == deckSystem)
+    //        return;
 
-        bWorkingBlock = true;
-        deckSystem.CardDrawEffect(cardDataPile);
-        SetText();
-    }
+    //    bWorkingBlock = true;
+    //    deckSystem.CardDrawEffect(cardDataPile);
+    //    SetText();
+    //}
 
     public void CallPannel(CurrentPannel _setType)
     {
@@ -245,9 +263,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.GetDeckCnt().ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.GetGraveCnt().ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.GetHandCnt().ToString();
+        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCards.Count.ToString();
+        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.graveCards.Count.ToString();
+        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCards.Count.ToString();
     }
 
     protected override void OnShow()
@@ -305,5 +323,12 @@ public class UIView_CardSystem : UIView
     public void PlayerTurnStarted(int waveIdx)
     {
         //handRoot.gameObject.SetActive(true);
+    }
+
+    public void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    {
+        uiJobQueue = _jobQueue;
+
+        SetText();
     }
 }

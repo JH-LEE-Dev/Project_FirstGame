@@ -39,6 +39,12 @@ public class CardMotion : MonoBehaviour
     [SerializeField] private float rejectAngle = 5f;    
     private Sequence rejectSeq;
 
+    [Header("Grave Motion")]
+    private Tween flyTween;
+    [SerializeField] private float graveDuration = 0.25f;
+
+
+
     public void Bind(CardInstance card)
     {
         owner = card;
@@ -209,4 +215,15 @@ public class CardMotion : MonoBehaviour
 
 
     // 
+
+
+    public void FlyToGrave(Vector3 graveAnchoredPos, System.Action onComplete = null)
+    {
+        flyTween?.Kill();
+
+        flyTween = rt.DOAnchorPos(graveAnchoredPos, graveDuration)
+            .SetEase(Ease.InCubic)
+            .SetUpdate(true)
+            .OnComplete(() => onComplete?.Invoke());
+    }
 }

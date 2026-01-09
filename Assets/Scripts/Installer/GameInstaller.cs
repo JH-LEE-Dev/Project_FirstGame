@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class GameInstaller : MonoBehaviour
 {
+    //외부 의존성
     private InputManager inputManager;
+    private ICardUICommandSystem cardUICommandSystem;
+
+    //내부 의존성
     private UnitSpawner unitSpawner;
     private WaveManager waveManager;
     private GameController gameController;
@@ -33,7 +37,7 @@ public class GameInstaller : MonoBehaviour
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem);
         cardEffectManager.Initialize(unitLogicSystem, cardManager);
-        cardManager.Initialize(unitLogicSystem,gameController);
+        cardManager.Initialize(unitLogicSystem,gameController,cardUICommandSystem);
 
         BindEvent(cardManager, cardEffectManager);
     }
@@ -55,7 +59,12 @@ public class GameInstaller : MonoBehaviour
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        uiInstaller.DependencyInjection_Gameplay(cardManager,cardManager, gameController);
+        uiInstaller.ReceiveDependency_Gameplay(cardManager,cardManager, gameController);
+    }
+
+    public void ReceiveDependency_Gameplay(ICardUICommandSystem _cardUICommandSystem)
+    {
+        cardUICommandSystem = _cardUICommandSystem;
     }
 
     public void BindEvent(CardManager _cardManager, CardEffectManager _cardEffectManager)

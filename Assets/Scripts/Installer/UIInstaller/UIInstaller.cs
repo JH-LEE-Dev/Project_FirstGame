@@ -15,6 +15,7 @@ public class UIInstaller : MonoBehaviour
 
     //내부 의존성
     private UIManager uiManager;
+    private UICommandManager uiCommandManager;
 
 
     [Header("MainMenu Scene Objects")]
@@ -38,12 +39,14 @@ public class UIInstaller : MonoBehaviour
     {
         inputManager = _inputManager;
         uiManager = GetComponent<UIManager>();
+        uiCommandManager = GetComponent<UICommandManager>();
         bootStrapProvider = _bootStrapProvider;
 
+        uiCommandManager.Initialize();
         uiManager.Initialize(inputManager);
     }
 
-    public void DependencyInjection_Gameplay(ICardSystemEvent _cardSystemEvent,
+    public void ReceiveDependency_Gameplay(ICardSystemEvent _cardSystemEvent,
         ICardSystemProvider _cardSystemProvider,IGameFlowProvider _gameFlowProvider)
     {
         cardSystemEvent = _cardSystemEvent;
@@ -214,8 +217,6 @@ public class UIInstaller : MonoBehaviour
 
     private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
     {
-        cardSystemEvent.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
-        cardSystemEvent.CardPileDrawedEvent += cardSystemObject.CardDrawed;
         cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemEvent.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
         cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
@@ -224,6 +225,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
+        uiCommandManager.BindDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
 
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -244,11 +246,11 @@ public class UIInstaller : MonoBehaviour
         UIView_CardSystem cardSystemObject = uiManager.GetView<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.GetView<UIView_Gameplay>();
 
-        cardSystemEvent.CardPileDrawedEvent -= cardSystemObject.CardDrawed;
         cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
+        uiCommandManager.ReleaseDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
 
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -284,5 +286,10 @@ public class UIInstaller : MonoBehaviour
     public void ReleaseDependency_GameplayScene()
     {
         uiManager.ReleaseDependency_GameplayScene();
+    }
+
+    public void DependencyInjection_Gameplay(GameInstaller gameInstaller)
+    {
+        gameInstaller.ReceiveDependency_Gameplay(uiCommandManager);
     }
 }
