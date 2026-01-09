@@ -220,16 +220,6 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
-    //public void CardDrawed(List<CardDataInstance> cardDataPile)
-    //{
-    //    if (null == deckSystem)
-    //        return;
-
-    //    bWorkingBlock = true;
-    //    deckSystem.CardDrawEffect(cardDataPile);
-    //    SetText();
-    //}
-
     public void CallPannel(CurrentPannel _setType)
     {
         if (null == cardPannel)
@@ -328,6 +318,30 @@ public class UIView_CardSystem : UIView
     public void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
         uiJobQueue = _jobQueue;
+        
+        int size = _jobQueue.Count;
+        for (int i = 0; i < size; ++i)
+        {
+            Job_CardSystemUI currentJob = uiJobQueue[i];
+
+            List<CardDataInstance> currCardDataList = currentJob.cards;
+            JobType_CardSystemUI currenType = currentJob.jobType;
+
+            switch(currenType)
+            {
+                case JobType_CardSystemUI.Draw:
+                {
+                        if (null == deckSystem)
+                            return;
+
+                        bWorkingBlock = true;
+                        deckSystem.CardDrawEffect(currCardDataList);
+                }
+                break;
+
+                default: break;
+            }
+        }
 
         SetText();
     }
