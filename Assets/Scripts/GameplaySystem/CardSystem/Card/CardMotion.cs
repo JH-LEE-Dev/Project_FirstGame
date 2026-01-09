@@ -41,7 +41,7 @@ public class CardMotion : MonoBehaviour
 
     [Header("Grave Motion")]
     private Tween flyTween;
-    [SerializeField] private float graveDuration = 0.5f;
+    [SerializeField] private float graveDuration = 0.25f;
 
 
 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6299baea6746e454fb99a66c5c49a50d
+guid: aac3a5f9b3c976a4288eb54a8b56a8d5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3573078340223617106
-    second: cara_0_0
+      213: -3167047231515751395
+    second: cara - 3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,30 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cara_0_0
+      name: cara - 3_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 9
+        y: 7
         width: 32
-        height: 14
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ea734583e20e96ec0800000000000000
-      internalID: -3573078340223617106
+      spriteID: d1c8e9a92536c04d0800000000000000
+      internalID: -3167047231515751395
       vertices: []
       indices: 
       edges: []
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      cara_0_0: -3573078340223617106
+      cara - 3_0: -3167047231515751395
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

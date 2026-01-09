@@ -42,6 +42,7 @@ public class Character : Unit
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
+        character_Visual.Bind(this);
     }
 
     private void BindEvent()
