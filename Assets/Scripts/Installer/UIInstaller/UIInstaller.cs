@@ -84,7 +84,7 @@ public class UIInstaller : MonoBehaviour
 
     public void MainMenuLevelStarted()
     {
-        canvas_MainMenuScene = Instantiate(canvas_MainMenuScene_Prefab);
+        SetupMainMenuCanvas();
 
         Transform overlayRoot = Instantiate(mainMenuLevelRoots_Prefab.overlayLayerRoot, canvas_MainMenuScene.transform);
         Transform popupLayerRoot = Instantiate(mainMenuLevelRoots_Prefab.popupLayerRoot, canvas_MainMenuScene.transform);
@@ -114,7 +114,7 @@ public class UIInstaller : MonoBehaviour
 
     public void SetupUIElement()
     {
-        canvas_GamplayScene = Instantiate(canvas_GamplayScene_Prefab);
+        SetupGameplayCanvas();
 
         Transform overlayRoot = Instantiate(gameplayLevelRoots_Prefab.overlayLayerRoot, canvas_GamplayScene.transform);
         Transform popupLayerRoot = Instantiate(gameplayLevelRoots_Prefab.popupLayerRoot, canvas_GamplayScene.transform);
@@ -130,6 +130,28 @@ public class UIInstaller : MonoBehaviour
         uiManager.SceneChanged(tempRoot);
 
         OpenGameplayUIView();
+    }
+
+    public void SetupGameplayCanvas()
+    {
+        canvas_GamplayScene = Instantiate(canvas_GamplayScene_Prefab);
+        CanvasSystem canvasSystem = canvas_GamplayScene.GetComponent<CanvasSystem>();
+        
+        if(canvasSystem != null )
+        {
+            canvasSystem.Initialize();
+        }
+    }
+
+    public void SetupMainMenuCanvas()
+    {
+        canvas_MainMenuScene = Instantiate(canvas_MainMenuScene_Prefab);
+        CanvasSystem canvasSystem = canvas_MainMenuScene.GetComponent<CanvasSystem>();
+
+        if (canvasSystem != null)
+        {
+            canvasSystem.Initialize();
+        }
     }
 
     public void OpenGameplayUIView()
