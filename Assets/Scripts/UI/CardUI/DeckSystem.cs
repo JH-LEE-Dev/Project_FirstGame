@@ -54,6 +54,7 @@ public class DeckSystem : MonoBehaviour,
     [Header("CardBack Event for Drawed")]
     [SerializeField] private Vector2 drawedCardBackPunchPosMulti = Vector3.zero;
     [SerializeField] private Vector3 drawedCardBackPunchScale = Vector3.zero;
+    [SerializeField] private Vector3 drawedCardBackPunchRot = Vector3.zero;
     [SerializeField] private Ease drawedCardBackEase = Ease.OutExpo;
 
     private Sequence wealthySeq = null;
@@ -67,6 +68,7 @@ public class DeckSystem : MonoBehaviour,
 
     private Vector3 cardbackOriginPos = Vector3.zero;
     private Vector3 cardbackOriginScale = Vector3.zero;
+    private Quaternion cardbackOriginRot = Quaternion.identity;
 
     private int currentDrawCount = 0;
 
@@ -96,6 +98,7 @@ public class DeckSystem : MonoBehaviour,
         {
             cardbackOriginPos = cardBackRect.anchoredPosition;
             cardbackOriginScale = cardBackRect.localScale;
+            cardbackOriginRot = cardBackRect.rotation;
         }
     }
 
