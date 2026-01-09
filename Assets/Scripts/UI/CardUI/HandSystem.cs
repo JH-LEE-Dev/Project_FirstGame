@@ -44,7 +44,7 @@ public class HandSystem : MonoBehaviour
         // 프리뷰 상태에서 다시 클릭 -> 사용
         if (previewCard == _card)
         {
-            UseCard(_card);
+            cardSystem.TryUseCard(_card);
             return;
         }
 
