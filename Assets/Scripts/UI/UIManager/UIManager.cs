@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    //외부 의존성
+    private ICardSystemProvider cardSystemProvider;
+    private IUnitLogicSystemProvider unitLogicSystemProvider;
+
     private UIViewContext viewCtx;
 
     private Transform screenLayerRoot;
@@ -128,7 +132,7 @@ public class UIManager : MonoBehaviour
 
         Transform parent = GetLayerRoot(prefab.Layer);
 
-        if(parent == null)
+        if (parent == null)
         {
             Debug.Log("NULL!");
         }
@@ -137,6 +141,7 @@ public class UIManager : MonoBehaviour
         instance.gameObject.name = $"{prefab.gameObject.name}_Instance";
 
         instance.Initialize(viewCtx);
+        DependencyInjection(instance);
 
         return (T)instance;
     }
@@ -157,13 +162,29 @@ public class UIManager : MonoBehaviour
     {
     }
 
-    public void Initialize_GameplayScene(ICardSystemProvider _cardSystemProvider)
+    public void Initialize_GameplayScene(ICardSystemProvider _cardSystemProvider,
+        IUnitLogicSystemProvider _unitLogicSystemProvider)
     {
-        viewCtx.Initialize_Gameplay(_cardSystemProvider);
+        unitLogicSystemProvider = _unitLogicSystemProvider;
+        cardSystemProvider = _cardSystemProvider;
+
+        //viewCtx.Initialize_Gameplay();
     }
 
     public void ReleaseDependency_GameplayScene()
     {
         viewCtx.ReleaseDependency_GameplayScene();
+    }
+
+    public void DependencyInjection(UIView view)
+    {
+        if (view is UIView_CardSystem cardUI)
+            cardUI.DependencyInjection(cardSystemProvider);
+
+        if (view is UIView_Gameplay gameplayUI)
+            gameplayUI.DependencyInjection(unitLogicSystemProvider);
+
+        if (view is UIView_HUD hudUI)
+            hudUI.DependencyInjection(unitLogicSystemProvider);
     }
 }

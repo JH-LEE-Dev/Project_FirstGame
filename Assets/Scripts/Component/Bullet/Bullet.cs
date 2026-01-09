@@ -108,7 +108,7 @@ public class Bullet : MonoBehaviour
         // 데미지 처리
         effectComponent.PlayImpactEffect();
 
-        Unit hit = other.GetComponent<Unit>();
+        IDamageable hit = other.GetComponent<IDamageable>();
 
         if (hit != null)
         {

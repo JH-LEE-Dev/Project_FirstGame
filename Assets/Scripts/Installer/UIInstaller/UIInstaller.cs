@@ -12,6 +12,7 @@ public class UIInstaller : MonoBehaviour
     private ICardSystemEvent cardSystemEvent;
     private IGameFlowProvider gameFlowProvider;
     private IBootStrapProvider bootStrapProvider;
+    private IUnitLogicSystemProvider unitLogicSystemProvider;
 
     //내부 의존성
     private UIManager uiManager;
@@ -35,7 +36,7 @@ public class UIInstaller : MonoBehaviour
     private Canvas canvas_GamplayScene;
 
 
-    public void Initialize(IBootStrapProvider _bootStrapProvider,InputManager _inputManager)
+    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
     {
         inputManager = _inputManager;
         uiManager = GetComponent<UIManager>();
@@ -47,13 +48,15 @@ public class UIInstaller : MonoBehaviour
     }
 
     public void ReceiveDependency_Gameplay(ICardSystemEvent _cardSystemEvent,
-        ICardSystemProvider _cardSystemProvider,IGameFlowProvider _gameFlowProvider)
+        ICardSystemProvider _cardSystemProvider, IGameFlowProvider _gameFlowProvider,
+        IUnitLogicSystemProvider _unitLogicSystemProvider)
     {
         cardSystemEvent = _cardSystemEvent;
         cardSystemProvider = _cardSystemProvider;
         gameFlowProvider = _gameFlowProvider;
+        unitLogicSystemProvider = _unitLogicSystemProvider;
 
-        uiManager.Initialize_GameplayScene(cardSystemProvider);
+        uiManager.Initialize_GameplayScene(cardSystemProvider, unitLogicSystemProvider);
 
         SetupUIElement();
 
@@ -136,8 +139,8 @@ public class UIInstaller : MonoBehaviour
     {
         canvas_GamplayScene = Instantiate(canvas_GamplayScene_Prefab);
         CanvasSystem canvasSystem = canvas_GamplayScene.GetComponent<CanvasSystem>();
-        
-        if(canvasSystem != null )
+
+        if (canvasSystem != null)
         {
             canvasSystem.Initialize();
         }

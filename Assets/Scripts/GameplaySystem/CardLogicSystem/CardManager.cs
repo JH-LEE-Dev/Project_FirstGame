@@ -176,10 +176,9 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         graveCnt = 0;
     }
 
-    public void CardUsingFinished()
-    {
-        CardUsingTurnFinishedEvent?.Invoke();
 
+    public void HandToGrave()
+    {
         for (int i = 0; i < handPile.Count; ++i)
         {
             var card = handPile[i];
@@ -262,7 +261,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         {
             if (cardSystemActions_AfterAttack.Count == 0)
             {
+                HandToGrave();
                 gameFlowController.PlayerTurnIsFinished();
+                cardUICommandSystem.CreateCommand(JobType_CardSystemUI.HandToGrave);
+                cardUICommandSystem.DispatchCommand();
                 return;
             }
 
@@ -296,5 +298,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
     public void PlayerTurnFinished()
     {
         ExecuteSystemAction_AfterAttack();
+    }
+
+    public void CardUsingFinished()
+    {
+        CardUsingTurnFinishedEvent?.Invoke();
     }
 }

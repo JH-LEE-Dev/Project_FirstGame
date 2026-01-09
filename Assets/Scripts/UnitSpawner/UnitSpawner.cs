@@ -9,8 +9,10 @@ public class UnitSpawner : MonoBehaviour
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
     [SerializeField] private GameObject characterPrefab;
+    [SerializeField] private GameObject earthPrefab;
     [SerializeField] private GameObject enemyUnitPrefab;
-    [SerializeField] private GameObject spawnPoint;
+    [SerializeField] private GameObject characterSpawnPoint;
+    [SerializeField] private GameObject earthSpawnPoint;
 
     //외부 의존성
     private InputManager inputManager;
@@ -27,6 +29,7 @@ public class UnitSpawner : MonoBehaviour
     private uint curUnitCnt;
 
     public Character characterUnit { get; private set; }
+    public Earth earthUnit { get; private set; }
 
     [Header("Wave Spawn Settings")]
     [SerializeField] private GameObject waveSpawnPoint;
@@ -57,6 +60,7 @@ public class UnitSpawner : MonoBehaviour
 
         BindEvent();
         SpawnCharacter();
+        SpawnEarth();
     }
     public void OnDestroy()
     {
@@ -76,7 +80,7 @@ public class UnitSpawner : MonoBehaviour
 
     private void SpawnCharacter()
     {
-        GameObject spawnedObject = Instantiate(characterPrefab, spawnPoint.transform);
+        GameObject spawnedObject = Instantiate(characterPrefab, characterSpawnPoint.transform);
 
         if (spawnedObject == null)
             return;
@@ -88,6 +92,21 @@ public class UnitSpawner : MonoBehaviour
             spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
             gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
             characterUnit = spawnedUnit;
+        }
+    }
+
+    private void SpawnEarth()
+    {
+        GameObject spawnedObject = Instantiate(earthPrefab, earthSpawnPoint.transform);
+
+        if (spawnedObject == null)
+            return;
+
+        Earth spawnedUnit = spawnedObject.GetComponent<Earth>();
+
+        if (spawnedUnit != null)
+        {
+            earthUnit = spawnedUnit;
         }
     }
 
@@ -160,6 +179,6 @@ public class UnitSpawner : MonoBehaviour
 
     private void SetUnitLogicSystem()
     {
-        unitLogicSystemActions.Initialize(characterUnit, enemies);
+        unitLogicSystemActions.Initialize(characterUnit,earthUnit, enemies);
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UIView_Gameplay : UIView
 {
+    //외부 의존성
+    IUnitLogicSystemProvider unitLogicSystemProvider;
+
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
     [SerializeField] private GameObject crosshairUIPrefab;
@@ -19,6 +22,11 @@ public class UIView_Gameplay : UIView
             crosshairUI = Instantiate(crosshairUIPrefab, this.transform);
 
         crosshairUI.SetActive(false);
+    }
+
+    public void DependencyInjection(IUnitLogicSystemProvider _unitLogicSystemProvider)
+    {
+        unitLogicSystemProvider = _unitLogicSystemProvider;
     }
 
     public override void Update()

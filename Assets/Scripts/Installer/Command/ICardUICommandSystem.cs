@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICardUICommandSystem
 {
-    void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards);
+    void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default);
 
     void DispatchCommand();
 }

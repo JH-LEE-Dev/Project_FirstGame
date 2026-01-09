@@ -59,7 +59,7 @@ public class GameInstaller : MonoBehaviour
 
     public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
     {
-        uiInstaller.ReceiveDependency_Gameplay(cardManager,cardManager, gameController);
+        uiInstaller.ReceiveDependency_Gameplay(cardManager,cardManager, gameController,unitLogicSystem);
     }
 
     public void ReceiveDependency_Gameplay(ICardUICommandSystem _cardUICommandSystem)

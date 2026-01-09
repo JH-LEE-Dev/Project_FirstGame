@@ -843,6 +843,7 @@ GameObject:
   - component: {fileID: 1506261591}
   - component: {fileID: 1506261593}
   - component: {fileID: 1506261592}
+  - component: {fileID: 1506261594}
   m_Layer: 0
   m_Name: UIInstaller
   m_TagString: Untagged
@@ -906,6 +907,18 @@ MonoBehaviour:
   - {fileID: 8004459324530729153, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
   - {fileID: 6803540536523188111, guid: 1adc596e58e7a6441b0569a2fae69ff9, type: 3}
   - {fileID: 5906714827194331106, guid: 2e1ac48127c7b2042a3791b20e940111, type: 3}
+--- !u!114 &1506261594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506261590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
 --- !u!20 &1867789632 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 693036412966368884, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
@@ -1027,6 +1040,66 @@ PrefabInstance:
     - target: {fileID: 3132615358195672310, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[0].x
+      value: -4.3549194
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[0].y
+      value: -5.6425314
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[1].x
+      value: -6.7802854
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[1].y
+      value: 5.7593446
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[2].x
+      value: -2.2435825
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[2].y
+      value: 9.45259
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[3].x
+      value: 2.60535
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[3].y
+      value: 9.409624
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[4].x
+      value: 6.901985
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[4].y
+      value: 5.7145205
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[5].x
+      value: 6.901985
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[5].y
+      value: 5.7145205
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[6].x
+      value: 4.5537987
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749402979574480041, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_Points.Array.data[6].y
+      value: -5.8422546
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
