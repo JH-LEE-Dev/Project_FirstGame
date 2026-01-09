@@ -23,8 +23,6 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Button turnFinishedButton;
     ////////////
 
-    public Action<Vector3, CardDataInstance> DrawEvent;
-
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private ClickCatchSystem clickCatchSystem;
@@ -32,6 +30,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
+    public DeckSystem DeckSystem => deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
     // µ¦
@@ -77,16 +76,6 @@ public class UIView_CardSystem : UIView
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
-
-        BindingFunction();
-    }
-
-    private void BindingFunction()
-    {
-        if (null != handSystem)
-        {
-            DrawEvent += handSystem.ProcessDraw;
-        }
     }
 
     // For PoolingSystem
@@ -249,6 +238,27 @@ public class UIView_CardSystem : UIView
 
         cardPannel.gameObject.SetActive(false);
     }
+
+    public void CallOneCardDrawed(int currIdx, int _lastIdx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    {
+        if (currIdx == _lastIdx)
+            WorkingBlock = false;
+
+        handSystem?.ProcessDraw(_endPos, _data);
+        poolingSystem?.StarEffects.Release(_performer);
+    }
+
+    public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
+
+    public Vector3 GetDeckWorldPos()
+    {
+        if (null == deckSystem)
+            return Vector3.zero;
+
+        return deckSystem.transform.position;
+    }
+
+    public GameObject GetStarPerformerFromPool() => poolingSystem?.StarEffects.Get();
     /////////////////////////////////////////////////
 
     private void SetText()
@@ -326,14 +336,12 @@ public class UIView_CardSystem : UIView
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
-
-            List<CardDataInstance> currCardDatas = currentJob.cards;
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
             {
                 case JobType_CardSystemUI.Draw: 
-                    DrawedCardsFromTurn(currCardDatas);
+                    DrawedCardsFromTurn(currentJob.cards);
                     await Awaitable.WaitForSecondsAsync(2f);
                     break;
 
@@ -342,7 +350,7 @@ public class UIView_CardSystem : UIView
                     break;
 
                 case JobType_CardSystemUI.AdditionalDraw:
-                    DrawedCardsFromTurn(currCardDatas);
+                    DrawedCardsFromTurn(currentJob.cards);
                     await Awaitable.WaitForSecondsAsync(2f);
                     break;
 

@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolingSystem
   cardUIPrefab: {fileID: 5863989176703220490, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
+  starEffectPrefab: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
   inactiveHandPool: []
   otherCardPool: []
   handPoolSize: 20
@@ -1563,6 +1564,7 @@ MonoBehaviour:
   previewRoot: {fileID: 6432989706803050518}
   cards: []
   BulletRoots: []
+  discardInterval: 0.09
 --- !u!1 &8604045442958423822
 GameObject:
   m_ObjectHideFlags: 0

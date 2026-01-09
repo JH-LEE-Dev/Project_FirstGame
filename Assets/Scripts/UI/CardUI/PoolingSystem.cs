@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class PoolingSystem : MonoBehaviour
 {
-    UIView_CardSystem cardSystem;
-
+    private UIView_CardSystem cardSystem;
+    public UIView_CardSystem CardSystem => cardSystem;
 
     [Header("Prefab & Root")]
     [SerializeField] private GameObject cardUIPrefab;
+    [SerializeField] private GameObject starEffectPrefab;
 
     [Header("Pools")]
     // 비활성중인 패
@@ -19,6 +21,10 @@ public class PoolingSystem : MonoBehaviour
 
     [SerializeField] private int handPoolSize = 20;
     [SerializeField] private int otherPoolSize = 50;
+
+    // 덱, 웜홀에서 사용할 이펙트 풀링
+    private ObjectPool<GameObject> starEffects;
+    public ObjectPool<GameObject> StarEffects { get { return starEffects; } }
 
     private void Awake()
     {
@@ -34,6 +40,7 @@ public class PoolingSystem : MonoBehaviour
     {
         cardSystem = owner;
         cardPooling();
+        StarPooling();
     }
 
     private void cardPooling()
@@ -63,6 +70,24 @@ public class PoolingSystem : MonoBehaviour
         }
     }
 
+    private void StarPooling()
+    {
+        int maxPool = 30;
+
+        starEffects = new ObjectPool<GameObject>(
+            createFunc: CreateStarEffect,
+            actionOnGet: ActivateStarEffect,
+            actionOnRelease: DeActivateStarEffect,
+            actionOnDestroy: DestroyPoolObj,
+            maxSize: maxPool);
+
+        for (int i = 0; i < maxPool; ++i)
+        {
+            GameObject newObj = starEffects.Get();
+            starEffects.Release(newObj);
+        }
+    }
+
     // 카드 랜트.
     public CardInstance RentHandCard()
     {
@@ -86,4 +111,34 @@ public class PoolingSystem : MonoBehaviour
         card.Clear();
         inactiveHandPool.Add(card);
     }
+
+    private GameObject CreateStarEffect()
+    {
+        GameObject newObj = Instantiate(starEffectPrefab, this.transform);
+        StarEffect script = newObj?.GetComponent<StarEffect>();
+        script?.Init(this);
+
+        return newObj;
+    }
+
+    private void DestroyPoolObj(GameObject obj)
+    {
+        Destroy(obj);
+    }
+
+    private void ActivateStarEffect(GameObject obj)
+    {
+    }
+
+    private void DeActivateStarEffect(GameObject obj)
+    {
+        if (null == obj)
+            return;
+
+        StarEffect script = obj?.GetComponent<StarEffect>();
+        script?.ReturnToOrigin();
+
+        obj.SetActive(false);
+    }
+
 }

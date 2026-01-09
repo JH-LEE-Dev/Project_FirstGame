@@ -61,16 +61,12 @@ public class DeckSystem : MonoBehaviour,
     private Sequence activeSeq = null;
     private Sequence cardbackSeq = null;
 
-    private ObjectPool<GameObject> drawEffectParticle;
-
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
 
     private Vector3 cardbackOriginPos = Vector3.zero;
     private Vector3 cardbackOriginScale = Vector3.zero;
     private Quaternion cardbackOriginRot = Quaternion.identity;
-
-    private int currentDrawCount = 0;
 
     private bool bClickedEvent = false;
 
@@ -80,19 +76,6 @@ public class DeckSystem : MonoBehaviour,
 
         originScale = topRect.localScale;
         originQuat = topRect.localRotation;
-
-        drawEffectParticle = new ObjectPool<GameObject>(
-            createFunc: CreateDrawEffect,
-            actionOnGet: ActivateDrawEffect,
-            actionOnRelease: DeActivateDrawEffect,
-            actionOnDestroy: DestroyPoolObj,
-            maxSize: 15);
-
-        for (int i = 0; i < 15; ++i)
-        {
-            GameObject newObj = drawEffectParticle.Get();
-            drawEffectParticle.Release(newObj);
-        }
 
         if (null != cardBackRect)
         {
@@ -145,13 +128,15 @@ public class DeckSystem : MonoBehaviour,
 
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
 
-        currentDrawCount = dataList.Count;
+        int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
-            GameObject performer = drawEffectParticle.Get();
-            DrawEffect script = performer?.GetComponent<DrawEffect>();
+            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
+
+            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
@@ -174,7 +159,7 @@ public class DeckSystem : MonoBehaviour,
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
 
             script.CardDataInstance = dataList[i];
-            script.PlayingDrawEvent(i, drawDelay, drawDuration, drawEase, pathPoints);
+            script.PlayingEventforDeck(i, dataList.Count - 1, drawDelay, drawDuration, drawEase, pathPoints);
         }
     }
 
@@ -269,45 +254,6 @@ public class DeckSystem : MonoBehaviour,
             }));
 
         cardSystem?.CallPannel(CurrentPannel.Deck);
-    }
-
-    public void CallOneCardDrawCompleted(int _idx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
-    {
-        if (null == cardSystem)
-            return;
-
-        if (currentDrawCount - 1 == _idx)
-            cardSystem.WorkingBlock = false;
-
-        cardSystem.DrawEvent.Invoke(_endPos, _data);
-        drawEffectParticle.Release(_performer);
-    }
-
-    private GameObject CreateDrawEffect()
-    {
-        GameObject newObj = Instantiate(drawEffectPrefab, topRect);
-        DrawEffect script = newObj?.GetComponent<DrawEffect>();
-        script?.Init(this);
-
-        return newObj;
-    }
-
-    private void DestroyPoolObj(GameObject obj)
-    {
-        Destroy(obj);
-    }
-
-    private void ActivateDrawEffect(GameObject obj)
-    {
-    }
-
-    private void DeActivateDrawEffect(GameObject obj)
-    {
-        if (null == obj)
-            return;
-
-        obj.transform.position = topRect.position;
-        obj.SetActive(false);
     }
 
     public void OnPointerDown(PointerEventData _eventData)
