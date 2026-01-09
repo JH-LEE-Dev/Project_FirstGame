@@ -119,13 +119,12 @@ public class DeckSystem : MonoBehaviour,
     public void CardDrawEffect(List<CardDataInstance> dataList)
     {
         if (null == cardSystem)
-        {
-            Debug.Log("오류: 카드 시스템 바인딩 안 되어있음.");
             return;
-        }
+
+        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
+        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
 
         RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
-        //RectTransform endPoint = cardSystem.DrawEndPoint;
 
         currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
@@ -220,7 +219,7 @@ public class DeckSystem : MonoBehaviour,
                 bClickedEvent = false;
             }));
 
-        cardSystem?.CallDeckPannel(true);
+        cardSystem?.CallDeckPannel();
     }
 
     public void CallOneCardDrawCompleted(int _idx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
@@ -265,11 +264,17 @@ public class DeckSystem : MonoBehaviour,
 
     public void OnPointerDown(PointerEventData _eventData)
     {
+        if (true == cardSystem?.WorkingBlock)
+            return;
+
         DownEvent();
     }
 
     public void OnPointerUp(PointerEventData _eventData)
     {
+        if (true == cardSystem?.WorkingBlock)
+            return;
+
         UpEvent();
     }
 

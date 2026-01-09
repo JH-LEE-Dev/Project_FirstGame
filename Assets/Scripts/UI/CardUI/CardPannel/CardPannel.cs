@@ -9,6 +9,14 @@ public class CardPannel : MonoBehaviour
 
     private ScrollRect pannelScroll = null;
 
+    private CurrentPannel currPannelType = CurrentPannel.NONE;
+
+    public CurrentPannel CurrPannelType
+    {
+        get { return currPannelType; }
+        set { currPannelType = value; }
+    }
+
     private void Awake()
     {
         pannelScroll = gameObject.GetComponentInChildren<ScrollRect>();

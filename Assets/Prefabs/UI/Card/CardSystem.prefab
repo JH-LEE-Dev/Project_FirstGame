@@ -715,7 +715,7 @@ MonoBehaviour:
   - {fileID: 4997572091456650835}
   drawEndPoint: {fileID: 5082536235293513785}
   graveSystem: {fileID: 8356947880062379578}
-  cardPannel: {fileID: 3014680100241126493}
+  cardPannel: {fileID: 8622928418035731899}
   pannelContent: {fileID: 1618857870683622363}
 --- !u!1 &4291138023601622407
 GameObject:

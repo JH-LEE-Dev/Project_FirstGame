@@ -128,7 +128,7 @@ public class GraveyardSystem : MonoBehaviour
             }));
 
         // ³ªÁß¿¡ µ¦ ¸»°í ¹¦Áö·Î ¹Ù²Ù¸é µÊ.
-        cardSystem?.CallDeckPannel(true);
+        cardSystem?.CallGravePannel();
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)

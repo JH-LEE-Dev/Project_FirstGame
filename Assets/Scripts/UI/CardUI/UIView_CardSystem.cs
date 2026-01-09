@@ -47,7 +47,7 @@ public class UIView_CardSystem : UIView
 
     // µ¦, ¹¦Áö, ¼Ò¸ê °ø¿ë
     [Header("Pannel")]
-    [SerializeField] private GameObject cardPannel = null;
+    [SerializeField] private CardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
 
@@ -213,10 +213,32 @@ public class UIView_CardSystem : UIView
         SetText();
     }
 
-    public void CallDeckPannel(bool _activate)
+    public void CallDeckPannel()
     {
-        cardPannel?.SetActive(_activate);
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = CurrentPannel.Deck;
+        cardPannel.gameObject.SetActive(true);
         GetDeckCards();
+    }
+
+    public void CallGravePannel()
+    {
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = CurrentPannel.Grave;
+        cardPannel.gameObject.SetActive(true);
+        GetDeckCards();
+    }
+
+    public void ForceDeActivatePannelSelf(CurrentPannel callType)
+    {
+        if (null == cardPannel || callType != cardPannel.CurrPannelType)
+            return;
+
+        cardPannel.gameObject.SetActive(false);
     }
     /////////////////////////////////////////////////
 

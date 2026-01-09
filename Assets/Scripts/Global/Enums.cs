@@ -95,3 +95,11 @@ public enum CardState
     Other,
     Hidden
 }
+
+public enum CurrentPannel
+{
+    Deck,
+    Grave,
+    Extinction,
+    NONE
+}
