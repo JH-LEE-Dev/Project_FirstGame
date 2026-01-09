@@ -148,7 +148,7 @@ public class UIInstaller : MonoBehaviour
         if (canvasSystem != null)
         {
             canvasSystem.Initialize();
-            canvasSystem.InitializeChildrenCanvas();
+            StartCoroutine(canvasSystem.InitializeChildrenCanvas());
         }
     }
 
@@ -159,7 +159,7 @@ public class UIInstaller : MonoBehaviour
         if (canvasSystem != null)
         {
             canvasSystem.Initialize();
-            canvasSystem.InitializeChildrenCanvas();
+            StartCoroutine(canvasSystem.InitializeChildrenCanvas());
         }
     }
 

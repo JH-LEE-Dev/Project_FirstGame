@@ -135,7 +135,6 @@ public class DeckSystem : MonoBehaviour,
             if (null == script)
                 continue;
 
-            Vector3 firstPointPos = topRect.position + Vector3.up * drawFirstPointDist;
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
 
@@ -146,11 +145,15 @@ public class DeckSystem : MonoBehaviour,
                 midPointPos.y += Random.Range(-0.25f, 0.25f) * drawMidPointPower;
             }
 
+            // first
+            Vector3 firstPointPos = midPointPos;
+            firstPointPos.x += drawFirstPointDist;
+
             // end
             if (bEndPointRandom)
                 endPointPos.x += Random.Range(-1f, 1f) * drawEndPointPower;
 
-            Vector3[] pathPoints = { firstPointPos, midPointPos, endPointPos };
+            Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
 
             script.CardDataInstance = dataList[i];
             script.PlayingDrawEvent(i, drawDelay, drawDuration, drawEase, pathPoints);
