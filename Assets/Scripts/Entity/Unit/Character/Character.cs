@@ -25,7 +25,7 @@ public class Character : Unit
     private Vector2 fireDir;
 
     [SerializeField] private Character_Visual character_Visual;
-
+    [SerializeField] private BulletSocketSystem bulletSocket;
 
 
 
@@ -43,6 +43,7 @@ public class Character : Unit
 
         BindEvent();
         character_Visual.Bind(this);
+        bulletSocket.SetCount(2); // 현재 캐릭터 임시.
     }
 
     private void BindEvent()
@@ -89,13 +90,31 @@ public class Character : Unit
     /// 구현 코드 존.--------------------------------------------
     /// </summary>
 
+    float temp = 0f;
+    int itp = 3;
     protected override void Update()
     {
         base.Update();
 
         UpdateAimLine();
 
+        temp += Time.deltaTime;
 
+        if (temp > 5f)
+        {
+            if (itp == 2)
+            {
+                bulletSocket.SetCount(itp);
+                itp = 3;
+            }
+            else
+            {
+                bulletSocket.SetCount(itp);
+                itp = 2;
+            }
+
+            temp = 0f;
+        }
     }
 
     //데미지 입는 함수 - 미구현.
