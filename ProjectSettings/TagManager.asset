@@ -53,6 +53,9 @@ TagManager:
   - name: BlackBackground
     uniqueID: 3874161017
     locked: 0
+  - name: FieldParticle
+    uniqueID: 11728797
+    locked: 0
   - name: HUD
     uniqueID: 2618506313
     locked: 0
