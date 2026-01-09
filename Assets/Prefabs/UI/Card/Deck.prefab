@@ -241,8 +241,8 @@ MonoBehaviour:
   drawDelay: 0.15
   drawDuration: 0.5
   drawFirstPointDist: 2
-  bMidPointRandom: 0
-  drawMidPointPower: 5
+  bMidPointRandom: 1
+  drawMidPointPower: 3
   bEndPointRandom: 0
   drawEndPointPower: 5
   drawEase: 1
