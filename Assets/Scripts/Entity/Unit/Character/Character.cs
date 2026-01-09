@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
 
-public class Character : Unit
+public class Character : Unit, ICharacterData
 {
     /// <summary>
     /// 시스템 속성 존.----------------------------------
     /// </summary>
     public ICombatEffectReceiver combatEffectReceiver => combatComponent;
     public event Action PlayerAttackFinishedEvent;
+
+    private CombatComponent combatComponent;
 
     [Header("aim Object")]
     private LineRenderer lineRenderer;
@@ -34,6 +36,13 @@ public class Character : Unit
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
     /// </summary>
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        combatComponent = GetComponent<CombatComponent>();  
+    }
 
     public void Initialize_Character(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
@@ -153,5 +162,20 @@ public class Character : Unit
     {
         bCanAction = false;
         PlayerAttackFinishedEvent?.Invoke();
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    public float GetMaxHealth()
+    {
+        return healthComponent.GetMaxHealth();
+    }
+
+    public float GetCurrentHealth()
+    {
+        return healthComponent.GetCurrentHealth();
     }
 }

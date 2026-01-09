@@ -9,6 +9,9 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    //외부 의존성
+    private ICardSystemProvider cardSystemProvider;
+
     //사용 승인을 받은 카드
     private CardInstance verificationWaitCard;
 
@@ -62,6 +65,11 @@ public class UIView_CardSystem : UIView
     //UIJobQueue
     private List<Job_CardSystemUI> uiJobQueue;
 
+    public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
+    {
+        cardSystemProvider = _cardSystemProvider;
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -107,7 +115,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        viewCtx?.cardSystemProvider.CardUsed(_card.CardData);
+        cardSystemProvider.CardUsed(_card.CardData);
     }
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
@@ -165,7 +173,7 @@ public class UIView_CardSystem : UIView
     }
     public void GetDeckCards()
     {
-        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
+        ActivatePannel(cardSystemProvider.deckCards);
     }
 
     public void GetWormholeCards()
@@ -231,7 +239,7 @@ public class UIView_CardSystem : UIView
         switch(_setType)
         {
             case CurrentPannel.Deck: 
-                ActivatePannel(viewCtx.cardSystemProvider.deckCards); 
+                ActivatePannel(cardSystemProvider.deckCards); 
                 break;
 
             case CurrentPannel.Grave:
@@ -253,9 +261,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + viewCtx.cardSystemProvider.deckCards.Count.ToString();
-        graveCntText.text = "Grave : " + viewCtx.cardSystemProvider.graveCards.Count.ToString();
-        handCntText.text = "Hand : " + viewCtx.cardSystemProvider.handCards.Count.ToString();
+        deckCntText.text = "Deck : " + cardSystemProvider.deckCards.Count.ToString();
+        graveCntText.text = "Grave : " + cardSystemProvider.graveCards.Count.ToString();
+        handCntText.text = "Hand : " + cardSystemProvider.handCards.Count.ToString();
     }
 
     protected override void OnShow()
@@ -279,7 +287,7 @@ public class UIView_CardSystem : UIView
     {
         turnFinishedButton.gameObject.SetActive(false);
 
-        viewCtx.cardSystemProvider.CardUsingFinished();
+        cardSystemProvider.CardUsingFinished();
 
         SetText();
 
@@ -320,7 +328,7 @@ public class UIView_CardSystem : UIView
         uiJobQueue = _jobQueue;
 
         // 시작 대기
-        await Awaitable.WaitForSecondsAsync(2f);
+        //await Awaitable.WaitForSecondsAsync(2f);
 
         int size = _jobQueue.Count;
         for (int i = 0; i < size; ++i)
@@ -343,6 +351,11 @@ public class UIView_CardSystem : UIView
 
                 case JobType_CardSystemUI.AdditionalDraw:
                     DrawedCardsFromTurn(currCardDatas);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+                case JobType_CardSystemUI.HandToGrave:
+
+                    AllCardReturnToPool(CardState.InHand);
                     await Awaitable.WaitForSecondsAsync(2f);
                     break;
 

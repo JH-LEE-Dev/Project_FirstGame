@@ -62,17 +62,20 @@ EdgeCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -6.9333234, y: 5.7300715}
-  - {x: -2.980272, y: 9.452591}
+  - {x: -4.3549194, y: -5.6425314}
+  - {x: -6.7802854, y: 5.7593446}
+  - {x: -2.2435825, y: 9.45259}
   - {x: 2.60535, y: 9.409624}
   - {x: 6.901985, y: 5.7145205}
+  - {x: 6.901985, y: 5.7145205}
+  - {x: 4.5537987, y: -5.8422546}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0

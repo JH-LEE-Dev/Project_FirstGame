@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public interface IUnitLogicSystemActions
 {
-    void Initialize(Character character, List<Enemy> enemies);
+    void Initialize(Character character,Earth earth, List<Enemy> enemies);
 
     void ApplyShieldModifier(float bonusShield);
 

@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
 
-public class HealthComponent : EntityComponent
+public class HealthComponent : EntityComponent, IShieldEffectReceiver
 {
     public event Action UnitIsDeadEvent;
 
-    [SerializeField] private float health;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float currentHealth;
+    [SerializeField] private float currentShield;
 
     protected override void Awake()
     {
@@ -34,17 +36,48 @@ public class HealthComponent : EntityComponent
 
     public void SetHealth(float _health)
     {
-        health = _health;
+       maxHealth = _health;
     }
 
     public void DecreaseHealth(float damage)
     {
-        health -= damage;
+        if(currentShield > 0)
+        {
+            if(currentShield < damage)
+            {
+                damage -= currentShield;
+                currentShield = 0;
+            }
+            else
+            {
+                currentShield -= damage;
+                return;
+            }
+        }
 
-        if (health < 0)
+        currentHealth -= damage;
+
+        if (currentHealth < 0)
         {
             UnitIsDeadEvent?.Invoke();
-            health = 0;
+            currentHealth = 0;
         }
+
+        Debug.Log(currentHealth);
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public void ApplyShieldModifier(float bonusShield)
+    {
+        currentShield += bonusShield;
     }
 }

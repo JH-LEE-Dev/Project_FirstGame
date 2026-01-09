@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour, IDamageable
     protected UnitContext ctx;
     protected EffectComponent effectComponent;
     protected HealthComponent healthComponent;
-    protected CombatComponent combatComponent;
+
     public Animator animator { get; private set; }
 
     protected Vector2 moveDirection;
@@ -137,8 +137,6 @@ public class Unit : MonoBehaviour, IDamageable
         moveComponent = GetComponent<MoveComponent>();
         effectComponent = GetComponent<EffectComponent>();
         healthComponent = GetComponent<HealthComponent>();
-        combatComponent = GetComponent<CombatComponent>();
-
 
         moveComponent.Initialize(ctx);
 

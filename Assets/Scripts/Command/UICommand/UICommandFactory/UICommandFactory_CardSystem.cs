@@ -63,7 +63,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         batch.Add(new Job_CardSystemUI
         {
-            jobType = JobType_CardSystemUI.Draw,
+            jobType = JobType_CardSystemUI.HandToGrave,
             cards = drawList
         });
 
