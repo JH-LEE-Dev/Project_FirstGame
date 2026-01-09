@@ -1,9 +1,8 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
-public class GraveyardSystem : MonoBehaviour
+public class ExtinctionSystem : MonoBehaviour
     , IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     private RectTransform visualRect = null;
@@ -40,6 +39,11 @@ public class GraveyardSystem : MonoBehaviour
 
         originScale = transform.localScale;
         originQuat = transform.localRotation;
+    }
+
+    private void OnEnable()
+    {
+        
     }
 
     public void Init(UIView_CardSystem _cardSystem)
@@ -127,7 +131,7 @@ public class GraveyardSystem : MonoBehaviour
                 bClickedEvent = false;
             }));
 
-        cardSystem?.CallPannel(CurrentPannel.Grave);
+        cardSystem?.CallPannel(CurrentPannel.Extinction);
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)

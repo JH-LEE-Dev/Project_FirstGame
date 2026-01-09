@@ -45,12 +45,17 @@ public class UIView_CardSystem : UIView
     [Header("Graveyard Settings")]
     [SerializeField] private GraveyardSystem graveSystem = null;
 
+    // 소멸
+    [Header("Extinction Settings")]
+    [SerializeField] private ExtinctionSystem extinctionSystem = null;
+
     // 덱, 묘지, 소멸 공용
     [Header("Pannel")]
     [SerializeField] private CardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
 
+    // 드로우 중 작업 중지
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
@@ -67,6 +72,7 @@ public class UIView_CardSystem : UIView
         handSystem?.Init(this);
         deckSystem?.Init(this);
         graveSystem?.Init(this);
+        extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
 
         BindingFunction();
@@ -144,13 +150,6 @@ public class UIView_CardSystem : UIView
     /////////////////
 
 
-
-
-    public void GetDeckCards()
-    {
-        ActivatePannel(viewCtx.cardSystemProvider.deckCards);
-    }
-
     public void GetWormholeCards()
     {
         // 추후 구현
@@ -213,24 +212,26 @@ public class UIView_CardSystem : UIView
         SetText();
     }
 
-    public void CallDeckPannel()
+    public void CallPannel(CurrentPannel _setType)
     {
         if (null == cardPannel)
             return;
 
-        cardPannel.CurrPannelType = CurrentPannel.Deck;
+        cardPannel.CurrPannelType = _setType;
         cardPannel.gameObject.SetActive(true);
-        GetDeckCards();
-    }
 
-    public void CallGravePannel()
-    {
-        if (null == cardPannel)
-            return;
+        switch(_setType)
+        {
+            case CurrentPannel.Deck: 
+                ActivatePannel(viewCtx.cardSystemProvider.deckCards); 
+                break;
 
-        cardPannel.CurrPannelType = CurrentPannel.Grave;
-        cardPannel.gameObject.SetActive(true);
-        GetDeckCards();
+            case CurrentPannel.Grave:
+                break;
+
+            case CurrentPannel.Extinction:
+                break;
+        }
     }
 
     public void ForceDeActivatePannelSelf(CurrentPannel callType)
@@ -241,8 +242,6 @@ public class UIView_CardSystem : UIView
         cardPannel.gameObject.SetActive(false);
     }
     /////////////////////////////////////////////////
-
-
 
     private void SetText()
     {

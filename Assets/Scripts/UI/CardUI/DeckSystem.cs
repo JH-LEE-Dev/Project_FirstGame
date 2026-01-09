@@ -219,7 +219,7 @@ public class DeckSystem : MonoBehaviour,
                 bClickedEvent = false;
             }));
 
-        cardSystem?.CallDeckPannel();
+        cardSystem?.CallPannel(CurrentPannel.Deck);
     }
 
     public void CallOneCardDrawCompleted(int _idx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
