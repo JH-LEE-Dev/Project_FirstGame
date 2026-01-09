@@ -4,6 +4,7 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 public class DeckSystem : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
@@ -50,13 +51,22 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
+    [Header("CardBack Event for Drawed")]
+    [SerializeField] private Vector2 drawedCardBackPunchPosMulti = Vector3.zero;
+    [SerializeField] private Vector3 drawedCardBackPunchScale = Vector3.zero;
+    [SerializeField] private Ease drawedCardBackEase = Ease.OutExpo;
+
     private Sequence wealthySeq = null;
     private Sequence activeSeq = null;
+    private Sequence cardbackSeq = null;
 
     private ObjectPool<GameObject> drawEffectParticle;
 
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
+
+    private Vector3 cardbackOriginPos = Vector3.zero;
+    private Vector3 cardbackOriginScale = Vector3.zero;
 
     private int currentDrawCount = 0;
 
@@ -80,6 +90,12 @@ public class DeckSystem : MonoBehaviour,
         {
             GameObject newObj = drawEffectParticle.Get();
             drawEffectParticle.Release(newObj);
+        }
+
+        if (null != cardBackRect)
+        {
+            cardbackOriginPos = cardBackRect.anchoredPosition;
+            cardbackOriginScale = cardBackRect.localScale;
         }
     }
 
@@ -157,6 +173,36 @@ public class DeckSystem : MonoBehaviour,
             script.CardDataInstance = dataList[i];
             script.PlayingDrawEvent(i, drawDelay, drawDuration, drawEase, pathPoints);
         }
+    }
+
+    public void CardBackDrawedEffect()
+    {
+        if (null == cardBackRect)
+            return;
+
+        cardBackRect.anchoredPosition = cardbackOriginPos;
+        cardBackRect.localScale = cardbackOriginScale;
+
+        CancelPrevMotion(cardbackSeq);
+
+        cardbackSeq = DOTween.Sequence();
+
+        float randPosX = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.x;
+        float randPosY = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.y;
+
+        Vector3 randomPos = new Vector3(randPosX, randPosY);
+
+        cardbackSeq.Append(cardBackRect.DOPunchAnchorPos(randomPos, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase)
+            .OnComplete(() =>
+            {
+                
+            }));
+
+        cardbackSeq.Join(cardBackRect.DOPunchScale(drawedCardBackPunchScale, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase));
     }
 
     private void EnterEvent()
@@ -250,7 +296,6 @@ public class DeckSystem : MonoBehaviour,
 
     private void ActivateDrawEffect(GameObject obj)
     {
-        obj?.SetActive(true);
     }
 
     private void DeActivateDrawEffect(GameObject obj)

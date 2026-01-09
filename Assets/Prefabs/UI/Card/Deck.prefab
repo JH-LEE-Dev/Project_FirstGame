@@ -256,3 +256,6 @@ MonoBehaviour:
   upEventDuration: 0.2
   upEventPunchPower: {x: 0, y: 0, z: 3.5}
   upEventEase: 18
+  drawedCardBackPunchPosMulti: {x: 3.5, y: -3.5}
+  drawedCardBackPunchScale: {x: -0.025, y: -0.025, z: 0}
+  drawedCardBackEase: 27
