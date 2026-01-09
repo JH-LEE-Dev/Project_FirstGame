@@ -16,7 +16,7 @@ public class Character_Visual : MonoBehaviour
 
 
     [Header("Hover")]
-    [SerializeField] private float hoverAmplitude = 0.018f; 
+    [SerializeField] private float hoverAmplitude = 0.0075f; 
     [SerializeField] private float hoverDuration = 2.2f;
     [SerializeField] private Ease hoverEase = Ease.InOutSine;
 

@@ -735,7 +735,7 @@ MonoBehaviour:
   body: {fileID: 8236839706518566827}
   backRings: {fileID: 3123738006426394367}
   frontRings: {fileID: 5280614631019589580}
-  hoverAmplitude: 0.018
+  hoverAmplitude: 0.0075
   hoverDuration: 2.2
   hoverEase: 4
   bodyRotateDeg: 2
