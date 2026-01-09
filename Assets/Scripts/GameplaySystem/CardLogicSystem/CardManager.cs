@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, 
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler,
     ICardSystemEvent, ICardSystemActions
 {
     public event Action<CardDataInstance> CardDrawedEvent;
@@ -82,7 +82,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(2);
+        CardData cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
@@ -154,7 +154,13 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         CardPileDraw(amount);
 
         CardDrawFinishedEvent?.Invoke();
-        handCnt = 0;
+    }
+
+    private IEnumerator CardAdditionalPileDrawCoroutine(int amount)
+    {
+        yield return new WaitForSeconds(cardDrawRate);
+
+        CardPileDraw(amount);
     }
 
     public void CardUsed(CardDataInstance usedCard)
@@ -233,7 +239,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         //StartCoroutine(CardDrawCoroutine());
 
         //Pile 드로우.
-        StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
+        StartCoroutine(ExecuteSystemAction_NextTurn());
     }
 
     public void StrategyForwarding(CardEffectStrategy effectStrategy)
@@ -256,7 +262,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void DrawAgain(int drawAmount)
     {
-        StartCoroutine(CardPileDrawCoroutine(drawAmount));
+        StartCoroutine(CardAdditionalPileDrawCoroutine(drawAmount));
     }
 
     public int GetDeckCnt()
@@ -291,29 +297,38 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     private IEnumerator ExecuteSystemAction_AfterAttack()
     {
-        if (cardSystemActions_AfterAttack.Count == 0)
+        while(true)
         {
-            gameFlowController.PlayerTurnIsFinished();
-            yield break; // 코루틴 정상 종료
+            if (cardSystemActions_AfterAttack.Count == 0)
+            {
+                gameFlowController.PlayerTurnIsFinished();
+                yield break; // 코루틴 정상 종료
+            }
+
+            var systemAction = cardSystemActions_AfterAttack.Dequeue();
+
+            systemAction.Execute_System();
+
+            yield return new WaitForSeconds(systemActionRate);
         }
-
-        var systemAction = cardSystemActions_AfterAttack.Dequeue();
-
-        systemAction.Execute_System();
-
-        yield return new WaitForSeconds(systemActionRate);
     }
 
     private IEnumerator ExecuteSystemAction_NextTurn()
     {
-        if (cardSystemActions_NextTurn.Count == 0)
-            yield break; // 코루틴 정상 종료
+        while(true)
+        {
+            if (cardSystemActions_NextTurn.Count == 0)
+            {
+                StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
+                yield break; // 코루틴 정상 종료
+            }
 
-        var systemAction = cardSystemActions_NextTurn.Dequeue();
+            var systemAction = cardSystemActions_NextTurn.Dequeue();
 
-        systemAction.Execute_System();
+            systemAction.Execute_System();
 
-        yield return new WaitForSeconds(systemActionRate);
+            yield return new WaitForSeconds(systemActionRate);
+        }
     }
 
     public void AttackAgain()

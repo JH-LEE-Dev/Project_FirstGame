@@ -559,6 +559,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7358706110774650695}
+  - component: {fileID: 9132191112841657630}
+  - component: {fileID: 6152041836335415834}
   - component: {fileID: 8622928418035731899}
   m_Layer: 5
   m_Name: Card_Pannel
@@ -589,6 +591,46 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &9132191112841657630
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3014680100241126493}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 5
+  m_TargetDisplay: 0
+--- !u!114 &6152041836335415834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3014680100241126493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &8622928418035731899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,8 +678,8 @@ RectTransform:
   - {fileID: 6553213081025930073}
   - {fileID: 4788782726010582846}
   - {fileID: 5199692094062942720}
-  - {fileID: 7358706110774650695}
   - {fileID: 2506048222436119368}
+  - {fileID: 7358706110774650695}
   - {fileID: 4532228745545051706}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1519,7 +1561,6 @@ MonoBehaviour:
   previewRoot: {fileID: 6432989706803050518}
   cards: []
   BulletRoots: []
-  discardInterval: 0.09
 --- !u!1 &8604045442958423822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1866,6 +1907,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9155673763916870877}
     m_Modifications:
+    - target: {fileID: 1101190830178653438, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5178301261254129050, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
       propertyPath: m_Name
       value: GraveSystem

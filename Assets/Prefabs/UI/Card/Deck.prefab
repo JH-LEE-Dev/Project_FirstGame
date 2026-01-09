@@ -240,7 +240,7 @@ MonoBehaviour:
   wealthyEase: 4
   drawDelay: 0.15
   drawDuration: 0.5
-  drawFirstPointDist: 3
+  drawFirstPointDist: 2
   bMidPointRandom: 0
   drawMidPointPower: 5
   bEndPointRandom: 0
