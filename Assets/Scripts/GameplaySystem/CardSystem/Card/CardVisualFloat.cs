@@ -24,11 +24,17 @@ public class CardVisualFloat : MonoBehaviour
 
     [Header("Draw Look")]
     [SerializeField] private Color drawColor = new Color(1f, 1f, 0.07f, 1f);
-    [SerializeField] private float colorDuration = 0.9f;
+    [SerializeField] private float colorDuration = 0.5f;
 
     [Header("Overlay Ref")]
     [SerializeField] private Image drawOverlay;
     private Tween drawTween;
+
+    [Header("Draw Pop")]
+    [SerializeField] private float drawStartScale = 0.1f;
+    [SerializeField] private float drawOvershootScale = 1.05f;
+    [SerializeField] private float drawTotalDuration = 0.4f;
+    private Tween drawScaleTween;
 
 
     private void Awake()
@@ -96,6 +102,26 @@ public class CardVisualFloat : MonoBehaviour
 
         drawTween = drawOverlay.DOFade(0f, Mathf.Max(0.01f, colorDuration))
             .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+
+
+        drawScaleTween?.Kill();
+
+        visual.localScale = Vector3.one * drawStartScale;
+
+        float upDuration = drawTotalDuration * 0.8f;
+        float downDuration = drawTotalDuration * 0.2f;
+
+        drawScaleTween = DOTween.Sequence()
+            .Append(
+                visual.DOScale(drawOvershootScale, upDuration)
+                    .SetEase(Ease.OutBack)
+            )
+            .Append(
+                visual.DOScale(1f, downDuration)
+                    .SetEase(Ease.OutCubic)
+            )
             .SetUpdate(true)
             .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
