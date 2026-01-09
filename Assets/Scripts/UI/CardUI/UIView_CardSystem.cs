@@ -315,34 +315,50 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
         uiJobQueue = _jobQueue;
-        
+
+        // 시작 대기
+        await Awaitable.WaitForSecondsAsync(2f);
+
         int size = _jobQueue.Count;
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
 
-            List<CardDataInstance> currCardDataList = currentJob.cards;
+            List<CardDataInstance> currCardDatas = currentJob.cards;
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
             {
-                case JobType_CardSystemUI.Draw:
-                {
-                        if (null == deckSystem)
-                            return;
+                case JobType_CardSystemUI.Draw: 
+                    DrawedCardsFromTurn(currCardDatas);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
 
-                        bWorkingBlock = true;
-                        deckSystem.CardDrawEffect(currCardDataList);
-                }
-                break;
+                case JobType_CardSystemUI.GraveToDeck:
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                case JobType_CardSystemUI.AdditionalDraw:
+                    DrawedCardsFromTurn(currCardDatas);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
 
                 default: break;
             }
         }
 
         SetText();
+    }
+
+    void DrawedCardsFromTurn(List<CardDataInstance> _datas)
+    {
+        if (null == deckSystem)
+            return;
+
+        bWorkingBlock = true;
+        deckSystem.CardDrawEffect(_datas);
     }
 }
