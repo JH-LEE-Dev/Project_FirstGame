@@ -4,7 +4,7 @@ public class CanvasSystem : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
 
-    private void Awake()
+    public void Initialize()
     {
         if (canvas == null)
             canvas = GetComponent<Canvas>();

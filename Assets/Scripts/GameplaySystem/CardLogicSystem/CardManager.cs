@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler, 
+public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler,
     ICardSystemEvent, ICardSystemActions
 {
     public event Action<CardDataInstance> CardDrawedEvent;
@@ -82,7 +82,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(2);
+        CardData cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
@@ -233,7 +233,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         //StartCoroutine(CardDrawCoroutine());
 
         //Pile 드로우.
-        StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
+        StartCoroutine(ExecuteSystemAction_NextTurn());
     }
 
     public void StrategyForwarding(CardEffectStrategy effectStrategy)
@@ -307,7 +307,12 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
     private IEnumerator ExecuteSystemAction_NextTurn()
     {
         if (cardSystemActions_NextTurn.Count == 0)
+        {
+            StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
             yield break; // 코루틴 정상 종료
+        }
+
+        Debug.Log("NextTurn");
 
         var systemAction = cardSystemActions_NextTurn.Dequeue();
 
