@@ -263,6 +263,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
             if (cardSystemActions_AfterAttack.Count == 0)
             {
                 gameFlowController.PlayerTurnIsFinished();
+                cardUICommandSystem.CreateCommand(JobType_CardSystemUI.HandToGrave);
                 return;
             }
 

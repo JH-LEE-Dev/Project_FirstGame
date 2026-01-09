@@ -14,13 +14,18 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
         commandFactory_CardSystem = new UICommandFactory_CardSystem();
     }
 
-    public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards)
+    public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default)
     {
         switch (jobType)
         {
             case JobType_CardSystemUI.Draw:
                 {
                     commandFactory_CardSystem.CreateJob_Draw(cards);
+                    break;
+                }
+            case JobType_CardSystemUI.HandToGrave:
+                {
+                    commandFactory_CardSystem.CreateJob_ToGrave(cards);
                     break;
                 }
         }

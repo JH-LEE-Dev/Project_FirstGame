@@ -843,6 +843,7 @@ GameObject:
   - component: {fileID: 1506261591}
   - component: {fileID: 1506261593}
   - component: {fileID: 1506261592}
+  - component: {fileID: 1506261594}
   m_Layer: 0
   m_Name: UIInstaller
   m_TagString: Untagged
@@ -906,6 +907,18 @@ MonoBehaviour:
   - {fileID: 8004459324530729153, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
   - {fileID: 6803540536523188111, guid: 1adc596e58e7a6441b0569a2fae69ff9, type: 3}
   - {fileID: 5906714827194331106, guid: 2e1ac48127c7b2042a3791b20e940111, type: 3}
+--- !u!114 &1506261594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506261590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
 --- !u!20 &1867789632 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 693036412966368884, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
@@ -1046,6 +1059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CanvasSystem
   canvas: {fileID: 1108041376833722446}
+  unitforSorting: 5
 --- !u!1 &2252223581178452936
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,6 +51,25 @@ public class UICommandFactory_CardSystem : UICommandFactory
         currentSentBatch = batch;   
     }
 
+    public void CreateJob_ToGrave(ReadOnlySpan<CardDataInstance> toGraveCards)
+    {
+        var batch = jobBatchPool.Get();
+        var drawList = cardListPool.Get();
+
+        for (int i = 0; i < toGraveCards.Length; ++i)
+        {
+            drawList.Add(toGraveCards[i]);
+        }
+
+        batch.Add(new Job_CardSystemUI
+        {
+            jobType = JobType_CardSystemUI.Draw,
+            cards = drawList
+        });
+
+        currentSentBatch = batch;
+    }
+
     public List<Job_CardSystemUI> GetJobBatch()
     {
         ReleaseJobBatch();

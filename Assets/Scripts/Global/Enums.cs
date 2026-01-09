@@ -100,5 +100,6 @@ public enum JobType_CardSystemUI
 {
     Draw,
     AdditionalDraw,
-    GraveToDeck
+    GraveToDeck,
+    HandToGrave
 }
