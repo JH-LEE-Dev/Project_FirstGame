@@ -154,7 +154,13 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         CardPileDraw(amount);
 
         CardDrawFinishedEvent?.Invoke();
-        handCnt = 0;
+    }
+
+    private IEnumerator CardAdditionalPileDrawCoroutine(int amount)
+    {
+        yield return new WaitForSeconds(cardDrawRate);
+
+        CardPileDraw(amount);
     }
 
     public void CardUsed(CardDataInstance usedCard)
@@ -256,7 +262,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void DrawAgain(int drawAmount)
     {
-        StartCoroutine(CardPileDrawCoroutine(drawAmount));
+        StartCoroutine(CardAdditionalPileDrawCoroutine(drawAmount));
     }
 
     public int GetDeckCnt()
@@ -291,34 +297,38 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     private IEnumerator ExecuteSystemAction_AfterAttack()
     {
-        if (cardSystemActions_AfterAttack.Count == 0)
+        while(true)
         {
-            gameFlowController.PlayerTurnIsFinished();
-            yield break; // 코루틴 정상 종료
+            if (cardSystemActions_AfterAttack.Count == 0)
+            {
+                gameFlowController.PlayerTurnIsFinished();
+                yield break; // 코루틴 정상 종료
+            }
+
+            var systemAction = cardSystemActions_AfterAttack.Dequeue();
+
+            systemAction.Execute_System();
+
+            yield return new WaitForSeconds(systemActionRate);
         }
-
-        var systemAction = cardSystemActions_AfterAttack.Dequeue();
-
-        systemAction.Execute_System();
-
-        yield return new WaitForSeconds(systemActionRate);
     }
 
     private IEnumerator ExecuteSystemAction_NextTurn()
     {
-        if (cardSystemActions_NextTurn.Count == 0)
+        while(true)
         {
-            StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
-            yield break; // 코루틴 정상 종료
+            if (cardSystemActions_NextTurn.Count == 0)
+            {
+                StartCoroutine(CardPileDrawCoroutine(drawCardCnt));
+                yield break; // 코루틴 정상 종료
+            }
+
+            var systemAction = cardSystemActions_NextTurn.Dequeue();
+
+            systemAction.Execute_System();
+
+            yield return new WaitForSeconds(systemActionRate);
         }
-
-        Debug.Log("NextTurn");
-
-        var systemAction = cardSystemActions_NextTurn.Dequeue();
-
-        systemAction.Execute_System();
-
-        yield return new WaitForSeconds(systemActionRate);
     }
 
     public void AttackAgain()

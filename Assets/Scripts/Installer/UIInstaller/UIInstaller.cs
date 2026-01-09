@@ -97,14 +97,10 @@ public class UIInstaller : MonoBehaviour
         CanvasRoot tempRoot = new CanvasRoot();
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
-
         uiManager.SceneChanged(tempRoot);
-        uiManager.Initialize_MainMenuScene();
 
-        UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
-
-        mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
-        mainMenuUIView.PlayButtonClickedEvent += bootStrapProvider.GoToGameplayScene;
+        OpenMainMenuUIView();
+        SetupMainMenuCanvasChilds();
     }
 
     public void GameplayLevelStarted()
@@ -130,6 +126,7 @@ public class UIInstaller : MonoBehaviour
         uiManager.SceneChanged(tempRoot);
 
         OpenGameplayUIView();
+        SetupGameplayCanvasChilds();
     }
 
     public void SetupGameplayCanvas()
@@ -154,7 +151,27 @@ public class UIInstaller : MonoBehaviour
         }
     }
 
-    public void OpenGameplayUIView()
+    private void SetupGameplayCanvasChilds()
+    {
+        CanvasSystem canvasSystem = canvas_GamplayScene.GetComponent<CanvasSystem>();
+
+        if (canvasSystem != null)
+        {
+            canvasSystem.Initialize();
+        }
+    }
+
+    private void SetupMainMenuCanvasChilds()
+    {
+        CanvasSystem canvasSystem = canvas_MainMenuScene.GetComponent<CanvasSystem>();
+
+        if (canvasSystem != null)
+        {
+            canvasSystem.Initialize();
+        }
+    }
+
+    private void OpenGameplayUIView()
     {
         UIView_HUD HUDObject = uiManager.Open<UIView_HUD>();
         UIView_CardSystem cardSystemObject = uiManager.Open<UIView_CardSystem>();
@@ -167,7 +184,17 @@ public class UIInstaller : MonoBehaviour
         BindEvent_Gameplay(HUDObject, cardSystemObject, gameplayObject);
     }
 
-    public void ResetVariable()
+    private void OpenMainMenuUIView()
+    {
+        uiManager.Initialize_MainMenuScene();
+
+        UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
+
+        mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
+        mainMenuUIView.PlayButtonClickedEvent += bootStrapProvider.GoToGameplayScene;
+    }
+
+    private void ResetVariable()
     {
         cardSystemProvider = null;
     }
