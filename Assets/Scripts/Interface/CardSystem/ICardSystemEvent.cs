@@ -5,8 +5,6 @@ using UnityEngine;
 
 public interface ICardSystemEvent
 {
-    event Action<CardDataInstance> CardDrawedEvent;
-    event Action<List<CardDataInstance>> CardPileDrawedEvent;
     event Action CardDrawFinishedEvent;
     event Action CardUsingTurnFinishedEvent;
     event Action<bool> CardUsingVerificationEvent;

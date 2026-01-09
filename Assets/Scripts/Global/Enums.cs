@@ -95,3 +95,10 @@ public enum CardState
     Other,
     Hidden
 }
+
+public enum JobType_CardSystemUI
+{
+    Draw,
+    AdditionalDraw,
+    GraveToDeck
+}
