@@ -8,6 +8,7 @@ public class DrawEffect : MonoBehaviour
     [SerializeField] private float rotateDuration = 1f;
 
     private DeckSystem deckSystem = null;
+    private TrailRenderer trail = null;
 
     private Sequence activeSeq = null;
     private Tween activeRotate = null;
@@ -17,7 +18,9 @@ public class DrawEffect : MonoBehaviour
 
     public void Init(DeckSystem _deckSystem)
     {
-        deckSystem = _deckSystem; 
+        deckSystem = _deckSystem;
+
+        trail = gameObject.GetComponentInChildren<TrailRenderer>();
     }
 
     public void PlayingDrawEvent(int _idx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
@@ -25,7 +28,7 @@ public class DrawEffect : MonoBehaviour
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
 
-        LoopRotate();
+        trail?.Clear();
 
         activeSeq = DOTween.Sequence();
 
@@ -34,6 +37,12 @@ public class DrawEffect : MonoBehaviour
         activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CubicBezier, PathMode.TopDown2D, 10, Color.green)
             .SetUpdate(false)
             .SetEase(_drawEase)
+            .OnStart(()=>
+            {
+                gameObject.SetActive(true);
+                deckSystem?.CardBackDrawedEffect();
+                LoopRotate();
+            })
             .OnComplete(() =>
             {
                 deckSystem?.CallOneCardDrawCompleted(_idx, transform.position, cardDataInstance, gameObject);

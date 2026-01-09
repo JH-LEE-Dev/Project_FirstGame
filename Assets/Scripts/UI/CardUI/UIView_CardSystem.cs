@@ -45,12 +45,17 @@ public class UIView_CardSystem : UIView
     [Header("Graveyard Settings")]
     [SerializeField] private GraveyardSystem graveSystem = null;
 
+    // ¼Ò¸ê
+    [Header("Extinction Settings")]
+    [SerializeField] private ExtinctionSystem extinctionSystem = null;
+
     // µ¦, ¹¦Áö, ¼Ò¸ê °ø¿ë
     [Header("Pannel")]
-    [SerializeField] private GameObject cardPannel = null;
+    [SerializeField] private CardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
 
+    // µå·Î¿ì Áß ÀÛ¾÷ ÁßÁö
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
@@ -70,6 +75,7 @@ public class UIView_CardSystem : UIView
         handSystem?.Init(this);
         deckSystem?.Init(this);
         graveSystem?.Init(this);
+        extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
 
         BindingFunction();
@@ -214,24 +220,36 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
-    //public void CardDrawed(List<CardDataInstance> cardDataPile)
-    //{
-    //    if (null == deckSystem)
-    //        return;
-
-    //    bWorkingBlock = true;
-    //    deckSystem.CardDrawEffect(cardDataPile);
-    //    SetText();
-    //}
-
-    public void CallDeckPannel(bool _activate)
+    public void CallPannel(CurrentPannel _setType)
     {
-        cardPannel?.SetActive(_activate);
-        GetDeckCards();
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = _setType;
+        cardPannel.gameObject.SetActive(true);
+
+        switch(_setType)
+        {
+            case CurrentPannel.Deck: 
+                ActivatePannel(viewCtx.cardSystemProvider.deckCards); 
+                break;
+
+            case CurrentPannel.Grave:
+                break;
+
+            case CurrentPannel.Extinction:
+                break;
+        }
+    }
+
+    public void ForceDeActivatePannelSelf(CurrentPannel callType)
+    {
+        if (null == cardPannel || callType != cardPannel.CurrPannelType)
+            return;
+
+        cardPannel.gameObject.SetActive(false);
     }
     /////////////////////////////////////////////////
-
-
 
     private void SetText()
     {
@@ -297,10 +315,50 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
         uiJobQueue = _jobQueue;
 
+        // ½ÃÀÛ ´ë±â
+        await Awaitable.WaitForSecondsAsync(2f);
+
+        int size = _jobQueue.Count;
+        for (int i = 0; i < size; ++i)
+        {
+            Job_CardSystemUI currentJob = uiJobQueue[i];
+
+            List<CardDataInstance> currCardDatas = currentJob.cards;
+            JobType_CardSystemUI currenType = currentJob.jobType;
+
+            switch(currenType)
+            {
+                case JobType_CardSystemUI.Draw: 
+                    DrawedCardsFromTurn(currCardDatas);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                case JobType_CardSystemUI.GraveToDeck:
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                case JobType_CardSystemUI.AdditionalDraw:
+                    DrawedCardsFromTurn(currCardDatas);
+                    await Awaitable.WaitForSecondsAsync(2f);
+                    break;
+
+                default: break;
+            }
+        }
+
         SetText();
+    }
+
+    void DrawedCardsFromTurn(List<CardDataInstance> _datas)
+    {
+        if (null == deckSystem)
+            return;
+
+        bWorkingBlock = true;
+        deckSystem.CardDrawEffect(_datas);
     }
 }
