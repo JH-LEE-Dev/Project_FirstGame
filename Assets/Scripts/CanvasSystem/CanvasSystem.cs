@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class CanvasSystem : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
+    [SerializeField] private int unitforSorting = 5;
 
     public void Initialize()
     {
@@ -14,8 +16,10 @@ public class CanvasSystem : MonoBehaviour
         canvas.worldCamera = Camera.main;
     }
 
-    public void InitializeChildrenCanvas()
+    public IEnumerator InitializeChildrenCanvas()
     {
+        yield return null;
+
         if (canvas == null)
             canvas = GetComponent<Canvas>();
 
@@ -27,9 +31,16 @@ public class CanvasSystem : MonoBehaviour
             if (null == children[i] || children[i] == canvas)
                 continue;
 
+            bool wasActive = children[i].gameObject.activeSelf;
+            if (!wasActive)
+                children[i].gameObject.SetActive(true);
+
             children[i].overrideSorting = true;
-            children[i].sortingLayerID = canvas.sortingLayerID;
-            children[i].sortingOrder = canvas.sortingOrder + i;
+            children[i].sortingLayerName = canvas.sortingLayerName;
+            children[i].sortingOrder = canvas.sortingOrder + i * unitforSorting;
+
+            if (!wasActive)
+                children[i].gameObject.SetActive(false);
         }
     }
 }
