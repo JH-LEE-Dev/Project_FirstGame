@@ -143,7 +143,7 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem?.CallPannel(CurrentPannel.Grave);
     }
 
-    public void CardMoveToDeckEffect(List<CardDataInstance> dataList)
+    public void CardMoveToDeckEffect(int spawningCount)
     {
         if (null == cardSystem)
             return;
@@ -152,9 +152,7 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
 
         RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
-
-        int currentCount = dataList.Count;
-        for (int i = 0; i < currentCount; i++)
+        for (int i = 0; i < spawningCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool();
             StarEffect script = performer?.GetComponent<StarEffect>();
