@@ -148,8 +148,8 @@ public class GraveyardSystem : MonoBehaviour
         if (null == cardSystem)
             return;
 
-        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
-        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
+        // 묘지 > 덱 타이밍에 패널이 묘지 타입으로 열려 있다면 강제로 끔
+        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
 
         RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
 
@@ -178,8 +178,6 @@ public class GraveyardSystem : MonoBehaviour
             firstPointPos.x -= toDeckFirstPointDist;
 
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
-
-            script.CardDataInstance = dataList[i];
             script.PlayingEventforWormHole(i, toDeckDelay, toDeckDuration, toDeckEase, pathPoints);
         }
     }
