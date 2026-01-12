@@ -203,7 +203,7 @@ MonoBehaviour:
   drawPathPoints:
   - {fileID: 4924247403232587697}
   wealthySpeed: 1
-  wealthyHeight: 2
+  wealthyHeight: 5
   wealthyAngle: 2.5
   drawDelay: 0.15
   drawDuration: 0.5
