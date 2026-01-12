@@ -70,6 +70,18 @@ public class UICommandFactory_CardSystem : UICommandFactory
         currentSentBatch = batch;
     }
 
+    public void CreateJob_ToDeck()
+    {
+        var batch = jobBatchPool.Get();
+
+        batch.Add(new Job_CardSystemUI
+        {
+            jobType = JobType_CardSystemUI.GraveToDeck
+        });
+
+        currentSentBatch = batch;
+    }
+
     public List<Job_CardSystemUI> GetJobBatch()
     {
         ReleaseJobBatch();
