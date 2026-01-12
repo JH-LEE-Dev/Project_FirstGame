@@ -62,7 +62,6 @@ public class DeckSystem : MonoBehaviour,
     [Header("CardBack Event for Drawed")]
     [SerializeField] private Ease drawedCardBackEase = Ease.OutExpo;
 
-    private Sequence wealthySeq = null;
     private Sequence activeSeq = null;
     private Sequence cardbackSeq = null;
 
