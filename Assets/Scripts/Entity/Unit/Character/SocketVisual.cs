@@ -15,7 +15,7 @@ public class SocketVisual : MonoBehaviour
     [SerializeField] private float hoverDuration = 2.2f;
 
     [Header("Wobble Rotate (Visual only)")]
-    [SerializeField] private float wobbleDeg = 3f;       // ±3도
+    [SerializeField] private float wobbleDeg = 3f;      
     [SerializeField] private float wobbleDuration = 2.4f;
 
 
@@ -48,7 +48,7 @@ public class SocketVisual : MonoBehaviour
             baseVisualZ = visual.localEulerAngles.z; // 자식 SlotVisual이 가진 기본 20도
         }
 
-        // “시작점만 다르게” (박자 동일)
+        // 시작점만 다르게 (박자 동일)
         hoverPhase0 = Random.Range(0f, Mathf.PI * 2f);
         wobblePhase0 = Random.Range(0f, Mathf.PI * 2f);
     }
