@@ -111,9 +111,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
             amount = deckPile.Count;
         }
 
-        using var temp = new RentalScope<CardDataInstance>(amount);
-
-        Span<CardDataInstance> writeBuffer = temp.Span;
+        using var rentalBuffer = new RentalScope<CardDataInstance>(amount);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < amount; ++i)
         {
@@ -129,14 +128,19 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
             writeBuffer[i] = card;
         }
 
-        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
-        temp.Dispose();
+        CreateUICommand(JobType_CardSystemUI.Draw, rentalBuffer);
 
         if (deckPile.Count == 0 && gravePile.Count != 0)
         {
             GraveToDeckMove();
             CardPileDraw(restDrawCnt);
         }
+    }
+
+    private void CreateUICommand(JobType_CardSystemUI jobType, RentalScope<CardDataInstance> cardsBuffer)
+    {
+        cardUICommandSystem.CreateCommand(jobType, cardsBuffer.Span);
+        cardsBuffer.Dispose();
     }
 
     private void StartCardPileDraw(int amount)
@@ -211,9 +215,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     private void GraveToDeckMove()
     {
-        using var temp = new RentalScope<CardDataInstance>(gravePile.Count);
-
-        Span<CardDataInstance> writeBuffer = temp.Span;
+        using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < gravePile.Count; ++i)
         {
@@ -223,8 +226,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
         gravePile.Clear();
 
-        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.GraveToDeck, writeBuffer);
-        temp.Dispose();
+        CreateUICommand(JobType_CardSystemUI.GraveToDeck, rentalBuffer);
     }
 
     public void StartCardDrawTurn(int waveIdx)
