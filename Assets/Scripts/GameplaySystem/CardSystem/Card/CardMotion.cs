@@ -40,9 +40,31 @@ public class CardMotion : MonoBehaviour
     private Sequence rejectSeq;
 
     [Header("Grave Motion")]
+    [SerializeField] private float graveDuration = 0.4f;
+    [SerializeField] private float graveTiltZ = 80f;     // 왼쪽으로 기울기(도)
+    [SerializeField] private float graveScale = 0.3f;    // 줄어드는 비율
     private Tween flyTween;
-    [SerializeField] private float graveDuration = 0.25f;
+    private Tween flyRotateTween;
+    private Tween flyScaleTween; 
 
+
+    public void AllKillTweens()
+    {
+        hoverTween.Kill();
+
+        previewMoveTween.Kill();
+        previewScaleTween.Kill();
+        previewRotateTween.Kill();
+        previewEndScaleTween.Kill();
+
+        rejectSeq.Kill();
+
+        flyTween.Kill();
+        flyRotateTween.Kill();
+        flyScaleTween.Kill();
+
+        transform.localScale = originScale;
+    }
 
 
     public void Bind(CardInstance card)
@@ -54,30 +76,10 @@ public class CardMotion : MonoBehaviour
     }
 
 
-
     private void Update()
     {
         Tick(Time.unscaledDeltaTime);
     }
-
-
-
-    public void EnterHand()
-    {
-        owner.SetUIState(CardState.InHand);
-        velocity = Vector2.zero;
-    }
-
-
-
-    public void ExitHand()
-    {
-        velocity = Vector2.zero;
-        KillHoverOnly();
-        transform.localScale = originScale;
-    }
-
-
 
     public void SetTarget(Vector2 pos, float angleZ)
     {
@@ -215,15 +217,33 @@ public class CardMotion : MonoBehaviour
 
 
     // 
-
-
     public void FlyToGrave(Vector3 graveAnchoredPos, System.Action onComplete = null)
     {
-        flyTween?.Kill();
+        KillHoverOnly();
+        previewMoveTween?.Kill();
+        previewScaleTween?.Kill();
+        previewRotateTween?.Kill();
+        previewEndScaleTween?.Kill();
+        rejectSeq?.Kill();
 
-        flyTween = rt.DOAnchorPos(graveAnchoredPos, graveDuration)
-            .SetEase(Ease.InCubic)
-            .SetUpdate(true)
-            .OnComplete(() => onComplete?.Invoke());
+        flyTween?.Kill();
+        flyRotateTween?.Kill();
+        flyScaleTween?.Kill();
+
+        velocity = Vector2.zero;
+
+        flyTween = rt.DOAnchorPos((Vector2)graveAnchoredPos, graveDuration)
+            .SetEase(Ease.InSine)
+            .SetUpdate(true);
+
+        flyRotateTween = rt.DOLocalRotate(new Vector3(0f, 0f, graveTiltZ), graveDuration)
+            .SetEase(Ease.InSine)
+            .SetUpdate(true);
+
+        flyScaleTween = transform.DOScale(originScale * graveScale, graveDuration)
+            .SetEase(Ease.InSine)
+            .SetUpdate(true);
+
+        flyTween.OnComplete(() => onComplete?.Invoke());
     }
 }

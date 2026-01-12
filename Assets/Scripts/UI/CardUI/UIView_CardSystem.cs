@@ -313,27 +313,11 @@ public class UIView_CardSystem : UIView
 
     public void CardUsingFinished()
     {
+        handSystem?.CancelPreview();
+
         turnFinishedButton.gameObject.SetActive(false);
-
         cardSystemProvider.CardUsingFinished();
-
         SetText();
-
-        ClearAllCards();
-    }
-
-    public void ClearAllCards()
-    {
-        //for(int i = 0; i < cards.Count;++i)
-        //{
-        //    RectTransform card = cards[i].GetComponent<RectTransform>();
-
-        //    card.localPosition = new Vector3(-1000,-1000,card.localPosition.z);
-        //}
-
-        //cards.Clear();
-
-        //computeArc();
     }
 
     public void CardDrawFinished()
