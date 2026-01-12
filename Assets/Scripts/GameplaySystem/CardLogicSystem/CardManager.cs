@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.Pool;
+using static UnityEngine.Rendering.GPUSort;
 
 
 public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler,
@@ -102,15 +103,24 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void CardPileDraw(int amount)
     {
+        int restDrawCnt = 0;
+
+        if (deckPile.Count < amount)
+        {
+            restDrawCnt = amount - deckPile.Count;
+            amount = deckPile.Count;
+        }
+
         using var temp = new RentalScope<CardDataInstance>(amount);
 
         Span<CardDataInstance> writeBuffer = temp.Span;
 
-        int i = 0;
-        for (; i < amount; ++i)
+        for (int i = 0; i < amount; ++i)
         {
             if (deckPile.Count == 0)
+            {
                 break;
+            }
 
             var card = deckPile[deckPile.Count - 1];
             deckPile.RemoveAt(deckPile.Count - 1);
@@ -120,11 +130,12 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
 
         cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
+        temp.Dispose();
 
         if (deckPile.Count == 0 && gravePile.Count != 0)
         {
             GraveToDeckMove();
-            CardPileDraw(amount - i);
+            CardPileDraw(restDrawCnt);
         }
     }
 
@@ -213,6 +224,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         gravePile.Clear();
 
         cardUICommandSystem.CreateCommand(JobType_CardSystemUI.GraveToDeck, writeBuffer);
+        temp.Dispose();
     }
 
     public void StartCardDrawTurn(int waveIdx)

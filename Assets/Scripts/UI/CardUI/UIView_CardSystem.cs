@@ -335,7 +335,6 @@ public class UIView_CardSystem : UIView
 
     public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
-        Debug.Log(_jobQueue.Count);
         uiJobQueue = _jobQueue;
 
         // 시작 대기
@@ -345,11 +344,12 @@ public class UIView_CardSystem : UIView
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
+
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
             {
-                case JobType_CardSystemUI.Draw: 
+                case JobType_CardSystemUI.Draw:
                     DrawedCardsFromTurn(currentJob.cards);
                     await Awaitable.WaitForSecondsAsync(2f);
                     break;
