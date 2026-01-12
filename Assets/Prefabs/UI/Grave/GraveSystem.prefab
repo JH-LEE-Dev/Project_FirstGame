@@ -132,7 +132,7 @@ MonoBehaviour:
   toDeckDuration: 0.7
   toDeckFirstPointDist: 2
   bMidPointRandom: 1
-  toDeckMidPointPower: 5
+  toDeckMidPointPower: 3
   toDeckEase: 6
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15
