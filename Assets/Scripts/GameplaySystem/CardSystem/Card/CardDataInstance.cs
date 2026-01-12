@@ -6,12 +6,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [Serializable]
-public class CardDataInstance : IPointerClickHandler
+public class CardDataInstance
 {
     public event Action<CardDataInstance> CardUsedEvent;
 
     private CardData cardData;
     public bool bUpgrade = false;
+
     public void Initialize(CardData cardData)
     {
         this.cardData = cardData;

@@ -76,6 +76,21 @@ public class Character : Unit, ICharacterData
         combatComponent.BulletEffectIsFinishedEvent += PlayerAttackFinished;
     }
 
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    public float GetMaxHealth()
+    {
+        return healthComponent.GetMaxHealth();
+    }
+
+    public float GetCurrentHealth()
+    {
+        return healthComponent.GetCurrentHealth();
+    }
+
     private void ReleaseEvent()
     {
         inputManager.inputReader.MoveEvent -= OnMove;
@@ -83,6 +98,7 @@ public class Character : Unit, ICharacterData
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
         combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
     }
+
     protected override void OnDestroy()
     {
         ReleaseEvent();
@@ -203,20 +219,5 @@ public class Character : Unit, ICharacterData
     {
         bCanAction = false;
         PlayerAttackFinishedEvent?.Invoke();
-    }
-
-    public Transform GetTransform()
-    {
-        return transform;
-    }
-
-    public float GetMaxHealth()
-    {
-        return healthComponent.GetMaxHealth();
-    }
-
-    public float GetCurrentHealth()
-    {
-        return healthComponent.GetCurrentHealth();
     }
 }

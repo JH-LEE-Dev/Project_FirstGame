@@ -77,6 +77,7 @@ public enum CardSystemEffectType
     DrawAgain,
     MeteorShower,
     Flare,
+    AttackAgain
 }
 
 public enum CardSystemActionTimingType

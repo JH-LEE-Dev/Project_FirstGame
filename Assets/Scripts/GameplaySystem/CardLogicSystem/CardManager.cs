@@ -14,7 +14,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 {
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingTurnFinishedEvent;
-    public event Action<CardData> CardUsedEvent;
+    public event Action<CardDataInstance> CardUsedEvent;
     public event Action<bool> CardUsingVerificationEvent;
 
     //외부 의존성
@@ -89,7 +89,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(3);
+        CardData cardData = cardDataBase.GetCardData(1);
         if (cardData == null)
             return;
 
@@ -177,7 +177,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
         gravePile.Add(usedCard);
         ++graveCnt;
         CardUsingVerificationEvent?.Invoke(true);
-        CardUsedEvent?.Invoke(usedCard.GetCardData());
+        CardUsedEvent?.Invoke(usedCard);
 
         ExecuteSystemAction_BeforeAttack();
     }

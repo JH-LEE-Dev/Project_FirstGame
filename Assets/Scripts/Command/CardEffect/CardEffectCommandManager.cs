@@ -11,10 +11,10 @@ public class CardEffectCommandManager : MonoBehaviour
     [SerializeField] private List<CardEffectStatusCommand> cardStatusCommands = new List<CardEffectStatusCommand>();
     [SerializeField] private List<CardEffectSystemCommand> cardSystemCommands = new List<CardEffectSystemCommand>();
 
-    public void AnalysisCardEffect(CardData cardData)
+    public void AnalysisCardEffect(CardDataInstance card)
     {
-        List<CardStatusEffectType> cardStatusEffectTypes = cardData.cardStatusEffects;
-        List<CardSystemEffectType> cardSystemEffectTypes = cardData.cardSystemEffects;
+        List<CardStatusEffectType> cardStatusEffectTypes = card.GetCardData().cardStatusEffects;
+        List<CardSystemEffectType> cardSystemEffectTypes = card.GetCardData().cardSystemEffects;
 
         for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
         {
