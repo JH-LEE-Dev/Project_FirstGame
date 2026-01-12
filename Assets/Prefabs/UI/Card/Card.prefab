@@ -367,7 +367,7 @@ MonoBehaviour:
   snapDist: 0.05
   hoverScale: 1.3
   hoverDuration: 0.15
-  previewScale: 2.5
+  previewScale: 2
   previewMoveDuration: 0.3
   previewScaleDuration: 0.3
   previewEndScaleDur: 0.6

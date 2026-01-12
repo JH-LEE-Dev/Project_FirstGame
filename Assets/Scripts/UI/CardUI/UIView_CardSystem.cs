@@ -259,15 +259,12 @@ public class UIView_CardSystem : UIView
         return deckSystem.transform.position;
     }
 
-    public GameObject GetStarPerformerFromPool(Transform attachingObj)
+    public GameObject GetStarPerformerFromPool(Transform target)
     {
         GameObject getObj = poolingSystem?.StarEffects.Get();
 
         if (null != getObj)
-        {
-            getObj.transform.SetParent(attachingObj);
-            getObj.transform.position = attachingObj.position;
-        }
+            getObj.transform.position = target.position;
 
         return getObj;
     }
