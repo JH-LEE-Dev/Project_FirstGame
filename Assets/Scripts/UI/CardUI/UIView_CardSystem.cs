@@ -54,9 +54,6 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
-    //UIJobQueue
-    private List<Job_CardSystemUI> uiJobQueue;
-
     public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
     {
         cardSystemProvider = _cardSystemProvider;
@@ -320,14 +317,15 @@ public class UIView_CardSystem : UIView
 
     public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
-        uiJobQueue = _jobQueue;
+        var currentBatchList = _jobQueue;
 
         float turnWaitSecond = 2f;
 
-        int size = _jobQueue.Count;
+        int size = currentBatchList.Count;
         for (int i = 0; i < size; ++i)
         {
-            Job_CardSystemUI currentJob = uiJobQueue[i];
+            Job_CardSystemUI currentJob = currentBatchList[i];
+
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
@@ -341,7 +339,7 @@ public class UIView_CardSystem : UIView
 
                 case JobType_CardSystemUI.GraveToDeck:
 
-                    graveSystem?.CardMoveToDeckEffect(_jobQueue[i].cards.Count);
+                    graveSystem?.CardMoveToDeckEffect(currentBatchList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;

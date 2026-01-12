@@ -5333,7 +5333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   drawCardCnt: 5
-  initialDeckCnt: 8
+  initialDeckCnt: 10
 --- !u!114 &-3014418931989348951
 MonoBehaviour:
   m_ObjectHideFlags: 0
