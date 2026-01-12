@@ -29,9 +29,14 @@ public class CardDataInstance : IPointerClickHandler
         return cardData;
     }
 
-    public void AddCardEffect(CardEffectType effectType)
+    public void AddCardSystemEffect(CardSystemEffectType effectType)
     {
-        cardData.cardEffects.Add(effectType);
+        cardData.cardSystemEffects.Add(effectType);
+    }
+
+    public void AddCardStatusEffect(CardStatusEffectType effectType)
+    {
+        cardData.cardStatusEffects.Add(effectType);
     }
 
     public void OnPointerClick(PointerEventData eventData)

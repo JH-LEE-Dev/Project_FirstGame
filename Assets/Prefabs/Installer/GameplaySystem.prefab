@@ -35,6 +35,58 @@ Transform:
   - {fileID: 530487473881166707}
   m_Father: {fileID: 2715298809759021445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &795674254859153700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5223334871247944760}
+  - component: {fileID: 6879801045031881104}
+  m_Layer: 0
+  m_Name: OrbitPathComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5223334871247944760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795674254859153700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -11.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4737121153119196882}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6879801045031881104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795674254859153700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f285a6c03280a4dbc3091f495558b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitPathComponent
+  orbitPathSettings: {fileID: 11400000, guid: c4685e60e0e1a3641b88114f3d3e9837, type: 2}
+  center: {fileID: 0}
+  radius: 8.9
+  startAngleDeg: 63
+  endAngleDeg: 117
+  pathLineCount: 20
+  flowSpeedPerSec: 0.1
+  pathLinePrefab: {fileID: 7938705195784025681, guid: 778b26b2ec6989c4198fbeef9fd72bd5, type: 3}
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0
@@ -5291,11 +5343,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3132615358195672310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef99fca02fc00a04babee60027a0c6e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ff534d53caf633498282d9ab2875b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardEffectManager
-  cardEffects:
+  cardStatusCommands:
   - {fileID: 11400000, guid: cb7784a0a1a26be41b06bd03f6f2a8b9, type: 2}
+  - {fileID: 11400000, guid: 8ca12cec04b3a424d8eea19f235c082d, type: 2}
+  cardSystemCommands:
   - {fileID: 11400000, guid: ac242b3e0727ff44abd729273aaa8601, type: 2}
   - {fileID: 11400000, guid: 7e851f1c960a27844a0ed53368046151, type: 2}
   - {fileID: 11400000, guid: 90ae2b86987e8ee4987f66aa1df35438, type: 2}
@@ -10156,6 +10210,51 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!1 &3924299347047386443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4737121153119196882}
+  - component: {fileID: 4266073514408420827}
+  m_Layer: 0
+  m_Name: EnvironmentSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4737121153119196882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3924299347047386443}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5223334871247944760}
+  m_Father: {fileID: 7045863790459964670}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4266073514408420827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3924299347047386443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2faae1c6b7a8642bc9f3e0684ad79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentManager
 --- !u!1 &3969614341799905809
 GameObject:
   m_ObjectHideFlags: 0
@@ -15286,7 +15385,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4737121153119196882}
   m_Father: {fileID: 2715298809759021445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8204895467648919775

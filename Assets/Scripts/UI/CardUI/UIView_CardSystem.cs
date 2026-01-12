@@ -332,7 +332,7 @@ public class UIView_CardSystem : UIView
 
             switch(currenType)
             {
-                case JobType_CardSystemUI.Draw: 
+                case JobType_CardSystemUI.Draw:
 
                     DrawingCards(currentJob.cards);
 

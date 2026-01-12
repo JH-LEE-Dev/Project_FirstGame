@@ -36,14 +36,16 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
 
     public void SetHealth(float _health)
     {
-       maxHealth = _health;
+        maxHealth = _health;
     }
 
     public void DecreaseHealth(float damage)
     {
-        if(currentShield > 0)
+        if (currentShield > 0)
         {
-            if(currentShield < damage)
+            Debug.Log(currentShield);
+
+            if (currentShield < damage)
             {
                 damage -= currentShield;
                 currentShield = 0;
@@ -62,8 +64,6 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
             UnitIsDeadEvent?.Invoke();
             currentHealth = 0;
         }
-
-        Debug.Log(currentHealth);
     }
 
     public float GetMaxHealth()

@@ -20,7 +20,12 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
         {
             case JobType_CardSystemUI.Draw:
                 {
-                    commandFactory_CardSystem.CreateJob_Draw(cards);
+                    commandFactory_CardSystem.CreateJob_Draw(cards,false);
+                    break;
+                }
+            case JobType_CardSystemUI.AdditionalDraw:
+                {
+                    commandFactory_CardSystem.CreateJob_Draw(cards,true);
                     break;
                 }
             case JobType_CardSystemUI.HandToGrave:

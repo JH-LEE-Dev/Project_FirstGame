@@ -5,6 +5,10 @@ public class EMoveComponent : MoveComponent
     /// <summary>
     /// 시스템 속성 존.---------------------------------------
     /// </summary>
+    
+    //움직임 행동을 정의하는 객체. 원하는 MoveStrategy를 인스펙터에서 넣어주면 됨.
+    [SerializeField] protected EnemyMoveStrategy moveStrategyAsset;
+    protected EnemyMoveStrategy moveStrategy;
 
 
 
@@ -16,10 +20,34 @@ public class EMoveComponent : MoveComponent
     [SerializeField] float maxSpeed = 20f;
 
 
+
+
+    /// <summary>
+    /// 시스템 코드 존.---------------------------------------
+    /// </summary>
+    
+    public void Initialize(UnitContext _ctx,bool temp = false)
+    {
+        base.Initialize(_ctx);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        moveStrategy = Instantiate(moveStrategyAsset);
+    }
+
+    protected override void Start()
+    {
+        moveStrategy.Initialize(ctx.unit);
+    }
+
+
     /// <summary>
     /// 구현 코드 존.---------------------------------------
     /// </summary>
-    
+
     protected override void Update()
     {
         if (moveDirection.x == 0)
@@ -34,23 +62,23 @@ public class EMoveComponent : MoveComponent
             Accelerate(); // 지구로 돌진할 때 호출되는 함수임.
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     private void Accelerate()
     {
         moveStrategy.Accelerate(moveDirection, acceleration, maxSpeed);
     }
 
-    public override void SetImpulsePower(float power)
+    public void SetImpulsePower(float power)
     {
         impulsePower = power;
     }
 
-    public override void SetAccelerate(bool boolean)
+    public void SetAccelerate(bool boolean)
     {
         bAccelerate = boolean;
+    }
+
+    public virtual void ApplyImpulse()
+    {
+        moveStrategy.Move_Impulse(moveDirection, impulsePower);
     }
 }

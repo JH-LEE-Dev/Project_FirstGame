@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Draw Again Strategy
   m_EditorClassIdentifier: Assembly-CSharp::DrawAgainStrategy
   effectApplyType: 1
+  cardSystemActionTimingType: 0
   drawAmount: 2

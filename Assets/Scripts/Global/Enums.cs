@@ -55,7 +55,8 @@ public enum CardName
     BonusDamage,
     DrawAgain,
     MeteorShower,
-    Flare
+    Flare,
+    Shield
 }
 
 public enum CardEffectApplyType
@@ -65,9 +66,14 @@ public enum CardEffectApplyType
 }
 
 
-public enum CardEffectType
+public enum CardStatusEffectType
 {
     BonusDamage,
+    Shield
+}
+
+public enum CardSystemEffectType
+{
     DrawAgain,
     MeteorShower,
     Flare,

@@ -6,9 +6,5 @@ public interface IUnitLogicSystemActions
 {
     void Initialize(Character character,Earth earth, List<Enemy> enemies);
 
-    void ApplyShieldModifier(float bonusShield);
-
-    void ApplyAttackModifier(float bonusDamage);
-
     bool CanApplyBulletEffect();
 }

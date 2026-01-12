@@ -5,7 +5,7 @@ public class EntityComponent : MonoBehaviour
     protected UnitContext ctx;
     protected bool bDead = false;
 
-    public virtual void Initialize(UnitContext _ctx)
+    protected void Initialize(UnitContext _ctx)
     {
         ctx = _ctx;
         BindEvent();

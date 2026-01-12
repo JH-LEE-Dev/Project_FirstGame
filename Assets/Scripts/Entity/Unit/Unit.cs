@@ -25,7 +25,6 @@ public class Unit : MonoBehaviour, IDamageable
     protected Rigidbody2D rb;
     protected Collider2D col;
     protected SpriteRenderer sr;
-    protected MoveComponent moveComponent;
     protected UnitContext ctx;
     protected EffectComponent effectComponent;
     protected HealthComponent healthComponent;
@@ -134,11 +133,9 @@ public class Unit : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
-        moveComponent = GetComponent<MoveComponent>();
         effectComponent = GetComponent<EffectComponent>();
         healthComponent = GetComponent<HealthComponent>();
 
-        moveComponent.Initialize(ctx);
 
         rb.gravityScale = 0f;
         rb.linearDamping = 5f;
@@ -161,27 +158,6 @@ public class Unit : MonoBehaviour, IDamageable
     {
         //미구현. 신경쓰지 마쇼
         ProcessNextCommand();
-    }
-
-    //입력 시스템에 의해서 호출되는 움직임 함수.
-    public virtual void OnMove(Vector2 move)
-    {
-        //시스템에 의해 플레이어가 공격 가능한 턴/타이밍에만 실행되게 적용.
-        if (bCanAction == false)
-        {
-            return;
-        }
-
-        //키보드 <-, -> 에 따른 이동 방향임. Vector2(1,0) Vector2(-1,0)
-        moveDirection = move;
-        moveComponent.SetMoveDirection(moveDirection);
-    }
-
-    //이 함수는 입력에 의해 작동하지 않는 움직임에 필요한 함수.
-    //ex. Enemy
-    public virtual void OnMove()
-    {
-
     }
 
     //체력 깎이는 함수.

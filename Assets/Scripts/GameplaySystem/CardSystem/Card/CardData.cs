@@ -14,5 +14,6 @@ public class CardData
 
     public bool bFlash = false; // 한 턴 지나면 사라질 놈 (인게임중에 다른 카드 효과에 의해 만들어진놈)
 
-    public List<CardEffectType> cardEffects;
+    public List<CardStatusEffectType> cardStatusEffects;
+    public List<CardSystemEffectType> cardSystemEffects;
 }
