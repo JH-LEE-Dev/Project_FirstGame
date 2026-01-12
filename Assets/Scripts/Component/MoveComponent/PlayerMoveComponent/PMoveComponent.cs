@@ -53,8 +53,8 @@ public class PMoveComponent : MoveComponent
     {
         base.Update();
 
-        if (moveDirection.x == 0)
-            return;
+        //if (moveDirection.x == 0)
+        //    return;
 
         moveStrategy.Move(moveDirection);
     }
