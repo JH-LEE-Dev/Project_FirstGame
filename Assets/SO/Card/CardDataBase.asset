@@ -41,3 +41,10 @@ MonoBehaviour:
     usingType: 0
     bFlash: 0
     cardEffects: 03000000
+  - id: 4
+    cardName: 4
+    cardType: 1
+    elementType: 0
+    usingType: 0
+    bFlash: 0
+    cardEffects: 04000000

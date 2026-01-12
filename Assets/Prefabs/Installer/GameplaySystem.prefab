@@ -5291,11 +5291,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3132615358195672310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef99fca02fc00a04babee60027a0c6e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ff534d53caf633498282d9ab2875b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardEffectManager
-  cardEffects:
+  cardStatusCommands:
   - {fileID: 11400000, guid: cb7784a0a1a26be41b06bd03f6f2a8b9, type: 2}
+  - {fileID: 11400000, guid: 8ca12cec04b3a424d8eea19f235c082d, type: 2}
+  cardSystemCommands:
   - {fileID: 11400000, guid: ac242b3e0727ff44abd729273aaa8601, type: 2}
   - {fileID: 11400000, guid: 7e851f1c960a27844a0ed53368046151, type: 2}
   - {fileID: 11400000, guid: 90ae2b86987e8ee4987f66aa1df35438, type: 2}

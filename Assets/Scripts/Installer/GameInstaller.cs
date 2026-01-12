@@ -13,7 +13,7 @@ public class GameInstaller : MonoBehaviour
     private CameraController cameraController;
     private GameServiceLocator gameServiceLocator;
     private CardManager cardManager;
-    private CardEffectManager cardEffectManager;
+    private CardEffectCommandManager cardEffectCommandManager;
     private UnitLogicSystem unitLogicSystem;
 
     [SerializeField] private WaveDatabase waveDatabase;
@@ -28,7 +28,7 @@ public class GameInstaller : MonoBehaviour
         cameraController = GetComponent<CameraController>();
         gameServiceLocator = new GameServiceLocator();
         cardManager = GetComponent<CardManager>();
-        cardEffectManager = GetComponent<CardEffectManager>();
+        cardEffectCommandManager = GetComponent<CardEffectCommandManager>();
         unitLogicSystem = GetComponent<UnitLogicSystem>();
 
         waveManager.Initialize(waveDatabase);
@@ -36,10 +36,9 @@ public class GameInstaller : MonoBehaviour
         gameController.Initialize(waveManager, inputManager, cardManager);
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem);
-        cardEffectManager.Initialize(unitLogicSystem, cardManager);
         cardManager.Initialize(unitLogicSystem,gameController,cardUICommandSystem);
 
-        BindEvent(cardManager, cardEffectManager);
+        BindEvent(cardManager,unitLogicSystem, cardEffectCommandManager);
     }
 
     private void Awake()
@@ -67,14 +66,22 @@ public class GameInstaller : MonoBehaviour
         cardUICommandSystem = _cardUICommandSystem;
     }
 
-    public void BindEvent(CardManager _cardManager, CardEffectManager _cardEffectManager)
+    public void BindEvent(CardManager _cardManager, UnitLogicSystem _unitLogicSystem,CardEffectCommandManager _cardEffectManager)
     {
-        cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
-        cardManager.CardUsedEvent += cardEffectManager.ExecuteCardEffect;
+        cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
+        cardManager.CardUsedEvent += cardEffectCommandManager.AnalysisCardEffect;
+
+        cardEffectCommandManager.CardEffectStatusCommandDispatchEvent -= unitLogicSystem.InsertCommand;
+        cardEffectCommandManager.CardEffectStatusCommandDispatchEvent += unitLogicSystem.InsertCommand;
+        cardEffectCommandManager.CardEffectSystemCommandDispatchEvent -= cardManager.InsertCommand;
+        cardEffectCommandManager.CardEffectSystemCommandDispatchEvent += cardManager.InsertCommand;
     }
 
     public void ReleaseEvent()
     {
-        cardManager.CardUsedEvent -= cardEffectManager.ExecuteCardEffect;
+        cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
+
+        cardEffectCommandManager.CardEffectStatusCommandDispatchEvent -= unitLogicSystem.InsertCommand;
+        cardEffectCommandManager.CardEffectSystemCommandDispatchEvent -= cardManager.InsertCommand;
     }
 }
