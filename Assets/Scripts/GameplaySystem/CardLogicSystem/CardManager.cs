@@ -106,8 +106,12 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
         Span<CardDataInstance> writeBuffer = temp.Span;
 
-        for (int i = 0; i < amount; ++i)
+        int i = 0;
+        for (; i < amount; ++i)
         {
+            if (deckPile.Count == 0)
+                break;
+
             var card = deckPile[deckPile.Count - 1];
             deckPile.RemoveAt(deckPile.Count - 1);
 
@@ -116,6 +120,12 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
 
         cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
+
+        if (deckPile.Count == 0)
+        {
+            GraveToDeckMove();
+            CardPileDraw(amount - i);
+        }
     }
 
     private void StartCardPileDraw(int amount)
@@ -188,7 +198,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         handPile.Clear();
     }
 
-    private void GraveToDeckMove(int moveAmount)
+    private void GraveToDeckMove()
     {
         for (int i = 0; i < gravePile.Count; ++i)
         {
@@ -197,6 +207,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
 
         gravePile.Clear();
+
+        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.GraveToDeck);
     }
 
     public void StartCardDrawTurn(int waveIdx)
