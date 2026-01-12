@@ -259,7 +259,12 @@ public class UIView_CardSystem : UIView
         return deckSystem.transform.position;
     }
 
-    public GameObject GetStarPerformerFromPool() => poolingSystem?.StarEffects.Get();
+    public GameObject GetStarPerformerFromPool()
+    {
+        GameObject getObj = poolingSystem?.StarEffects.Get();
+
+        return getObj;
+    }
     /////////////////////////////////////////////////
 
     private void SetText()

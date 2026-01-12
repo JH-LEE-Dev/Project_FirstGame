@@ -16,7 +16,7 @@ public class GraveyardSystem : MonoBehaviour
     [SerializeField] private List<RectTransform> drawPathPoints = new();
 
     [Header("toDeck Effect Settings")]
-    [SerializeField] private float toDeckDelay = 0.15f;
+    [SerializeField] private float toDeckDelay = 0.02f;
     [SerializeField] private float toDeckDuration = 1f;
     [SerializeField] private float toDeckFirstPointDist = 2f;
     [Space]
@@ -166,10 +166,7 @@ public class GraveyardSystem : MonoBehaviour
 
             // mid
             if (bMidPointRandom)
-            {
-                midPointPos.x += Random.Range(-1f, 1f) * toDeckMidPointPower;
                 midPointPos.y += Random.Range(-0.35f, 0.35f) * toDeckMidPointPower;
-            }
 
             // first
             Vector3 firstPointPos = midPointPos;
