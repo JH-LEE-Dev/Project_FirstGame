@@ -333,6 +333,7 @@ public class UIView_CardSystem : UIView
 
     public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
+        Debug.Log(_jobQueue.Count);
         uiJobQueue = _jobQueue;
 
         float turnWaitSecond = 2f;

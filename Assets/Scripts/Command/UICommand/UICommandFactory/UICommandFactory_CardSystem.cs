@@ -34,7 +34,13 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards)
     {
-        var batch = jobBatchPool.Get();
+        List<Job_CardSystemUI> batch;
+
+        if (currentSentBatch == null)
+            batch = jobBatchPool.Get();
+        else
+            batch = currentSentBatch;
+
         var drawList = cardListPool.Get();
 
         for (int i = 0; i < drawCards.Length; ++i)
@@ -48,12 +54,19 @@ public class UICommandFactory_CardSystem : UICommandFactory
             cards = drawList
         });
 
-        currentSentBatch = batch;   
+        if (currentSentBatch == null)
+            currentSentBatch = batch;
     }
 
     public void CreateJob_ToGrave(ReadOnlySpan<CardDataInstance> toGraveCards)
     {
-        var batch = jobBatchPool.Get();
+        List<Job_CardSystemUI> batch;
+
+        if (currentSentBatch == null)
+            batch = jobBatchPool.Get();
+        else
+            batch = currentSentBatch;
+
         var drawList = cardListPool.Get();
 
         for (int i = 0; i < toGraveCards.Length; ++i)
@@ -67,19 +80,34 @@ public class UICommandFactory_CardSystem : UICommandFactory
             cards = drawList
         });
 
-        currentSentBatch = batch;
+        if (currentSentBatch == null)
+            currentSentBatch = batch;
     }
 
-    public void CreateJob_ToDeck()
+    public void CreateJob_ToDeck(ReadOnlySpan<CardDataInstance> toDeckCards)
     {
-        var batch = jobBatchPool.Get();
+        List<Job_CardSystemUI> batch;
+
+        if (currentSentBatch == null)
+            batch = jobBatchPool.Get();
+        else
+            batch = currentSentBatch;
+
+        var toDeckList = cardListPool.Get();
+
+        for (int i = 0; i < toDeckCards.Length; ++i)
+        {
+            toDeckList.Add(toDeckCards[i]);
+        }
 
         batch.Add(new Job_CardSystemUI
         {
-            jobType = JobType_CardSystemUI.GraveToDeck
+            jobType = JobType_CardSystemUI.GraveToDeck,
+            cards = toDeckList
         });
 
-        currentSentBatch = batch;
+        if (currentSentBatch == null)
+            currentSentBatch = batch;
     }
 
     public List<Job_CardSystemUI> GetJobBatch()
@@ -104,5 +132,6 @@ public class UICommandFactory_CardSystem : UICommandFactory
         }
 
         lastSentBatch = currentSentBatch;
+        currentSentBatch = null;
     }
 }

@@ -30,7 +30,7 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
                 }
             case JobType_CardSystemUI.GraveToDeck:
                 {
-                    commandFactory_CardSystem.CreateJob_ToDeck();
+                    commandFactory_CardSystem.CreateJob_ToDeck(cards);
                     break;
                 }
         }
