@@ -135,9 +135,6 @@ public class PoolingSystem : MonoBehaviour
         if (null == obj)
             return;
 
-        StarEffect script = obj?.GetComponent<StarEffect>();
-        script?.ReturnToOrigin();
-
         obj.SetActive(false);
     }
 

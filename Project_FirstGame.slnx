@@ -4,6 +4,7 @@
   <Project Path="ChocDino.UIFX.csproj" />
   <Project Path="ChocDino.UIFX.Demos.csproj" />
   <Project Path="VHierarchy.csproj" />
+  <Project Path="DamageNumbersPro.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="ChocDino.UIFX.Editor.csproj" />
   <Project Path="ChocDino.UIFX.TMP.Editor.csproj" />

@@ -19,16 +19,11 @@ public class StarEffect : MonoBehaviour
     private CardDataInstance cardDataInstance = null;
     public CardDataInstance CardDataInstance { set { cardDataInstance = value; } }
 
-    private Transform originParent = null; 
-
     public void Init(PoolingSystem _poolingSystem)
     {
-        originParent = transform.parent;
         poolingSystem = _poolingSystem;
         trail = gameObject.GetComponentInChildren<TrailRenderer>();
     }
-
-    public void ReturnToOrigin() => transform.SetParent(originParent);
 
     public void PlayingEventforDeck(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
