@@ -36,13 +36,6 @@ public class UIView_CardSystem : UIView
     public DeckSystem DeckSystem => deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
-    // µ¦
-    [Header("Deck Settings")]
-    [SerializeField] private List<RectTransform> drawPathPoints = new();
-    [SerializeField] private RectTransform drawEndPoint = null;
-    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
-    //public RectTransform DrawEndPoint { get { return drawEndPoint; } }
-
     // ¹¦Áö
     [Header("Graveyard Settings")]
     [SerializeField] private GraveyardSystem graveSystem = null;

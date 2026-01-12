@@ -12,6 +12,9 @@ public class GraveyardSystem : MonoBehaviour
 
     private Sequence activeSeq = null;
 
+    [Header("Effect Location Settings")]
+    [SerializeField] private List<RectTransform> drawPathPoints = new();
+
     [Header("toDeck Effect Settings")]
     [SerializeField] private float toDeckDelay = 0.15f;
     [SerializeField] private float toDeckDuration = 1f;
@@ -148,7 +151,7 @@ public class GraveyardSystem : MonoBehaviour
         // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
 
-        RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
+        RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
 
         int currentCount = dataList.Count;
         for (int i = 0; i < currentCount; i++)
@@ -172,7 +175,7 @@ public class GraveyardSystem : MonoBehaviour
 
             // first
             Vector3 firstPointPos = midPointPos;
-            firstPointPos.x += toDeckFirstPointDist;
+            firstPointPos.x -= toDeckFirstPointDist;
 
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
 
