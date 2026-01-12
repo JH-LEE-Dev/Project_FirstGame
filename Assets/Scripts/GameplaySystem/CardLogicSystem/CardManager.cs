@@ -121,7 +121,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
         cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
 
-        if (deckPile.Count == 0)
+        if (deckPile.Count == 0 && gravePile.Count != 0)
         {
             GraveToDeckMove();
             CardPileDraw(amount - i);
