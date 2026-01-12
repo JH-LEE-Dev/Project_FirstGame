@@ -161,11 +161,13 @@ public class UIView_CardSystem : UIView
     public void GetWormholeCards()
     {
         // 추후 구현
+        ActivatePannel(cardSystemProvider.graveCards);
     }
 
     public void GetExtinctionCards()
     {
         // 추후 구현
+        //ActivatePannel(cardSystemProvider);
     }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
