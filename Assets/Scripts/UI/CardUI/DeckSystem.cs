@@ -25,9 +25,9 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private List<RectTransform> drawPathPoints = new();
 
     [Header("Wealthy Settings")]
-    [SerializeField] private float wealthyDuration = 1f;
-    [SerializeField] private float wealthyAngle = 5f;
-    [SerializeField] private Ease wealthyEase = Ease.Linear;
+    [SerializeField] private float wealthySpeed = 1f;
+    [SerializeField] private float wealthyHeight = 2f;
+    [SerializeField] private float wealthyAngle = 3.5f;
 
     [Header("Draw Effect Settings")]
     [SerializeField] private float drawDelay = 0.15f;
@@ -72,6 +72,7 @@ public class DeckSystem : MonoBehaviour,
     private Vector3 cardbackOriginScale = Vector3.zero;
 
     private bool bClickedEvent = false;
+    private float originalY;
 
     protected void Awake()
     {
@@ -90,6 +91,12 @@ public class DeckSystem : MonoBehaviour,
 
     private void Start()
     {
+        if (wealthyRect != null)
+            originalY = wealthyRect.localPosition.y;
+    }
+
+    private void Update()
+    {
         WealthyMotion();
     }
 
@@ -107,18 +114,15 @@ public class DeckSystem : MonoBehaviour,
 
     private void WealthyMotion()
     {
-        if (null == wealthyRect)
-            return;
+        if (wealthyRect == null) return;
 
-        wealthyRect.localRotation = Quaternion.Euler(0f, 0f, wealthyAngle);
+        float zRotation = Mathf.Cos(Time.time * wealthySpeed) * wealthyAngle;
+        wealthyRect.localRotation = Quaternion.Euler(0f, 0f, zRotation);
 
-        wealthySeq = DOTween.Sequence();
-
-        wealthySeq.Append(wealthyRect.DOLocalRotate(new Vector3(0f, 0f, -wealthyAngle), wealthyDuration, RotateMode.Fast)
-            .SetUpdate(false)
-            .SetEase(wealthyEase));
-
-        wealthySeq.SetLoops(-1, LoopType.Yoyo);
+        float yOffset = Mathf.Sin(Time.time * wealthySpeed * 0.5f) * wealthyHeight;
+        Vector3 pos = wealthyRect.localPosition;
+        pos.y = originalY + yOffset;
+        wealthyRect.localPosition = pos;
     }
 
     public void CardDrawEffect(List<CardDataInstance> dataList)
@@ -169,19 +173,19 @@ public class DeckSystem : MonoBehaviour,
         if (null == cardBackRect || null == impactParticle)
             return;
 
-        cardBackRect.eulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
+        cardBackRect.localEulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
         cardBackRect.localScale = cardbackOriginScale * 0.85f;
 
         CancelPrevMotion(cardbackSeq);
 
         cardbackSeq = DOTween.Sequence();
 
-        cardbackSeq.Append(cardBackRect.DORotate(Vector3.zero, drawDelay)
+        cardbackSeq.Append(cardBackRect.DOLocalRotate(Vector3.zero, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase)
             .OnComplete(() =>
             {
-
+                cardBackRect.localEulerAngles = Vector3.zero;
             }));
 
         cardbackSeq.Join(cardBackRect.DOScale(cardbackOriginScale, drawDelay)
@@ -260,19 +264,19 @@ public class DeckSystem : MonoBehaviour,
         if (null == cardBackRect || null == impactParticle)
             return;
 
-        cardBackRect.eulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
+        cardBackRect.localEulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
         cardBackRect.localScale = cardbackOriginScale * 0.85f;
 
         CancelPrevMotion(cardbackSeq);
 
         cardbackSeq = DOTween.Sequence();
 
-        cardbackSeq.Append(cardBackRect.DORotate(Vector3.zero, drawDelay)
+        cardbackSeq.Append(cardBackRect.DOLocalRotate(Vector3.zero, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase)
             .OnComplete(() =>
             {
-
+                cardBackRect.localEulerAngles = Vector3.zero;
             }));
 
         cardbackSeq.Join(cardBackRect.DOScale(cardbackOriginScale, drawDelay)
