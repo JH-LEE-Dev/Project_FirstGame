@@ -374,6 +374,9 @@ MonoBehaviour:
   rejectTotal: 0.2
   rejectScale: 0.95
   rejectAngle: 5
+  graveDuration: 0.4
+  graveTiltZ: 60
+  graveScale: 0.3
 --- !u!114 &7831457537719056636
 MonoBehaviour:
   m_ObjectHideFlags: 0
