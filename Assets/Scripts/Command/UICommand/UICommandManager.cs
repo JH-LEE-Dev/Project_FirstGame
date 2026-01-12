@@ -12,6 +12,8 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
     {
         dispatcher = new UICommandDispatcher();
         commandFactory_CardSystem = new UICommandFactory_CardSystem();
+
+        commandFactory_CardSystem.Initialize();
     }
 
     public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default)

@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a1948dfbeb2f4f438ff2f8a116f2793, type: 3}
-  m_Name: Flare Strategy
-  m_EditorClassIdentifier: Assembly-CSharp::FlareStrategy
-  effectApplyType: 1
-  cardSystemActionTimingType: 2
-  drawAmount: 1
+  m_Script: {fileID: 11500000, guid: 106dc9c8d3c9aa1408169cfab9ae5f1b, type: 3}
+  m_Name: Bonus Damage Command
+  m_EditorClassIdentifier: Assembly-CSharp::BonusDamageStrategy
+  bonusDamage: 0

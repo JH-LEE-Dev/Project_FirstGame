@@ -7,8 +7,8 @@ using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 public class UICommandFactory_CardSystem : UICommandFactory
 {
     // 현재 UI가 사용 중인 Batch를 시스템이 보관
-    private List<Job_CardSystemUI> lastSentBatch;
-    private List<Job_CardSystemUI> currentSentBatch;
+    //private List<Job_CardSystemUI> lastSentBatch;
+    //private List<Job_CardSystemUI> currentSentBatch;
 
     // Job Batch Pool (Job들을 전달하기 위한 용도)
     private ObjectPool<List<Job_CardSystemUI>> jobBatchPool =
@@ -17,7 +17,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             actionOnGet: (list) => list.Clear(),
             actionOnRelease: (list) => list.Clear(),
             collectionCheck: true,
-            defaultCapacity: 5,
+            defaultCapacity: 10,
             maxSize: 10
         );
 
@@ -28,18 +28,32 @@ public class UICommandFactory_CardSystem : UICommandFactory
             actionOnGet: (list) => list.Clear(),
             actionOnRelease: (list) => list.Clear(),
             collectionCheck: true,
-            defaultCapacity: 5,
+            defaultCapacity: 10,
             maxSize: 10
         );
 
+    private List<List<Job_CardSystemUI>> usedBatches = new List<List<Job_CardSystemUI>>(5);
+
+    private int writeIndex = 0;
+
+    public void Initialize()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            usedBatches.Add(jobBatchPool.Get());
+        }
+    }
+
+    private List<Job_CardSystemUI> GetActiveBatch() => usedBatches[writeIndex];
+
     public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards, bool bAdditional)
     {
-        List<Job_CardSystemUI> batch;
+        var batch = GetActiveBatch();
 
-        if (currentSentBatch == null)
-            batch = jobBatchPool.Get();
-        else
-            batch = currentSentBatch;
+        //if (currentSentBatch == null)
+        //    batch = jobBatchPool.Get();
+        //else
+        //    batch = currentSentBatch;
 
         var drawList = cardListPool.Get();
 
@@ -61,18 +75,18 @@ public class UICommandFactory_CardSystem : UICommandFactory
                 cards = drawList
             });
 
-        if (currentSentBatch == null)
-            currentSentBatch = batch;
+        //if (currentSentBatch == null)
+        //currentSentBatch = batch;
     }
 
     public void CreateJob_ToGrave(ReadOnlySpan<CardDataInstance> toGraveCards)
     {
-        List<Job_CardSystemUI> batch;
+        var batch = GetActiveBatch();
 
-        if (currentSentBatch == null)
-            batch = jobBatchPool.Get();
-        else
-            batch = currentSentBatch;
+        //if (currentSentBatch == null)
+        //    batch = jobBatchPool.Get();
+        //else
+        //    batch = currentSentBatch;
 
         var drawList = cardListPool.Get();
 
@@ -87,18 +101,18 @@ public class UICommandFactory_CardSystem : UICommandFactory
             cards = drawList
         });
 
-        if (currentSentBatch == null)
-            currentSentBatch = batch;
+        //if (currentSentBatch == null)
+        //currentSentBatch = batch;
     }
 
     public void CreateJob_ToDeck(ReadOnlySpan<CardDataInstance> toDeckCards)
     {
-        List<Job_CardSystemUI> batch;
+        var batch = GetActiveBatch();
 
-        if (currentSentBatch == null)
-            batch = jobBatchPool.Get();
-        else
-            batch = currentSentBatch;
+        //if (currentSentBatch == null)
+        //    batch = jobBatchPool.Get();
+        //else
+        //    batch = currentSentBatch;
 
         var toDeckList = cardListPool.Get();
 
@@ -113,32 +127,60 @@ public class UICommandFactory_CardSystem : UICommandFactory
             cards = toDeckList
         });
 
-        if (currentSentBatch == null)
-            currentSentBatch = batch;
+        //if (currentSentBatch == null)
+        //currentSentBatch = batch;
     }
 
     public List<Job_CardSystemUI> GetJobBatch()
     {
-        ReleaseJobBatch();
+        List<Job_CardSystemUI> batchToReturn = usedBatches[writeIndex];
 
-        return lastSentBatch;
+        writeIndex = (writeIndex + 1) % 5;
+
+        PrepareNextSlot(writeIndex);
+
+        return batchToReturn;
     }
 
     public void ReleaseJobBatch()
     {
-        if (lastSentBatch != null)
+        ++writeIndex;
+
+        if (writeIndex >= 5)
         {
-            foreach (var oldJob in lastSentBatch)
+            writeIndex = 0;
+
+            if (usedBatches[writeIndex] != null)
             {
-                if (oldJob.cards != null)
-                    cardListPool.Release(oldJob.cards);
+                foreach (var oldJob in usedBatches[writeIndex])
+                {
+                    if (oldJob.cards != null)
+                        cardListPool.Release(oldJob.cards);
+                }
+
+                jobBatchPool.Release(usedBatches[writeIndex]);
+                //usedBatches[usedBatchCnt] = null;
             }
 
-            jobBatchPool.Release(lastSentBatch);
-            lastSentBatch = null;
+            usedBatches[writeIndex] = jobBatchPool.Get();
         }
 
-        lastSentBatch = currentSentBatch;
-        currentSentBatch = null;
+        //lastSentBatch = currentSentBatch;
+        //currentSentBatch = null;
+    }
+
+    private void PrepareNextSlot(int index)
+    {
+        List<Job_CardSystemUI> nextBatch = usedBatches[index];
+
+        // 들어있던 내부 카드 리스트들 풀에 반납
+        foreach (var job in nextBatch)
+        {
+            if (job.cards != null)
+                cardListPool.Release(job.cards);
+        }
+
+        // 리스트 비우기 (이제 새로운 CreateJob을 받을 준비 완료)
+        nextBatch.Clear();
     }
 }
