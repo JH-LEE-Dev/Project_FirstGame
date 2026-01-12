@@ -51,13 +51,14 @@ public class StarEffect : MonoBehaviour
     {
         Action deckStartedEvent = () =>
         {
-
+            UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
+            cardSystem?.PlayMoveToDeckMotion();
         };
 
         Action deckCompoleteEvent = () =>
         {
             UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
-            cardSystem?.CallGraveToDeckFinished(gameObject);
+            cardSystem?.CallGraveToDeckFinished(_idx, gameObject);
         };
 
        ExecuteMotionSeuence(_idx, _spawnDelay, _drawDuration, _drawEase, points, deckStartedEvent, deckCompoleteEvent);

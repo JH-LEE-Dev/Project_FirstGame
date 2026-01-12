@@ -153,22 +153,6 @@ public class UIView_CardSystem : UIView
         if (graveSystem == null) return Vector3.zero;
         return graveSystem.GetComponent<RectTransform>().anchoredPosition;
     }
-    public void GetDeckCards()
-    {
-        ActivatePannel(cardSystemProvider.deckCards);
-    }
-
-    public void GetWormholeCards()
-    {
-        // 추후 구현
-        ActivatePannel(cardSystemProvider.graveCards);
-    }
-
-    public void GetExtinctionCards()
-    {
-        // 추후 구현
-        //ActivatePannel(cardSystemProvider);
-    }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
@@ -227,9 +211,11 @@ public class UIView_CardSystem : UIView
                 break;
 
             case CurrentPannel.Grave:
+                ActivatePannel(cardSystemProvider.graveCards);
                 break;
 
             case CurrentPannel.Extinction:
+                //ActivatePannel(cardSystemProvider.cards);
                 break;
         }
     }
@@ -251,12 +237,19 @@ public class UIView_CardSystem : UIView
         poolingSystem?.StarEffects?.Release(_performer);
     }
 
-    public void CallGraveToDeckFinished(GameObject _performer)
+    public void CallGraveToDeckFinished(int currIdx, GameObject _performer)
     {
+        // 풀링한테 지워달라고 요청
         poolingSystem?.StarEffects?.Release(_performer);
+        // 덱 받은 모션 재생
+        deckSystem?.InDeckFromGraveMotion();
+
+        // 현재 받은 인덱스가 마지막 주자 인덱스랑 같으면 마무리 모션
+        graveSystem?.MoveToDeckFinishMotion(currIdx);
     }
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
+    public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
 
     public Vector3 GetDeckWorldPos()
     {
@@ -306,27 +299,11 @@ public class UIView_CardSystem : UIView
 
     public void CardUsingFinished()
     {
+        handSystem?.CancelPreview();
+
         turnFinishedButton.gameObject.SetActive(false);
-
         cardSystemProvider.CardUsingFinished();
-
         SetText();
-
-        ClearAllCards();
-    }
-
-    public void ClearAllCards()
-    {
-        //for(int i = 0; i < cards.Count;++i)
-        //{
-        //    RectTransform card = cards[i].GetComponent<RectTransform>();
-
-        //    card.localPosition = new Vector3(-1000,-1000,card.localPosition.z);
-        //}
-
-        //cards.Clear();
-
-        //computeArc();
     }
 
     public void CardDrawFinished()
@@ -355,7 +332,6 @@ public class UIView_CardSystem : UIView
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
-
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
@@ -378,7 +354,7 @@ public class UIView_CardSystem : UIView
 
                     DrawingCards(currentJob.cards);
 
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    //await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 

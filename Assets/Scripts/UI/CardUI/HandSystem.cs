@@ -89,8 +89,6 @@ public class HandSystem : MonoBehaviour
         // 손패 등록(순서 유지: add가 곧 오른쪽)
         card.gameObject.SetActive(true);
         card.SetUIState(CardState.InHand); 
-        
-        card.Motion.EnterHand();
         card.VisualFloat.PlayDrawColor();
 
         // 생성 시작 위치
@@ -191,7 +189,6 @@ public class HandSystem : MonoBehaviour
         equippedBullets.Add(card);
 
         // 필드로 이동
-        card.Motion.ExitHand();
         card.transform.SetParent(BulletRoots[slot], false);
 
         // 슬롯 중앙에 고정(임시)
@@ -247,11 +244,11 @@ public class HandSystem : MonoBehaviour
 
 
 
-
         // 전부 초기화 한다.
         _card.SetUIState(CardState.Hidden);
-        _card.Motion.ExitHand();
+        _card.Motion.AllKillTweens();
         _card.gameObject.SetActive(false);
+
 
         // 풀링 반납
         cardSystem.ReturnHandCard(_card);
@@ -270,7 +267,6 @@ public class HandSystem : MonoBehaviour
 
         card.transform.SetParent(handRoot, false);
         card.SetUIState(CardState.InHand);
-        card.Motion.EnterHand();
 
         computeArc();
     }

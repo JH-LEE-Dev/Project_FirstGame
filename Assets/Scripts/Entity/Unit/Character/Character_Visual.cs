@@ -11,28 +11,27 @@ public class Character_Visual : MonoBehaviour
 
     [Header("Targets")]
     [SerializeField] private Transform body;
-    [SerializeField] private Transform backRings;  
+    [SerializeField] private Transform backRings;
     [SerializeField] private Transform frontRings;
 
+    [Header("Time")]
+    [SerializeField] private bool useUnscaledTime = false;
 
-    [Header("Hover")]
-    [SerializeField] private float hoverAmplitude = 0.0075f; 
+    [Header("Body Hover")]
+    [SerializeField] private float hoverAmplitude = 0.004f;
     [SerializeField] private float hoverDuration = 2.2f;
-    [SerializeField] private Ease hoverEase = Ease.InOutSine;
 
-
-    [Header("Sway")]
-    [SerializeField] private float bodyRotateDeg = 2.0f;
+    [Header("Body Z Rotate")]
+    [SerializeField] private float bodyRotateAmplitude = 1.5f;
     [SerializeField] private float bodyRotateDuration = 3.0f;
 
-    [Header("Rings")]
-    [SerializeField] private float ringWobbleDeg = 3.5f;       // 링만 따로 흔들면 더 귀여움
-    [SerializeField] private float ringWobbleDuration = 2.4f;
+    [Header("Rings Z Rotate")]
+    [SerializeField] private float ringRotateAmplitude = 1f;
+    [SerializeField] private float ringRotateDuration = 2.6f;
 
-
-    [Header("Misc")]
-    [SerializeField] private bool useUnscaledTime = false;     // 타임스케일 0에서도 떠있게 할지
-
+    [Header("Rings Hover (optional)")]
+    [SerializeField] private float ringHoverAmplitude = 0.0015f;
+    [SerializeField] private float ringHoverDuration = 2.0f;
 
     [Header("Blink")]
     [SerializeField] private bool enableBlink = true;   // 눈 깜빡임
@@ -43,18 +42,18 @@ public class Character_Visual : MonoBehaviour
 
 
 
-    private Vector3 bodyBaseLocalPos;
-    private float bodyBaseLocalZ;
+    // base pose
+    private Vector3 bodyBasePos;
+    private float bodyBaseZ;
 
-    private Vector3 backRingBaseLocalPos;
-    private float backRingBaseLocalZ;
+    private Vector3 backRingBasePos;
+    private float backRingBaseZ;
 
-    private Vector3 frontRingBaseLocalPos;
-    private float frontRingBaseLocalZ;
+    private Vector3 frontRingBasePos;
+    private float frontRingBaseZ;
 
-    private float ringZDelta;
 
-    private Sequence idleSeq;
+
     private Coroutine blinkCo;
 
 
@@ -62,29 +61,35 @@ public class Character_Visual : MonoBehaviour
     {
         if (body == null) body = transform;
 
-        bodyBaseLocalPos = body.localPosition;
-        bodyBaseLocalZ = body.localEulerAngles.z;
+        bodyBasePos = body.localPosition;
+        bodyBaseZ = body.localEulerAngles.z;
 
-        if (backRings != null) backRingBaseLocalZ = backRings.localEulerAngles.z;
-        if (frontRings != null) frontRingBaseLocalZ = frontRings.localEulerAngles.z;
+        if (backRings != null)
+        {
+            backRingBasePos = backRings.localPosition;
+            backRingBaseZ = backRings.localEulerAngles.z;
+        }
+
+        if (frontRings != null)
+        {
+            frontRingBasePos = frontRings.localPosition;
+            frontRingBaseZ = frontRings.localEulerAngles.z;
+        }
     }
 
     private void OnEnable()
     {
-        StartIdle();
         StartBlink();
     }
 
     private void OnDisable()
     {
         StopBlink();
-        StopIdle(resetPose: false);
     }
 
     private void OnDestroy()
     {
         StopBlink();
-        StopIdle(resetPose: false);
     }
 
     public void Bind(Character character)
@@ -92,110 +97,43 @@ public class Character_Visual : MonoBehaviour
         owner = character;
     }
 
-
-    public void StartIdle()
+    private void LateUpdate()
     {
-        StopIdle(resetPose: true);
+        float t = useUnscaledTime ? Time.unscaledTime : Time.time;
 
-        float phase = Random.Range(0f, 1f);
+        // Body
+        float hoverPhase = (t / hoverDuration) * Mathf.PI * 2f;
+        float rotPhase = (t / bodyRotateDuration) * Mathf.PI * 2f;
 
-        float ampMul = Random.Range(0.9f, 1.12f);
-        float durMul = Random.Range(0.92f, 1.08f);
+        Vector3 bPos = bodyBasePos;
+        bPos.y += Mathf.Sin(hoverPhase) * hoverAmplitude;
 
-        float hAmp = hoverAmplitude * ampMul;
-        float hDur = hoverDuration * durMul;
+        float bZ = bodyBaseZ + Mathf.Sin(rotPhase) * bodyRotateAmplitude;
 
-        float rotDeg = bodyRotateDeg * Random.Range(0.85f, 1.15f);
-        float rotDur = bodyRotateDuration * Random.Range(0.9f, 1.1f);
+        body.localPosition = bPos;
+        body.localRotation = Quaternion.Euler(0f, 0f, bZ);
 
-        float ringDeg = ringWobbleDeg * Random.Range(0.85f, 1.15f);
-        float ringDur = ringWobbleDuration * Random.Range(0.9f, 1.1f);
+        // Rings
+        float ringRotPhase = (t / ringRotateDuration) * Mathf.PI * 2f;
+        float ringHoverPhase = (t / ringHoverDuration) * Mathf.PI * 2f;
 
-        float t0 = phase * Mathf.PI * 2f;
-        Vector3 basePos = bodyBaseLocalPos;
+        float ringZDelta = Mathf.Sin(ringRotPhase) * ringRotateAmplitude;
+        float ringYDelta = Mathf.Sin(ringHoverPhase) * ringHoverAmplitude;
 
-        // 초기 포즈
-        body.localPosition = basePos + Vector3.up * (Mathf.Sin(t0) * hAmp);
-        body.localRotation = Quaternion.Euler(0f, 0f, bodyBaseLocalZ + Mathf.Sin(t0) * rotDeg);
-
-        ringZDelta = Mathf.Sin(t0) * ringDeg;
-        ApplyRingPose(ringZDelta);
-
-        idleSeq = DOTween.Sequence()
-            .SetTarget(this)
-            .SetUpdate(useUnscaledTime);
-
-        // Body hover (sin 기반: 튐 없음)
-        float time = t0;
-        Tween hoverTween = DOTween.To(() => time, v =>
-        {
-            time = v;
-            var p = basePos;
-            p.y += Mathf.Sin(time) * hAmp;
-            body.localPosition = p;
-        }, t0 + Mathf.PI * 2f, hDur)
-        .SetEase(Ease.Linear)
-        .SetLoops(-1, LoopType.Restart);
-
-        // Body rotate
-        Tween bodyRotTween = body.DOLocalRotate(new Vector3(0f, 0f, bodyBaseLocalZ + rotDeg), rotDur * 0.5f)
-            .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
-
-        // Rings wobble (back/front 동일 delta)
-        Tween ringTween = DOTween.To(() => ringZDelta, v =>
-        {
-            ringZDelta = v;
-            ApplyRingPose(ringZDelta);
-        }, ringDeg, ringDur * 0.5f)
-        .SetEase(Ease.InOutSine)
-        .SetLoops(-1, LoopType.Yoyo);
-
-        idleSeq.Join(hoverTween);
-        idleSeq.Join(bodyRotTween);
-        idleSeq.Join(ringTween);
-
-        idleSeq.Play();
+        ApplyRing(backRings, backRingBasePos, backRingBaseZ, ringZDelta, ringYDelta);
+        ApplyRing(frontRings, frontRingBasePos, frontRingBaseZ, ringZDelta, ringYDelta);
     }
 
-
-
-    public void StopIdle(bool resetPose)
+    private void ApplyRing(Transform ring, Vector3 basePos, float baseZ, float zDelta, float yDelta)
     {
-        if (idleSeq != null && idleSeq.IsActive())
-        {
-            idleSeq.Kill();
-            idleSeq = null;
-        }
+        if (ring == null) return;
 
-        // StartIdle에서 SetTarget(this) 걸었으니 안전하게 this 타겟만 정리
-        DOTween.Kill(this);
+        var p = basePos;
+        p.y += yDelta;
+        ring.localPosition = p;
 
-        if (!resetPose) return;
-
-        if (body != null)
-        {
-            body.localPosition = bodyBaseLocalPos;
-            body.localRotation = Quaternion.Euler(0f, 0f, bodyBaseLocalZ);
-        }
-
-        if (backRings != null)
-            backRings.localRotation = Quaternion.Euler(0f, 0f, backRingBaseLocalZ);
-
-        if (frontRings != null)
-            frontRings.localRotation = Quaternion.Euler(0f, 0f, frontRingBaseLocalZ);
+        ring.localRotation = Quaternion.Euler(0f, 0f, baseZ + zDelta);
     }
-
-
-    private void ApplyRingPose(float zDelta)
-    {
-        if (backRings != null)
-            backRings.localRotation = Quaternion.Euler(0f, 0f, backRingBaseLocalZ + zDelta);
-
-        if (frontRings != null)
-            frontRings.localRotation = Quaternion.Euler(0f, 0f, frontRingBaseLocalZ + zDelta);
-    }
-
 
 
     public void SetFace(FaceExpression expr)

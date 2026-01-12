@@ -6,15 +6,20 @@ using UnityEngine.EventSystems;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
+using Image = UnityEngine.UI.Image;
+
 public class DeckSystem : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [Header("Main Binding")]
-    public GameObject drawEffectPrefab = null;
+    public GameObject impactEffectPrefab = null;
+    [Space]
     public RectTransform wealthyRect = null;
     public RectTransform cardBackRect = null;
+
     private RectTransform topRect = null;
     private UIView_CardSystem cardSystem = null;
+    private ParticleSystem impactParticle = null;
 
     [Header("Effect Location Settings")]
     [SerializeField] private List<RectTransform> drawPathPoints = new();
@@ -55,9 +60,6 @@ public class DeckSystem : MonoBehaviour,
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
     [Header("CardBack Event for Drawed")]
-    [SerializeField] private Vector2 drawedCardBackPunchPosMulti = Vector3.zero;
-    [SerializeField] private Vector3 drawedCardBackPunchScale = Vector3.zero;
-    [SerializeField] private Vector3 drawedCardBackPunchRot = Vector3.zero;
     [SerializeField] private Ease drawedCardBackEase = Ease.OutExpo;
 
     private Sequence wealthySeq = null;
@@ -67,9 +69,7 @@ public class DeckSystem : MonoBehaviour,
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
 
-    private Vector3 cardbackOriginPos = Vector3.zero;
     private Vector3 cardbackOriginScale = Vector3.zero;
-    private Quaternion cardbackOriginRot = Quaternion.identity;
 
     private bool bClickedEvent = false;
 
@@ -82,10 +82,10 @@ public class DeckSystem : MonoBehaviour,
 
         if (null != cardBackRect)
         {
-            cardbackOriginPos = cardBackRect.anchoredPosition;
             cardbackOriginScale = cardBackRect.localScale;
-            cardbackOriginRot = cardBackRect.rotation;
         }
+
+        impactParticle = impactEffectPrefab?.GetComponentInChildren<ParticleSystem>();
     }
 
     private void Start()
@@ -166,32 +166,30 @@ public class DeckSystem : MonoBehaviour,
 
     public void CardBackDrawedEffect()
     {
-        if (null == cardBackRect)
+        if (null == cardBackRect || null == impactParticle)
             return;
 
-        cardBackRect.anchoredPosition = cardbackOriginPos;
-        cardBackRect.localScale = cardbackOriginScale;
+        cardBackRect.eulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
+        cardBackRect.localScale = cardbackOriginScale * 0.85f;
 
         CancelPrevMotion(cardbackSeq);
 
         cardbackSeq = DOTween.Sequence();
 
-        float randPosX = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.x;
-        float randPosY = Random.Range(0.1f, 1f) * drawedCardBackPunchPosMulti.y;
-
-        Vector3 randomPos = new Vector3(randPosX, randPosY);
-
-        cardbackSeq.Append(cardBackRect.DOPunchAnchorPos(randomPos, drawDelay)
+        cardbackSeq.Append(cardBackRect.DORotate(Vector3.zero, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase)
             .OnComplete(() =>
             {
-                
+
             }));
 
-        cardbackSeq.Join(cardBackRect.DOPunchScale(drawedCardBackPunchScale, drawDelay)
+        cardbackSeq.Join(cardBackRect.DOScale(cardbackOriginScale, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase));
+
+        impactParticle.Stop();
+        impactParticle.Play();
     }
 
     private void EnterEvent()
@@ -255,6 +253,34 @@ public class DeckSystem : MonoBehaviour,
             }));
 
         cardSystem?.CallPannel(CurrentPannel.Deck);
+    }
+
+    public void InDeckFromGraveMotion()
+    {
+        if (null == cardBackRect || null == impactParticle)
+            return;
+
+        cardBackRect.eulerAngles = new Vector3(0f, 0f, Random.Range(-10f, 10f));
+        cardBackRect.localScale = cardbackOriginScale * 0.85f;
+
+        CancelPrevMotion(cardbackSeq);
+
+        cardbackSeq = DOTween.Sequence();
+
+        cardbackSeq.Append(cardBackRect.DORotate(Vector3.zero, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase)
+            .OnComplete(() =>
+            {
+
+            }));
+
+        cardbackSeq.Join(cardBackRect.DOScale(cardbackOriginScale, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase));
+
+        impactParticle.Stop();
+        impactParticle.Play();
     }
 
     public void OnPointerDown(PointerEventData _eventData)

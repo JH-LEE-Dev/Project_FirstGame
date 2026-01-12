@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
+
+using Image = UnityEngine.UI.Image;
 
 public class GraveyardSystem : MonoBehaviour
     , IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    private RectTransform visualRect = null;
+    private RectTransform topRect = null;
+    public RectTransform visualRect = null;
+    private Image visualImage = null;
     private UIView_CardSystem cardSystem = null;
 
     private Sequence activeSeq = null;
+    private Sequence viualSeq = null;
 
     [Header("Effect Location Settings")]
     [SerializeField] private List<RectTransform> drawPathPoints = new();
@@ -42,17 +48,33 @@ public class GraveyardSystem : MonoBehaviour
     [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
+    [Header("visualEvent Settings")]
+    [SerializeField] private Vector2 visualPunchPos = Vector2.zero;
+    [SerializeField] private Vector3 visualPunchScale = Vector3.zero;
+    [SerializeField] private Ease visualEventEase = Ease.OutExpo;
+
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
 
+    private Vector3 originVisualPos = Vector3.zero;
+    private Vector3 originVisualScale = Vector3.one;
+
     private bool bClickedEvent = false;
+    private int currentMoveCnt = 0;
 
     private void Awake()
     {
-        visualRect = GetComponent<RectTransform>();
+        topRect = GetComponent<RectTransform>();
 
         originScale = transform.localScale;
         originQuat = transform.localRotation;
+
+        if (visualRect)
+        {
+            visualImage = visualRect.GetComponent<Image>();
+            originVisualPos = visualRect.localPosition;
+            originVisualScale = visualRect.localScale;
+        }
     }
 
     public void Init(UIView_CardSystem _cardSystem)
@@ -86,7 +108,7 @@ public class GraveyardSystem : MonoBehaviour
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(visualRect.DOScale(originScale * enterEventSizeMulti, enterEventDuration)
+        activeSeq.Append(topRect.DOScale(originScale * enterEventSizeMulti, enterEventDuration)
             .SetUpdate(false)
             .SetEase(enterEventEase));
     }
@@ -96,13 +118,13 @@ public class GraveyardSystem : MonoBehaviour
         if (bClickedEvent)
             return;
 
-        visualRect.localRotation = originQuat;
+        topRect.localRotation = originQuat;
 
         CancelPrevMotion(activeSeq);
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(visualRect.DOScale(originScale, exitEventDuration)
+        activeSeq.Append(topRect.DOScale(originScale, exitEventDuration)
             .SetUpdate(false)
             .SetEase(exitEventEase));
     }
@@ -113,7 +135,7 @@ public class GraveyardSystem : MonoBehaviour
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(visualRect.DOScale(originScale, downEventDuration)
+        activeSeq.Append(topRect.DOScale(originScale, downEventDuration)
             .SetUpdate(false)
             .SetEase(downEventEase));
     }
@@ -122,17 +144,17 @@ public class GraveyardSystem : MonoBehaviour
     {
         bClickedEvent = true;
 
-        visualRect.localRotation = originQuat;
+        topRect.localRotation = originQuat;
 
         CancelPrevMotion(activeSeq);
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(visualRect.DOScale(originScale, upEventDuration)
+        activeSeq.Append(topRect.DOScale(originScale, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase));
 
-        activeSeq.Join(visualRect.DOPunchRotation(upEventPunchPower, upEventDuration)
+        activeSeq.Join(topRect.DOPunchRotation(upEventPunchPower, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase)
             .OnComplete(() =>
@@ -148,8 +170,11 @@ public class GraveyardSystem : MonoBehaviour
         if (null == cardSystem)
             return;
 
+        MoveToDeckTopRect();
+
         // 묘지 > 덱 타이밍에 패널이 묘지 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
+        currentMoveCnt = spawningCount;
 
         RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
         for (int i = 0; i < spawningCount; i++)
@@ -173,6 +198,80 @@ public class GraveyardSystem : MonoBehaviour
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
             script.PlayingEventforWormHole(i, toDeckDelay, toDeckDuration, toDeckEase, pathPoints);
         }
+    }
+
+    public void CardMoveToDeckMotion()
+    {
+        if (null == visualRect)
+            return;
+
+        bool update = false;
+
+        visualRect.anchoredPosition = originVisualPos;
+        visualRect.localScale = originVisualScale;
+
+        CancelPrevMotion(viualSeq);
+
+        viualSeq = DOTween.Sequence();
+
+        float randPosX = Random.Range(-1f, -0.1f) * visualPunchPos.x;
+        float randPosY = Random.Range(-1f, -1f) * visualPunchPos.y;
+
+        Vector3 randomPos = new Vector3(randPosX, randPosY);
+
+        viualSeq.Append(visualRect.DOPunchAnchorPos(randomPos, toDeckDelay)
+            .SetUpdate(update)
+            .SetEase(visualEventEase)
+            .OnComplete(() =>
+            {
+
+            }));
+
+        viualSeq.Join(visualRect.DOPunchScale(visualPunchScale, toDeckDelay)
+            .SetUpdate(update)
+            .SetEase(visualEventEase));
+
+        visualImage.DOComplete();
+
+        Color red = visualImage.color;
+        red.g -= 0.5f / currentMoveCnt;
+
+        visualImage.DOColor(red, toDeckDelay)
+            .SetUpdate(update)
+            .SetEase(visualEventEase);
+    }
+
+    public void MoveToDeckFinishMotion(int idx)
+    {
+        if (currentMoveCnt - 1 != idx)
+            return;
+
+        visualImage.DOComplete();
+
+        visualImage.DOColor(Color.white, 1.5f)
+            .SetUpdate(false)
+            .SetEase(Ease.Linear);
+
+        CancelPrevMotion(activeSeq);
+
+        activeSeq = DOTween.Sequence();
+
+        activeSeq.Append(topRect.DOScale(originScale, 1.5f)
+            .SetUpdate(false)
+            .SetEase(Ease.OutCubic));
+    }
+
+    private void MoveToDeckTopRect()
+    {
+        float totalDuration = toDeckDelay * currentMoveCnt;
+
+        CancelPrevMotion(activeSeq);
+
+        activeSeq = DOTween.Sequence();
+
+        activeSeq.Append(topRect.DOScale(originScale * 1.2f, 0.1f)
+            .SetUpdate(false)
+            .SetEase(Ease.OutCubic));
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)
