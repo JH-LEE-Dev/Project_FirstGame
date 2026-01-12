@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.Pool;
+using static UnityEngine.Rendering.GPUSort;
 
 
 public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHandler,
@@ -102,12 +103,24 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     public void CardPileDraw(int amount)
     {
-        using var temp = new RentalScope<CardDataInstance>(amount);
+        int restDrawCnt = 0;
 
-        Span<CardDataInstance> writeBuffer = temp.Span;
+        if (deckPile.Count < amount)
+        {
+            restDrawCnt = amount - deckPile.Count;
+            amount = deckPile.Count;
+        }
+
+        using var rentalBuffer = new RentalScope<CardDataInstance>(amount);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < amount; ++i)
         {
+            if (deckPile.Count == 0)
+            {
+                break;
+            }
+
             var card = deckPile[deckPile.Count - 1];
             deckPile.RemoveAt(deckPile.Count - 1);
 
@@ -115,7 +128,19 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
             writeBuffer[i] = card;
         }
 
-        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.Draw, writeBuffer);
+        CreateUICommand(JobType_CardSystemUI.Draw, rentalBuffer);
+
+        if (deckPile.Count == 0 && gravePile.Count != 0)
+        {
+            GraveToDeckMove();
+            CardPileDraw(restDrawCnt);
+        }
+    }
+
+    private void CreateUICommand(JobType_CardSystemUI jobType, RentalScope<CardDataInstance> cardsBuffer)
+    {
+        cardUICommandSystem.CreateCommand(jobType, cardsBuffer.Span);
+        cardsBuffer.Dispose();
     }
 
     private void StartCardPileDraw(int amount)
@@ -188,8 +213,11 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         handPile.Clear();
     }
 
-    private void GraveToDeckMove(int moveAmount)
+    private void GraveToDeckMove()
     {
+        using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
         for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
@@ -197,6 +225,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
         }
 
         gravePile.Clear();
+
+        CreateUICommand(JobType_CardSystemUI.GraveToDeck, rentalBuffer);
     }
 
     public void StartCardDrawTurn(int waveIdx)

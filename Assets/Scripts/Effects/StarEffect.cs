@@ -28,12 +28,6 @@ public class StarEffect : MonoBehaviour
         trail = gameObject.GetComponentInChildren<TrailRenderer>();
     }
 
-    public void AttachTo(Transform _target)
-    {
-        transform.position = _target.position;
-        transform.SetParent(_target);
-    }
-
     public void ReturnToOrigin() => transform.SetParent(originParent);
 
     public void PlayingEventforDeck(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
@@ -55,7 +49,18 @@ public class StarEffect : MonoBehaviour
 
     public void PlayingEventforWormHole(int _idx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
-        ExecuteMotionSeuence(_idx, _spawnDelay, _drawDuration, _drawEase, points);
+        Action deckStartedEvent = () =>
+        {
+
+        };
+
+        Action deckCompoleteEvent = () =>
+        {
+            UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
+            cardSystem?.CallGraveToDeckFinished(gameObject);
+        };
+
+       ExecuteMotionSeuence(_idx, _spawnDelay, _drawDuration, _drawEase, points, deckStartedEvent, deckCompoleteEvent);
     }
 
     private void ExecuteMotionSeuence(int _idx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points,

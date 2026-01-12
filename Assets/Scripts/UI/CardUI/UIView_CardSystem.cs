@@ -36,13 +36,6 @@ public class UIView_CardSystem : UIView
     public DeckSystem DeckSystem => deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
-    // 덱
-    [Header("Deck Settings")]
-    [SerializeField] private List<RectTransform> drawPathPoints = new();
-    [SerializeField] private RectTransform drawEndPoint = null;
-    public List<RectTransform> DrawPathPoints { get { return drawPathPoints; } }
-    //public RectTransform DrawEndPoint { get { return drawEndPoint; } }
-
     // 묘지
     [Header("Graveyard Settings")]
     [SerializeField] private GraveyardSystem graveSystem = null;
@@ -168,11 +161,13 @@ public class UIView_CardSystem : UIView
     public void GetWormholeCards()
     {
         // 추후 구현
+        ActivatePannel(cardSystemProvider.graveCards);
     }
 
     public void GetExtinctionCards()
     {
         // 추후 구현
+        //ActivatePannel(cardSystemProvider);
     }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
@@ -253,7 +248,12 @@ public class UIView_CardSystem : UIView
             WorkingBlock = false;
 
         handSystem?.ProcessDraw(_endPos, _data);
-        poolingSystem?.StarEffects.Release(_performer);
+        poolingSystem?.StarEffects?.Release(_performer);
+    }
+
+    public void CallGraveToDeckFinished(GameObject _performer)
+    {
+        poolingSystem?.StarEffects?.Release(_performer);
     }
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
@@ -266,7 +266,18 @@ public class UIView_CardSystem : UIView
         return deckSystem.transform.position;
     }
 
-    public GameObject GetStarPerformerFromPool() => poolingSystem?.StarEffects.Get();
+    public GameObject GetStarPerformerFromPool(Transform attachingObj)
+    {
+        GameObject getObj = poolingSystem?.StarEffects.Get();
+
+        if (null != getObj)
+        {
+            getObj.transform.SetParent(attachingObj);
+            getObj.transform.position = attachingObj.position;
+        }
+
+        return getObj;
+    }
     /////////////////////////////////////////////////
 
     private void SetText()
@@ -337,34 +348,41 @@ public class UIView_CardSystem : UIView
     {
         uiJobQueue = _jobQueue;
 
-        // 시작 대기
-        //await Awaitable.WaitForSecondsAsync(2f);
+        float turnWaitSecond = 2f;
 
         int size = _jobQueue.Count;
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
+
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
             {
                 case JobType_CardSystemUI.Draw: 
-                    DrawedCardsFromTurn(currentJob.cards);
-                    await Awaitable.WaitForSecondsAsync(2f);
+
+                    DrawingCards(currentJob.cards);
+
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.GraveToDeck:
-                    await Awaitable.WaitForSecondsAsync(2f);
+
+                    graveSystem?.CardMoveToDeckEffect(_jobQueue[i].cards.Count);
+
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.AdditionalDraw:
-                    DrawedCardsFromTurn(currentJob.cards);
-                    await Awaitable.WaitForSecondsAsync(2f);
+
+                    DrawingCards(currentJob.cards);
+
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 
                     AllCardReturnToPool(CardState.InHand);
-                    await Awaitable.WaitForSecondsAsync(2f);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 default: break;
@@ -374,7 +392,7 @@ public class UIView_CardSystem : UIView
         SetText();
     }
 
-    void DrawedCardsFromTurn(List<CardDataInstance> _datas)
+    void DrawingCards(List<CardDataInstance> _datas)
     {
         if (null == deckSystem)
             return;

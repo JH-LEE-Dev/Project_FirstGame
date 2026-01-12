@@ -16,6 +16,9 @@ public class DeckSystem : MonoBehaviour,
     private RectTransform topRect = null;
     private UIView_CardSystem cardSystem = null;
 
+    [Header("Effect Location Settings")]
+    [SerializeField] private List<RectTransform> drawPathPoints = new();
+
     [Header("Wealthy Settings")]
     [SerializeField] private float wealthyDuration = 1f;
     [SerializeField] private float wealthyAngle = 5f;
@@ -48,7 +51,7 @@ public class DeckSystem : MonoBehaviour,
 
     [Header("Up Event Settings")]
     [SerializeField] private float upEventDuration = 0.4f;
-    [SerializeField] private Vector3 upEventPunchPower = Vector3.zero;
+    [SerializeField] private Vector3 upEventStartRot = Vector3.zero;
     [SerializeField] private Ease upEventEase = Ease.OutExpo;
 
     [Header("CardBack Event for Drawed")]
@@ -126,17 +129,15 @@ public class DeckSystem : MonoBehaviour,
         // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
 
-        RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
+        RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
 
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
-            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
             StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
-
-            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
@@ -235,7 +236,7 @@ public class DeckSystem : MonoBehaviour,
     {
         bClickedEvent = true;
 
-        topRect.localRotation = originQuat;
+        topRect.localEulerAngles = upEventStartRot;
 
         CancelPrevMotion(activeSeq);
 
@@ -245,10 +246,10 @@ public class DeckSystem : MonoBehaviour,
             .SetUpdate(false)
             .SetEase(upEventEase));
 
-        activeSeq.Join(topRect.DOPunchRotation(upEventPunchPower, upEventDuration)
+        activeSeq.Join(topRect.DORotate(Vector3.zero, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase)
-            .OnComplete(()=>
+            .OnComplete(() =>
             {
                 bClickedEvent = false;
             }));

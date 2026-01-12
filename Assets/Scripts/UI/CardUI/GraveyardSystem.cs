@@ -12,8 +12,11 @@ public class GraveyardSystem : MonoBehaviour
 
     private Sequence activeSeq = null;
 
+    [Header("Effect Location Settings")]
+    [SerializeField] private List<RectTransform> drawPathPoints = new();
+
     [Header("toDeck Effect Settings")]
-    [SerializeField] private float toDeckDelay = 0.15f;
+    [SerializeField] private float toDeckDelay = 0.02f;
     [SerializeField] private float toDeckDuration = 1f;
     [SerializeField] private float toDeckFirstPointDist = 2f;
     [Space]
@@ -140,43 +143,34 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem?.CallPannel(CurrentPannel.Grave);
     }
 
-    public void CardDrawEffect(List<CardDataInstance> dataList)
+    public void CardMoveToDeckEffect(int spawningCount)
     {
         if (null == cardSystem)
             return;
 
-        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
-        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
+        // 묘지 > 덱 타이밍에 패널이 묘지 타입으로 열려 있다면 강제로 끔
+        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
 
-        RectTransform midPoint = cardSystem.DrawPathPoints[Random.Range(0, cardSystem.DrawPathPoints.Count - 1)];
-
-        int currentCount = dataList.Count;
-        for (int i = 0; i < currentCount; i++)
+        RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
+        for (int i = 0; i < spawningCount; i++)
         {
-            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
             StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
-
-            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetDeckWorldPos();
 
             // mid
             if (bMidPointRandom)
-            {
-                midPointPos.x += Random.Range(-1f, 1f) * toDeckMidPointPower;
-                midPointPos.y += Random.Range(-0.35f, 0.35f) * toDeckMidPointPower;
-            }
+                midPointPos.y += Random.Range(-1f, 1f) * toDeckMidPointPower;
 
             // first
             Vector3 firstPointPos = midPointPos;
-            firstPointPos.x += toDeckFirstPointDist;
+            firstPointPos.x -= toDeckFirstPointDist;
 
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
-
-            script.CardDataInstance = dataList[i];
             script.PlayingEventforWormHole(i, toDeckDelay, toDeckDuration, toDeckEase, pathPoints);
         }
     }
