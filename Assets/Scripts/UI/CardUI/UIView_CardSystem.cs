@@ -341,16 +341,23 @@ public class UIView_CardSystem : UIView
             switch(currenType)
             {
                 case JobType_CardSystemUI.Draw: 
-                    DrawedCardsFromTurn(currentJob.cards);
+
+                    DrawingCards(currentJob.cards);
+
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.GraveToDeck:
+
+                    graveSystem?.CardMoveToDeckEffect(currentJob.cards);
+
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.AdditionalDraw:
-                    DrawedCardsFromTurn(currentJob.cards);
+
+                    DrawingCards(currentJob.cards);
+
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
@@ -366,7 +373,7 @@ public class UIView_CardSystem : UIView
         SetText();
     }
 
-    void DrawedCardsFromTurn(List<CardDataInstance> _datas)
+    void DrawingCards(List<CardDataInstance> _datas)
     {
         if (null == deckSystem)
             return;

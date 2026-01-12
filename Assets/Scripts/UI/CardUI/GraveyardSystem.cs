@@ -143,7 +143,7 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem?.CallPannel(CurrentPannel.Grave);
     }
 
-    public void CardDrawEffect(List<CardDataInstance> dataList)
+    public void CardMoveToDeckEffect(List<CardDataInstance> dataList)
     {
         if (null == cardSystem)
             return;

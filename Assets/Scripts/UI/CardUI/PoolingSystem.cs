@@ -72,7 +72,7 @@ public class PoolingSystem : MonoBehaviour
 
     private void StarPooling()
     {
-        int maxPool = 30;
+        int maxPool = 50;
 
         starEffects = new ObjectPool<GameObject>(
             createFunc: CreateStarEffect,
