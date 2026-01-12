@@ -6,15 +6,20 @@ using UnityEngine.EventSystems;
 using UnityEngine.Pool;
 using UnityEngine.UI;
 
+using Image = UnityEngine.UI.Image;
+
 public class DeckSystem : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [Header("Main Binding")]
-    public GameObject drawEffectPrefab = null;
+    public GameObject impactEffectPrefab = null;
+    [Space]
     public RectTransform wealthyRect = null;
     public RectTransform cardBackRect = null;
+
     private RectTransform topRect = null;
     private UIView_CardSystem cardSystem = null;
+    private ParticleSystem impactParticle = null;
 
     [Header("Effect Location Settings")]
     [SerializeField] private List<RectTransform> drawPathPoints = new();
@@ -86,6 +91,8 @@ public class DeckSystem : MonoBehaviour,
             cardbackOriginScale = cardBackRect.localScale;
             cardbackOriginRot = cardBackRect.rotation;
         }
+
+        impactParticle = impactEffectPrefab?.GetComponentInChildren<ParticleSystem>();
     }
 
     private void Start()
@@ -192,6 +199,12 @@ public class DeckSystem : MonoBehaviour,
         cardbackSeq.Join(cardBackRect.DOPunchScale(drawedCardBackPunchScale, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase));
+        
+        if (null != impactParticle)
+        {
+            impactParticle.Stop();
+            impactParticle.Play();
+        }
     }
 
     private void EnterEvent()
@@ -255,6 +268,39 @@ public class DeckSystem : MonoBehaviour,
             }));
 
         cardSystem?.CallPannel(CurrentPannel.Deck);
+    }
+
+    public void InDeckFromGraveMotion()
+    {
+        if (null == cardBackRect || null == impactParticle)
+            return;
+
+        cardBackRect.anchoredPosition = cardbackOriginPos;
+        cardBackRect.localScale = cardbackOriginScale;
+
+        CancelPrevMotion(cardbackSeq);
+
+        cardbackSeq = DOTween.Sequence();
+
+        float randPosX = Random.Range(-1f, 1f) * drawedCardBackPunchPosMulti.x;
+        float randPosY = Random.Range(-1f, 1f) * drawedCardBackPunchPosMulti.y;
+
+        Vector3 randomPos = new Vector3(randPosX, randPosY);
+
+        cardbackSeq.Append(cardBackRect.DOPunchAnchorPos(randomPos, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase)
+            .OnComplete(() =>
+            {
+
+            }));
+
+        cardbackSeq.Join(cardBackRect.DOPunchScale(drawedCardBackPunchScale, drawDelay)
+            .SetUpdate(false)
+            .SetEase(drawedCardBackEase));
+
+        impactParticle.Stop();
+        impactParticle.Play();
     }
 
     public void OnPointerDown(PointerEventData _eventData)

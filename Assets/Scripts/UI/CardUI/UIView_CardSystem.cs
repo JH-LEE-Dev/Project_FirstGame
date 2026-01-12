@@ -251,12 +251,19 @@ public class UIView_CardSystem : UIView
         poolingSystem?.StarEffects?.Release(_performer);
     }
 
-    public void CallGraveToDeckFinished(GameObject _performer)
+    public void CallGraveToDeckFinished(int currIdx, GameObject _performer)
     {
+        // 풀링한테 지워달라고 요청
         poolingSystem?.StarEffects?.Release(_performer);
+        // 덱 받은 모션 재생
+        deckSystem?.InDeckFromGraveMotion();
+
+        // 현재 받은 인덱스가 마지막 주자 인덱스랑 같으면 마무리 모션
+        graveSystem?.MoveToDeckFinishMotion(currIdx);
     }
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
+    public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
 
     public Vector3 GetDeckWorldPos()
     {
