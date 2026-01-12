@@ -246,7 +246,12 @@ public class UIView_CardSystem : UIView
             WorkingBlock = false;
 
         handSystem?.ProcessDraw(_endPos, _data);
-        poolingSystem?.StarEffects.Release(_performer);
+        poolingSystem?.StarEffects?.Release(_performer);
+    }
+
+    public void CallGraveToDeckFinished(GameObject _performer)
+    {
+        poolingSystem?.StarEffects?.Release(_performer);
     }
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
@@ -259,9 +264,15 @@ public class UIView_CardSystem : UIView
         return deckSystem.transform.position;
     }
 
-    public GameObject GetStarPerformerFromPool()
+    public GameObject GetStarPerformerFromPool(Transform attachingObj)
     {
         GameObject getObj = poolingSystem?.StarEffects.Get();
+
+        if (null != getObj)
+        {
+            getObj.transform.SetParent(attachingObj);
+            getObj.transform.position = attachingObj.position;
+        }
 
         return getObj;
     }
@@ -355,7 +366,7 @@ public class UIView_CardSystem : UIView
 
                 case JobType_CardSystemUI.GraveToDeck:
 
-                    graveSystem?.CardMoveToDeckEffect(currentJob.cards);
+                    graveSystem?.CardMoveToDeckEffect(_jobQueue[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;

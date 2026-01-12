@@ -128,11 +128,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GraveyardSystem
   drawPathPoints:
   - {fileID: 7395640516585700209}
-  toDeckDelay: 0.15
-  toDeckDuration: 1
+  toDeckDelay: 0.07
+  toDeckDuration: 0.7
   toDeckFirstPointDist: 2
-  bMidPointRandom: 0
-  toDeckMidPointPower: 2
+  bMidPointRandom: 1
+  toDeckMidPointPower: 5
   toDeckEase: 6
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15

@@ -134,12 +134,10 @@ public class DeckSystem : MonoBehaviour,
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
-            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
             StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
-
-            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);

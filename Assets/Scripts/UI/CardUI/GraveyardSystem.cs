@@ -154,19 +154,17 @@ public class GraveyardSystem : MonoBehaviour
         RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
         for (int i = 0; i < spawningCount; i++)
         {
-            GameObject performer = cardSystem.GetStarPerformerFromPool();
+            GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
             StarEffect script = performer?.GetComponent<StarEffect>();
             if (null == script)
                 continue;
-
-            script.AttachTo(this.transform);
 
             Vector3 midPointPos = midPoint.position;
             Vector3 endPointPos = cardSystem.GetDeckWorldPos();
 
             // mid
             if (bMidPointRandom)
-                midPointPos.y += Random.Range(-0.35f, 0.35f) * toDeckMidPointPower;
+                midPointPos.y += Random.Range(-1f, 1f) * toDeckMidPointPower;
 
             // first
             Vector3 firstPointPos = midPointPos;
