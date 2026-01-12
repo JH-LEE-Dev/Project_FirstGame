@@ -24,7 +24,7 @@ public class CardMotion : MonoBehaviour
     private Vector3 originScale;
 
     [Header("Preview")]
-    [SerializeField] private float previewScale = 2.5f;
+    [SerializeField] private float previewScale = 2f;
     [SerializeField] private float previewMoveDuration = 0.3f;
     [SerializeField] private float previewScaleDuration = 0.3f;
     [SerializeField] private float previewEndScaleDur = 0.6f;
