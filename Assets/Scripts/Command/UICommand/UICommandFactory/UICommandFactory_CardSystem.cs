@@ -84,7 +84,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             currentSentBatch = batch;
     }
 
-    public void CreateJob_ToDeck()
+    public void CreateJob_ToDeck(ReadOnlySpan<CardDataInstance> toDeckCards)
     {
         List<Job_CardSystemUI> batch;
 
@@ -93,9 +93,17 @@ public class UICommandFactory_CardSystem : UICommandFactory
         else
             batch = currentSentBatch;
 
+        var toDeckList = cardListPool.Get();
+
+        for (int i = 0; i < toDeckCards.Length; ++i)
+        {
+            toDeckList.Add(toDeckCards[i]);
+        }
+
         batch.Add(new Job_CardSystemUI
         {
-            jobType = JobType_CardSystemUI.GraveToDeck
+            jobType = JobType_CardSystemUI.GraveToDeck,
+            cards = toDeckList
         });
 
         if (currentSentBatch == null)

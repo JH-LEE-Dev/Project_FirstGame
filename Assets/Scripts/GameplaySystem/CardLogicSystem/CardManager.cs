@@ -200,6 +200,10 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
     private void GraveToDeckMove()
     {
+        using var temp = new RentalScope<CardDataInstance>(gravePile.Count);
+
+        Span<CardDataInstance> writeBuffer = temp.Span;
+
         for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
@@ -208,7 +212,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardStrategyHand
 
         gravePile.Clear();
 
-        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.GraveToDeck);
+        cardUICommandSystem.CreateCommand(JobType_CardSystemUI.GraveToDeck, writeBuffer);
     }
 
     public void StartCardDrawTurn(int waveIdx)
