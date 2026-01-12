@@ -3,14 +3,11 @@ using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Strategy/Move/Enemy/Normal")]
-public class NormalEnemyMoveStrategy : MoveStrategy
+public class EnemyTempMoveStrategy : EnemyMoveStrategy
 {
     /// <summary>
     /// 구현 속성 존, ----------------------------------------
     /// </summary>
-    [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float accelTime = 0.2f;
-    [SerializeField] private float decelTime = 0.2f;
     [SerializeField] private float forceDelta = 1f;
 
     private Rigidbody2D rb;
@@ -20,43 +17,6 @@ public class NormalEnemyMoveStrategy : MoveStrategy
         unit = _unit;
 
         rb = unit.GetComponent<Rigidbody2D>();
-    }
-
-    //미구현. 신경 끄셈.
-    public override async Task AsyncMove(Vector2 direction)
-    {
-        direction.Normalize();
-
-        float accel = maxSpeed / accelTime;
-        float decel = maxSpeed / decelTime;
-
-        float speed = 0f;
-
-        while (speed < maxSpeed)
-        {
-            speed += accel * Time.fixedDeltaTime;
-            speed = Mathf.Min(speed, maxSpeed);
-
-            rb.linearVelocity = direction * speed;
-            await Task.Yield();
-        }
-
-        while (speed > 0f)
-        {
-            speed -= decel * Time.fixedDeltaTime;
-            speed = Mathf.Max(speed, 0f);
-
-            rb.linearVelocity = direction * speed;
-            await Task.Yield();
-        }
-
-        rb.linearVelocity = Vector2.zero;
-    }
-
-    //캐릭터 전용 함수. 신경 끄셈.
-    public override void Move(Vector2 direction)
-    {
-        return;
     }
 
     //RigidBody에 Impulse를 적용하여 움직이는 함수임, 매 프레임 호출이 아니라

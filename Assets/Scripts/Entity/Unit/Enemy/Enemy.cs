@@ -8,7 +8,7 @@ public class Enemy : Unit,IEnemyData
     [SerializeField] private LayerMask gravityLayerMask;
     private EnemyTypeData enemyTypeData;
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
-
+    private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;
 
     /// <summary>
@@ -29,12 +29,14 @@ public class Enemy : Unit,IEnemyData
         base.Awake();
 
         combatComponent = GetComponent<ECombatComponent>();
+        moveComponent = GetComponent<EMoveComponent>();
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
         base.Initialize(_inputManager, _gameServiceLocator);
+        moveComponent.Initialize(ctx);
 
         enemyTypeData = _enemyTypeData;
 
@@ -77,7 +79,7 @@ public class Enemy : Unit,IEnemyData
     }
 
     //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
-    public override void OnMove()
+    public void OnMove()
     {
         moveComponent.ApplyImpulse();
     }

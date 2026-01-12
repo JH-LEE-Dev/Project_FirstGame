@@ -103,7 +103,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
         }
     }
 
-    public void CardPileDraw(int amount)
+    public void CardPileDraw(int amount, bool bAdditional)
     {
         int restDrawCnt = 0;
 
@@ -130,12 +130,15 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
             writeBuffer[i] = card;
         }
 
-        CreateUICommand(JobType_CardSystemUI.Draw, rentalBuffer);
+        if (bAdditional == false)
+            CreateUICommand(JobType_CardSystemUI.Draw, rentalBuffer);
+        else
+            CreateUICommand(JobType_CardSystemUI.AdditionalDraw, rentalBuffer);
 
         if (deckPile.Count == 0 && gravePile.Count != 0)
         {
             GraveToDeckMove();
-            CardPileDraw(restDrawCnt);
+            CardPileDraw(restDrawCnt, false);
         }
     }
 
@@ -147,7 +150,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     private void StartCardPileDraw(int amount)
     {
-        CardPileDraw(amount);
+        CardPileDraw(amount, false);
 
         cardUICommandSystem.DispatchCommand();
         CardDrawFinishedEvent?.Invoke();
@@ -155,11 +158,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     private void CardAdditionalPileDraw(int amount)
     {
-        CardPileDraw(amount);
-        Debug.Log(amount);
-
-        cardUICommandSystem.DispatchCommand();
-        CardDrawFinishedEvent?.Invoke();
+        CardPileDraw(amount, true);
     }
 
     public void CardUsed(CardDataInstance usedCard)
@@ -330,7 +329,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
     {
         ExecuteSystemAction_AfterAttack();
 
-        if(CheckRemainingAttacks() == true)
+        if (CheckRemainingAttacks() == true)
         {
             HandToGrave();
             gameFlowController.PlayerTurnIsFinished();

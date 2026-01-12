@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PathLine : MonoBehaviour
+public class OrbitPathSegment : MonoBehaviour
 {
 
     private SpriteRenderer sr;

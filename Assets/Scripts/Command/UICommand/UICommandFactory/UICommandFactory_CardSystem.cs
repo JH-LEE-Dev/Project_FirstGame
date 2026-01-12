@@ -32,7 +32,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             maxSize: 10
         );
 
-    public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards)
+    public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards, bool bAdditional)
     {
         List<Job_CardSystemUI> batch;
 
@@ -48,11 +48,18 @@ public class UICommandFactory_CardSystem : UICommandFactory
             drawList.Add(drawCards[i]);
         }
 
-        batch.Add(new Job_CardSystemUI
-        {
-            jobType = JobType_CardSystemUI.Draw,
-            cards = drawList
-        });
+        if (bAdditional == false)
+            batch.Add(new Job_CardSystemUI
+            {
+                jobType = JobType_CardSystemUI.Draw,
+                cards = drawList
+            });
+        else
+            batch.Add(new Job_CardSystemUI
+            {
+                jobType = JobType_CardSystemUI.AdditionalDraw,
+                cards = drawList
+            });
 
         if (currentSentBatch == null)
             currentSentBatch = batch;

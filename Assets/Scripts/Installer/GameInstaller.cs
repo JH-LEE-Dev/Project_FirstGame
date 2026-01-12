@@ -15,6 +15,7 @@ public class GameInstaller : MonoBehaviour
     private CardManager cardManager;
     private CardEffectCommandManager cardEffectCommandManager;
     private UnitLogicSystem unitLogicSystem;
+    private EnvironmentManager environmentManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -30,12 +31,13 @@ public class GameInstaller : MonoBehaviour
         cardManager = GetComponent<CardManager>();
         cardEffectCommandManager = GetComponent<CardEffectCommandManager>();
         unitLogicSystem = GetComponent<UnitLogicSystem>();
+        environmentManager = GetComponentInChildren<EnvironmentManager>();
 
         waveManager.Initialize(waveDatabase);
         gameServiceLocator.Initialize(cameraController, gameController, waveManager);
         gameController.Initialize(waveManager, inputManager, cardManager);
         unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
-            gameController,unitLogicSystem);
+            gameController,unitLogicSystem,environmentManager);
         cardManager.Initialize(unitLogicSystem,gameController,cardUICommandSystem);
 
         BindEvent(cardManager,unitLogicSystem, cardEffectCommandManager);

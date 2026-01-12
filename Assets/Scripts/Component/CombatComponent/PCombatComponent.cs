@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CombatComponent : EntityComponent, ICombatEffectReceiver
+public class PCombatComponent : EntityComponent, ICombatEffectReceiver
 {
     /// <summary>
     /// 시스템 속성 존. -----------------------------------------

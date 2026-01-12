@@ -22,6 +22,7 @@ public class UnitSpawner : MonoBehaviour
     private ICardSystemActions cardSystemActions;
     private IGameFlowProvider gameFlowProvider;
     private IUnitLogicSystemActions unitLogicSystemActions;
+    private IOrbitPathProvider orbirPathProvider;
 
     //내부 의존성
     private GameRuleEventController gameRuleEventController;
@@ -46,7 +47,7 @@ public class UnitSpawner : MonoBehaviour
     public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions, 
         GameServiceLocator _gameServiceLocator,ICardSystemEvent _cardSystemEvent,
         ICardSystemActions _cardSystemActions,GameController _gameController,
-        UnitLogicSystem _unitLogicSystem)
+        UnitLogicSystem _unitLogicSystem,IOrbitPathProvider _orbitPathProvider)
     {
         inputManager = _inputManager;
         waveSystemActions = _waveSystemActions;
@@ -55,6 +56,7 @@ public class UnitSpawner : MonoBehaviour
         cardSystemActions = _cardSystemActions;
         gameFlowProvider = _gameController;
         unitLogicSystemActions = _unitLogicSystem;
+        orbirPathProvider = _orbitPathProvider;
 
         gameRuleEventController = new GameRuleEventController();
 
@@ -89,7 +91,7 @@ public class UnitSpawner : MonoBehaviour
 
         if (spawnedUnit != null)
         {
-            spawnedUnit.Initialize_Character(inputManager, gameServiceLocator);
+            spawnedUnit.Initialize_Character(inputManager,orbirPathProvider, gameServiceLocator);
             gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
             characterUnit = spawnedUnit;
         }

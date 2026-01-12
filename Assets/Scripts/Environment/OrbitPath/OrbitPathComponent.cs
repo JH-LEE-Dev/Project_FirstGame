@@ -3,36 +3,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PathManager : MonoBehaviour
+public class OrbitPathComponent : MonoBehaviour
 {
+    [Header("OrbitSettings")]
+    [SerializeField] private OrbitPathSettings orbitPathSettings;
+    [Space]
     [Header("Arc Definition")]
     [SerializeField] public Transform center;                   // 구 센터
     [SerializeField] public float radius = 8.9f;                // 반지름
     [SerializeField] public float startAngleDeg = 63f;          // 시작 각도(도)
     [SerializeField] public float endAngleDeg = 117f;           // 끝 각도(도)
-
+    [Space]
     [Header("Dash Settings")]
     [SerializeField] private int pathLineCount = 20;
     [SerializeField] private float flowSpeedPerSec = 0.1f;
-
+    [Space]
     [Header("Ref")]
     [SerializeField] private GameObject pathLinePrefab;
-    private readonly List<PathLine> pathLines = new();
+    private readonly List<OrbitPathSegment> pathLines = new();
 
     // 전체 흐름 제어 변수
     private float globalT;
 
     private void Awake()
     {
+        Initialize();
+
         if (!center) center = transform;
 
         for (int i = 0; i < pathLineCount; i++)
         {
             var go = Instantiate(pathLinePrefab, center);
-            var line = go.GetComponent<PathLine>();
-            if (!line) line = go.AddComponent<PathLine>();
+            var line = go.GetComponent<OrbitPathSegment>();
+            if (!line) line = go.AddComponent<OrbitPathSegment>();
             pathLines.Add(line);
         }
+    }
+
+    public void Initialize()
+    {
+        if(orbitPathSettings == null)
+        {
+            Debug.LogWarning("OrbitPathComponent::Initialize -> orbitSettings is null!!");
+            return;
+        }
+
+        center = orbitPathSettings.center;
+        radius = orbitPathSettings.radius;
+        startAngleDeg = orbitPathSettings.startAngleDeg;
+        endAngleDeg = orbitPathSettings.endAngleDeg;
+        pathLineCount = orbitPathSettings.pathLineCount;
+        flowSpeedPerSec = orbitPathSettings.flowSpeedPerSec;
+        pathLinePrefab = orbitPathSettings.pathLinePrefab;
     }
 
     private void Update()

@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Threading.Tasks;
 
-[CreateAssetMenu(menuName = "Strategy/Move/Player")]
-public class PlayerMoveStrategy : MoveStrategy
+[CreateAssetMenu(menuName = "Strategy/Move/PlayerTempMove")]
+public class PlayerTempMoveStrategy : PlayerMoveStrategy
 {
     /// <summary>
     /// 속성 존. ---------------------------------------
@@ -24,29 +24,9 @@ public class PlayerMoveStrategy : MoveStrategy
     /// <summary>
     /// 구현 코드 존. --------------------------------------
     /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="acceleration"></param>
-    /// <param name="maxSpeed"></param>
-
-    //거의 Enemy 전용. 신경쓰지 마셈.
-    public override void Accelerate(Vector2 direction,float acceleration, float maxSpeed)
-    {
-    }
-
-    //거의 Enemy 전용, 신경 끄쇼.
-    public override void Move_Impulse(Vector2 direction, float power)
-    {
-        return;
-    }
-
-    //미구현. 신경 끄쇼.
-    public override async Task AsyncMove(Vector2 direction)
-    {
-        await Task.Yield();
-    }
 
     //이니셜라이즈 함수.
-    public override void Initialize(Unit _unit)
+    public override void Initialize(Unit _unit,IOrbitPathProvider orbitPathProvider)
     {
         unit = _unit;
         InitialPos = unit.transform.position;

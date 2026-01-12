@@ -1,15 +1,20 @@
 using System;
 using UnityEngine;
 
+
 public class Character : Unit, ICharacterData
 {
+    //외부 의존성
+    IOrbitPathProvider orbirPathProvider;
+
     /// <summary>
     /// 시스템 속성 존.----------------------------------
     /// </summary>
     public ICombatEffectReceiver combatEffectReceiver => combatComponent;
     public event Action PlayerAttackFinishedEvent;
 
-    private CombatComponent combatComponent;
+    private PMoveComponent moveComponent;
+    private PCombatComponent combatComponent;
 
     [Header("aim Object")]
     private LineRenderer lineRenderer;
@@ -41,13 +46,16 @@ public class Character : Unit, ICharacterData
     {
         base.Awake();
 
-        combatComponent = GetComponent<CombatComponent>();  
+        combatComponent = GetComponent<PCombatComponent>();
+        moveComponent = GetComponent<PMoveComponent>();
     }
 
-    public void Initialize_Character(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
+    public void Initialize_Character(InputManager _inputManager, IOrbitPathProvider _orbitPathProvider, GameServiceLocator _gameServiceLocator)
     {
-        base.Initialize(_inputManager, _gameServiceLocator);
+        orbirPathProvider = _orbitPathProvider;
 
+        base.Initialize(_inputManager, _gameServiceLocator);
+        moveComponent.Initialize(ctx,orbirPathProvider);
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
@@ -124,6 +132,20 @@ public class Character : Unit, ICharacterData
 
             temp = 0f;
         }
+    }
+
+    //입력 시스템에 의해서 호출되는 움직임 함수.
+    private void OnMove(Vector2 move)
+    {
+        //시스템에 의해 플레이어가 공격 가능한 턴/타이밍에만 실행되게 적용.
+        if (bCanAction == false)
+        {
+            return;
+        }
+
+        //키보드 <-, -> 에 따른 이동 방향임. Vector2(1,0) Vector2(-1,0)
+        moveDirection = move;
+        moveComponent.SetMoveDirection(moveDirection);
     }
 
     //데미지 입는 함수 - 미구현.

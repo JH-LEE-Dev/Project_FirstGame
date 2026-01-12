@@ -8,6 +8,5 @@ public class EffectCommand_DrawAgain : CardEffectSystemCommand
     public override void Execute(ICardEffectCommandHandler cardEffectCommandHandler)
     {
         cardEffectCommandHandler.DrawAgain(drawAmount);
-        cardEffectCommandHandler.AttackAgain();
     }
 }

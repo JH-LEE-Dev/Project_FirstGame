@@ -101,13 +101,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1816364501443836691}
-  - component: {fileID: 1555570957811930838}
   - component: {fileID: 1305217980410147217}
   - component: {fileID: -3339691030104686882}
   - component: {fileID: 3098091103372273114}
   - component: {fileID: -1553346184001684206}
   - component: {fileID: 7987698377607979650}
   - component: {fileID: 3703326560759357920}
+  - component: {fileID: -1876821194239025316}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -133,19 +133,6 @@ Transform:
   - {fileID: 3071258779691088719}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1555570957811930838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179902501351162253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0da6d58779c602245917bb24f3665448, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MoveComponent
-  moveStrategyAsset: {fileID: 11400000, guid: 71e48c02d0b65ea479261500870d6330, type: 2}
 --- !u!114 &1305217980410147217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,7 +236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c574d97ffd75ed147a85622accba197e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  health: 0
+  maxHealth: 0
+  currentHealth: 0
+  currentShield: 0
 --- !u!120 &3703326560759357920
 LineRenderer:
   serializedVersion: 3
@@ -360,6 +349,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &-1876821194239025316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179902501351162253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ad3a8fdd01c6b4ca946e18d168047a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PMoveComponent
+  moveStrategyAsset: {fileID: 11400000, guid: 71e48c02d0b65ea479261500870d6330, type: 2}
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
