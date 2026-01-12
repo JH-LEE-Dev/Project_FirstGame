@@ -330,8 +330,7 @@ public class UIView_CardSystem : UIView
     {
         uiJobQueue = _jobQueue;
 
-        // 시작 대기
-        //await Awaitable.WaitForSecondsAsync(2f);
+        float turnWaitSecond = 2f;
 
         int size = _jobQueue.Count;
         for (int i = 0; i < size; ++i)
@@ -343,21 +342,21 @@ public class UIView_CardSystem : UIView
             {
                 case JobType_CardSystemUI.Draw: 
                     DrawedCardsFromTurn(currentJob.cards);
-                    await Awaitable.WaitForSecondsAsync(2f);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.GraveToDeck:
-                    await Awaitable.WaitForSecondsAsync(2f);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 case JobType_CardSystemUI.AdditionalDraw:
                     DrawedCardsFromTurn(currentJob.cards);
-                    await Awaitable.WaitForSecondsAsync(2f);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 
                     AllCardReturnToPool(CardState.InHand);
-                    await Awaitable.WaitForSecondsAsync(2f);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
                 default: break;
