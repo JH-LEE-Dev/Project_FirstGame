@@ -346,7 +346,6 @@ public class UIView_CardSystem : UIView
 
     public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
     {
-        Debug.Log(_jobQueue.Count);
         uiJobQueue = _jobQueue;
 
         float turnWaitSecond = 2f;
@@ -355,6 +354,7 @@ public class UIView_CardSystem : UIView
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
+
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
