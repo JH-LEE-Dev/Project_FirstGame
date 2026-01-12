@@ -153,22 +153,6 @@ public class UIView_CardSystem : UIView
         if (graveSystem == null) return Vector3.zero;
         return graveSystem.GetComponent<RectTransform>().anchoredPosition;
     }
-    public void GetDeckCards()
-    {
-        ActivatePannel(cardSystemProvider.deckCards);
-    }
-
-    public void GetWormholeCards()
-    {
-        // 추후 구현
-        ActivatePannel(cardSystemProvider.graveCards);
-    }
-
-    public void GetExtinctionCards()
-    {
-        // 추후 구현
-        //ActivatePannel(cardSystemProvider);
-    }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
@@ -227,9 +211,11 @@ public class UIView_CardSystem : UIView
                 break;
 
             case CurrentPannel.Grave:
+                ActivatePannel(cardSystemProvider.graveCards);
                 break;
 
             case CurrentPannel.Extinction:
+                //ActivatePannel(cardSystemProvider.cards);
                 break;
         }
     }
@@ -345,7 +331,6 @@ public class UIView_CardSystem : UIView
         for (int i = 0; i < size; ++i)
         {
             Job_CardSystemUI currentJob = uiJobQueue[i];
-
             JobType_CardSystemUI currenType = currentJob.jobType;
 
             switch(currenType)
@@ -368,7 +353,7 @@ public class UIView_CardSystem : UIView
 
                     DrawingCards(currentJob.cards);
 
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    //await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 

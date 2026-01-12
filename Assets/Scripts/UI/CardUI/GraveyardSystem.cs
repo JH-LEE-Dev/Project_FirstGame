@@ -269,7 +269,7 @@ public class GraveyardSystem : MonoBehaviour
 
         activeSeq = DOTween.Sequence();
 
-        activeSeq.Append(topRect.DOScale(originScale * 1.15f, 0.1f)
+        activeSeq.Append(topRect.DOScale(originScale * 1.2f, 0.1f)
             .SetUpdate(false)
             .SetEase(Ease.OutCubic));
     }
