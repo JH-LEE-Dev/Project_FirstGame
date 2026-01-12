@@ -156,6 +156,7 @@ public class Character : Unit, ICharacterData
         //시스템에 의해 플레이어가 공격 가능한 턴/타이밍에만 실행되게 적용.
         if (bCanAction == false)
         {
+            moveComponent.SetMoveDirection(Vector2.zero);
             return;
         }
 

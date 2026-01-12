@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ad3a8fdd01c6b4ca946e18d168047a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PMoveComponent
-  moveStrategyAsset: {fileID: 11400000, guid: 71e48c02d0b65ea479261500870d6330, type: 2}
+  moveStrategyAsset: {fileID: 11400000, guid: f920ea7fa15a0e54ea089ad3d22eb19d, type: 2}
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
