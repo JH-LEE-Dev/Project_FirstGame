@@ -163,7 +163,7 @@ public class Unit : MonoBehaviour, IDamageable
     //체력 깎이는 함수.
     public virtual void TakeDamage(float damage)
     {
-        healthComponent.DecreaseHealth(damage);
+        healthComponent.TakeDamange(damage);
     }
 
     //RigidBody의 Damping 설정하는 함수. Character는 무관.

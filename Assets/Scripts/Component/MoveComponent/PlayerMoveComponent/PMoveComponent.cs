@@ -11,7 +11,7 @@ public class PMoveComponent : MoveComponent
     protected PlayerMoveStrategy moveStrategy;
 
     //외부 의존성
-    IOrbitPathProvider orbirPathProvider;
+    IOrbitPathProvider orbitPathProvider;
 
 
 
@@ -34,7 +34,7 @@ public class PMoveComponent : MoveComponent
     public void Initialize(UnitContext _ctx,IOrbitPathProvider _orbitPathProvider,IMoveSignalHandler _moveSignalHandler)
     {
         base.Initialize(_ctx, _moveSignalHandler);
-        orbirPathProvider = _orbitPathProvider; 
+        orbitPathProvider = _orbitPathProvider; 
     }
 
     protected override void Awake()
@@ -46,7 +46,7 @@ public class PMoveComponent : MoveComponent
 
     protected override void Start()
     {
-        moveStrategy.Initialize(ctx.unit,orbirPathProvider);
+        moveStrategy.Initialize(ctx.unit,orbitPathProvider);
     }
 
     protected override void Update()

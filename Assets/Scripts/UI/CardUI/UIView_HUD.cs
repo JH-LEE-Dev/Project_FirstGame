@@ -63,4 +63,9 @@ public class UIView_HUD : UIView
     {
         turnProcessIndicatorText.text = "Card Using Time";
     }
+
+    public void OnPlayerHit()
+    {
+
+    }
 }

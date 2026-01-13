@@ -6,10 +6,6 @@ using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class UICommandFactory_CardSystem : UICommandFactory
 {
-    // 현재 UI가 사용 중인 Batch를 시스템이 보관
-    //private List<Job_CardSystemUI> lastSentBatch;
-    //private List<Job_CardSystemUI> currentSentBatch;
-
     // Job Batch Pool (Job들을 전달하기 위한 용도)
     private ObjectPool<List<Job_CardSystemUI>> jobBatchPool =
         new ObjectPool<List<Job_CardSystemUI>>(
