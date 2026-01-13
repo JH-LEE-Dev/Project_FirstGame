@@ -18,7 +18,10 @@ public class UIView_HUD : UIView
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
+    [SerializeField] private TextMotion hpText;
     [SerializeField] private BarMotion targetBar;
+
+    private float prevCurrHp = 0f;
 
     protected override void Awake()
     {
@@ -71,15 +74,19 @@ public class UIView_HUD : UIView
 
     public void OnPlayerHit(float damage)
     {
-        if (null == hpBar)
-            return;
-
         IEarthData currEarth = unitLogicSystemProvider.earthData;
 
         float maxHP = currEarth.GetMaxHealth();
         float currHp = currEarth.GetCurrentHealth();
+
         float oneProgress = currHp / maxHP;
 
-        hpBar.OnHit(oneProgress);
+        if (null != hpBar)
+            hpBar.OnHit(oneProgress);
+
+        if (null != hpText)
+            hpText.OnHit(prevCurrHp, currHp);
+
+        prevCurrHp = currHp;
     }
 }

@@ -582,6 +582,7 @@ MonoBehaviour:
   turnIndicatorText: {fileID: 5675350175602365181}
   turnProcessIndicatorText: {fileID: 6305588099218769138}
   hpBar: {fileID: 2492851807881466662}
+  hpText: {fileID: 7683775203455921574}
   targetBar: {fileID: 4694876721956356493}
 --- !u!1 &3534484546545379159
 GameObject:
@@ -1413,6 +1414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5476941621113003394}
   - component: {fileID: 2492851807881466662}
+  - component: {fileID: 7683775203455921574}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -1473,6 +1475,21 @@ MonoBehaviour:
   particle: {fileID: 0}
   particleCnt: 10
   particlePower: 1
+--- !u!114 &7683775203455921574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7051562049922961453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c109196da5d933241b14734ef00a3cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextMotion
+  mainText: {fileID: 4057923928133818456}
+  motionDuration: 0.5
+  motionEase: 1
 --- !u!1 &7066618789633872215
 GameObject:
   m_ObjectHideFlags: 0
