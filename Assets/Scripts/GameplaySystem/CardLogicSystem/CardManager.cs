@@ -89,7 +89,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(4);
+        CardData cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
@@ -159,6 +159,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
     private void CardAdditionalPileDraw(int amount)
     {
         CardPileDraw(amount, true);
+
+        cardUICommandSystem.DispatchCommand();
     }
 
     public void CardUsed(CardDataInstance usedCard)
@@ -235,6 +237,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void StartCardDrawTurn(int waveIdx)
     {
+        attackCnt = 1;
         ExecuteSystemAction_BeforeTurn();
     }
 
