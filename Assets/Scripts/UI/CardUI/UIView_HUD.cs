@@ -78,7 +78,6 @@ public class UIView_HUD : UIView
 
         float maxHP = currEarth.GetMaxHealth();
         float currHp = currEarth.GetCurrentHealth();
-
         float oneProgress = currHp / maxHP;
 
         hpBar.OnHit(oneProgress);
