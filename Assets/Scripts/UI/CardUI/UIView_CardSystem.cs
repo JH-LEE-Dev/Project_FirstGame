@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -9,6 +10,8 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    public event Action UICommandCompleteEvent;
+
     //외부 의존성
     private ICardSystemProvider cardSystemProvider;
 
@@ -54,9 +57,18 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
+    public MeshRenderer testImpact = null;
+    private Material mat = null;
+    private ParticleSystem particle = null;
+
     public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
     {
         cardSystemProvider = _cardSystemProvider;
+    }
+
+    public override void OnDestroy()
+    {
+        UICommandCompleteEvent = null;
     }
 
     protected override void Awake()
@@ -74,6 +86,31 @@ public class UIView_CardSystem : UIView
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
+
+        Test();
+    }
+
+    public void Test()
+    {
+        mat = testImpact?.material;
+        particle = testImpact?.gameObject.GetComponentInChildren<ParticleSystem>();
+
+        DG.Tweening.Sequence seq = DOTween.Sequence();
+
+        seq.AppendCallback(() =>
+        {
+            if (particle != null)
+            {
+                particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                particle.Play();
+            }
+            mat.SetFloat("_Ratio", 0f);
+        });
+
+        seq.Append(mat.DOFloat(1f, "_Ratio", 2f)
+            .SetEase(Ease.OutQuad));
+
+        seq.SetLoops(-1);
     }
 
     // For PoolingSystem
@@ -319,7 +356,7 @@ public class UIView_CardSystem : UIView
     {
         var currentBatchList = _jobQueue;
 
-        float turnWaitSecond = 2f;
+        float turnWaitSecond = 0.5f;
 
         int size = currentBatchList.Count;
         for (int i = 0; i < size; ++i)
@@ -348,7 +385,7 @@ public class UIView_CardSystem : UIView
 
                     DrawingCards(currentJob.cards);
 
-                    //await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 
@@ -361,6 +398,8 @@ public class UIView_CardSystem : UIView
         }
 
         SetText();
+
+        UICommandCompleteEvent?.Invoke();
     }
 
     void DrawingCards(List<CardDataInstance> _datas)

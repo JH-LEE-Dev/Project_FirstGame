@@ -83,7 +83,7 @@ public class Enemy : Unit,IEnemyData
 
     public override void TakeDamage(float damage)
     {
-        healthComponent.DecreaseHealth(damage); 
+        healthComponent.TakeDamange(damage); 
     }
 
     //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.

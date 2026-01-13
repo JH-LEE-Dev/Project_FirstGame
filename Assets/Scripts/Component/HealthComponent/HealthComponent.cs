@@ -9,6 +9,9 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
     [SerializeField] private float currentHealth;
     [SerializeField] private float currentShield;
 
+    private float prevHealth;
+    private float prevShield;
+
     protected override void Awake()
     {
 
@@ -37,10 +40,15 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
     public void SetHealth(float _health)
     {
         maxHealth = _health;
+        prevHealth = _health;
+        currentHealth = _health;
     }
 
-    public void DecreaseHealth(float damage)
+    public void TakeDamange(float damage)
     {
+        prevHealth = currentHealth;
+        prevShield = currentShield; 
+
         if (currentShield > 0)
         {
             Debug.Log(currentShield);
@@ -79,6 +87,16 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
     {
         return currentShield;
     }
+
+    public float GetPrevHealth()
+    {
+        return prevHealth;
+    }
+    public float GetPrevShield()
+    {
+        return prevShield;
+    }
+
 
     public void ApplyShieldModifier(float bonusShield)
     {

@@ -11,7 +11,7 @@ public class PMoveComponent : MoveComponent
     protected PlayerMoveStrategy moveStrategy;
 
     //외부 의존성
-    IOrbitPathProvider orbirPathProvider;
+    IOrbitPathProvider orbitPathProvider;
 
 
 

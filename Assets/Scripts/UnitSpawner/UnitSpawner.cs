@@ -4,8 +4,11 @@ using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using System.Collections.Generic;
 
-public class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEvent
 {
+    public event Action PlayerSpawnedEvent;
+    public event Action EnemySpawnedEvent;
+
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
     [SerializeField] private GameObject characterPrefab;
@@ -61,13 +64,17 @@ public class UnitSpawner : MonoBehaviour
         gameRuleEventController = new GameRuleEventController();
 
         BindEvent();
-        SpawnCharacter();
         SpawnEarth();
+        SpawnCharacter();
     }
+
     public void OnDestroy()
     {
         gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
         ReleaseEvent();
+
+        PlayerSpawnedEvent = null;
+        EnemySpawnedEvent = null;
     }
 
     private void BindEvent()
@@ -94,6 +101,10 @@ public class UnitSpawner : MonoBehaviour
             spawnedUnit.Initialize_Character(inputManager,orbirPathProvider, gameServiceLocator);
             gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
             characterUnit = spawnedUnit;
+
+            PlayerSpawnedEvent?.Invoke();
+
+            SetUnitLogicSystem_Character();
         }
     }
 
@@ -109,6 +120,8 @@ public class UnitSpawner : MonoBehaviour
         if (spawnedUnit != null)
         {
             earthUnit = spawnedUnit;
+
+            SetUnitLogicSystem_Earth();
         }
     }
 
@@ -176,11 +189,28 @@ public class UnitSpawner : MonoBehaviour
             }
         }
 
-        SetUnitLogicSystem();
+        EnemySpawnedEvent?.Invoke();
+
+        SetUnitLogicSystem_Enemy();
     }
 
-    private void SetUnitLogicSystem()
+    private void SetUnitLogicSystem_Character()
     {
-        unitLogicSystemActions.Initialize(characterUnit,earthUnit, enemies);
+        unitLogicSystemActions.Initialize(characterUnit);
+    }
+
+    private void SetUnitLogicSystem_Enemy()
+    {
+        unitLogicSystemActions.Initialize(enemies);
+    }
+
+    private void SetUnitLogicSystem_Earth()
+    {
+        unitLogicSystemActions.Initialize(earthUnit);
+    }
+
+    public IUnitEvent GetPlayerEventSource()
+    {
+        return earthUnit;
     }
 }
