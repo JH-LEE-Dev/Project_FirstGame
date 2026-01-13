@@ -18,8 +18,8 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
 
     public void OnDestroy()
     {
-        Debug.Log("1");
-        dispatcher.Release();
+        if (dispatcher != null)
+            dispatcher.Release();
     }
 
     public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default)

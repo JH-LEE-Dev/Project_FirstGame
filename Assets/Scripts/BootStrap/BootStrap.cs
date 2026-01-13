@@ -68,8 +68,6 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     {
         inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
         inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
-        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
-        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
     }
 
     private void ReleaseEvent()
