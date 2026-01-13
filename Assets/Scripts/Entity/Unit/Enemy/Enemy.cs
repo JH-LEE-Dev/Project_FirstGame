@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Enemy : Unit,IEnemyData
 {
+    //내부 의존성
+    EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
+
     /// <summary>
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
@@ -30,6 +33,10 @@ public class Enemy : Unit,IEnemyData
 
         combatComponent = GetComponent<ECombatComponent>();
         moveComponent = GetComponent<EMoveComponent>();
+        visualComponentCoordinator = new EVisualComponentCoordinator();
+
+        //Visual 로직에 필요한 의존성을 추가해주면 됨.
+        visualComponentCoordinator.Initialize(combatComponent, moveComponent);
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator

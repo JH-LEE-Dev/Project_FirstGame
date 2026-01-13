@@ -7,6 +7,9 @@ public class Character : Unit, ICharacterData
     //외부 의존성
     IOrbitPathProvider orbirPathProvider;
 
+    //내부 의존성
+    PVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
+
     /// <summary>
     /// 시스템 속성 존.----------------------------------
     /// </summary>
@@ -48,6 +51,10 @@ public class Character : Unit, ICharacterData
 
         combatComponent = GetComponent<PCombatComponent>();
         moveComponent = GetComponent<PMoveComponent>();
+        visualComponentCoordinator = new PVisualComponentCoordinator();
+
+        //Visual 로직에 필요한 의존성을 추가해주면 됨.
+        visualComponentCoordinator.Initialize(combatComponent, moveComponent);
     }
 
     public void Initialize_Character(InputManager _inputManager, IOrbitPathProvider _orbitPathProvider, GameServiceLocator _gameServiceLocator)

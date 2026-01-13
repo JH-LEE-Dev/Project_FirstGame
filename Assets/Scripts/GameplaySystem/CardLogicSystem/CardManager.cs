@@ -89,7 +89,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(1);
+        CardData cardData = cardDataBase.GetCardData(0);
         if (cardData == null)
             return;
 
@@ -135,7 +135,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
         else
             CreateUICommand(JobType_CardSystemUI.AdditionalDraw, rentalBuffer);
 
-        if (deckPile.Count == 0 && gravePile.Count != 0)
+        if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
             GraveToDeckMove();
             CardPileDraw(restDrawCnt, false);
