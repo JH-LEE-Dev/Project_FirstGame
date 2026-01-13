@@ -100,7 +100,9 @@ public class UIView_CardSystem : UIView
             mat.SetFloat("_Ratio", 0f);
         });
 
-        seq.Append(mat.DOFloat(1f, "_Ratio", 2f).SetEase(Ease.OutQuad));
+        seq.Append(mat.DOFloat(1f, "_Ratio", 2f)
+            .SetEase(Ease.OutQuad));
+
         seq.SetLoops(-1);
     }
 
