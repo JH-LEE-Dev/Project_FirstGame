@@ -3,5 +3,7 @@ using UnityEngine;
 
 public interface IWaveSystemActions
 {
-    public event Action<uint> SpawnWaveEvent;
+    void StartEnemyMoveTurn();
+
+    void EnemyIsDead();
 }

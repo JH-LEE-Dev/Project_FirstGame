@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public interface ICardSystemEvent
+public interface ICardSystemEvents
 {
     event Action CardDrawFinishedEvent;
     event Action CardUsingTurnFinishedEvent;

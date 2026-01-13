@@ -34,13 +34,13 @@ public class GameInstaller : MonoBehaviour
         environmentManager = GetComponentInChildren<EnvironmentManager>();
 
         waveManager.Initialize(waveDatabase);
-        gameServiceLocator.Initialize(cameraController, gameController, waveManager);
+        gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(waveManager, inputManager, cardManager);
-        unitSpawner.Initiallize(inputManager, waveManager, gameServiceLocator, cardManager,cardManager,
+        unitSpawner.Initiallize(inputManager, waveManager,waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem,environmentManager);
         cardManager.Initialize(unitLogicSystem,gameController,cardUICommandSystem);
 
-        BindEvent(cardManager,unitLogicSystem, cardEffectCommandManager);
+        BindEvent();
     }
 
     private void Awake()
@@ -68,7 +68,7 @@ public class GameInstaller : MonoBehaviour
         cardUICommandSystem = _cardUICommandSystem;
     }
 
-    public void BindEvent(CardManager _cardManager, UnitLogicSystem _unitLogicSystem,CardEffectCommandManager _cardEffectManager)
+    public void BindEvent()
     {
         cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
         cardManager.CardUsedEvent += cardEffectCommandManager.AnalysisCardEffect;
@@ -77,12 +77,24 @@ public class GameInstaller : MonoBehaviour
         cardEffectCommandManager.CardEffectStatusCommandDispatchEvent += unitLogicSystem.InsertCommand;
         cardEffectCommandManager.CardEffectSystemCommandDispatchEvent -= cardManager.InsertCommand;
         cardEffectCommandManager.CardEffectSystemCommandDispatchEvent += cardManager.InsertCommand;
+
+        gameController.SpawnWaveEvent -= waveManager.SpawnWave;
+        gameController.SpawnWaveEvent += waveManager.SpawnWave;
+        waveManager.SpawnWaveEvent -= unitSpawner.SpawnWave;
+        waveManager.SpawnWaveEvent += unitSpawner.SpawnWave;
+        waveManager.WaveEndEvent -= unitSpawner.ResetCurrentEnemies;
+        waveManager.WaveEndEvent += unitSpawner.ResetCurrentEnemies;
+        waveManager.WaveMoveEndEvent -= gameController.ChangeGameStateToPlayerTurn;
+        waveManager.WaveMoveEndEvent += gameController.ChangeGameStateToPlayerTurn;
     }
 
     public void ReleaseEvent()
     {
         cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
-
+        gameController.SpawnWaveEvent -= waveManager.SpawnWave;
+        waveManager.SpawnWaveEvent -= unitSpawner.SpawnWave;
+        waveManager.WaveEndEvent -= unitSpawner.ResetCurrentEnemies;
+        waveManager.WaveMoveEndEvent -= gameController.ChangeGameStateToPlayerTurn;
         cardEffectCommandManager.CardEffectStatusCommandDispatchEvent -= unitLogicSystem.InsertCommand;
         cardEffectCommandManager.CardEffectSystemCommandDispatchEvent -= cardManager.InsertCommand;
     }

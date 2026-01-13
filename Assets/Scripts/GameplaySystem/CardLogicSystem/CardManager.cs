@@ -10,7 +10,7 @@ using static UnityEngine.Rendering.GPUSort;
 
 
 public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectCommandHandler,
-    ICardSystemEvent, ICardSystemActions
+    ICardSystemEvents, ICardSystemActions
 {
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingTurnFinishedEvent;
@@ -89,7 +89,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(4);
+        CardData cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
@@ -101,6 +101,14 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
             deckPile.Add(card);
             ++deckCnt;
         }
+    }
+
+    private void OnDestroy()
+    {
+        CardDrawFinishedEvent = null;
+        CardUsingTurnFinishedEvent = null;
+        CardUsedEvent = null;
+        CardUsingVerificationEvent = null;
     }
 
     public void CardPileDraw(int amount, bool bAdditional)
@@ -159,6 +167,8 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
     private void CardAdditionalPileDraw(int amount)
     {
         CardPileDraw(amount, true);
+
+        cardUICommandSystem.DispatchCommand();
     }
 
     public void CardUsed(CardDataInstance usedCard)
@@ -235,6 +245,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void StartCardDrawTurn(int waveIdx)
     {
+        attackCnt = 1;
         ExecuteSystemAction_BeforeTurn();
     }
 

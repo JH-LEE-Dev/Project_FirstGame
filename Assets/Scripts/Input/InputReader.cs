@@ -67,5 +67,6 @@ public class InputReader
         PointerPositionEvent = null;
         MoveEvent = null;
         FireButtonPressedEvent = null;
+        ESCButtonPressedEvent = null;
     }
 }

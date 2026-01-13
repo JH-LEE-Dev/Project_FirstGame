@@ -56,6 +56,7 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
     protected override void OnDestroy()
     {
         ReleaseEvent();
+        BulletEffectIsFinishedEvent = null;
     }
 
     public virtual void Fire(Vector2 dir)

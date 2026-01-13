@@ -120,6 +120,7 @@ public class Character : Unit, ICharacterData
     protected override void OnDestroy()
     {
         ReleaseEvent();
+        PlayerAttackFinishedEvent = null;
     }
 
     //bCanAction이 True일 때만 캐릭터가 움직이거나 발사할 수 있음.

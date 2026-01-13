@@ -16,6 +16,12 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
         commandFactory_CardSystem.Initialize();
     }
 
+    public void OnDestroy()
+    {
+        Debug.Log("1");
+        dispatcher.Release();
+    }
+
     public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default)
     {
         switch (jobType)

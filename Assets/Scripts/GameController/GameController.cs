@@ -3,21 +3,23 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour, IGameFlowController
 {
+    public event Action<int> SpawnWaveEvent;
+
     //외부 의존성.
     private InputManager inputManager;
     private ICardSystemActions cardSystemActions;
+    private IWaveSystemActions waveSystemActions;
 
     //내부 의존성
     private GameStateMachine gameStateMachine;
-    //내부 의존성이지만 최상위 모듈에서 주입해줌.
-    private WaveManager waveManager;
+
 
     private int waveIdx = 0;
 
-    public void Initialize(WaveManager _waveManager, InputManager _inputManager,
+    public void Initialize(IWaveSystemActions _waveSystemActions, InputManager _inputManager,
         ICardSystemActions _cardSystemActions)
     {
-        waveManager = _waveManager;
+        waveSystemActions = _waveSystemActions;
         inputManager = _inputManager;
         cardSystemActions = _cardSystemActions;
         gameStateMachine = new GameStateMachine();
@@ -38,11 +40,8 @@ public class GameController : MonoBehaviour, IGameFlowController
 
     public void BindEvent(GS_EnemyTurnState enemyTurn, GS_PlayerTurnState playerTurn)
     {
-        enemyTurn.EnemyTurnStartEvent -= waveManager.StartEnemyMoveTurn;
-        enemyTurn.EnemyTurnStartEvent += waveManager.StartEnemyMoveTurn;
-
-        waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
-        waveManager.WaveMoveEndEvent += ChangeGameStateToPlayerTurn;
+        enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
+        enemyTurn.EnemyTurnStartEvent += waveSystemActions.StartEnemyMoveTurn;
 
         playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
         playerTurn.PlayerTurnStartEvent += cardSystemActions.StartCardDrawTurn;
@@ -53,20 +52,19 @@ public class GameController : MonoBehaviour, IGameFlowController
         GS_PlayerTurnState playerTurn = gameStateMachine.GetState<GS_PlayerTurnState>();
         GS_EnemyTurnState enemyTurn = gameStateMachine.GetState<GS_EnemyTurnState>();
 
-        enemyTurn.EnemyTurnStartEvent -= waveManager.StartEnemyMoveTurn;
-
-        waveManager.WaveMoveEndEvent -= ChangeGameStateToPlayerTurn;
-
+        enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
         playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
     }
+
     public void OnDestroy()
     {
+        SpawnWaveEvent = null;
         ReleaseEvent();
     }
 
     public void Start()
     {
-        waveManager.SpawnWave(waveIdx);
+        SpawnWaveEvent?.Invoke(waveIdx);
         gameStateMachine.ChangeState<GS_PlayerTurnState>();
     }
 

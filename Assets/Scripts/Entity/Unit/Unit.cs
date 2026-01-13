@@ -98,6 +98,7 @@ public class Unit : MonoBehaviour, IDamageable
     protected virtual void OnDestroy()
     {
         ReleaseEvent();
+        UnitIsDeadEvent = null;
     }
 
     protected void InvokeUnitIsDead()
