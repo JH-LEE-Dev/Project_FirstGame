@@ -135,27 +135,23 @@ public class Character_Visual : MonoBehaviour
 
         float wallX = 0f;
 
-        // release 중에도 pressure가 남아있으면(>0) 오버슈트가 같이 복귀해야 함
         if (pushingSign != 0 && pressure > 0.0001f)
             wallX = pushingSign * maxWallOffsetX * pressure;
 
 
-        // Body base hover/rotate
+        // Body base
         float hoverPhase = (t / hoverDuration) * Mathf.PI * 2f;
         float rotPhase = (t / bodyRotateDuration) * Mathf.PI * 2f;
 
         Vector3 bPos = bodyBasePos;
         bPos.y += Mathf.Sin(hoverPhase) * hoverAmplitude;
 
-        // Wall push: 미세 오버슈트(누적)
         bPos.x += wallX;
         body.localPosition = bPos;
 
         float bZ = bodyBaseZ + Mathf.Sin(rotPhase) * bodyRotateAmplitude;
         body.localRotation = Quaternion.Euler(0f, 0f, bZ);
 
-        // Wall push: 찌부/퍼짐(누적)
-        // Flip 부호는 유지하면서 baseScale 기준으로 계산
         float signX = body.localScale.x >= 0f ? 1f : -1f;
         float absBaseX = Mathf.Abs(bodyBaseScale.x);
         float baseY = bodyBaseScale.y;
@@ -168,6 +164,8 @@ public class Character_Visual : MonoBehaviour
         bs.y = baseY * yMul;
         bs.z = bodyBaseScale.z;
         body.localScale = bs;
+
+
 
         // Rings (hover/rotate + lean)
         float ringRotPhase = (t / ringRotateDuration) * Mathf.PI * 2f;
@@ -301,7 +299,6 @@ public class Character_Visual : MonoBehaviour
             pushingSign = sign;
             isPushingWall = true;
 
-            // 이미 누적 중이면 아무 것도 안 함(매 틱 Kill 방지)
             bool alreadyBuilding = pressureTween != null && pressureTween.IsActive() && pressureTween.IsPlaying();
             if (alreadyBuilding) return;
 
@@ -355,7 +352,7 @@ public class Character_Visual : MonoBehaviour
         SetFace(FaceExpression.Idle);
         StartBlink();
 
-        // body 스케일을 복구
+        // body 스케일 복구
         if (body != null)
         {
             float signX = body.localScale.x >= 0f ? 1f : -1f;
