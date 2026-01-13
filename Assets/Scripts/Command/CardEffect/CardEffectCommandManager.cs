@@ -28,4 +28,10 @@ public class CardEffectCommandManager : MonoBehaviour
             CardEffectSystemCommandDispatchEvent?.Invoke(effectCommand);
         }
     }
+
+    public void OnDestroy()
+    {
+        CardEffectSystemCommandDispatchEvent = null;
+        CardEffectStatusCommandDispatchEvent = null;
+    }
 }

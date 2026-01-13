@@ -14,6 +14,7 @@ public class UIInstaller : MonoBehaviour
     private IBootStrapProvider bootStrapProvider;
     private IUnitLogicSystemProvider unitLogicSystemProvider;
     private IUnitEventAccessor unitEventAccessor;
+    private IUnitSpawnSystemEvent unitSpawnSystemEvent;
 
     //내부 의존성
     private UIManager uiManager;
@@ -50,13 +51,15 @@ public class UIInstaller : MonoBehaviour
 
     public void ReceiveDependency_Gameplay(ICardSystemEvent _cardSystemEvent,
         ICardSystemProvider _cardSystemProvider, IGameFlowProvider _gameFlowProvider,
-        IUnitLogicSystemProvider _unitLogicSystemProvider, IUnitEventAccessor _unitEventAccessor)
+        IUnitLogicSystemProvider _unitLogicSystemProvider, IUnitEventAccessor _unitEventAccessor,
+        IUnitSpawnSystemEvent _unitSpawnSystemEvent)
     {
         cardSystemEvent = _cardSystemEvent;
         cardSystemProvider = _cardSystemProvider;
         gameFlowProvider = _gameFlowProvider;
         unitLogicSystemProvider = _unitLogicSystemProvider;
         unitEventAccessor = _unitEventAccessor;
+        unitSpawnSystemEvent = _unitSpawnSystemEvent;
 
         uiManager.Initialize_GameplayScene(cardSystemProvider, unitLogicSystemProvider);
 
@@ -228,6 +231,8 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingVerificationEvent += cardSystemObject.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
+        unitSpawnSystemEvent.PlayerSpawnedEvent += HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
         uiCommandManager.BindDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
@@ -258,6 +263,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
         cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         uiCommandManager.ReleaseDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
 

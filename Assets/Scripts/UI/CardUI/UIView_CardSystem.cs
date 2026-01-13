@@ -10,6 +10,8 @@ using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
+    public event Action UICommandCompleteEvent;
+
     //외부 의존성
     private ICardSystemProvider cardSystemProvider;
 
@@ -62,6 +64,11 @@ public class UIView_CardSystem : UIView
     public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
     {
         cardSystemProvider = _cardSystemProvider;
+    }
+
+    public override void OnDestroy()
+    {
+        UICommandCompleteEvent = null;
     }
 
     protected override void Awake()
@@ -391,6 +398,8 @@ public class UIView_CardSystem : UIView
         }
 
         SetText();
+
+        UICommandCompleteEvent?.Invoke();
     }
 
     void DrawingCards(List<CardDataInstance> _datas)

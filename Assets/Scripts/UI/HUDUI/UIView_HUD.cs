@@ -74,13 +74,18 @@ public class UIView_HUD : UIView
         if (null == hpBar)
             return;
 
-        IEarthData currEarth = unitLogicSystemProvider.earthData;
+        IPlayerData currPlayer = unitLogicSystemProvider.playerData;
 
-        float maxHP = currEarth.GetMaxHealth();
-        float currHp = currEarth.GetCurrentHealth();
+        float maxHP = currPlayer.GetMaxHealth();
+        float currHp = currPlayer.GetCurrentHealth();
 
         float oneProgress = currHp / maxHP;
 
         hpBar.OnHit(oneProgress);
+    }
+
+    public void PlayerSpawned()
+    {
+
     }
 }

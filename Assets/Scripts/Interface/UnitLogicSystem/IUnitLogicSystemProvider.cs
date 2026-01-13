@@ -7,5 +7,5 @@ public interface IUnitLogicSystemProvider
 
     public ICharacterData characterData { get; }
 
-    public IEarthData earthData { get; }
+    public IPlayerData playerData { get; }
 }
