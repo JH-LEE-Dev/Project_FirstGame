@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IUnitEvent
 {
-    event Action TakeDamageEvent;
+    event Action<float> TakeDamageEvent;
 }

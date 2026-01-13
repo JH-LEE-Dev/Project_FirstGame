@@ -3,7 +3,7 @@ using System;
 
 public class Earth : MonoBehaviour, IDamageable, IEarthData, IUnitEvent
 {
-    public event Action TakeDamageEvent;
+    public event Action<float> TakeDamageEvent;
 
     public IShieldEffectReceiver shieldEffectReceiver => healthComponent;
 
@@ -17,7 +17,7 @@ public class Earth : MonoBehaviour, IDamageable, IEarthData, IUnitEvent
     public void TakeDamage(float damage)
     {
         healthComponent.TakeDamange(damage);
-        TakeDamageEvent?.Invoke();
+        TakeDamageEvent?.Invoke(damage);
     }
 
     public Transform GetTransform()
