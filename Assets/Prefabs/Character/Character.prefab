@@ -822,6 +822,11 @@ MonoBehaviour:
   ringLeanAngle: 26
   ringLeanDuration: 0.75
   ringLeanEase: 15
+  pressureBuildTime: 1
+  maxWallOffsetX: 0.02
+  maxSquashRatio: 0.2
+  maxSpreadRatio: 0.15
+  releaseDur: 0.18
 --- !u!1 &5880904374570772843
 GameObject:
   m_ObjectHideFlags: 0
