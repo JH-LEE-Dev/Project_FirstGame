@@ -28,7 +28,7 @@ MonoBehaviour:
     usingType: 0
     bFlash: 0
     cardStatusEffects: 
-    cardSystemEffects: 00000000
+    cardSystemEffects: 0000000003000000
   - id: 2
     cardName: 2
     cardType: 0

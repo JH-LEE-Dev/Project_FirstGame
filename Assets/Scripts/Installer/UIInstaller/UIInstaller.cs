@@ -9,7 +9,7 @@ public class UIInstaller : MonoBehaviour
     //외부 의존성
     private InputManager inputManager;
     private ICardSystemProvider cardSystemProvider;
-    private ICardSystemEvent cardSystemEvent;
+    private ICardSystemEvents cardSystemEvent;
     private IGameFlowProvider gameFlowProvider;
     private IBootStrapProvider bootStrapProvider;
     private IUnitLogicSystemProvider unitLogicSystemProvider;
@@ -49,7 +49,7 @@ public class UIInstaller : MonoBehaviour
         uiManager.Initialize(inputManager);
     }
 
-    public void ReceiveDependency_Gameplay(ICardSystemEvent _cardSystemEvent,
+    public void ReceiveDependency_Gameplay(ICardSystemEvents _cardSystemEvent,
         ICardSystemProvider _cardSystemProvider, IGameFlowProvider _gameFlowProvider,
         IUnitLogicSystemProvider _unitLogicSystemProvider, IUnitEventAccessor _unitEventAccessor,
         IUnitSpawnSystemEvent _unitSpawnSystemEvent)

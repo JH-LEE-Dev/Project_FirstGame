@@ -24,4 +24,9 @@ public class AEH_Impact : MonoBehaviour
 
         BulletEffectIsFinishedEvent?.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        BulletEffectIsFinishedEvent = null;
+    }
 }

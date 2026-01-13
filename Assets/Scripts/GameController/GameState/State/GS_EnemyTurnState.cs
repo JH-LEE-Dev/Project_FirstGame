@@ -31,4 +31,9 @@ public class GS_EnemyTurnState : IState
     {
 
     }
+
+    public void Release()
+    {
+        EnemyTurnStartEvent = null;
+    }
 }

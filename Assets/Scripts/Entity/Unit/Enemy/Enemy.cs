@@ -32,6 +32,18 @@ public class Enemy : Unit,IEnemyData
         base.Awake();
     }
 
+    public void DeActivate()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Activate(Vector3 spawnPos)
+    {
+        gameObject.SetActive(true);
+        transform.position = spawnPos;  
+        healthComponent.ResetHealthComponent();
+    }
+
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
@@ -47,7 +59,6 @@ public class Enemy : Unit,IEnemyData
         moveComponent.Initialize(ctx,visualComponentCoordinator);
 
         SetupEnemyType();
-        BindEvent();
 
         //trail 임시 코드.
         trailRenderer = GetComponent<TrailRenderer>();
@@ -69,16 +80,6 @@ public class Enemy : Unit,IEnemyData
 
         //비주얼 관련 초기화.
         combatComponent.Initialize(ctx,visualComponentCoordinator, enemyTypeData.attack);
-    }
-
-    private void BindEvent()
-    {
-        gameServiceLocator.waveSystemProvider.StartMoveEvent += OnMove;
-    }
-
-    private void ReleaseEvent()
-    {
-        gameServiceLocator.waveSystemProvider.StartMoveEvent -= OnMove;
     }
 
     public override void TakeDamage(float damage)
@@ -111,7 +112,7 @@ public class Enemy : Unit,IEnemyData
    
     protected override void OnDestroy()
     {
-        ReleaseEvent();
+
     }
 
     public void SetTargetPoint(Vector2 _targetPoint)

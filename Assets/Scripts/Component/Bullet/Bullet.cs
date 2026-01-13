@@ -35,6 +35,11 @@ public class Bullet : MonoBehaviour
         effectComponent = GetComponentInChildren<EffectComponent>();
     }
 
+    private void OnDestroy()
+    {
+        BulletEffectIsFinishedEvent = null;
+    }
+
     private void Update()
     {
         Fly();

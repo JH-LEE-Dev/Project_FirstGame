@@ -8,8 +8,6 @@ using UnityEngine.EventSystems;
 [Serializable]
 public class CardDataInstance
 {
-    public event Action<CardDataInstance> CardUsedEvent;
-
     private CardData cardData;
     public bool bUpgrade = false;
 
@@ -38,10 +36,5 @@ public class CardDataInstance
     public void AddCardStatusEffect(CardStatusEffectType effectType)
     {
         cardData.cardStatusEffects.Add(effectType);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        CardUsedEvent?.Invoke(this);
     }
 }

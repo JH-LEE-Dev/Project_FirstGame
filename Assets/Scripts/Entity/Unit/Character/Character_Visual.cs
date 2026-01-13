@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Mono.Cecil.Cil;
 using System.Collections;
 using UnityEngine;
 
@@ -29,9 +30,9 @@ public class Character_Visual : MonoBehaviour
     [SerializeField] private float ringRotateAmplitude = 1f;
     [SerializeField] private float ringRotateDuration = 2.6f;
 
-    [Header("Rings Hover (optional)")]
-    [SerializeField] private float ringHoverAmplitude = 0.0015f;
-    [SerializeField] private float ringHoverDuration = 2.0f;
+    [Header("Rings Hover")]
+    [SerializeField] private float ringHoverAmplitude = 0.003f;
+    [SerializeField] private float ringHoverDuration = 2f;
 
     [Header("Blink")]
     [SerializeField] private bool enableBlink = true;   // 눈 깜빡임
@@ -41,6 +42,14 @@ public class Character_Visual : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float doubleBlinkChance = 0.5f; // 두번 깜빡 확률
 
 
+    [Header("Flip / Rings Lean")]
+    [SerializeField] private float ringLeanAngle = 26f;     // 기울기 각도(도)
+    [SerializeField] private float ringLeanDuration = 0.75f;
+    [SerializeField] private Ease ringLeanEase = Ease.OutQuint;
+
+    private float ringLeanZ = 0f;
+    private Tween ringLeanTween;
+    private Dir currentDir = Dir.Left;
 
     // base pose
     private Vector3 bodyBasePos;
@@ -75,6 +84,8 @@ public class Character_Visual : MonoBehaviour
             frontRingBasePos = frontRings.localPosition;
             frontRingBaseZ = frontRings.localEulerAngles.z;
         }
+
+        SnapFlip(Dir.Left);
     }
 
     private void OnEnable()
@@ -84,17 +95,21 @@ public class Character_Visual : MonoBehaviour
 
     private void OnDisable()
     {
+        ringLeanTween?.Kill();
         StopBlink();
     }
 
     private void OnDestroy()
     {
+        ringLeanTween?.Kill();
         StopBlink();
     }
 
     public void Bind(Character character)
     {
         owner = character;
+
+
     }
 
     private void LateUpdate()
@@ -120,11 +135,13 @@ public class Character_Visual : MonoBehaviour
         float ringZDelta = Mathf.Sin(ringRotPhase) * ringRotateAmplitude;
         float ringYDelta = Mathf.Sin(ringHoverPhase) * ringHoverAmplitude;
 
-        ApplyRing(backRings, backRingBasePos, backRingBaseZ, ringZDelta, ringYDelta);
-        ApplyRing(frontRings, frontRingBasePos, frontRingBaseZ, ringZDelta, ringYDelta);
+        // ringLeanZ를 "추가 회전"으로 합산
+        ApplyRing(backRings, backRingBasePos, backRingBaseZ, ringZDelta, ringYDelta, ringLeanZ);
+        ApplyRing(frontRings, frontRingBasePos, frontRingBaseZ, ringZDelta, ringYDelta, ringLeanZ);
+
     }
 
-    private void ApplyRing(Transform ring, Vector3 basePos, float baseZ, float zDelta, float yDelta)
+    private void ApplyRing(Transform ring, Vector3 basePos, float baseZ, float zDelta, float yDelta, float leanZ)
     {
         if (ring == null) return;
 
@@ -132,7 +149,7 @@ public class Character_Visual : MonoBehaviour
         p.y += yDelta;
         ring.localPosition = p;
 
-        ring.localRotation = Quaternion.Euler(0f, 0f, baseZ + zDelta);
+        ring.localRotation = Quaternion.Euler(0f, 0f, baseZ + zDelta + leanZ);
     }
 
 
@@ -157,7 +174,6 @@ public class Character_Visual : MonoBehaviour
             blinkCo = null;
         }
 
-        // 비활성화 될 때 눈이 감긴 상태로 멈추는 거 싫으면 기본으로 복구
         SetFace(FaceExpression.Idle);
     }
 
@@ -190,5 +206,45 @@ public class Character_Visual : MonoBehaviour
                 SetFace(FaceExpression.Idle);
             }
         }
+    }
+
+    public void Flip(Dir _dir)
+    {
+        if (currentDir == _dir) return;
+
+        currentDir = _dir;
+
+        if (body != null)
+        {
+            Vector3 bs = body.localScale;
+            float absX = Mathf.Abs(bs.x);
+
+            bs.x = (_dir == Dir.Left) ? absX : -absX;
+            body.localScale = bs;
+        }
+
+        float targetLean = 0f;
+
+        if (_dir == Dir.Left) targetLean = +ringLeanAngle;
+        if (_dir == Dir.Right) targetLean = -ringLeanAngle;
+
+        ringLeanTween?.Kill();
+        ringLeanTween = DOTween.To(() => ringLeanZ, v => ringLeanZ = v, targetLean, ringLeanDuration)
+            .SetEase(ringLeanEase);
+    }
+
+    private void SnapFlip(Dir dir)
+    {
+        currentDir = dir;
+        if (body != null)
+        {
+            Vector3 bs = body.localScale;
+            float absX = Mathf.Abs(bs.x);
+            bs.x = (dir == Dir.Left) ? absX : -absX;
+            body.localScale = bs;
+        }
+
+        if (dir == Dir.Left) ringLeanZ = +ringLeanAngle;
+        if (dir == Dir.Right) ringLeanZ = -ringLeanAngle;
     }
 }

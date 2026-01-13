@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 
-public interface IWaveSystemProvider
+public interface IWaveSystemEvents
 {
+    public event Action WaveEndEvent;
     public event Action StartMoveEvent;
 }

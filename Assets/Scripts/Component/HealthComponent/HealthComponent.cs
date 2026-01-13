@@ -17,9 +17,16 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
 
     }
 
+    public void ResetHealthComponent()
+    {
+        prevHealth = maxHealth;
+        currentHealth = maxHealth;
+        currentShield = 0;
+    }
+
     protected override void OnDestroy()
     {
-
+        UnitIsDeadEvent = null;
     }
 
     protected override void FixedUpdate()

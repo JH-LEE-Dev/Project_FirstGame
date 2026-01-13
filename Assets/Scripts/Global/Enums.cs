@@ -10,11 +10,8 @@ public enum UILayer
 
 public enum Dir
 { 
-    Up,
-    RightUp,
     Right,
-    RightDown,
-    Down,
+    Left,
 }
 
 
@@ -126,5 +123,16 @@ public enum CombatActionSignal
 
 public enum MoveActionSignal
 {
-    Dash,
+    LeftMoving,
+    RightMoving,
+    Blocked,
+
+}
+
+public enum CutsceneSignal
+{
+    TurnStart_Start,
+    TurnStart_End,
+    TurnEnd_Start,
+    TurnEnd_End,
 }

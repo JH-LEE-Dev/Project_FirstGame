@@ -4,43 +4,29 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Strategy/Move/PlayerNormalMove")]
 public class PlayerNormalMoveStrategy : PlayerMoveStrategy
 {
-    [Header("Normalized path value (0~1)")]
-    [SerializeField, Range(0f, 1f)]
-    private float movingValue = 0.5f;
-
-    [Header("Speed")]
-    [SerializeField] private float maxSpeedPerSec = 0.5f;
-
-    [Header("Feel (seconds)")]
-    [SerializeField] private float accelTime = 0.05f; // 출발 감각
-    [SerializeField] private float decelTime = 0.05f; // 정지 감각
-
-    [Header("Feel Curve")]
-    [SerializeField] private AnimationCurve accelCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-    [SerializeField] private AnimationCurve decelCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-
-    // 내부 상태
-    private float inputAxis;     // -1, 0, +1
-    private float currentSpeed;  // 현재 속도
-    private float targetSpeed;   // 목표 속도
-
-
-    public override void Initialize(Unit _unit, IOrbitPathProvider _orbitPathProvider)
+    public override void Initialize(Unit _unit, IOrbitPathProvider _orbitPathProvider, IMoveSignalHandler _moveSignalHandler)
     {
         unit = _unit;
         orbitPathProvider = _orbitPathProvider;
+        moveSignalHandler = _moveSignalHandler;
         ApplyPosition();
     }
 
-    private void ApplyPosition()
-    {
-        unit.transform.position = orbitPathProvider.GetPathPosition(movingValue);
-    }
 
     public override void Move(Vector2 direction)
     {
         if (unit == null || orbitPathProvider == null)
             return;
+
+        if (direction.x == -1f)
+        {
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.LeftMoving);
+        }
+        else if (direction.x == 1f)
+        {
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.RightMoving);
+        }
+
 
         float dt = Time.deltaTime;
 
@@ -76,4 +62,5 @@ public class PlayerNormalMoveStrategy : PlayerMoveStrategy
 
         ApplyPosition();
     }
+
 }
