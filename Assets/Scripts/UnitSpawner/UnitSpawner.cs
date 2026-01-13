@@ -4,7 +4,7 @@ using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using System.Collections.Generic;
 
-public class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour,IUnitEventAccessor
 {
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
@@ -182,5 +182,10 @@ public class UnitSpawner : MonoBehaviour
     private void SetUnitLogicSystem()
     {
         unitLogicSystemActions.Initialize(characterUnit,earthUnit, enemies);
+    }
+
+    public IUnitEvent GetPlayerEventSource()
+    {
+        return earthUnit;
     }
 }

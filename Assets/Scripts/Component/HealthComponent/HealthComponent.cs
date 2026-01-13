@@ -39,7 +39,7 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
         maxHealth = _health;
     }
 
-    public void DecreaseHealth(float damage)
+    public void TakeDamange(float damage)
     {
         if (currentShield > 0)
         {
@@ -74,6 +74,10 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
     public float GetCurrentHealth()
     {
         return currentHealth;
+    }
+    public float GetCurrentShield()
+    {
+        return currentShield;
     }
 
     public void ApplyShieldModifier(float bonusShield)

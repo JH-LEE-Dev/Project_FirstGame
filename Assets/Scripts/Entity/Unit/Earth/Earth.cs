@@ -1,7 +1,10 @@
 using UnityEngine;
+using System;
 
-public class Earth : MonoBehaviour, IDamageable, IEarthData
+public class Earth : MonoBehaviour, IDamageable, IEarthData, IUnitEvent
 {
+    public event Action TakeDamageEvent;
+
     public IShieldEffectReceiver shieldEffectReceiver => healthComponent;
 
     protected HealthComponent healthComponent;
@@ -13,7 +16,8 @@ public class Earth : MonoBehaviour, IDamageable, IEarthData
 
     public void TakeDamage(float damage)
     {
-        healthComponent.DecreaseHealth(damage);
+        healthComponent.TakeDamange(damage);
+        TakeDamageEvent?.Invoke();
     }
 
     public Transform GetTransform()
@@ -29,5 +33,15 @@ public class Earth : MonoBehaviour, IDamageable, IEarthData
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
+    }
+
+    public float GetCurrentShield()
+    {
+        return healthComponent.GetCurrentShield();
+    }
+
+    private void OnDestroy()
+    {
+        TakeDamageEvent = null;
     }
 }

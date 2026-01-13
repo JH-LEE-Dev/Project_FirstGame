@@ -1,0 +1,61 @@
+using UnityEngine;
+
+//Enemy, Character의 각 컴포넌트가 공통적으로/비슷한 방식으로 통신해야 하는 로직은 여기 기반 클래스에 작성
+public class VisualComponentCoordinator : IMoveSignalHandler, ICombatSignalHandler
+{
+    /// <summary>
+    /// 시스템 속성 존. -----------------------------------------
+    /// </summary>
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 구현 속성 존. -----------------------------------------
+    /// </summary>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 시스템 코드 존. -----------------------------------------
+    /// </summary>
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 구현 코드 존. -----------------------------------------
+    /// </summary>
+    public virtual void NotifyCombatActionSignal(CombatActionSignal signal)
+    {
+
+    }
+
+    public virtual void NotifyMoveSignalAction(MoveActionSignal signal)
+    {
+
+    }
+}
