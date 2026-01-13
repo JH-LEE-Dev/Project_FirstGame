@@ -30,8 +30,8 @@ public class Character_Visual : MonoBehaviour
     [SerializeField] private float ringRotateDuration = 2.6f;
 
     [Header("Rings Hover")]
-    [SerializeField] private float ringHoverAmplitude = 0.0015f;
-    [SerializeField] private float ringHoverDuration = 2.0f;
+    [SerializeField] private float ringHoverAmplitude = 0.003f;
+    [SerializeField] private float ringHoverDuration = 2f;
 
     [Header("Blink")]
     [SerializeField] private bool enableBlink = true;   // ´« ±ôºýÀÓ
@@ -43,8 +43,8 @@ public class Character_Visual : MonoBehaviour
 
     [Header("Flip / Rings Lean")]
     [SerializeField] private float ringLeanAngle = 26f;     // ±â¿ï±â °¢µµ(µµ)
-    [SerializeField] private float ringLeanDuration = 1f;
-    [SerializeField] private Ease ringLeanEase = Ease.OutSine;
+    [SerializeField] private float ringLeanDuration = 0.75f;
+    [SerializeField] private Ease ringLeanEase = Ease.OutQuint;
 
     private float ringLeanZ = 0f;
     private Tween ringLeanTween;

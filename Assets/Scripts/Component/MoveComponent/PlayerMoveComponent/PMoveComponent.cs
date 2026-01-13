@@ -35,7 +35,7 @@ public class PMoveComponent : MoveComponent
     public void Initialize(UnitContext _ctx, IOrbitPathProvider _orbitPathProvider, IMoveSignalHandler _moveSignalHandler)
     {
         base.Initialize(_ctx, _moveSignalHandler);
-        orbirPathProvider = _orbitPathProvider;
+        orbitPathProvider = _orbitPathProvider;
     }
 
     protected override void Awake()
@@ -47,7 +47,7 @@ public class PMoveComponent : MoveComponent
 
     protected override void Start()
     {
-        moveStrategy.Initialize(ctx.unit, orbirPathProvider, moveSignalHandler);
+        moveStrategy.Initialize(ctx.unit, orbitPathProvider, moveSignalHandler);
     }
 
     protected override void Update()

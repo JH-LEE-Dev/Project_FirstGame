@@ -812,7 +812,7 @@ MonoBehaviour:
   bodyRotateDuration: 3
   ringRotateAmplitude: 1
   ringRotateDuration: 2.6
-  ringHoverAmplitude: 0.0015
+  ringHoverAmplitude: 0.003
   ringHoverDuration: 2
   enableBlink: 1
   blinkInterval: {x: 3, y: 6}
@@ -820,8 +820,8 @@ MonoBehaviour:
   betweenDoubleBlink: {x: 0.07, y: 0.08}
   doubleBlinkChance: 0.5
   ringLeanAngle: 26
-  ringLeanDuration: 1
-  ringLeanEase: 3
+  ringLeanDuration: 0.75
+  ringLeanEase: 15
 --- !u!1 &5880904374570772843
 GameObject:
   m_ObjectHideFlags: 0
