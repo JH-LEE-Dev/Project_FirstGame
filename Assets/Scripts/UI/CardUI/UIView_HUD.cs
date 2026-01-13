@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,10 @@ public class UIView_HUD : UIView
     [Space]
     [SerializeField] private TMP_Text turnIndicatorText;
     [SerializeField] private TMP_Text turnProcessIndicatorText;
+
+    [Header("UI Bar")]
+    [SerializeField] private Slider hpBar;
+    [SerializeField] private Slider targetBar;
 
     protected override void Awake()
     {

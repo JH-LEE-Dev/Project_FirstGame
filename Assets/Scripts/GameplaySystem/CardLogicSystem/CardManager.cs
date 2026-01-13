@@ -89,7 +89,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(0);
+        CardData cardData = cardDataBase.GetCardData(4);
         if (cardData == null)
             return;
 
