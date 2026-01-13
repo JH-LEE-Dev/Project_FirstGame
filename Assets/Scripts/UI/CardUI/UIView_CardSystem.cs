@@ -319,7 +319,7 @@ public class UIView_CardSystem : UIView
     {
         var currentBatchList = _jobQueue;
 
-        float turnWaitSecond = 2f;
+        float turnWaitSecond = 0.5f;
 
         int size = currentBatchList.Count;
         for (int i = 0; i < size; ++i)
@@ -348,7 +348,7 @@ public class UIView_CardSystem : UIView
 
                     DrawingCards(currentJob.cards);
 
-                    //await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case JobType_CardSystemUI.HandToGrave:
 
