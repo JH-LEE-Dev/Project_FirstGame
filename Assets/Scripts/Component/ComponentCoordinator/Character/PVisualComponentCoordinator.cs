@@ -58,4 +58,15 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
     /// <summary>
     /// 구현 코드 존. -----------------------------------------
     /// </summary>
+    /// 
+    public override void NotifyCombatActionSignal(CombatActionSignal signal)
+    {
+        //예시
+        //visualComponent,TriggerCombatActionEffect(signal);
+    }
+
+    public override void NotifyMoveSignalAction(MoveActionSignal signal)
+    {
+        //visualComponent,TriggerMoveActionEffect(signal);
+    }
 }

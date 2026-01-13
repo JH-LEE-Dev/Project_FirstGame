@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : Unit, ICharacterData
 {
     //외부 의존성
-    IOrbitPathProvider orbirPathProvider;
+    IOrbitPathProvider orbitPathProvider;
 
     //내부 의존성
     PVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -48,6 +48,12 @@ public class Character : Unit, ICharacterData
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    public void Initialize_Character(InputManager _inputManager, IOrbitPathProvider _orbitPathProvider, GameServiceLocator _gameServiceLocator)
+    {
+        base.Initialize(_inputManager, _gameServiceLocator);
+        orbitPathProvider = _orbitPathProvider;
 
         combatComponent = GetComponent<PCombatComponent>();
         moveComponent = GetComponent<PMoveComponent>();
@@ -55,14 +61,9 @@ public class Character : Unit, ICharacterData
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         visualComponentCoordinator.Initialize(combatComponent, moveComponent);
-    }
+        moveComponent.Initialize(ctx, orbitPathProvider,visualComponentCoordinator);
+        combatComponent.Initialize(ctx, visualComponentCoordinator);
 
-    public void Initialize_Character(InputManager _inputManager, IOrbitPathProvider _orbitPathProvider, GameServiceLocator _gameServiceLocator)
-    {
-        orbirPathProvider = _orbitPathProvider;
-
-        base.Initialize(_inputManager, _gameServiceLocator);
-        moveComponent.Initialize(ctx,orbirPathProvider);
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();

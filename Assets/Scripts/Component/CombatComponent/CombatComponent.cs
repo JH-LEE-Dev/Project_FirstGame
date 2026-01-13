@@ -6,7 +6,7 @@ public class CombatComponent : EntityComponent
     /// 시스템 속성 존. -----------------------------------------
     /// </summary>
 
-
+    protected ICombatSignalHandler combatSignalHandler;
 
 
 
@@ -33,6 +33,11 @@ public class CombatComponent : EntityComponent
     /// 시스템 코드 존. -----------------------------------------
     /// </summary>
 
+    public void Initialize(UnitContext _ctx, ICombatSignalHandler _combatSignalHandler)
+    {
+        base.Initialize(_ctx);
+        combatSignalHandler = _combatSignalHandler;
+    }
 
 
 

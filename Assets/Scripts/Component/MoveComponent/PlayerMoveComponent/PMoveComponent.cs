@@ -31,9 +31,9 @@ public class PMoveComponent : MoveComponent
     /// 시스템 코드 존.---------------------------------------
     /// </summary>
     
-    public void Initialize(UnitContext _ctx,IOrbitPathProvider _orbitPathProvider)
+    public void Initialize(UnitContext _ctx,IOrbitPathProvider _orbitPathProvider,IMoveSignalHandler _moveSignalHandler)
     {
-        base.Initialize(_ctx);
+        base.Initialize(_ctx, _moveSignalHandler);
         orbirPathProvider = _orbitPathProvider; 
     }
 

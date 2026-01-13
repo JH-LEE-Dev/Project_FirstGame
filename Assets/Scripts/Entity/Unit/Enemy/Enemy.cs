@@ -30,6 +30,13 @@ public class Enemy : Unit,IEnemyData
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
+        , EnemyTypeData _enemyTypeData)
+    {
+        base.Initialize(_inputManager, _gameServiceLocator);
+        enemyTypeData = _enemyTypeData;
 
         combatComponent = GetComponent<ECombatComponent>();
         moveComponent = GetComponent<EMoveComponent>();
@@ -37,15 +44,7 @@ public class Enemy : Unit,IEnemyData
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         visualComponentCoordinator.Initialize(combatComponent, moveComponent);
-    }
-
-    public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
-        , EnemyTypeData _enemyTypeData)
-    {
-        base.Initialize(_inputManager, _gameServiceLocator);
-        moveComponent.Initialize(ctx);
-
-        enemyTypeData = _enemyTypeData;
+        moveComponent.Initialize(ctx,visualComponentCoordinator);
 
         SetupEnemyType();
         BindEvent();
@@ -67,7 +66,9 @@ public class Enemy : Unit,IEnemyData
         transform.localScale = new Vector3(scaleDelta + scale, scaleDelta + scale, 1f);
         moveComponent.SetImpulsePower(enemyTypeData.moveForce);
         healthComponent.SetHealth(enemyTypeData.health);
-        combatComponent.Initialize(enemyTypeData.attack);
+
+        //비주얼 관련 초기화.
+        combatComponent.Initialize(ctx,visualComponentCoordinator, enemyTypeData.attack);
     }
 
     private void BindEvent()
