@@ -3,29 +3,35 @@ using System;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using System.Collections.Generic;
+using UnityEngine.Pool;
+using Unity.VisualScripting;
 
-public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEvent
+public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEvent
 {
     public event Action PlayerSpawnedEvent;
     public event Action EnemySpawnedEvent;
 
+    [Header("Enemy Pool Settings")]
+    [SerializeField] const int enemyMaxCount = 40;
+
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
-    [SerializeField] private GameObject characterPrefab;
-    [SerializeField] private GameObject earthPrefab;
-    [SerializeField] private GameObject enemyUnitPrefab;
+    [SerializeField] private Character characterPrefab;
+    [SerializeField] private Earth earthPrefab;
+    [SerializeField] private Enemy enemyUnitPrefab;
     [SerializeField] private GameObject characterSpawnPoint;
     [SerializeField] private GameObject earthSpawnPoint;
 
     //외부 의존성
     private InputManager inputManager;
     private IWaveSystemActions waveSystemActions;
+    private IWaveSystemEvents waveSystemEvents;
     private GameServiceLocator gameServiceLocator;
-    private ICardSystemEvent cardSystemEvent;
+    private ICardSystemEvents cardSystemEvents;
     private ICardSystemActions cardSystemActions;
     private IGameFlowProvider gameFlowProvider;
     private IUnitLogicSystemActions unitLogicSystemActions;
-    private IOrbitPathProvider orbirPathProvider;
+    private IOrbitPathProvider orbitPathProvider;
 
     //내부 의존성
     private GameRuleEventController gameRuleEventController;
@@ -45,61 +51,86 @@ public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEve
     [SerializeField] private GameObject enemyTargetPoint;
 
 
-    private List<Enemy> enemies = new List<Enemy>();
+    private List<Enemy> enemies = new List<Enemy>(40);
 
-    public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions, 
-        GameServiceLocator _gameServiceLocator,ICardSystemEvent _cardSystemEvent,
-        ICardSystemActions _cardSystemActions,GameController _gameController,
-        UnitLogicSystem _unitLogicSystem,IOrbitPathProvider _orbitPathProvider)
+    // Enemy 풀
+    ObjectPool<Enemy> enemyPool;
+
+    private void Awake()
+    {
+        enemyPool = new ObjectPool<Enemy>(
+            createFunc: OnCreateEnemy,
+            actionOnGet: OnGetEnemy,
+            actionOnRelease: OnReleaseEnemy,
+            actionOnDestroy: OnDestroyEnemy,
+            collectionCheck: false,
+            defaultCapacity: 40,
+            maxSize: 40
+        );
+    }
+
+    private Enemy OnCreateEnemy()
+    {
+        Enemy instance = Instantiate(enemyUnitPrefab);
+        return instance;
+    }
+
+    private void OnGetEnemy(Enemy enemy)
+    {
+        enemy.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseEnemy(Enemy enemy)
+    {
+        waveSystemEvents.StartMoveEvent -= enemy.OnMove;
+    }
+
+    //풀 용량 초기화 상황에서 Enemy 파괴.
+    private void OnDestroyEnemy(Enemy enemy)
+    {
+        Destroy(enemy.gameObject);
+    }
+
+    public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions,
+        IWaveSystemEvents _waveSystemEvents,
+        GameServiceLocator _gameServiceLocator, ICardSystemEvents _cardSystemEvent,
+        ICardSystemActions _cardSystemActions, GameController _gameController,
+        UnitLogicSystem _unitLogicSystem, IOrbitPathProvider _orbitPathProvider)
     {
         inputManager = _inputManager;
         waveSystemActions = _waveSystemActions;
+        waveSystemEvents = _waveSystemEvents;
         gameServiceLocator = _gameServiceLocator;
-        cardSystemEvent = _cardSystemEvent;
+        cardSystemEvents = _cardSystemEvent;
         cardSystemActions = _cardSystemActions;
         gameFlowProvider = _gameController;
         unitLogicSystemActions = _unitLogicSystem;
-        orbirPathProvider = _orbitPathProvider;
+        orbitPathProvider = _orbitPathProvider;
 
         gameRuleEventController = new GameRuleEventController();
 
-        BindEvent();
         SpawnEarth();
         SpawnCharacter();
     }
 
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
-        ReleaseEvent();
+        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
 
         PlayerSpawnedEvent = null;
         EnemySpawnedEvent = null;
-    }
 
-    private void BindEvent()
-    {
-        waveSystemActions.SpawnWaveEvent += SpawnWave;
-    }
-
-    private void ReleaseEvent()
-    {
-        waveSystemActions.SpawnWaveEvent -= SpawnWave;
+        ReleaseAllEnemy();
     }
 
     private void SpawnCharacter()
     {
-        GameObject spawnedObject = Instantiate(characterPrefab, characterSpawnPoint.transform);
-
-        if (spawnedObject == null)
-            return;
-
-        Character spawnedUnit = spawnedObject.GetComponent<Character>();
+        Character spawnedUnit = Instantiate(characterPrefab, characterSpawnPoint.transform);
 
         if (spawnedUnit != null)
         {
-            spawnedUnit.Initialize_Character(inputManager,orbirPathProvider, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvent,cardSystemActions);
+            spawnedUnit.Initialize_Character(inputManager, orbitPathProvider, gameServiceLocator);
+            gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
             characterUnit = spawnedUnit;
 
             PlayerSpawnedEvent?.Invoke();
@@ -110,12 +141,7 @@ public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEve
 
     private void SpawnEarth()
     {
-        GameObject spawnedObject = Instantiate(earthPrefab, earthSpawnPoint.transform);
-
-        if (spawnedObject == null)
-            return;
-
-        Earth spawnedUnit = spawnedObject.GetComponent<Earth>();
+        Earth spawnedUnit = Instantiate(earthPrefab, earthSpawnPoint.transform);
 
         if (spawnedUnit != null)
         {
@@ -169,12 +195,7 @@ public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEve
         {
             Vector3 spawnPosition = GetRandomPointInEllipse();
 
-            GameObject spawnedObject = Instantiate(enemyUnitPrefab, spawnPosition, Quaternion.identity);
-
-            if (spawnedObject == null)
-                return;
-
-            Enemy spawnedUnit = spawnedObject.GetComponent<Enemy>();
+            Enemy spawnedUnit = enemyPool.Get();
 
             if (spawnedUnit != null)
             {
@@ -182,8 +203,16 @@ public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEve
 
                 EnemyTypeData enemyTypeData = enemyTypeDataBase.GetEnemyData(randomInt);
 
+                spawnedUnit.Activate(spawnPosition);
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
+                spawnedUnit.UnitIsDeadEvent -= waveSystemActions.EnemyIsDead;
+                spawnedUnit.UnitIsDeadEvent += waveSystemActions.EnemyIsDead;
+
+                //파괴된 객체들은 구독을 취소하도록 조치를 취해야 함. 
+                //일단 풀링된 Enemy들이기 때문에 WaveSystem과 함께 파괴되어 문제는 발생하지 않을 것임.
+                waveSystemEvents.StartMoveEvent -= spawnedUnit.OnMove;
+                waveSystemEvents.StartMoveEvent += spawnedUnit.OnMove;
 
                 enemies.Add(spawnedUnit);
             }
@@ -212,5 +241,24 @@ public class UnitSpawner : MonoBehaviour,IUnitEventAccessor, IUnitSpawnSystemEve
     public IUnitEvent GetPlayerEventSource()
     {
         return earthUnit;
+    }
+
+    public void ResetCurrentEnemies()
+    {
+        for (int i = 0; i < enemies.Count; ++i)
+        {
+            enemies[i].DeActivate();
+        }
+    }
+
+    private void ReleaseAllEnemy()
+    {
+        for (int i = 0; i < enemies.Count; ++i)
+        {
+            if (enemies[i] != null)//씬이 종료되면 gameObject는 즉시 파괴되므로 접근해서는 안됨.
+                enemyPool.Release(enemies[i]);
+        }
+
+        enemyPool.Dispose();
     }
 }

@@ -24,6 +24,11 @@ public class UIView_MainMenu : UIView
         startButton.onClick.AddListener(OnClickStart);
     }
 
+    public override void OnDestroy()
+    {
+        PlayButtonClickedEvent = null;
+    }
+
     protected override void OnShow()
     {
         base.OnShow();

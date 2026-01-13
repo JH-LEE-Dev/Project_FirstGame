@@ -10,7 +10,7 @@ using static UnityEngine.Rendering.GPUSort;
 
 
 public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectCommandHandler,
-    ICardSystemEvent, ICardSystemActions
+    ICardSystemEvents, ICardSystemActions
 {
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingTurnFinishedEvent;
@@ -101,6 +101,14 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
             deckPile.Add(card);
             ++deckCnt;
         }
+    }
+
+    private void OnDestroy()
+    {
+        CardDrawFinishedEvent = null;
+        CardUsingTurnFinishedEvent = null;
+        CardUsedEvent = null;
+        CardUsingVerificationEvent = null;
     }
 
     public void CardPileDraw(int amount, bool bAdditional)

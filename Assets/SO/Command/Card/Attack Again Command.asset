@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Attack Again Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_AttackAgain
   effectApplyType: 1
-  cardSystemActionTimingType: 1
+  cardSystemActionTimingType: 2

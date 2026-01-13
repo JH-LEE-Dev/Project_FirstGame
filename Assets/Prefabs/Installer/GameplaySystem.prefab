@@ -5295,9 +5295,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2030a578d4e92d4887ffb053949495a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpawner
-  characterPrefab: {fileID: 179902501351162253, guid: 4473f9a0bbf50dd4695a6e8fc5e7e12a, type: 3}
-  earthPrefab: {fileID: 7657409726134063642, guid: 13a3d039e2159bc4d8c7fe1d862a882e, type: 3}
-  enemyUnitPrefab: {fileID: 624792059011753228, guid: fedaa3959cdfbf141b633754ef890a97, type: 3}
+  characterPrefab: {fileID: 1305217980410147217, guid: 4473f9a0bbf50dd4695a6e8fc5e7e12a, type: 3}
+  earthPrefab: {fileID: -4757043121124196522, guid: 13a3d039e2159bc4d8c7fe1d862a882e, type: 3}
+  enemyUnitPrefab: {fileID: 6860260092290883035, guid: fedaa3959cdfbf141b633754ef890a97, type: 3}
   characterSpawnPoint: {fileID: 4256006090761786137}
   earthSpawnPoint: {fileID: 6785999967380246694}
   waveSpawnPoint: {fileID: 6792626470961715331}

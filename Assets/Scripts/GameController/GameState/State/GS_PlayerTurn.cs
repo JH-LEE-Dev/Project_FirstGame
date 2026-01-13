@@ -31,4 +31,9 @@ public class GS_PlayerTurnState : IState
     {
 
     }
+
+    public void Release()
+    {
+        PlayerTurnStartEvent = null;
+    }
 }
