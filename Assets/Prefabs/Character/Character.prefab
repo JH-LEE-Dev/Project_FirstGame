@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 7987698377607979650}
   - component: {fileID: 3703326560759357920}
   - component: {fileID: -1876821194239025316}
+  - component: {fileID: 985420965116964591}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -361,7 +362,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ad3a8fdd01c6b4ca946e18d168047a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PMoveComponent
-  moveStrategyAsset: {fileID: 11400000, guid: f920ea7fa15a0e54ea089ad3d22eb19d, type: 2}
+  moveStrategyAsset: {fileID: 11400000, guid: af3d4cbeec16da54c8215375785917db, type: 2}
+--- !u!114 &985420965116964591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179902501351162253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a75502f595f404587d7f429264e1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character_Cutscene
+  turnStartPointPrefab: {fileID: 6225297960522730106, guid: a60eb439c7e784b43bc241bf5143ec66, type: 3}
+  turnStartDur: 0.8
+  maxTurnStartScale: 12
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +459,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: aac3a5f9b3c976a4288eb54a8b56a8d5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5f3367655554b87488029eea15c5bfee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -728,7 +744,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: c3f68c2db6305d642aef73321435a26e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6b58933b676c1764e818a90720022d25, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -803,6 +819,9 @@ MonoBehaviour:
   closeHold: {x: 0.09, y: 0.15}
   betweenDoubleBlink: {x: 0.07, y: 0.08}
   doubleBlinkChance: 0.5
+  ringLeanAngle: 26
+  ringLeanDuration: 1
+  ringLeanEase: 3
 --- !u!1 &5880904374570772843
 GameObject:
   m_ObjectHideFlags: 0

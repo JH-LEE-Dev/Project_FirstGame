@@ -20,7 +20,8 @@ public class PMoveComponent : MoveComponent
     /// 구현 속성 존.---------------------------------------
     /// </summary>
 
-
+    // Path에 빨려가는것을 막기위한 장치
+    private bool bIgnorePath = false;
 
 
 
@@ -31,10 +32,10 @@ public class PMoveComponent : MoveComponent
     /// 시스템 코드 존.---------------------------------------
     /// </summary>
     
-    public void Initialize(UnitContext _ctx,IOrbitPathProvider _orbitPathProvider,IMoveSignalHandler _moveSignalHandler)
+    public void Initialize(UnitContext _ctx, IOrbitPathProvider _orbitPathProvider, IMoveSignalHandler _moveSignalHandler)
     {
         base.Initialize(_ctx, _moveSignalHandler);
-        orbirPathProvider = _orbitPathProvider; 
+        orbirPathProvider = _orbitPathProvider;
     }
 
     protected override void Awake()
@@ -46,23 +47,35 @@ public class PMoveComponent : MoveComponent
 
     protected override void Start()
     {
-        moveStrategy.Initialize(ctx.unit,orbirPathProvider);
+        moveStrategy.Initialize(ctx.unit, orbirPathProvider, moveSignalHandler);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        //if (moveDirection.x == 0)
-        //    return;
+        // 컷씬 연출 중일땐 레일로 빨려가는것을 막는다.
+        if (bIgnorePath == true) return;
 
         moveStrategy.Move(moveDirection);
     }
-
-
 
     /// <summary>
     /// 구현 코드 존.---------------------------------------
     /// </summary>
 
+    public void SetbIgnorePath(bool value)
+    {
+        bIgnorePath = value;
+    }
+
+    public void ResetCharacterPosition()
+    {
+        moveStrategy.ResetCharacterPosition();
+    }
+
+    public Vector3 GetCharacterResetPosition()
+    {
+        return moveStrategy.GetCharacterResetPosition();
+    }
 }

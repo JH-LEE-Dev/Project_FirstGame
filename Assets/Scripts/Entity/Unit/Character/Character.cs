@@ -18,6 +18,7 @@ public class Character : Unit, ICharacterData
 
     private PMoveComponent moveComponent;
     private PCombatComponent combatComponent;
+    private CutsceneComponent cutsceneComponent;
 
     [Header("aim Object")]
     private LineRenderer lineRenderer;
@@ -57,17 +58,20 @@ public class Character : Unit, ICharacterData
 
         combatComponent = GetComponent<PCombatComponent>();
         moveComponent = GetComponent<PMoveComponent>();
+        cutsceneComponent = GetComponent<CutsceneComponent>();
         visualComponentCoordinator = new PVisualComponentCoordinator();
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
-        visualComponentCoordinator.Initialize(combatComponent, moveComponent);
+        visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider,visualComponentCoordinator);
         combatComponent.Initialize(ctx, visualComponentCoordinator);
+        cutsceneComponent?.Initialize(this, visualComponentCoordinator);
 
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
-        character_Visual.Bind(this);
+        character_Visual?.Bind(this);
+
         bulletSocket.SetCount(2); // 현재 캐릭터 임시.
     }
 
@@ -89,6 +93,12 @@ public class Character : Unit, ICharacterData
         return transform;
     }
 
+    public bool IsCutScene()
+    {
+        if (cutsceneComponent == null) return false;
+
+        return cutsceneComponent.IsCutscene;
+    }
     public float GetMaxHealth()
     {
         return healthComponent.GetMaxHealth();
@@ -228,5 +238,34 @@ public class Character : Unit, ICharacterData
     {
         bCanAction = false;
         PlayerAttackFinishedEvent?.Invoke();
+    }
+
+
+
+
+
+
+
+
+
+    // YW 구현존
+
+    // 상황에 따른 컷씬 동작 수행. (컷씬중에는 움직일 수 없게끔 장치를 해두었음.)
+    public void PlayCutscene(CutsceneSignal _signal)
+    {
+        switch(_signal)
+        {
+            // 카드 드로우 되었을 때 해주면 됨.
+            case CutsceneSignal.TurnStart_Start:
+                cutsceneComponent.TurnStart();
+                break;
+
+
+            // Turn 종료 버튼을 눌렀을 때 해주면 됨.
+            case CutsceneSignal.TurnEnd_Start:
+                cutsceneComponent.TurnEnd();
+                break;
+
+        }
     }
 }
