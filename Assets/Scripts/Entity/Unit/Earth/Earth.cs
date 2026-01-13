@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class Earth : MonoBehaviour, IDamageable, IEarthData, IUnitEvent
+public class Earth : MonoBehaviour, IDamageable, IPlayerData, IUnitEvent
 {
     public event Action<float> TakeDamageEvent;
 
@@ -43,5 +43,15 @@ public class Earth : MonoBehaviour, IDamageable, IEarthData, IUnitEvent
     private void OnDestroy()
     {
         TakeDamageEvent = null;
+    }
+
+    public float GetPrevHealth()
+    {
+        return healthComponent.GetPrevHealth();
+    }
+
+    public float GetPrevShield()
+    {
+        return healthComponent.GetPrevShield();
     }
 }
