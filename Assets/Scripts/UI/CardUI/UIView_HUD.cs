@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,10 @@ public class UIView_HUD : UIView
     [Space]
     [SerializeField] private TMP_Text turnIndicatorText;
     [SerializeField] private TMP_Text turnProcessIndicatorText;
+
+    [Header("UI Bar")]
+    [SerializeField] private BarMotion hpBar;
+    [SerializeField] private BarMotion targetBar;
 
     protected override void Awake()
     {
@@ -66,6 +71,16 @@ public class UIView_HUD : UIView
 
     public void OnPlayerHit(float damage)
     {
+        if (null == hpBar)
+            return;
 
+        IEarthData currEarth = unitLogicSystemProvider.earthData;
+
+        float maxHP = currEarth.GetMaxHealth();
+        float currHp = currEarth.GetCurrentHealth();
+
+        float oneProgress = currHp / maxHP;
+
+        hpBar.OnHit(oneProgress);
     }
 }

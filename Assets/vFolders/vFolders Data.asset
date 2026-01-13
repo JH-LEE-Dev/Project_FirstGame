@@ -46,7 +46,7 @@ MonoBehaviour:
       colorIndex: 7
       isIconRecursive: 1
       isColorRecursive: 1
-    - iconNameOrGuid: 
+    - iconNameOrGuid: cs Script Icon
       colorIndex: 2
       isIconRecursive: 0
       isColorRecursive: 1
