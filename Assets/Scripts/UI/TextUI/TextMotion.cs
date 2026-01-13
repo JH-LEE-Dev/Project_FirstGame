@@ -12,18 +12,18 @@ public class TextMotion : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mainText;
     [SerializeField] private float motionDuration = 1f;
     [SerializeField] private Ease motionEase = Ease.Linear;
-    [SerializeField] private bool bColorChange = false;
-    [SerializeField] private bool bShaking = false;
+    [SerializeField] private bool colorChange = false;
+    [SerializeField] private bool shaking = false;
 
     [Header("Color Change Settings")]
-    [ShowIf("bColorChange"), SerializeField] private Color defaultColor = Color.white;
-    [ShowIf("bColorChange"), SerializeField] private Color callColor = Color.softRed;
+    [ShowIf("colorChange"), SerializeField] private Color defaultColor = Color.white;
+    [ShowIf("colorChange"), SerializeField] private Color callColor = Color.softRed;
 
     [Header("Shaking Settings")]
-    [ShowIf("bShaking"), SerializeField] private RectTransform visualRect = null;
-    [ShowIf("bShaking"), SerializeField] private float shakeDuration = 1f;
-    [ShowIf("bShaking"), SerializeField] private float shakePower = 5f;
-    [ShowIf("bShaking"), SerializeField] private Ease shakeEase = Ease.Linear;
+    [ShowIf("shaking"), SerializeField] private RectTransform visualRect = null;
+    [ShowIf("shaking"), SerializeField] private float shakeDuration = 1f;
+    [ShowIf("shaking"), SerializeField] private float shakePower = 5f;
+    [ShowIf("shaking"), SerializeField] private Ease shakeEase = Ease.Linear;
 
     private Sequence colorSeq = null;
     private Sequence shakeSeq = null;
@@ -63,7 +63,7 @@ public class TextMotion : MonoBehaviour
 
     private void OnColorChange()
     {
-        if (!bColorChange)
+        if (!colorChange)
             return;
 
         colorSeq = CancelPrevMotion(colorSeq);
@@ -80,7 +80,7 @@ public class TextMotion : MonoBehaviour
 
     private void OnShake(float _motionDuration)
     {
-        if (!bShaking || null == visualRect)
+        if (!shaking || null == visualRect)
             return;
 
         float finalDuration = _motionDuration < 0f ? shakeDuration : _motionDuration;
@@ -99,12 +99,30 @@ public class TextMotion : MonoBehaviour
 
     private Sequence CancelPrevMotion(Sequence target)
     {
-        if (null == target)
-            return null;
-
         if (target.IsActive())
             target.Kill();
 
         return DOTween.Sequence();
+    }
+
+    [Button]
+    private void PlayMotionTest()
+    {
+        OnHit(50f, 45f);
+    }
+
+    [Button]
+    private void ResetData()
+    {
+        if (null != visualRect)
+        {
+            visualRect.anchoredPosition = originalAnchoredPos;
+        }
+
+        if (null != mainText)
+        {
+            mainText.color = defaultColor;
+            mainText.text = Mathf.RoundToInt(50f).ToString();
+        }
     }
 }
