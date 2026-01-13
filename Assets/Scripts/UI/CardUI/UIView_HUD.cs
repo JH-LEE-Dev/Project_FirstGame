@@ -17,8 +17,8 @@ public class UIView_HUD : UIView
     [SerializeField] private TMP_Text turnProcessIndicatorText;
 
     [Header("UI Bar")]
-    [SerializeField] private Slider hpBar;
-    [SerializeField] private Slider targetBar;
+    [SerializeField] private BarMotion hpBar;
+    [SerializeField] private BarMotion targetBar;
 
     protected override void Awake()
     {
@@ -71,6 +71,16 @@ public class UIView_HUD : UIView
 
     public void OnPlayerHit()
     {
+        if (null == hpBar)
+            return;
 
+        IEarthData currEarth = unitLogicSystemProvider.earthData;
+
+        float maxHP = currEarth.GetMaxHealth();
+        float currHp = currEarth.GetCurrentHealth();
+
+        float oneProgress = currHp / maxHP;
+
+        hpBar.OnHit(oneProgress);
     }
 }

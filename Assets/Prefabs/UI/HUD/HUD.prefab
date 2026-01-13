@@ -249,6 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7791674110105796231}
+  - component: {fileID: 4694876721956356493}
   m_Layer: 5
   m_Name: TargetBar
   m_TagString: Untagged
@@ -278,6 +279,35 @@ RectTransform:
   m_AnchoredPosition: {x: 535, y: -400}
   m_SizeDelta: {x: 256, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4694876721956356493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2237816681071352848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24bbccf5e39b6ee419df6a447b12c2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarMotion
+  activeGhost: 0
+  activeShaking: 0
+  activeParticle: 0
+  mainSlider: {fileID: 0}
+  mainDuration: 0.5
+  mainEase: 1
+  ghostSlider: {fileID: 0}
+  ghostDelay: 0.5
+  ghostDuration: 0.5
+  ghostEase: 1
+  visualRect: {fileID: 0}
+  shakeDuration: 0.5
+  shakePower: 100
+  shakeEase: 1
+  particle: {fileID: 0}
+  particleCnt: 10
+  particlePower: 1
 --- !u!1 &2662704195677978835
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,8 +581,8 @@ MonoBehaviour:
   uiPrefab: {fileID: 0}
   turnIndicatorText: {fileID: 5675350175602365181}
   turnProcessIndicatorText: {fileID: 6305588099218769138}
-  hpBar: {fileID: 0}
-  targetBar: {fileID: 0}
+  hpBar: {fileID: 2492851807881466662}
+  targetBar: {fileID: 4694876721956356493}
 --- !u!1 &3534484546545379159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1425,19 +1455,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bbccf5e39b6ee419df6a447b12c2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarMotion
-  activeGhost: 0
-  activeShaking: 0
+  activeGhost: 1
+  activeShaking: 1
   activeParticle: 0
   mainSlider: {fileID: 4944131663532709494}
   mainDuration: 0.5
   mainEase: 1
   ghostSlider: {fileID: 7862364765069126221}
-  ghostDelay: 0.5
+  ghostDelay: 0.35
   ghostDuration: 0.5
-  ghostEase: 1
+  ghostEase: 6
   visualRect: {fileID: 5476941621113003394}
-  shakePos: {x: 1, y: 1, z: 1}
-  shakePower: 0.5
+  shakeDuration: 0.5
+  shakePower: 15
+  shakeEase: 0
   particle: {fileID: 0}
   particleCnt: 10
   particlePower: 1
