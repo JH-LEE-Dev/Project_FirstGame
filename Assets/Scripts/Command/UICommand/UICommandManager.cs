@@ -3,8 +3,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class UICommandManager : MonoBehaviour, ICardUICommandSystem
+public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUICommandEvents
 {
+    public event Action<List<JobType_CardSystemUI>> JobDispatchEvent;
+
     private UICommandDispatcher dispatcher;
     private UICommandFactory_CardSystem commandFactory_CardSystem;
 
