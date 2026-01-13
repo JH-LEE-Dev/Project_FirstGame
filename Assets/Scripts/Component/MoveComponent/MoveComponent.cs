@@ -6,7 +6,8 @@ public class MoveComponent : EntityComponent
     /// <summary>
     /// 시스템 속성 존. -------------------------------------------
     /// </summary>
-    
+
+    protected IMoveSignalHandler moveSignalHandler;
 
 
     /// <summary>
@@ -32,6 +33,13 @@ public class MoveComponent : EntityComponent
     protected override void Start()
     {
 
+    }
+
+    public void Initialize(UnitContext _ctx,IMoveSignalHandler _moveSignalHandler)
+    {
+        base.Initialize(_ctx);
+
+        moveSignalHandler = _moveSignalHandler;
     }
 
 

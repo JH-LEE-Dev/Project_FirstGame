@@ -1,11 +1,12 @@
 using UnityEngine;
 
-public class ECombatComponent : EntityComponent
+public class ECombatComponent : CombatComponent
 {
     [SerializeField] private float attack = 0f;
 
-    public void Initialize(float _attack)
+    public void Initialize(UnitContext _ctx,ICombatSignalHandler _signalHandler,float _attack)
     {
+        base.Initialize(_ctx, _signalHandler); 
         attack = _attack;
     }
 

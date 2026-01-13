@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Enemy : Unit,IEnemyData
 {
+    //내부 의존성
+    EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
+
     /// <summary>
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
@@ -27,18 +30,21 @@ public class Enemy : Unit,IEnemyData
     protected override void Awake()
     {
         base.Awake();
-
-        combatComponent = GetComponent<ECombatComponent>();
-        moveComponent = GetComponent<EMoveComponent>();
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
         base.Initialize(_inputManager, _gameServiceLocator);
-        moveComponent.Initialize(ctx);
-
         enemyTypeData = _enemyTypeData;
+
+        combatComponent = GetComponent<ECombatComponent>();
+        moveComponent = GetComponent<EMoveComponent>();
+        visualComponentCoordinator = new EVisualComponentCoordinator();
+
+        //Visual 로직에 필요한 의존성을 추가해주면 됨.
+        visualComponentCoordinator.Initialize(combatComponent, moveComponent);
+        moveComponent.Initialize(ctx,visualComponentCoordinator);
 
         SetupEnemyType();
         BindEvent();
@@ -60,7 +66,9 @@ public class Enemy : Unit,IEnemyData
         transform.localScale = new Vector3(scaleDelta + scale, scaleDelta + scale, 1f);
         moveComponent.SetImpulsePower(enemyTypeData.moveForce);
         healthComponent.SetHealth(enemyTypeData.health);
-        combatComponent.Initialize(enemyTypeData.attack);
+
+        //비주얼 관련 초기화.
+        combatComponent.Initialize(ctx,visualComponentCoordinator, enemyTypeData.attack);
     }
 
     private void BindEvent()

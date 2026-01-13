@@ -30,4 +30,9 @@ public class Earth : MonoBehaviour, IDamageable, IEarthData
     {
         return healthComponent.GetCurrentHealth();
     }
+
+    public float GetCurrentShield()
+    {
+        return healthComponent.GetCurrentShield();
+    }
 }

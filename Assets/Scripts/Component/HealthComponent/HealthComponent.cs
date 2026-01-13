@@ -75,6 +75,10 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
     {
         return currentHealth;
     }
+    public float GetCurrentShield()
+    {
+        return currentShield;
+    }
 
     public void ApplyShieldModifier(float bonusShield)
     {

@@ -25,11 +25,7 @@ public class EMoveComponent : MoveComponent
     /// <summary>
     /// 시스템 코드 존.---------------------------------------
     /// </summary>
-    
-    public void Initialize(UnitContext _ctx,bool temp = false)
-    {
-        base.Initialize(_ctx);
-    }
+
 
     protected override void Awake()
     {

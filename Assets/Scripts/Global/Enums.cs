@@ -118,3 +118,13 @@ public enum JobType_CardSystemUI
     GraveToDeck,
     HandToGrave
 }
+
+public enum CombatActionSignal
+{
+    Attack,
+}
+
+public enum MoveActionSignal
+{
+    Dash,
+}
