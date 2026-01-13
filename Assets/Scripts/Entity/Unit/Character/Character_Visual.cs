@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Mono.Cecil.Cil;
 using System.Collections;
 using UnityEngine;
 
@@ -209,6 +210,8 @@ public class Character_Visual : MonoBehaviour
 
     public void Flip(Dir _dir)
     {
+        if (currentDir == _dir) return;
+
         currentDir = _dir;
 
         if (body != null)
