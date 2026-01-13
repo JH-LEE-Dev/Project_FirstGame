@@ -76,6 +76,18 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
             case MoveActionSignal.LeftMoving:
                 characterVisualComponent.Flip(Dir.Left);
                 break;
+
+            case MoveActionSignal.RightBlocked:
+                characterVisualComponent.Flip(Dir.Right);
+                characterVisualComponent.SetWallPushing(true, Dir.Right);
+                break;
+            case MoveActionSignal.LeftBlocked:
+                characterVisualComponent.Flip(Dir.Left);
+                characterVisualComponent.SetWallPushing(true, Dir.Left);
+                break;
+            case MoveActionSignal.NotBlocked:
+                characterVisualComponent.SetWallPushing(false, Dir.Left);
+                break;
         }
     }
 

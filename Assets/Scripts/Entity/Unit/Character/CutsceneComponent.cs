@@ -44,10 +44,8 @@ public class CutsceneComponent : MonoBehaviour
 
         bCutscene = true;
 
-        // 컷씬 시작 신호 (즉시)
         cutsceneSignalHandler?.NotifyCutsceneSignalAction(CutsceneSignal.TurnStart_Start);
 
-        // 기존 트윈 정리
         turnStartSeq?.Kill();
         turnStartSeq = null;
 
@@ -61,11 +59,9 @@ public class CutsceneComponent : MonoBehaviour
 
         turnStartSeq = DOTween.Sequence();
 
-        // 이동: 빠르게 출발 → 감속
         Tween moveTween = ct.DOMove(endPos, turnStartDur)
             .SetEase(Ease.OutCubic);
 
-        // 스케일: 동일한 감속 느낌
         Tween scaleTween = ct.DOScale(targetScale, turnStartDur)
             .From(startScale, true)
             .SetEase(Ease.OutCubic);

@@ -125,8 +125,9 @@ public enum MoveActionSignal
 {
     LeftMoving,
     RightMoving,
-    Blocked,
-
+    LeftBlocked,
+    RightBlocked,
+    NotBlocked,
 }
 
 public enum CutsceneSignal

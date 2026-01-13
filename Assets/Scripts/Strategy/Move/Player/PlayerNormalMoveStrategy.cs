@@ -39,6 +39,19 @@ public class PlayerNormalMoveStrategy : PlayerMoveStrategy
         if (Mathf.Approximately(movingValue, 1f) && targetSpeed > 0f)
             targetSpeed = 0f;
 
+
+        bool pushingRightWall = Mathf.Approximately(movingValue, 0f) && inputAxis < 0f;
+        bool pushingLeftWall = Mathf.Approximately(movingValue, 1f) && inputAxis > 0f;
+
+        if (pushingLeftWall)
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.LeftBlocked);
+        else if (pushingRightWall)
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.RightBlocked);
+        else
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.NotBlocked);
+
+
+
         bool stopping = Mathf.Approximately(targetSpeed, 0f);
         float timeConstant = stopping ? decelTime : accelTime;
 
