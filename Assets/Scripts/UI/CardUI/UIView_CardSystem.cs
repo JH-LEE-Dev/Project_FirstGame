@@ -83,34 +83,24 @@ public class UIView_CardSystem : UIView
         Test();
     }
 
-        public void Test()
-        {
+    public void Test()
+    {
         mat = testImpact?.material;
         particle = testImpact?.gameObject.GetComponentInChildren<ParticleSystem>();
 
-        // 1. 시퀀스 생성
         DG.Tweening.Sequence seq = DOTween.Sequence();
 
-        // 2. [단계 1] 매 루프 시작마다 실행할 행동 (파티클 재생 & 초기화)
         seq.AppendCallback(() =>
         {
-            // 파티클 재시작
             if (particle != null)
             {
                 particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 particle.Play();
             }
-
-            // (선택) 쉐이더 값이 혹시 튀는 걸 방지하기 위해 0으로 명확히 세팅
-            // DOFloat가 알아서 해주긴 하지만 안전장치입니다.
             mat.SetFloat("_Ratio", 0f);
         });
 
-        // 3. [단계 2] 쉐이더 애니메이션 (0 -> 1)
-        // From(0f)를 붙여서 매번 0부터 시작하도록 강제합니다.
         seq.Append(mat.DOFloat(1f, "_Ratio", 2f).SetEase(Ease.OutQuad));
-
-        // 4. [설정] 시퀀스 전체를 무한 반복
         seq.SetLoops(-1);
     }
 
