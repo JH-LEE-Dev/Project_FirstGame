@@ -1365,8 +1365,8 @@
     "m_ObjectId": "a079a26438234941ad40eb3bb8e5f474",
     "m_Title": "Make the Ring Texture",
     "m_Position": {
-        "x": -1727.0,
-        "y": -231.0
+        "x": -1727.0001220703125,
+        "y": -231.00003051757813
     }
 }
 
@@ -2033,7 +2033,7 @@
     "m_ObjectId": "cae66e031d9f49efa72c709171decdab",
     "m_KeepLightingVariants": false,
     "m_DefaultDecalBlending": true,
-    "m_DefaultSSAO": true
+    "m_DefaultSSAO": false
 }
 
 {
@@ -2501,7 +2501,7 @@
     "m_AlphaMode": 0,
     "m_RenderFace": 2,
     "m_AlphaClip": false,
-    "m_CastShadows": true,
+    "m_CastShadows": false,
     "m_ReceiveShadows": true,
     "m_DisableTint": false,
     "m_Sort3DAs2DCompatible": false,

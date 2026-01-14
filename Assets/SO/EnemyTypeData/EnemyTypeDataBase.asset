@@ -18,26 +18,26 @@ MonoBehaviour:
     scale: 2
     moveForce: 6
     health: 5
-    attack: 2
+    attack: 24
     shield: 0
   - id: Two
     sprite: {fileID: 215401576309132004, guid: c97a667afec2bd5419ec6d2d48465c7c, type: 3}
     scale: 4
     moveForce: 7
     health: 5
-    attack: 2
+    attack: 12
     shield: 0
   - id: Three
     sprite: {fileID: 6024657178149202955, guid: 47566be39d3a771448842dc5e7f9403e, type: 3}
     scale: 3
     moveForce: 5
     health: 5
-    attack: 2
+    attack: 17
     shield: 0
   - id: Four
     sprite: {fileID: -4734392874465410214, guid: ccfe7fa19208eb44c8518c1d58cf0572, type: 3}
     scale: 3
     moveForce: 8
     health: 0
-    attack: 0
+    attack: 7
     shield: 0

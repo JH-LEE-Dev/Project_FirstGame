@@ -12,6 +12,8 @@ public class UIText_DamageNumPlayer : MonoBehaviour
     [SerializeField] private TMP_Text mainText;
     [SerializeField] private RectTransform visualRect;
     [SerializeField] private bool collision;
+    [SerializeField] private Color defaultColor = Color.orange;
+    [SerializeField] private Color dangerColor = Color.red;
 
     [Header("First Settings")]
     [SerializeField] private Vector2 Dir;
@@ -65,7 +67,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public void PlayMotion(Action callback = null)
+    public void PlayMotion(bool _danger, Action _callback = null)
     {
         if (null != seq && seq.IsActive())
             seq.Kill();
@@ -79,17 +81,17 @@ public class UIText_DamageNumPlayer : MonoBehaviour
             
         });
 
-        FirstMotion();
+        FirstMotion(_danger);
         FinaltMotion();
 
         seq.SetUpdate(false);
         seq.OnComplete(()=>
         {
-            callback.Invoke();
+            _callback.Invoke();
         });
     }
 
-    private void FirstMotion()
+    private void FirstMotion(bool _danger)
     {
         if (null != rigid)
             rigid.simulated = true;
@@ -98,10 +100,17 @@ public class UIText_DamageNumPlayer : MonoBehaviour
         {
             visualRect.position = startPosition;
             visualRect.localScale = originScale;
+            mainText.color = defaultColor;
+
+            if (_danger)
+            {
+                mainText.color = dangerColor;
+                visualRect.localScale *= 1.25f;
+            }
         }
 
         rigid.AddForce(Dir.normalized * (Random.Range(0.5f, 1f) * power), ForceMode2D.Impulse);
-        rigid.AddTorque(Random.Range(0.3f, 0.85f), ForceMode2D.Impulse);
+        rigid.AddTorque(Random.Range(0.3f, 0.65f), ForceMode2D.Impulse);
         seq.AppendInterval(firstWait);
     }
 
