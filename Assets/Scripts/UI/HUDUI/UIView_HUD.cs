@@ -1,3 +1,4 @@
+using DamageNumbersPro;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -18,7 +19,11 @@ public class UIView_HUD : UIView
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
+    [SerializeField] private UIText_PlayerHP hpText;
     [SerializeField] private BarMotion targetBar;
+
+    [Header("Pooling System")]
+    [SerializeField] private UIDamage_Pooling damagePooling;
 
     protected override void Awake()
     {
@@ -29,6 +34,12 @@ public class UIView_HUD : UIView
     }
 
     public void DataInjection(IPlayerData _playerData)
+    private void Start()
+    {
+        hpText?.Init(unitLogicSystemProvider.playerData.GetMaxHealth(), this);
+    }
+
+    public void DependencyInjection(IUnitLogicSystemProvider _unitLogicSystemProvider)
     {
         playerData = _playerData;
     }
@@ -76,13 +87,21 @@ public class UIView_HUD : UIView
 
         IPlayerData currPlayer = playerData;
 
-        float maxHP = currPlayer.GetMaxHealth();
+        float maxHp = currPlayer.GetMaxHealth();
+        float prevHp = currPlayer.GetPrevHealth();
         float currHp = currPlayer.GetCurrentHealth();
 
-        float oneProgress = currHp / maxHP;
+        float oneProgress = currHp / maxHp;
 
-        hpBar.OnHit(oneProgress);
+        if (null != hpBar)
+            hpBar.OnHit(oneProgress);
+
+        if (null != hpText)
+            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePooling.DamagePool.Get());
     }
+
+    public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
+    public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
 
     public void PlayerSpawned()
     {

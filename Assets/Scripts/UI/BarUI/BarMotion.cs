@@ -8,7 +8,7 @@ public class BarMotion : MonoBehaviour
     [Header("Bar Settings")]
     [SerializeField] private bool activeGhost = false;
     [SerializeField] private bool activeShaking = false;
-    [SerializeField] private bool activeParticle = false;
+    //[SerializeField] private bool activeParticle = false;
 
     [Header("Main Settings")]
     [HideIf("activeGhost"),SerializeField] private Slider mainSlider;
@@ -29,9 +29,9 @@ public class BarMotion : MonoBehaviour
     private Vector2 originAnchoredPos = Vector2.zero;
 
     [Header("Particle Settings")]
-    [ShowIf("activeParticle"), SerializeField] private ParticleSystem particle;
-    [ShowIf("activeParticle"), SerializeField] private int particleCnt = 10;
-    [ShowIf("activeParticle"), SerializeField, Range(1f, 10f)] private float particlePower = 1f;
+    //[ShowIf("activeParticle"), SerializeField] private ParticleSystem particle;
+    //[ShowIf("activeParticle"), SerializeField] private int particleCnt = 10;
+    //[ShowIf("activeParticle"), SerializeField, Range(1f, 10f)] private float particlePower = 1f;
 
     private Sequence mainSeq = null;
     private Sequence ghostSeq = null;
@@ -108,8 +108,8 @@ public class BarMotion : MonoBehaviour
 
     private void Setup_Particle()
     {
-        if (!activeParticle || null == particle)
-            return;
+        //if (!activeParticle || null == particle)
+        //    return;
 
 
     }
