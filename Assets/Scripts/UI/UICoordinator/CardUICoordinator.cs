@@ -35,10 +35,13 @@ public class CardUICoordinator
         cardUISystem.CardUsedEvent += CardUsed;
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
         cardUISystem.CardUsingFinishedEvent += CardUsingFinished;
+        cardUISystem.UICommandCompleteEvent -= UICommandComplete;
+        cardUISystem.UICommandCompleteEvent += UICommandComplete;
     }
 
     private void ReleaseEvent()
     {
+        cardUISystem.UICommandCompleteEvent -= UICommandComplete;
         cardUISystem.CardUsedEvent -= CardUsed;
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
     }
