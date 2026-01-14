@@ -101,7 +101,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
         }
 
         rigid.AddForce(Dir.normalized * (Random.Range(0.5f, 1f) * power), ForceMode2D.Impulse);
-        rigid.AddTorque(Random.Range(-1f, 1f), ForceMode2D.Impulse);
+        rigid.AddTorque(Random.Range(0.3f, 0.85f), ForceMode2D.Impulse);
         seq.AppendInterval(firstWait);
     }
 

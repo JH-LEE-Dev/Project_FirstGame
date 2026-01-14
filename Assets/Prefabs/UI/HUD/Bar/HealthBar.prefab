@@ -539,7 +539,7 @@ MonoBehaviour:
   mainDuration: 0.5
   mainEase: 1
   ghostSlider: {fileID: 2653825454776584448}
-  ghostDelay: 0.5
+  ghostDelay: 2
   ghostDuration: 0.5
   ghostEase: 6
   visualRect: {fileID: 417412318454431439}
