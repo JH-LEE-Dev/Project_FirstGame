@@ -104,8 +104,6 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
             case CutsceneSignal.TurnStart_Start:
                 // 캐릭터를 우측으로 돌림.
                 characterVisualComponent.Flip(Dir.Right);
-                characterVisualComponent.StopBlink();
-                characterVisualComponent.SetFace(FaceExpression.Angry);
                 // 기존 위치로 빨려가면안됨.
                 moveComponent.SetbIgnorePath(true);
                 break;
@@ -114,7 +112,6 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
             case CutsceneSignal.TurnStart_End:
                 // 기존 위치로 여전히 빨려가면안됨.
                 moveComponent.SetbIgnorePath(true);
-                characterVisualComponent.StartBlink();
                 break;
 
             // 턴 넘기기 버튼 클릭
