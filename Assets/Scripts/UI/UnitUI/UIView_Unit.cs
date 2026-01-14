@@ -1,3 +1,4 @@
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class UIView_Unit : UIView
@@ -5,21 +6,21 @@ public class UIView_Unit : UIView
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
 
-    IPlayerData playerData;
+    ICharacterData characterData;
 
     protected override void Awake()
     {
         base.Awake();
     }
 
-    public void DataInjection(IPlayerData _playerData)
+    public void DataInjection()
     {
-        playerData = _playerData;
+       
     }
 
-    public void PlayerSpawned()
+    public void Initialize(ICharacterData _characterData)
     {
-
+        characterData = _characterData;
     }
 
     public override void Update()

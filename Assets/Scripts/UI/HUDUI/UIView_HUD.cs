@@ -38,12 +38,11 @@ public class UIView_HUD : UIView
     private void Start()
     {
         waveEndDeclareText.gameObject.SetActive(false);
-        hpText?.Init(playerData.GetMaxHealth(), this);
     }
 
-    public void DataInjection(IPlayerData _playerData)
+    public void DataInjection()
     {
-        playerData = _playerData;
+
     }
 
     protected override void OnShow()
@@ -107,8 +106,10 @@ public class UIView_HUD : UIView
     public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
     public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
 
-    public void PlayerSpawned()
+    public void Initialize(IPlayerData _playerData)
     {
+        playerData = _playerData;
 
+        hpText?.Init(playerData.GetMaxHealth(), this);
     }
 }
