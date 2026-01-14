@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface ICardSystemActions
 {
-    void StartCardDrawTurn(int waveIdx);
-
-    void PlayerTurnFinished();
+    public void CardUsed(CardDataInstance usedCard);
+    public void CardUsingFinished();
 }

@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour, IGameFlowController
 
     //외부 의존성.
     private InputManager inputManager;
-    private ICardSystemActions cardSystemActions;
+    private ICardSystemFlowActions cardSystemFlowActions;
     private IWaveSystemActions waveSystemActions;
 
     //내부 의존성
@@ -17,11 +17,11 @@ public class GameController : MonoBehaviour, IGameFlowController
     private int waveIdx = 0;
 
     public void Initialize(IWaveSystemActions _waveSystemActions, InputManager _inputManager,
-        ICardSystemActions _cardSystemActions)
+        ICardSystemFlowActions _cardSystemFlowActions)
     {
         waveSystemActions = _waveSystemActions;
         inputManager = _inputManager;
-        cardSystemActions = _cardSystemActions;
+        cardSystemFlowActions = _cardSystemFlowActions;
         gameStateMachine = new GameStateMachine();
 
         SetGameState();
@@ -43,8 +43,8 @@ public class GameController : MonoBehaviour, IGameFlowController
         enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
         enemyTurn.EnemyTurnStartEvent += waveSystemActions.StartEnemyMoveTurn;
 
-        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
-        playerTurn.PlayerTurnStartEvent += cardSystemActions.StartCardDrawTurn;
+        playerTurn.PlayerTurnStartEvent -= cardSystemFlowActions.StartCardDrawTurn;
+        playerTurn.PlayerTurnStartEvent += cardSystemFlowActions.StartCardDrawTurn;
     }
 
     public void ReleaseEvent()
@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour, IGameFlowController
         GS_EnemyTurnState enemyTurn = gameStateMachine.GetState<GS_EnemyTurnState>();
 
         enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
-        playerTurn.PlayerTurnStartEvent -= cardSystemActions.StartCardDrawTurn;
+        playerTurn.PlayerTurnStartEvent -= cardSystemFlowActions.StartCardDrawTurn;
     }
 
     public void OnDestroy()

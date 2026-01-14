@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class UIView_HUD : UIView
 {
-    //외부 의존성
-    IUnitLogicSystemProvider unitLogicSystemProvider;
+    //외부 데이터
+    IPlayerData playerData;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -28,9 +28,9 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void DependencyInjection(IUnitLogicSystemProvider _unitLogicSystemProvider)
+    public void DataInjection(IPlayerData _playerData)
     {
-        unitLogicSystemProvider = _unitLogicSystemProvider;
+        playerData = _playerData;
     }
 
     protected override void OnShow()
@@ -74,7 +74,7 @@ public class UIView_HUD : UIView
         if (null == hpBar)
             return;
 
-        IPlayerData currPlayer = unitLogicSystemProvider.playerData;
+        IPlayerData currPlayer = playerData;
 
         float maxHP = currPlayer.GetMaxHealth();
         float currHp = currPlayer.GetCurrentHealth();
