@@ -33,13 +33,12 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void DataInjection(IPlayerData _playerData)
     private void Start()
     {
-        hpText?.Init(unitLogicSystemProvider.playerData.GetMaxHealth(), this);
+        hpText?.Init(playerData.GetMaxHealth(), this);
     }
 
-    public void DependencyInjection(IUnitLogicSystemProvider _unitLogicSystemProvider)
+    public void DataInjection(IPlayerData _playerData)
     {
         playerData = _playerData;
     }
