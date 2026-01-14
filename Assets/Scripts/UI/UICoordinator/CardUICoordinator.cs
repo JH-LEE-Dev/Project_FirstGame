@@ -39,6 +39,11 @@ public class CardUICoordinator
         cardUISystem.UICommandCompleteEvent += UICommandComplete;
     }
 
+    public void PlayerSpawned()
+    {
+        unitUISystem.PlayerSpawned();
+    }
+
     private void ReleaseEvent()
     {
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;

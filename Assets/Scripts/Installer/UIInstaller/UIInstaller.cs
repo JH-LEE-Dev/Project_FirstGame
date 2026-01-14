@@ -232,6 +232,8 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingVerificationEvent += cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= cardUICoordinator.PlayerSpawned;
+        unitSpawnSystemEvent.PlayerSpawnedEvent += cardUICoordinator.PlayerSpawned;
         unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
         unitSpawnSystemEvent.PlayerSpawnedEvent += HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
@@ -273,6 +275,7 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingVerificationEvent -= cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= cardUICoordinator.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
 
         uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;

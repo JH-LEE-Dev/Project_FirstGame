@@ -17,6 +17,11 @@ public class UIView_Unit : UIView
         playerData = _playerData;
     }
 
+    public void PlayerSpawned()
+    {
+
+    }
+
     public override void Update()
     {
         base.Update();
