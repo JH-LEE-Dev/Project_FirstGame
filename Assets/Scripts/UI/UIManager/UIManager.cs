@@ -6,7 +6,6 @@ public class UIManager : MonoBehaviour
 {
     //외부 의존성
     ICardSystemData cardSystemData;
-    IUnitLogicSystemData unitLogicSystemData;
 
     private UIViewContext viewCtx;
 
@@ -162,10 +161,9 @@ public class UIManager : MonoBehaviour
     {
     }
 
-    public void Initialize_GameplayScene(ICardSystemData _cardSystemData,IUnitLogicSystemData _unitLogicSystemData)
+    public void Initialize_GameplayScene(ICardSystemData _cardSystemData)
     { 
         cardSystemData = _cardSystemData;
-        unitLogicSystemData = _unitLogicSystemData;
     }
 
     public void ReleaseDependency_GameplayScene()
@@ -179,9 +177,9 @@ public class UIManager : MonoBehaviour
             cardUI.DataInjection(cardSystemData.deckCards,cardSystemData.handCards,cardSystemData.graveCards);
 
         if (view is UIView_HUD hudUI)
-            hudUI.DataInjection(unitLogicSystemData.playerData);
+            hudUI.DataInjection();
 
         if (view is UIView_Unit unitUI)
-            unitUI.DataInjection(unitLogicSystemData.playerData);
+            unitUI.DataInjection();
     }
 }

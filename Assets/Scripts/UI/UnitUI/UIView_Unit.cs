@@ -1,3 +1,4 @@
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class UIView_Unit : UIView
@@ -5,7 +6,7 @@ public class UIView_Unit : UIView
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
 
-    IPlayerData playerData;
+    ICharacterData characterData;
 
     [Header("BulletSocket")]
     // 불릿 슬롯을 관리하는 시스템
@@ -22,8 +23,14 @@ public class UIView_Unit : UIView
         base.Awake();
     }
 
-    public void DataInjection(IPlayerData _playerData)
+    public void DataInjection()
     {
+       
+    }
+
+    public void Initialize(ICharacterData _characterData)
+    {
+        characterData = _characterData;
         playerData = _playerData;
         // 임시로 시작은 2개 연출중. 나중에 매개변수로 캐릭터 타입 넣어주면 될듯.
         SetBulletSocket();

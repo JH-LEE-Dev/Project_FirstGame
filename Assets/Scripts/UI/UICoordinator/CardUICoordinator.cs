@@ -39,6 +39,11 @@ public class CardUICoordinator
         cardUISystem.UICommandCompleteEvent += UICommandComplete;
     }
 
+    public void CharacterSpawned(ICharacterData _characterData)
+    {
+        unitUISystem.Initialize(_characterData);
+    }
+
     private void ReleaseEvent()
     {
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;

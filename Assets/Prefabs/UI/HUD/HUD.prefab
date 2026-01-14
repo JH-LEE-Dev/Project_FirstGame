@@ -414,7 +414,7 @@ MonoBehaviour:
   turnIndicatorText: {fileID: 5675350175602365181}
   turnProcessIndicatorText: {fileID: 6305588099218769138}
   waveText: {fileID: 8954051545492850275}
-  waveEndDeclareText: {fileID: 0}
+  waveEndDeclareText: {fileID: 8378088274874323808}
   hpBar: {fileID: 2492851807881466662}
   hpText: {fileID: 7683775203455921574}
   targetBar: {fileID: 4694876721956356493}
