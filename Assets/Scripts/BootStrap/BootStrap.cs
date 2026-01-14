@@ -81,9 +81,8 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     public void SetupGameplayScene()
     {
         gameInstaller = Instantiate(gameInstaller_Prefab);
+        gameInstaller.Initialize(inputManager, uiInstaller, uiInstaller);
         uiInstaller.DependencyInjection_Gameplay(gameInstaller);
-        gameInstaller.Initialize(inputManager);
-        gameInstaller.DependencyInjection_Gameplay(uiInstaller);
 
         uiInstaller.GameplayLevelStarted();
     }

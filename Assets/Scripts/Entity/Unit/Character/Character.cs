@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Character : Unit, ICharacterData
+public class Character : Unit, ICharacterData,ICharacterSignalHub
 {
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;

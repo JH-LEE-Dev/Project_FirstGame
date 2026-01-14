@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardUICoordinator
+public class CardUICoordinator : ICardUISignalHub
 {
     public event Action UICommandCompleteEvent;
     public event Action<CardDataInstance> CardUsedEvent;

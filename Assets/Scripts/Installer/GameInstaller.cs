@@ -1,10 +1,24 @@
 using UnityEngine;
 
-public class GameInstaller : MonoBehaviour
+public class GameInstaller : MonoBehaviour,IGameModuleProvider
 {
+    public ICardSystemEvents cardSystemEvents => cardManager;
+
+    public ICardSystemData cardSystemData => cardManager;
+
+    public ICardSystemActions cardSystemActions => cardManager;
+
+    public IUnitLogicSystemData unitLogicSystemData => unitLogicSystem;
+
+    public IUnitEventAccessor unitEventAccessor => unitSpawner;
+
+    public IUnitSpawnSystemEvent unitSpawnSystemEvent => unitSpawner;
+
     //외부 의존성
     private InputManager inputManager;
     private ICardUICommandSystem cardUICommandSystem;
+    private IUIModuleProvider uiModuleProvider;
+    private IUISignalHubProvider uiSignalHubProvider;
 
     //내부 의존성
     private UnitSpawner unitSpawner;
@@ -19,9 +33,12 @@ public class GameInstaller : MonoBehaviour
 
     [SerializeField] private WaveDatabase waveDatabase;
 
-    public void Initialize(InputManager _inputManager)
+    public void Initialize(InputManager _inputManager,IUISignalHubProvider _uiSignalHubProvider,IUIModuleProvider _uiModuleProvider)
     {
         inputManager = _inputManager;
+        uiModuleProvider = _uiModuleProvider;
+        uiSignalHubProvider = _uiSignalHubProvider;
+        cardUICommandSystem = uiModuleProvider.uiCommandSystem;
 
         gameController = GetComponentInChildren<GameController>();
         unitSpawner = GetComponent<UnitSpawner>();
@@ -35,7 +52,7 @@ public class GameInstaller : MonoBehaviour
 
         waveManager.Initialize(waveDatabase);
         gameServiceLocator.Initialize(cameraController);
-        gameController.Initialize(waveManager, inputManager, cardManager);
+        gameController.Initialize(waveManager, inputManager, cardManager, uiSignalHubProvider,unitSpawner);
         unitSpawner.Initiallize(inputManager, waveManager,waveManager, gameServiceLocator, cardManager,cardManager,
             gameController,unitLogicSystem,environmentManager);
         cardManager.Initialize(unitLogicSystem,gameController,cardUICommandSystem);
@@ -46,6 +63,7 @@ public class GameInstaller : MonoBehaviour
     public void Release()
     {
         unitSpawner.Release();
+        gameController.Release();
         ReleaseEvent();
     }
 
@@ -64,19 +82,6 @@ public class GameInstaller : MonoBehaviour
         ReleaseEvent();
     }
 
-    public void DependencyInjection_Gameplay(UIInstaller uiInstaller)
-    {
-        uiInstaller.ReceiveDependency_Gameplay(cardManager,cardManager,cardManager, 
-            gameController,unitLogicSystem,unitSpawner, unitSpawner);
-
-        unitSpawner.SpawnPlayerAndCharacter();
-    }
-
-    public void ReceiveDependency_Gameplay(ICardUICommandSystem _cardUICommandSystem)
-    {
-        cardUICommandSystem = _cardUICommandSystem;
-    }
-
     public void BindEvent()
     {
         cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
@@ -89,6 +94,8 @@ public class GameInstaller : MonoBehaviour
 
         gameController.SpawnWaveEvent -= waveManager.SpawnWave;
         gameController.SpawnWaveEvent += waveManager.SpawnWave;
+        gameController.SpawnPlayerEvent -= unitSpawner.SpawnPlayerAndCharacter;
+        gameController.SpawnPlayerEvent += unitSpawner.SpawnPlayerAndCharacter;
         waveManager.SpawnWaveEvent -= unitSpawner.SpawnWave;
         waveManager.SpawnWaveEvent += unitSpawner.SpawnWave;
         waveManager.WaveEndEvent -= unitSpawner.ResetCurrentEnemies;
@@ -101,6 +108,7 @@ public class GameInstaller : MonoBehaviour
     {
         cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
         gameController.SpawnWaveEvent -= waveManager.SpawnWave;
+        gameController.SpawnPlayerEvent -= unitSpawner.SpawnPlayerAndCharacter;
         waveManager.SpawnWaveEvent -= unitSpawner.SpawnWave;
         waveManager.WaveEndEvent -= unitSpawner.ResetCurrentEnemies;
         waveManager.WaveMoveEndEvent -= gameController.ChangeGameStateToPlayerTurn;

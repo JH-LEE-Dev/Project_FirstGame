@@ -1,17 +1,9 @@
 public class GameRuleEventController
 {
     //Character의존 DIP 적용 해야 함.
-    public void Bind_Character(Character character, IGameFlowProvider gameFlowProvider,ICardSystemEvents cardSystemEvent,
+    public void Bind_Character(Character character,ICardSystemEvents cardSystemEvent,
         ICardSystemFlowActions cardSystemFlowActions)
     {
-        GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
-
-        if (enemyTurnState != null)
-        {
-            enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
-            enemyTurnState.EnemyTurnStartEvent += character.ResetbCanAction;
-        }
-
         cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
         cardSystemEvent.CardUsingTurnFinishedEvent += character.SetbCanAction;
         cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
@@ -21,16 +13,9 @@ public class GameRuleEventController
         character.PlayerAttackFinishedEvent += cardSystemFlowActions.PlayerTurnFinished;
     }
 
-    public void Release_Character(Character character, IGameFlowProvider gameFlowProvider, ICardSystemEvents cardSystemEvent
+    public void Release_Character(Character character, ICardSystemEvents cardSystemEvent
         , ICardSystemFlowActions cardSystemFlowActions)
     {
-        GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
-
-        if (enemyTurnState != null)
-        {
-            enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
-        }
-
         cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
         cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
 
