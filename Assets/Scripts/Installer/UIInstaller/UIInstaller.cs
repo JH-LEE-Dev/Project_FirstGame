@@ -235,7 +235,11 @@ public class UIInstaller : MonoBehaviour
         unitSpawnSystemEvent.PlayerSpawnedEvent += HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
-        uiCommandManager.BindDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
+
+        uiCommandManager.JobDispatchEvent -= cardSystemObject.RecieveUIJob;
+        uiCommandManager.JobDispatchEvent += cardSystemObject.RecieveUIJob;
+        cardSystemObject.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
+        cardSystemObject.UICommandCompleteEvent += uiCommandManager.DecreaseJobBatchCount;
 
         IUnitEvent playerEventSource = unitEventAccessor.GetPlayerEventSource();
         playerEventSource.TakeDamageEvent -= HUDObject.OnPlayerHit;
@@ -265,7 +269,9 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
-        uiCommandManager.ReleaseDispatchEvent(HUDObject, cardSystemObject, gameplayObject);
+
+        uiCommandManager.JobDispatchEvent -= cardSystemObject.RecieveUIJob;
+        cardSystemObject.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
 
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 

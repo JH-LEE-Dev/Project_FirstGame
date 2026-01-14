@@ -43,6 +43,12 @@ public class GameInstaller : MonoBehaviour
         BindEvent();
     }
 
+    public void Release()
+    {
+        unitSpawner.Release();
+        ReleaseEvent();
+    }
+
     private void Awake()
     {
 

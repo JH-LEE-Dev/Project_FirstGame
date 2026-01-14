@@ -3,8 +3,15 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class UICommandManager : MonoBehaviour, ICardUICommandSystem
+public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUICommandEvents
 {
+    // 인터페이스의 이벤트를 dispatcher에 직접 연결
+    public event Action<List<Job_CardSystemUI>> JobDispatchEvent
+    {
+        add => dispatcher.CardSystem_JobDispatchEvent += value;
+        remove => dispatcher.CardSystem_JobDispatchEvent -= value;
+    }
+
     private UICommandDispatcher dispatcher;
     private UICommandFactory_CardSystem commandFactory_CardSystem;
 
@@ -18,8 +25,8 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
 
     public void OnDestroy()
     {
-        Debug.Log("1");
-        dispatcher.Release();
+        if (dispatcher != null)
+            dispatcher.Release();
     }
 
     public void CreateCommand(JobType_CardSystemUI jobType, ReadOnlySpan<CardDataInstance> cards = default)
@@ -60,6 +67,11 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem
         dispatcher.CardSystem_JobDispatchEvent += cardSystemObject.RecieveUIJob;
         cardSystemObject.UICommandCompleteEvent -= commandFactory_CardSystem.DecreaseBatchCount;
         cardSystemObject.UICommandCompleteEvent += commandFactory_CardSystem.DecreaseBatchCount;
+    }
+
+    public void DecreaseJobBatchCount()
+    {
+        commandFactory_CardSystem.DecreaseBatchCount();
     }
 
     public void ReleaseDispatchEvent(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)

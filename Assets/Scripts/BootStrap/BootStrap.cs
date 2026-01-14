@@ -68,8 +68,6 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     {
         inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
         inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
-        inputManager.inputReader.ESCButtonPressedEvent -= GoToMainMenuScene;
-        inputManager.inputReader.ESCButtonPressedEvent += GoToMainMenuScene;
     }
 
     private void ReleaseEvent()
@@ -111,6 +109,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
             return;
 
         uiInstaller.Release_Gameplay();
+        gameInstaller.Release();
         sceneManager.ChangeScene(SceneType.MainMenu);
     }
 
