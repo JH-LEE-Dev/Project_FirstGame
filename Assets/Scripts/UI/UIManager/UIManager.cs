@@ -180,5 +180,8 @@ public class UIManager : MonoBehaviour
 
         if (view is UIView_HUD hudUI)
             hudUI.DataInjection(unitLogicSystemData.playerData);
+
+        if (view is UIView_Unit unitUI)
+            unitUI.DataInjection(unitLogicSystemData.playerData);
     }
 }

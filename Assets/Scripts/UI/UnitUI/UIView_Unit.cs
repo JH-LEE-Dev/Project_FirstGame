@@ -20,7 +20,11 @@ public class UIView_Unit : UIView
     protected override void Awake()
     {
         base.Awake();
+    }
 
+    public void DataInjection(IPlayerData _playerData)
+    {
+        playerData = _playerData;
         // 임시로 시작은 2개 연출중. 나중에 매개변수로 캐릭터 타입 넣어주면 될듯.
         SetBulletSocket();
     }

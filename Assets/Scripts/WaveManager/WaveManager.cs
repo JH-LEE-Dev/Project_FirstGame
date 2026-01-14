@@ -31,6 +31,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
 
     public void SpawnWave(int idx)
     {
+        bIsWaveEnded = false;
         WaveData curWaveData = waveDatabase.GetWaveData(idx);
 
         if (curWaveData != null)
@@ -49,7 +50,8 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
     {
         yield return new WaitForSeconds(MoveTurnDelay);
 
-        WaveMoveEndEvent?.Invoke();
+        if (bIsWaveEnded == false)
+            WaveMoveEndEvent?.Invoke();
     }
 
     private IEnumerator MoveTurnCoroutine()
