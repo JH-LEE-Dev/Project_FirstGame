@@ -1,4 +1,3 @@
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class UIView_Unit : UIView
@@ -31,7 +30,6 @@ public class UIView_Unit : UIView
     public void Initialize(ICharacterData _characterData)
     {
         characterData = _characterData;
-        playerData = _playerData;
         // 임시로 시작은 2개 연출중. 나중에 매개변수로 캐릭터 타입 넣어주면 될듯.
         SetBulletSocket();
     }
@@ -39,28 +37,6 @@ public class UIView_Unit : UIView
     public override void Update()
     {
         base.Update();
-
-        Test();
-    }
-
-    private void Test()
-    {
-        temp += Time.deltaTime;
-
-        if (temp > 5f)
-        {
-            if (itp == 2)
-            {
-                bulletSocketSystem.SetCount(itp);
-                itp = 3;
-            }
-            else
-            {
-                bulletSocketSystem.SetCount(itp);
-                itp = 2;
-            }
-            temp = 0f;
-        }
     }
 
     protected override void OnShow()
@@ -76,6 +52,6 @@ public class UIView_Unit : UIView
     private void SetBulletSocket()
     {
         // 임시로 시작은 2개
-        bulletSocketSystem.Init(playerData.GetTransform(), 2);
+        bulletSocketSystem.Init(characterData.GetTransform(), 2);
     }
 }
