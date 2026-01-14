@@ -9,6 +9,11 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
         return orbitPathComponent.GetPathPosition(value);
     }
 
+    public void SetPathActive(bool value)
+    {
+        orbitPathComponent.SetPathActive(value);
+    }
+
     private void Awake()
     {
         orbitPathComponent = GetComponentInChildren<OrbitPathComponent>();

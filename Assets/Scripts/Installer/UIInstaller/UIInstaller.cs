@@ -66,7 +66,7 @@ public class UIInstaller : MonoBehaviour
         unitSpawnSystemEvent = _unitSpawnSystemEvent;
         cardSystemData = _cardSystemData;
 
-        uiManager.Initialize_GameplayScene(cardSystemData,unitLogicSystemData);
+        uiManager.Initialize_GameplayScene(cardSystemData);
         SetupUIElement();
 
         GS_PlayerTurnState playerTurnState = gameFlowProvider.GetGameState<GS_PlayerTurnState>();
@@ -232,8 +232,10 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingVerificationEvent += cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
-        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
-        unitSpawnSystemEvent.PlayerSpawnedEvent += HUDObject.PlayerSpawned;
+        unitSpawnSystemEvent.CharacterSpawnedEvent -= cardUICoordinator.CharacterSpawned;
+        unitSpawnSystemEvent.CharacterSpawnedEvent += cardUICoordinator.CharacterSpawned;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.Initialize;
+        unitSpawnSystemEvent.PlayerSpawnedEvent += HUDObject.Initialize;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
 
@@ -247,9 +249,9 @@ public class UIInstaller : MonoBehaviour
         cardUICoordinator.CardUsingFinishedEvent -= cardSystemActions.CardUsingFinished;
         cardUICoordinator.CardUsingFinishedEvent += cardSystemActions.CardUsingFinished;
 
-        IUnitEvent playerEventSource = unitEventAccessor.GetPlayerEventSource();
-        playerEventSource.TakeDamageEvent -= HUDObject.OnPlayerHit;
-        playerEventSource.TakeDamageEvent += HUDObject.OnPlayerHit;
+        //IUnitEvent playerEventSource = unitEventAccessor.GetPlayerEventSource();
+        //playerEventSource.TakeDamageEvent -= HUDObject.OnPlayerHit;
+        //playerEventSource.TakeDamageEvent += HUDObject.OnPlayerHit;
 
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -272,7 +274,8 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardDrawFinishedEvent -= cardUICoordinator.CardDrawFinished;
         cardSystemEvent.CardUsingVerificationEvent -= cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
-        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
+        unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.Initialize;
+        unitSpawnSystemEvent.CharacterSpawnedEvent -= cardUICoordinator.CharacterSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
 
         uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;

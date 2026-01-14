@@ -87,6 +87,8 @@ MonoBehaviour:
   pathLineCount: 20
   flowSpeedPerSec: 0.1
   pathLinePrefab: {fileID: 7938705195784025681, guid: 778b26b2ec6989c4198fbeef9fd72bd5, type: 3}
+  alphaFadeDuration: 0.25
+  globalAlpha: 1
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,20 @@ using UnityEngine;
 public class Character_Visual : MonoBehaviour
 {
     private Character owner;
+    private CutsceneComponent cutsceneComponent;
 
     [SerializeField] private Character_Face face;
+
+    // base pose
+    private Vector3 bodyBasePos;
+    private float bodyBaseZ;
+    private Vector3 bodyBaseScale;
+
+    private Vector3 backRingBasePos;
+    private float backRingBaseZ;
+
+    private Vector3 frontRingBasePos;
+    private float frontRingBaseZ;
 
 
     [Header("Targets")]
@@ -39,45 +51,48 @@ public class Character_Visual : MonoBehaviour
     [SerializeField] private Vector2 closeHold = new Vector2(0.09f, 0.15f);
     [SerializeField] private Vector2 betweenDoubleBlink = new Vector2(0.07f, 0.08f);
     [SerializeField, Range(0f, 1f)] private float doubleBlinkChance = 0.5f;
-
-    // base pose
-    private Vector3 bodyBasePos;
-    private float bodyBaseZ;
-    private Vector3 bodyBaseScale;
-
-    private Vector3 backRingBasePos;
-    private float backRingBaseZ;
-
-    private Vector3 frontRingBasePos;
-    private float frontRingBaseZ;
+    private Coroutine blinkCo;
 
 
     [Header("Flip / Rings Lean")]
-    [SerializeField] private float ringLeanAngle = 26f;     // 기울기 각도(도)
-    [SerializeField] private float ringLeanDuration = 0.75f;
-    [SerializeField] private Ease ringLeanEase = Ease.OutQuint;
+    [SerializeField] private float ringLeanAngle = 25f;   
+    private float ringLeanZ;                              
+    private float ringLeanZTarget;                        
+    [SerializeField] private float ringLeanTime = 0.2f;  
 
-    private float ringLeanZ = 0f;
-    private Tween ringLeanTween;
     private Dir currentDir = Dir.Left;
 
 
     [Header("Wall Push Feedback")]
-    [SerializeField] private float pressureBuildTime = 2f;
-    [SerializeField] private float maxWallOffsetX = 0.02f;
+    [SerializeField] private float maxWallOffsetX = 0.03f;
     [SerializeField, Range(0f, 0.25f)] private float maxSquashRatio = 0.2f;
     [SerializeField, Range(0f, 0.20f)] private float maxSpreadRatio = 0.15f;
-    [SerializeField] private float releaseDur = 0.18f;
-
     private bool isPushingWall = false;
-    private int pushingSign = 0;          // Left=-1, Right=+1
-    private float pressure = 0f;          // 0..1
+    private int pushingSign = 0;
+    private float pressure;
+    private float pressureTarget;
+    [SerializeField] private float pressureBuildTime = 0.3f;
+    [SerializeField] private float releaseDur = 0.04f;
 
-    private Tween pressureTween;
-    private Tween releaseTween;
+
+    [Header("Cutscene Lean")]
+    private float cutsceneRingLeanZ;        // current
+    private float cutsceneRingLeanZTarget;  // target
+    [SerializeField] private float cutsceneLeanTime = 0.10f;
+    private float cutsceneBodyLeanZ;        // current
+    private float cutsceneBodyLeanZTarget;  // target
+    [SerializeField] private float cutsceneBodyLeanTime = 0.10f;
 
 
-    private Coroutine blinkCo;
+    [Header("Move Visual")]
+    [SerializeField] private float moveRingLeanExtra = 18f;   // 이동 중 링 추가 기울림(도)
+    [SerializeField] private float moveBodyLeanExtra = 6f;    // 이동 중 바디 추가 기울림(도)
+    [SerializeField] private float moveLeanTime = 0.12f;      // 이동/정지 수렴 속도(작을수록 빠름)
+    private float moveRingLeanZ;        // current
+    private float moveRingLeanZTarget;  // target
+    private float moveBodyLeanZ;        // current
+    private float moveBodyLeanZTarget;  // target
+
 
 
     private void Awake()
@@ -110,48 +125,77 @@ public class Character_Visual : MonoBehaviour
 
     private void OnDisable()
     {
-        ringLeanTween?.Kill();
-        pressureTween?.Kill();
-        releaseTween?.Kill();
         StopBlink();
     }
 
     private void OnDestroy()
     {
-        ringLeanTween?.Kill();
-        pressureTween?.Kill();
-        releaseTween?.Kill();
         StopBlink();
     }
 
-    public void Bind(Character character)
+    public void Bind(Character _character, CutsceneComponent _cutsceneComponent)
     {
-        owner = character;
+        owner = _character;
+        cutsceneComponent = _cutsceneComponent;
     }
 
     private void LateUpdate()
     {
         float t = useUnscaledTime ? Time.unscaledTime : Time.time;
+        float dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
-        float wallX = 0f;
+        UpdateSmoothing(dt);
 
-        if (pushingSign != 0 && pressure > 0.0001f)
-            wallX = pushingSign * maxWallOffsetX * pressure;
+        float wallX = ComputeWallX();
 
+        UpdateBody(t, wallX);
+        UpdateRings(t, wallX);
+    }
 
-        // Body base
+    private void UpdateSmoothing(float dt)
+    {
+        // 링 기본 lean
+        ringLeanZ = ExpSmoothing(ringLeanZ, ringLeanZTarget, dt, ringLeanTime);
+
+        // 컷씬 lean (CutsceneComponent가 target을 갱신)
+        cutsceneRingLeanZ = ExpSmoothing(cutsceneRingLeanZ, cutsceneRingLeanZTarget, dt, cutsceneLeanTime);
+        cutsceneBodyLeanZ = ExpSmoothing(cutsceneBodyLeanZ, cutsceneBodyLeanZTarget, dt, cutsceneBodyLeanTime);
+
+        // pressure: pushing이면 buildTime, 아니면 releaseDur로 0으로 수렴
+        float timeConst = (pressureTarget > pressure) ? pressureBuildTime : releaseDur;
+        pressure = ExpSmoothing(pressure, pressureTarget, dt, timeConst);
+
+        moveRingLeanZ = ExpSmoothing(moveRingLeanZ, moveRingLeanZTarget, dt, moveLeanTime);
+        moveBodyLeanZ = ExpSmoothing(moveBodyLeanZ, moveBodyLeanZTarget, dt, moveLeanTime);
+
+        // 완전히 풀리면 sign 정리
+        if (pressure < 0.0001f && pressureTarget < 0.0001f)
+            pushingSign = 0;
+    }
+
+    private float ComputeWallX()
+    {
+        if (pushingSign == 0 || pressure <= 0.0001f) return 0f;
+        return pushingSign * maxWallOffsetX * pressure;
+    }
+
+    private void UpdateBody(float t, float wallX)
+    {
         float hoverPhase = (t / hoverDuration) * Mathf.PI * 2f;
         float rotPhase = (t / bodyRotateDuration) * Mathf.PI * 2f;
 
         Vector3 bPos = bodyBasePos;
         bPos.y += Mathf.Sin(hoverPhase) * hoverAmplitude;
-
         bPos.x += wallX;
         body.localPosition = bPos;
 
-        float bZ = bodyBaseZ + Mathf.Sin(rotPhase) * bodyRotateAmplitude;
+        //float bZ = bodyBaseZ + Mathf.Sin(rotPhase) * bodyRotateAmplitude + cutsceneBodyLeanZ;
+        float bZ = bodyBaseZ + Mathf.Sin(rotPhase) * bodyRotateAmplitude
+         + cutsceneBodyLeanZ + moveBodyLeanZ;
+
         body.localRotation = Quaternion.Euler(0f, 0f, bZ);
 
+        // 찌부/퍼짐 (pressure 기반)
         float signX = body.localScale.x >= 0f ? 1f : -1f;
         float absBaseX = Mathf.Abs(bodyBaseScale.x);
         float baseY = bodyBaseScale.y;
@@ -164,18 +208,27 @@ public class Character_Visual : MonoBehaviour
         bs.y = baseY * yMul;
         bs.z = bodyBaseScale.z;
         body.localScale = bs;
+    }
 
-
-
-        // Rings (hover/rotate + lean)
+    private void UpdateRings(float t, float wallX)
+    {
         float ringRotPhase = (t / ringRotateDuration) * Mathf.PI * 2f;
         float ringHoverPhase = (t / ringHoverDuration) * Mathf.PI * 2f;
 
         float ringZDelta = Mathf.Sin(ringRotPhase) * ringRotateAmplitude;
         float ringYDelta = Mathf.Sin(ringHoverPhase) * ringHoverAmplitude;
 
-        ApplyRing(backRings, backRingBasePos, backRingBaseZ, ringZDelta, ringYDelta, ringLeanZ, wallX);
-        ApplyRing(frontRings, frontRingBasePos, frontRingBaseZ, ringZDelta, ringYDelta, ringLeanZ, wallX);
+        //float finalRingLean = ringLeanZ + cutsceneRingLeanZ;
+        float finalRingLean = ringLeanZ + cutsceneRingLeanZ + moveRingLeanZ;
+        ApplyRing(backRings, backRingBasePos, backRingBaseZ, ringZDelta, ringYDelta, finalRingLean, wallX);
+        ApplyRing(frontRings, frontRingBasePos, frontRingBaseZ, ringZDelta, ringYDelta, finalRingLean, wallX);
+    }
+    // 움직임 핵심 함수
+    private float ExpSmoothing(float current, float target, float dt, float timeConstant)
+    {
+        if (timeConstant <= 0f) return target;
+        float k = 1f - Mathf.Exp(-dt / timeConstant);
+        return Mathf.LerpUnclamped(current, target, k);
     }
 
     private void ApplyRing(Transform ring, Vector3 basePos, float baseZ, float zDelta, float yDelta, float leanZ, float wallX)
@@ -196,7 +249,7 @@ public class Character_Visual : MonoBehaviour
         face?.SetExpression(expr);
     }
 
-    private void StartBlink()
+    public void StartBlink()
     {
         StopBlink();
         if (!enableBlink) return;
@@ -204,14 +257,13 @@ public class Character_Visual : MonoBehaviour
         blinkCo = StartCoroutine(BlinkLoop());
     }
 
-    private void StopBlink()
+    public void StopBlink()
     {
         if (blinkCo != null)
         {
             StopCoroutine(blinkCo);
             blinkCo = null;
         }
-
         SetFace(FaceExpression.Idle);
     }
 
@@ -251,21 +303,13 @@ public class Character_Visual : MonoBehaviour
         if (currentDir == _dir) return;
         currentDir = _dir;
 
-        // Body 즉시
-        if (body != null)
-        {
-            Vector3 bs = body.localScale;
-            float absX = Mathf.Abs(bs.x);
-            bs.x = (_dir == Dir.Left) ? absX : -absX;
-            body.localScale = bs;
-        }
+        // body 즉시 반전
+        Vector3 bs = body.localScale;
+        float absX = Mathf.Abs(bs.x);
+        bs.x = (_dir == Dir.Left) ? absX : -absX;
+        body.localScale = bs;
 
-        // Rings lean은 서서히
-        float targetLean = (_dir == Dir.Left) ? +ringLeanAngle : -ringLeanAngle;
-
-        ringLeanTween?.Kill();
-        ringLeanTween = DOTween.To(() => ringLeanZ, v => ringLeanZ = v, targetLean, ringLeanDuration)
-            .SetEase(ringLeanEase);
+        ringLeanZTarget = (_dir == Dir.Left) ? +ringLeanAngle : -ringLeanAngle;
     }
 
     private void SnapFlip(Dir dir)
@@ -295,26 +339,14 @@ public class Character_Visual : MonoBehaviour
                 SetFace(FaceExpression.Angry);
             }
 
-
-            pushingSign = sign;
             isPushingWall = true;
-
-            bool alreadyBuilding = pressureTween != null && pressureTween.IsActive() && pressureTween.IsPlaying();
-            if (alreadyBuilding) return;
-
-            releaseTween?.Kill();
-            releaseTween = null;
-
-            pressureTween?.Kill();
-            pressureTween = DOTween.To(() => pressure, v => pressure = v, 1f, pressureBuildTime)
-                .SetEase(Ease.OutCubic);
+            pushingSign = sign;
+            pressureTarget = 1f;
         }
         else
         {
-            if (!isPushingWall && pressure <= 0.0001f)
-                return;
+            if (!isPushingWall && pressure <= 0.0001f) return;
 
-            // 밀기 상태에서 빠져나오는 순간
             if (isPushingWall)
             {
                 StartBlink();
@@ -322,28 +354,12 @@ public class Character_Visual : MonoBehaviour
             }
 
             isPushingWall = false;
-
-            pressureTween?.Kill();
-            pressureTween = null;
-
-            releaseTween?.Kill();
-            releaseTween = DOTween.To(() => pressure, v => pressure = v, 0f, releaseDur)
-                .SetEase(Ease.OutCubic)
-                .OnComplete(() =>
-                {
-                    pushingSign = 0;
-                });
+            pressureTarget = 0f;
         }
     }
 
     public void ForceStableVisualState()
     {
-        pressureTween?.Kill();
-        pressureTween = null;
-
-        releaseTween?.Kill();
-        releaseTween = null;
-
         pressure = 0f;
         isPushingWall = false;
         pushingSign = 0;
@@ -351,6 +367,7 @@ public class Character_Visual : MonoBehaviour
         // 정상화
         SetFace(FaceExpression.Idle);
         StartBlink();
+        StopMovingVisual();
 
         // body 스케일 복구
         if (body != null)
@@ -364,6 +381,32 @@ public class Character_Visual : MonoBehaviour
             bs.z = bodyBaseScale.z;
             body.localScale = bs;
         }
+    }
+
+    public void SetCutsceneLeanTargets(float ringLeanTarget, float bodyLeanTarget)
+    {
+        cutsceneRingLeanZTarget = ringLeanTarget;
+        cutsceneBodyLeanZTarget = bodyLeanTarget;
+    }
+
+    public void ClearCutsceneLeanTargets()
+    {
+        cutsceneRingLeanZTarget = 0f;
+        cutsceneBodyLeanZTarget = 0f;
+    }
+
+    public void MovingVisual(Dir dir)
+    {
+        float sign = (dir == Dir.Left) ? +1f : -1f;
+
+        moveRingLeanZTarget = sign * moveRingLeanExtra;
+        moveBodyLeanZTarget = sign * moveBodyLeanExtra;
+    }
+
+    public void StopMovingVisual()
+    {
+        moveRingLeanZTarget = 0f;
+        moveBodyLeanZTarget = 0f;
     }
 }
 

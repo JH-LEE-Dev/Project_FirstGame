@@ -16,6 +16,8 @@ public class UIView_HUD : UIView
     [Space]
     [SerializeField] private TMP_Text turnIndicatorText;
     [SerializeField] private TMP_Text turnProcessIndicatorText;
+    [SerializeField] private TMP_Text waveText;
+    [SerializeField] private TMP_Text waveEndDeclareText;
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
@@ -35,12 +37,12 @@ public class UIView_HUD : UIView
 
     private void Start()
     {
-        hpText?.Init(playerData.GetMaxHealth(), this);
+        waveEndDeclareText.gameObject.SetActive(false);
     }
 
-    public void DataInjection(IPlayerData _playerData)
+    public void DataInjection()
     {
-        playerData = _playerData;
+
     }
 
     protected override void OnShow()
@@ -64,6 +66,8 @@ public class UIView_HUD : UIView
 
     public void PlayerTurnStarted(int waveIdx)
     {
+        waveEndDeclareText?.gameObject.SetActive(false); 
+        waveText.text = "Wave : " + (waveIdx + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
     }
@@ -102,8 +106,10 @@ public class UIView_HUD : UIView
     public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
     public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
 
-    public void PlayerSpawned()
+    public void Initialize(IPlayerData _playerData)
     {
+        playerData = _playerData;
 
+        hpText?.Init(playerData.GetMaxHealth(), this);
     }
 }

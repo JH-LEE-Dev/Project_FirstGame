@@ -68,6 +68,8 @@ public class GameInstaller : MonoBehaviour
     {
         uiInstaller.ReceiveDependency_Gameplay(cardManager,cardManager,cardManager, 
             gameController,unitLogicSystem,unitSpawner, unitSpawner);
+
+        unitSpawner.SpawnPlayerAndCharacter();
     }
 
     public void ReceiveDependency_Gameplay(ICardUICommandSystem _cardUICommandSystem)

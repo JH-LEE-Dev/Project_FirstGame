@@ -14,6 +14,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
     private WaveDatabase waveDatabase;
 
     private uint currentEnemyCount = 0;
+    private bool bIsWaveEnded = false;
 
     public void Initialize(WaveDatabase _waveDatabase)
     {
@@ -30,6 +31,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
 
     public void SpawnWave(int idx)
     {
+        bIsWaveEnded = false;
         WaveData curWaveData = waveDatabase.GetWaveData(idx);
 
         if (curWaveData != null)
@@ -48,7 +50,8 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
     {
         yield return new WaitForSeconds(MoveTurnDelay);
 
-        WaveMoveEndEvent?.Invoke();
+        if (bIsWaveEnded == false)
+            WaveMoveEndEvent?.Invoke();
     }
 
     private IEnumerator MoveTurnCoroutine()
@@ -68,6 +71,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
 
         if (currentEnemyCount == 0)
         {
+            bIsWaveEnded = true;
             WaveEndEvent?.Invoke();
         }
     }

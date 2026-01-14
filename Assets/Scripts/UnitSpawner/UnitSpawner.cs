@@ -8,8 +8,9 @@ using Unity.VisualScripting;
 
 public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEvent
 {
-    public event Action PlayerSpawnedEvent;
+    public event Action<IPlayerData> PlayerSpawnedEvent;
     public event Action EnemySpawnedEvent;
+    public event Action<ICharacterData> CharacterSpawnedEvent;
 
     [Header("Enemy Pool Settings")]
     [SerializeField] const int enemyMaxCount = 40;
@@ -108,9 +109,6 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         orbitPathProvider = _orbitPathProvider;
 
         gameRuleEventController = new GameRuleEventController();
-
-        SpawnEarth();
-        SpawnCharacter();
     }
 
     public void OnDestroy()
@@ -119,6 +117,12 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
         PlayerSpawnedEvent = null;
         EnemySpawnedEvent = null;
+    }
+
+    public void SpawnPlayerAndCharacter()
+    {
+        SpawnEarth();
+        SpawnCharacter();
     }
 
     private void SpawnCharacter()
@@ -131,7 +135,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
             gameRuleEventController.Bind_Character(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemFlowActions);
             characterUnit = spawnedUnit;
 
-            PlayerSpawnedEvent?.Invoke();
+            CharacterSpawnedEvent?.Invoke(spawnedUnit);
 
             SetUnitLogicSystem_Character();
         }
@@ -144,6 +148,8 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         if (spawnedUnit != null)
         {
             earthUnit = spawnedUnit;
+
+            PlayerSpawnedEvent?.Invoke(earthUnit);
 
             SetUnitLogicSystem_Earth();
         }

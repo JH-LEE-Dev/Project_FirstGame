@@ -5,7 +5,9 @@ using UnityEngine.TextCore.Text;
 public class CutsceneComponent : MonoBehaviour
 {
     private Character character;
+    private Character_Visual characterVisual;
     private ICutsceneSignalHandler cutsceneSignalHandler;
+    private IOrbitPathProvider orbitPathProvider;
 
     [Header("Turn Start Points")]
     [SerializeField] private Transform turnStartPointPrefab;
@@ -19,19 +21,21 @@ public class CutsceneComponent : MonoBehaviour
     public bool IsCutscene => bCutscene;
 
     [Header("TurnStart")]
-    [SerializeField] private float turnStartDur = 0.8f;
+    [SerializeField] private float turnStartDur = 1f;
+    [SerializeField] private float turnEndDur = 0.5f;
     [SerializeField] private float maxTurnStartScale = 12f;
     private float OriginScale = 4.25f;
 
 
-    public void Initialize(Character _character, ICutsceneSignalHandler _handler)
+    public void Initialize(Character _character, ICutsceneSignalHandler _handler, IOrbitPathProvider _orbitPathProvider, Character_Visual _characterVisual)
     {
         character = _character;
         cutsceneSignalHandler = _handler;
+        orbitPathProvider = _orbitPathProvider;
+        characterVisual = _characterVisual;
         turnStartPoint = Instantiate(turnStartPointPrefab, null);
     }
 
-    [ContextMenu("TEST / Turn Start Cutscene")]
     public void TurnStart()
     {
         if (bCutscene) return;
@@ -45,6 +49,7 @@ public class CutsceneComponent : MonoBehaviour
         bCutscene = true;
 
         cutsceneSignalHandler?.NotifyCutsceneSignalAction(CutsceneSignal.TurnStart_Start);
+        orbitPathProvider.SetPathActive(false);
 
         turnStartSeq?.Kill();
         turnStartSeq = null;
@@ -59,8 +64,23 @@ public class CutsceneComponent : MonoBehaviour
 
         turnStartSeq = DOTween.Sequence();
 
-        Tween moveTween = ct.DOMove(endPos, turnStartDur)
-            .SetEase(Ease.OutCubic);
+        Tween moveTween = null;
+        moveTween = ct.DOMove(endPos, turnStartDur)
+            .SetEase(Ease.OutCubic)
+            .OnUpdate(() =>
+            {
+                if (characterVisual == null || moveTween == null) return;
+
+                float t = moveTween.ElapsedPercentage();
+                float speedFeel = 1f - t;                
+                speedFeel *= speedFeel;                  
+
+                // Right로 기울이기: 네 규칙상 Right는 음수
+                float ringLean = -28f * speedFeel;
+                float bodyLean = -10f * speedFeel;
+
+                characterVisual.SetCutsceneLeanTargets(ringLean, bodyLean);
+            });
 
         Tween scaleTween = ct.DOScale(targetScale, turnStartDur)
             .From(startScale, true)
@@ -72,10 +92,10 @@ public class CutsceneComponent : MonoBehaviour
             .OnComplete(() =>
             {
                 bCutscene = false;
+                characterVisual?.ClearCutsceneLeanTargets();
                 cutsceneSignalHandler?.NotifyCutsceneSignalAction(CutsceneSignal.TurnStart_End);
             });
     }
-    [ContextMenu("TEST / Turn End Cutscene")]
     public void TurnEnd()
     {
         if (bCutscene) return;
@@ -99,6 +119,7 @@ public class CutsceneComponent : MonoBehaviour
 
         // 컷씬 시작 신호 (즉시)
         cutsceneSignalHandler?.NotifyCutsceneSignalAction(CutsceneSignal.TurnEnd_Start);
+        orbitPathProvider.SetPathActive(true);
 
         // 기존 트윈 정리
         turnStartSeq?.Kill();
@@ -119,14 +140,32 @@ public class CutsceneComponent : MonoBehaviour
             if (endCalled) return;
             endCalled = true;
             cutsceneSignalHandler?.NotifyCutsceneSignalAction(CutsceneSignal.TurnEnd_End);
+            characterVisual?.ClearCutsceneLeanTargets();
             bCutscene = false;
         }
         turnStartSeq = DOTween.Sequence();
 
-        Tween moveTween = ct.DOMove(endPos, turnStartDur)
-            .SetEase(Ease.OutCubic);
 
-        Tween scaleTween = ct.DOScale(targetScale, turnStartDur)
+
+        Tween moveTween = null;
+        moveTween = ct.DOMove(endPos, turnEndDur)
+            .SetEase(Ease.OutCubic)
+            .OnUpdate(() =>
+            {
+                if (characterVisual == null || moveTween == null) return;
+
+                float t = moveTween.ElapsedPercentage();
+                float speedFeel = 1f - t;
+                speedFeel *= speedFeel;
+
+                // Right로 기울이기: 네 규칙상 Right는 음수
+                float ringLean = -28f * speedFeel;
+                float bodyLean = -10f * speedFeel;
+
+                characterVisual.SetCutsceneLeanTargets(ringLean, bodyLean);
+            });
+
+        Tween scaleTween = ct.DOScale(targetScale, turnEndDur)
             .From(startScale, true)
             .SetEase(Ease.OutCubic);
 

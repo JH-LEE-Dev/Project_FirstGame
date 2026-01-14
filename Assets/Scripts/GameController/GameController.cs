@@ -92,4 +92,9 @@ public class GameController : MonoBehaviour, IGameFlowController
     {
         ChangeGameState<GS_PlayerTurnState>();
     }
+
+    public void WaveEnded()
+    {
+
+    }
 }

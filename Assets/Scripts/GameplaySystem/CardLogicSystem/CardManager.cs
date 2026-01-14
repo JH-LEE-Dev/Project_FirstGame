@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.Pool;
-using static UnityEngine.Rendering.GPUSort;
 
 
 public class CardManager : MonoBehaviour, ICardSystemActions, ICardEffectCommandHandler,
@@ -122,7 +117,7 @@ public class CardManager : MonoBehaviour, ICardSystemActions, ICardEffectCommand
             amount = deckPile.Count;
         }
 
-        using var rentalBuffer = new RentalScope<CardDataInstance>(amount);
+        var rentalBuffer = new RentalScope<CardDataInstance>(amount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < amount; ++i)
@@ -153,8 +148,15 @@ public class CardManager : MonoBehaviour, ICardSystemActions, ICardEffectCommand
 
     private void CreateUICommand(JobType_CardSystemUI jobType, RentalScope<CardDataInstance> cardsBuffer)
     {
-        cardUICommandSystem.CreateCommand(jobType, cardsBuffer.Span);
-        cardsBuffer.Dispose();
+        try
+        {
+            cardUICommandSystem.CreateCommand(jobType, cardsBuffer.Span);
+        }
+        finally
+        {
+
+            cardsBuffer.Dispose();
+        }
     }
 
     private void StartCardPileDraw(int amount)
