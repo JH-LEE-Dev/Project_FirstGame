@@ -19,6 +19,13 @@ public struct Job_CardSystemUI
     public List<CardDataInstance> cards;
 }
 
+public struct UIJobBatch_CardSystem
+{
+    public List<Job_CardSystemUI> jobList;
+    public int idx;
+}
+
+
 public ref struct RentalScope<T>
 {
     private T[] _array;

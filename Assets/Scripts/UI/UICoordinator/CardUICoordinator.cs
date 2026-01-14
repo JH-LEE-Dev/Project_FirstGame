@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardUICoordinator : ICardUISignalHub
 {
-    public event Action UICommandCompleteEvent;
+    public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> CardUsedEvent;
     public event Action CardUsingFinishedEvent;
 
@@ -24,9 +24,9 @@ public class CardUICoordinator : ICardUISignalHub
         ReleaseEvent();
     }
 
-    private void UICommandComplete()
+    private void UICommandComplete(int idx)
     {
-        UICommandCompleteEvent?.Invoke();
+        UICommandCompleteEvent?.Invoke(idx);
     }
 
     private void BindEvent()
@@ -71,9 +71,9 @@ public class CardUICoordinator : ICardUISignalHub
         cardUISystem.CardUsingApproved(boolean);
     }
 
-    public void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    public void RecieveUIJob(UIJobBatch_CardSystem _jobBatch)
     {
-        cardUISystem.RecieveUIJob(_jobQueue);
+        cardUISystem.RecieveUIJob(_jobBatch);
     }
 
     public void EnemyTurnStarted()

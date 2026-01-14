@@ -231,8 +231,8 @@ public class UIInstaller : MonoBehaviour, IUISignalHubProvider,IUIModuleProvider
         uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;
         uiCommandManager.JobDispatchEvent += cardUICoordinator.RecieveUIJob;
 
-        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
-        cardUICoordinator.UICommandCompleteEvent += uiCommandManager.DecreaseJobBatchCount;
+        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.ReleaseJobBatch;
+        cardUICoordinator.UICommandCompleteEvent += uiCommandManager.ReleaseJobBatch;
         cardUICoordinator.CardUsedEvent -= cardSystemActions.CardUsed;
         cardUICoordinator.CardUsedEvent += cardSystemActions.CardUsed;
         cardUICoordinator.CardUsingFinishedEvent -= cardSystemActions.CardUsingFinished;
@@ -255,7 +255,7 @@ public class UIInstaller : MonoBehaviour, IUISignalHubProvider,IUIModuleProvider
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayUICoordinator.CardUsingFinished;
 
         uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;
-        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
+        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.ReleaseJobBatch;
         cardUICoordinator.CardUsedEvent -= cardSystemActions.CardUsed;
         cardUICoordinator.CardUsingFinishedEvent -= cardSystemActions.CardUsingFinished;
 

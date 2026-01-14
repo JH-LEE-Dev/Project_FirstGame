@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 
 public class GameplayUICoordinator : IGameplayUISignalHub
 {
@@ -15,12 +16,13 @@ public class GameplayUICoordinator : IGameplayUISignalHub
 
     public void PlayerTurnStarted(int waveIdx)
     {
-
+        hudUISystem.PlayerTurnStarted(waveIdx);
     }
 
     public void EnemyTurnStarted()
     {
-
+        hudUISystem.EnemyTurnStarted();
+        gameplayUISystem.EnemyTurnStarted();
     }
 
     public void CardUseTimeStarted()
@@ -35,6 +37,6 @@ public class GameplayUICoordinator : IGameplayUISignalHub
 
     public void CardUsingFinished()
     {
-
+        gameplayUISystem.CardUsingFinished();
     }
 }
