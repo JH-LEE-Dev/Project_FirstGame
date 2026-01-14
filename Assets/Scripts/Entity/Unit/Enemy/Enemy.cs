@@ -9,6 +9,7 @@ public class Enemy : Unit,IEnemyData
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
     [SerializeField] private LayerMask gravityLayerMask;
+    [SerializeField] private ParticleSystem vfxDeadImpact;
     private EnemyTypeData enemyTypeData;
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
