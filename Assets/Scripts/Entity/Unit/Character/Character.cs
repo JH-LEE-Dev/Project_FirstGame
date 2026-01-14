@@ -129,6 +129,7 @@ public class Character : Unit, ICharacterData
     {
         lineRenderer.enabled = true;
         bCanAction = true;
+        PlayerAttackTurnStarted();
     }
 
     public override void ResetbCanAction()
@@ -248,7 +249,6 @@ public class Character : Unit, ICharacterData
 
 
 
-
     // YW 구현존
 
     // 상황에 따른 컷씬 동작 수행. (컷씬중에는 움직일 수 없게끔 장치를 해두었음.)
@@ -268,5 +268,15 @@ public class Character : Unit, ICharacterData
                 break;
 
         }
+    }
+
+    public void PlayerTurnStarted()
+    {
+        PlayCutscene(CutsceneSignal.TurnStart_Start);
+    }
+
+    public void PlayerAttackTurnStarted()
+    {
+        PlayCutscene(CutsceneSignal.TurnEnd_Start);
     }
 }
