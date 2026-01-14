@@ -21,7 +21,7 @@ public class PMoveComponent : MoveComponent
     /// </summary>
 
     // Path에 빨려가는것 + 이동을 막기위한 장치
-    private bool bIgnorePathAndMove = false;
+    private bool bIgnorePath = false;
 
 
 
@@ -54,13 +54,9 @@ public class PMoveComponent : MoveComponent
     {
         base.Update();
 
-        // 컷씬 연출 중일땐 레일로 빨려가는것을 막는다.
-        if (bIgnorePathAndMove == true)
-        {
-            SetMoveDirection(Vector2.zero);
-            moveStrategy.Move(moveDirection);
+        // 컷씬 연출 중일땐 레일로 빨려가는것 + 이동 입력을 막는다.
+        if (bIgnorePath == true)
             return;
-        }
 
         moveStrategy.Move(moveDirection);
     }
@@ -71,7 +67,7 @@ public class PMoveComponent : MoveComponent
 
     public void SetbIgnorePath(bool value)
     {
-        bIgnorePathAndMove = value;
+        bIgnorePath = value;
     }
 
     public void ResetCharacterPosition()
