@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IUnitLogicSystemProvider
+public interface IUnitLogicSystemData
 {
     public IReadOnlyList<IEnemyData> enemyData { get; }
 

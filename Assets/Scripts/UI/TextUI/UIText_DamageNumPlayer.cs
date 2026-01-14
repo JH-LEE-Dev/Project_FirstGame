@@ -1,0 +1,124 @@
+using DG.Tweening;
+using NaughtyAttributes;
+using System;
+using TMPro;
+using UnityEngine;
+
+using Random = UnityEngine.Random;
+
+public class UIText_DamageNumPlayer : MonoBehaviour
+{
+    [Header("Main Settings")]
+    [SerializeField] private TMP_Text mainText;
+    [SerializeField] private RectTransform visualRect;
+    [SerializeField] private bool collision;
+
+    [Header("First Settings")]
+    [SerializeField] private Vector2 Dir;
+    [SerializeField] private float power = 1f;
+    [SerializeField] private float firstWait = 1f;
+
+    [Header("Final Settings")]
+    [SerializeField] private float finalDuration = 1f;
+    [SerializeField] private Ease finalEase = Ease.Linear;
+
+    private Rigidbody2D rigid;
+    private Collider2D coll;
+
+    private float waitSecond = 0f;
+    private Vector3 startPosition;
+    private Vector3 targetPosition;
+
+    private Vector3 originScale;
+
+    private Sequence seq;
+
+    private void Awake()
+    {
+        originScale = visualRect.localScale;
+
+        rigid = GetComponent<Rigidbody2D>();
+        coll = GetComponent<Collider2D>();
+    }
+
+    private void Start()
+    {
+        if (null == visualRect)
+            visualRect = mainText?.gameObject.GetComponent<RectTransform>();
+
+        if (null != coll)
+            coll.isTrigger = !collision;
+    }
+
+    public void Setup(string _text, float _waitSecond, Vector3 _startPosition, Vector3 _targetPosition)
+    {
+        startPosition = _startPosition;
+        targetPosition = _targetPosition;
+        waitSecond = _waitSecond;
+
+        if (null != mainText)
+        {
+            mainText.text = _text;
+            mainText.alpha = 1f;
+        }
+
+        gameObject.SetActive(true);
+    }
+
+    public void PlayMotion(Action callback = null)
+    {
+        if (null != seq && seq.IsActive())
+            seq.Kill();
+
+        seq = DOTween.Sequence();
+
+        seq.AppendInterval(waitSecond);
+
+        seq.AppendCallback(() =>
+        {
+            
+        });
+
+        FirstMotion();
+        FinaltMotion();
+
+        seq.SetUpdate(false);
+        seq.OnComplete(()=>
+        {
+            callback.Invoke();
+        });
+    }
+
+    private void FirstMotion()
+    {
+        if (null != rigid)
+            rigid.simulated = true;
+
+        if (null != visualRect)
+        {
+            visualRect.position = startPosition;
+            visualRect.localScale = originScale;
+        }
+
+        rigid.AddForce(Dir.normalized * (Random.Range(0.5f, 1f) * power), ForceMode2D.Impulse);
+        rigid.AddTorque(Random.Range(0.3f, 0.85f), ForceMode2D.Impulse);
+        seq.AppendInterval(firstWait);
+    }
+
+    private void FinaltMotion()
+    {
+        seq.Append(visualRect.DOMove(targetPosition, finalDuration)
+            .SetEase(finalEase)
+            .OnStart(()=>
+            {
+                if (null != rigid)
+                    rigid.simulated = false;
+            }));
+
+        seq.Join(visualRect.DOScale(0f, finalDuration)
+            .SetEase(finalEase));
+
+        seq.Join(mainText.DOFade(0f, finalDuration)
+            .SetEase(finalEase));
+    }
+}

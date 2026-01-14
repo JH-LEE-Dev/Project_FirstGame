@@ -14,8 +14,6 @@ public enum Dir
     Left,
 }
 
-
-
 public enum CardType
 {
     Bullet,

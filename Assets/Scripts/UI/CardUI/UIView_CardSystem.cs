@@ -11,12 +11,16 @@ using static UnityEditor.PlayerSettings;
 public class UIView_CardSystem : UIView
 {
     public event Action UICommandCompleteEvent;
-
-    //외부 의존성
-    private ICardSystemProvider cardSystemProvider;
+    public event Action<CardDataInstance> CardUsedEvent;
+    public event Action CardUsingFinishedEvent;
 
     //사용 승인을 받은 카드
     private CardInstance verificationWaitCard;
+
+    //현재 게임 시스템의 카드 정보.
+    IReadOnlyList<CardDataInstance> deckCards;
+    IReadOnlyList<CardDataInstance> handCards;
+    IReadOnlyList<CardDataInstance> graveCards;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -61,14 +65,17 @@ public class UIView_CardSystem : UIView
     private Material mat = null;
     private ParticleSystem particle = null;
 
-    public void DependencyInjection(ICardSystemProvider _cardSystemProvider)
-    {
-        cardSystemProvider = _cardSystemProvider;
-    }
-
     public override void OnDestroy()
     {
         UICommandCompleteEvent = null;
+    }
+
+    public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
+        IReadOnlyList<CardDataInstance> _graveCards)
+    {
+        deckCards = _deckCards;
+        handCards = _handCards;
+        graveCards = _graveCards;
     }
 
     protected override void Awake()
@@ -131,7 +138,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        cardSystemProvider.CardUsed(_card.CardData);
+        CardUsedEvent?.Invoke(_card.CardData);
     }
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
@@ -241,15 +248,15 @@ public class UIView_CardSystem : UIView
         switch(_setType)
         {
             case CurrentPannel.Deck: 
-                ActivatePannel(cardSystemProvider.deckCards); 
+                ActivatePannel(deckCards); 
                 break;
 
             case CurrentPannel.Grave:
-                ActivatePannel(cardSystemProvider.graveCards);
+                ActivatePannel(graveCards);
                 break;
 
             case CurrentPannel.Extinction:
-                //ActivatePannel(cardSystemProvider.cards);
+                //ActivatePannel(cards);
                 break;
         }
     }
@@ -306,9 +313,9 @@ public class UIView_CardSystem : UIView
 
     private void SetText()
     {
-        deckCntText.text = "Deck : " + cardSystemProvider.deckCards.Count.ToString();
-        graveCntText.text = "Grave : " + cardSystemProvider.graveCards.Count.ToString();
-        handCntText.text = "Hand : " + cardSystemProvider.handCards.Count.ToString();
+        deckCntText.text = "Deck : " + deckCards.Count.ToString();
+        graveCntText.text = "Grave : " + graveCards.Count.ToString();
+        handCntText.text = "Hand : " + handCards.Count.ToString();
     }
 
     protected override void OnShow()
@@ -333,7 +340,7 @@ public class UIView_CardSystem : UIView
         handSystem?.CancelPreview();
 
         turnFinishedButton.gameObject.SetActive(false);
-        cardSystemProvider.CardUsingFinished();
+        CardUsingFinishedEvent?.Invoke();
         SetText();
     }
 

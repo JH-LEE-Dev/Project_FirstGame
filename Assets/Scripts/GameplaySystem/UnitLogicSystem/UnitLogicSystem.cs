@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 //캐릭터를 상위 모듈에 노출할 때 인터페이스로 묶어서 노출할 것. 이때 CombatReceiver도 private으로 해서 
 //캐릭터를 Facade로 사용할 것.
-public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogicSystemProvider, IUnitLogicCommandHandler
+public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogicSystemData, IUnitLogicCommandHandler
 {
     //의존성 DIP적용 검토하기.
     private Character characterUnit;

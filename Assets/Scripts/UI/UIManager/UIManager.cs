@@ -5,8 +5,8 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     //외부 의존성
-    private ICardSystemProvider cardSystemProvider;
-    private IUnitLogicSystemProvider unitLogicSystemProvider;
+    ICardSystemData cardSystemData;
+    IUnitLogicSystemData unitLogicSystemData;
 
     private UIViewContext viewCtx;
 
@@ -141,7 +141,7 @@ public class UIManager : MonoBehaviour
         instance.gameObject.name = $"{prefab.gameObject.name}_Instance";
 
         instance.Initialize(viewCtx);
-        DependencyInjection(instance);
+        DataInjection(instance);
 
         return (T)instance;
     }
@@ -162,13 +162,10 @@ public class UIManager : MonoBehaviour
     {
     }
 
-    public void Initialize_GameplayScene(ICardSystemProvider _cardSystemProvider,
-        IUnitLogicSystemProvider _unitLogicSystemProvider)
-    {
-        unitLogicSystemProvider = _unitLogicSystemProvider;
-        cardSystemProvider = _cardSystemProvider;
-
-        //viewCtx.Initialize_Gameplay();
+    public void Initialize_GameplayScene(ICardSystemData _cardSystemData,IUnitLogicSystemData _unitLogicSystemData)
+    { 
+        cardSystemData = _cardSystemData;
+        unitLogicSystemData = _unitLogicSystemData;
     }
 
     public void ReleaseDependency_GameplayScene()
@@ -176,15 +173,12 @@ public class UIManager : MonoBehaviour
         viewCtx.ReleaseDependency_GameplayScene();
     }
 
-    public void DependencyInjection(UIView view)
+    public void DataInjection(UIView view)
     {
         if (view is UIView_CardSystem cardUI)
-            cardUI.DependencyInjection(cardSystemProvider);
-
-        if (view is UIView_Gameplay gameplayUI)
-            gameplayUI.DependencyInjection(unitLogicSystemProvider);
+            cardUI.DataInjection(cardSystemData.deckCards,cardSystemData.handCards,cardSystemData.graveCards);
 
         if (view is UIView_HUD hudUI)
-            hudUI.DependencyInjection(unitLogicSystemProvider);
+            hudUI.DataInjection(unitLogicSystemData.playerData);
     }
 }

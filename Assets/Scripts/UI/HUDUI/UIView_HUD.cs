@@ -1,3 +1,4 @@
+using DamageNumbersPro;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -6,8 +7,8 @@ using UnityEngine.UI;
 
 public class UIView_HUD : UIView
 {
-    //외부 의존성
-    IUnitLogicSystemProvider unitLogicSystemProvider;
+    //외부 데이터
+    IPlayerData playerData;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -18,7 +19,11 @@ public class UIView_HUD : UIView
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
+    [SerializeField] private UIText_PlayerHP hpText;
     [SerializeField] private BarMotion targetBar;
+
+    [Header("Pooling System")]
+    [SerializeField] private UIDamage_Pooling damagePooling;
 
     protected override void Awake()
     {
@@ -28,9 +33,14 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void DependencyInjection(IUnitLogicSystemProvider _unitLogicSystemProvider)
+    private void Start()
     {
-        unitLogicSystemProvider = _unitLogicSystemProvider;
+        hpText?.Init(playerData.GetMaxHealth(), this);
+    }
+
+    public void DataInjection(IPlayerData _playerData)
+    {
+        playerData = _playerData;
     }
 
     protected override void OnShow()
@@ -74,15 +84,23 @@ public class UIView_HUD : UIView
         if (null == hpBar)
             return;
 
-        IPlayerData currPlayer = unitLogicSystemProvider.playerData;
+        IPlayerData currPlayer = playerData;
 
-        float maxHP = currPlayer.GetMaxHealth();
+        float maxHp = currPlayer.GetMaxHealth();
+        float prevHp = currPlayer.GetPrevHealth();
         float currHp = currPlayer.GetCurrentHealth();
 
-        float oneProgress = currHp / maxHP;
+        float oneProgress = currHp / maxHp;
 
-        hpBar.OnHit(oneProgress);
+        if (null != hpBar)
+            hpBar.OnHit(oneProgress);
+
+        if (null != hpText)
+            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePooling.DamagePool.Get());
     }
+
+    public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
+    public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
 
     public void PlayerSpawned()
     {
