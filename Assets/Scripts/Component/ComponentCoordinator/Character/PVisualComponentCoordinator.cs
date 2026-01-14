@@ -70,10 +70,15 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
     {
         switch (signal)
         {
+            case MoveActionSignal.Idle:
+                characterVisualComponent.StopMovingVisual();
+                break;
             case MoveActionSignal.RightMoving:
+                characterVisualComponent.MovingVisual(Dir.Right);
                 characterVisualComponent.Flip(Dir.Right);
                 break;
             case MoveActionSignal.LeftMoving:
+                characterVisualComponent.MovingVisual(Dir.Left);
                 characterVisualComponent.Flip(Dir.Left);
                 break;
 
@@ -97,33 +102,36 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
         {
             // 카드 사용 시작 연출 시작 (드로우 시점)
             case CutsceneSignal.TurnStart_Start:
+                // 캐릭터를 우측으로 돌림.
                 characterVisualComponent.Flip(Dir.Right);
+                characterVisualComponent.StopBlink();
+                characterVisualComponent.SetFace(FaceExpression.Angry);
                 // 기존 위치로 빨려가면안됨.
                 moveComponent.SetbIgnorePath(true);
-                Debug.LogWarning("TurnStart_Start");
                 break;
 
             // 카드 사용 시작 연출 종료
             case CutsceneSignal.TurnStart_End:
+                // 기존 위치로 여전히 빨려가면안됨.
                 moveComponent.SetbIgnorePath(true);
-                Debug.LogWarning("TurnStart_End");
-
+                characterVisualComponent.StartBlink();
                 break;
 
             // 턴 넘기기 버튼 클릭
             case CutsceneSignal.TurnEnd_Start:
                 // 여전히 빨려 들어가면안됨.
                 moveComponent.SetbIgnorePath(true);
-                Debug.LogWarning("TurnEnd_Start");
-
+                characterVisualComponent.StopBlink();
+                characterVisualComponent.SetFace(FaceExpression.Angry);
                 break;
 
             // 턴 넘기기 버튼 클릭 연출 종료
             case CutsceneSignal.TurnEnd_End:
                 // 턴 종료 연출이 끝났으므로, 빨려가게 방치하고 위치를 리셋해준다.
                 moveComponent.SetbIgnorePath(false);
+                characterVisualComponent.StartBlink();
+                // 캐릭터의 위치를 초기화 시킴.
                 moveComponent.ResetCharacterPosition();
-                Debug.LogWarning("TurnEnd_End");
                 break;
         }
     }

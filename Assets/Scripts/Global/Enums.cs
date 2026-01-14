@@ -121,6 +121,7 @@ public enum CombatActionSignal
 
 public enum MoveActionSignal
 {
+    Idle,
     LeftMoving,
     RightMoving,
     LeftBlocked,

@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-
 public class Character : Unit, ICharacterData
 {
     //외부 의존성
@@ -39,9 +38,6 @@ public class Character : Unit, ICharacterData
     [SerializeField] private BulletSocketSystem bulletSocket;
 
 
-
-
-
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
     /// </summary>
@@ -65,12 +61,12 @@ public class Character : Unit, ICharacterData
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider,visualComponentCoordinator);
         combatComponent.Initialize(ctx, visualComponentCoordinator);
-        cutsceneComponent?.Initialize(this, visualComponentCoordinator);
+        cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
 
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
-        character_Visual?.Bind(this);
+        character_Visual?.Bind(this, cutsceneComponent);
 
         bulletSocket.SetCount(2); // 현재 캐릭터 임시.
     }

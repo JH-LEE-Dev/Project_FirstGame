@@ -26,6 +26,10 @@ public class PlayerNormalMoveStrategy : PlayerMoveStrategy
         {
             moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.RightMoving);
         }
+        else
+        {
+            moveSignalHandler.NotifyMoveSignalAction(MoveActionSignal.Idle);
+        }
 
 
         float dt = Time.deltaTime;

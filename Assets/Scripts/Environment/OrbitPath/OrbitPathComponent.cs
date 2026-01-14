@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using DG.Tweening;
 
 public class OrbitPathComponent : MonoBehaviour
 {
@@ -22,8 +23,15 @@ public class OrbitPathComponent : MonoBehaviour
     [SerializeField] private GameObject pathLinePrefab;
     private readonly List<OrbitPathSegment> pathLines = new();
 
+    [Header("Alpha Settings")]
+    [SerializeField] private float alphaFadeDuration = 0.25f;
+    [SerializeField] private float globalAlpha = 1f;
+    private Tween alphaTween;
+
+
     // 전체 흐름 제어 변수
     private float globalT;
+
 
     private void Awake()
     {
@@ -94,7 +102,7 @@ public class OrbitPathComponent : MonoBehaviour
             else if (i == last - 1) alpha = Mathf.Lerp(0.66f, 0.33f, local01);
             else if (i == last) alpha = Mathf.Lerp(0.33f, 0f, local01);
 
-            pathLines[i].SetTransform(pos, rot, alpha);
+            pathLines[i].SetTransform(pos, rot, alpha * globalAlpha);
         }
     }
 
@@ -122,4 +130,21 @@ public class OrbitPathComponent : MonoBehaviour
 
     // 0~1값을 넣으면 정규화된 호 위의 위치를 반환함. 메인 캐릭터 움직임에 사용할 것임.
     public Vector3 GetPathPosition(float value) => PointOnArc(value);
+
+    public void SetPathActive(bool value)
+    {
+        float targetAlpha = value ? 1f : 0f;
+
+        // 기존 트윈이 있으면 중단
+        alphaTween?.Kill();
+
+        alphaTween = DOTween
+            .To(
+                () => globalAlpha,
+                x => globalAlpha = x,
+                targetAlpha,
+                alphaFadeDuration
+            )
+            .SetEase(Ease.Linear);
+    }
 }
