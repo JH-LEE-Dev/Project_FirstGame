@@ -115,12 +115,10 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+        Release();
 
         PlayerSpawnedEvent = null;
         EnemySpawnedEvent = null;
-
-        ReleaseAllEnemy();
     }
 
     private void SpawnCharacter()
@@ -260,5 +258,12 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         }
 
         enemyPool.Dispose();
+    }
+
+    public void Release()
+    {
+        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+
+        ReleaseAllEnemy();
     }
 }

@@ -109,6 +109,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
             return;
 
         uiInstaller.Release_Gameplay();
+        gameInstaller.Release();
         sceneManager.ChangeScene(SceneType.MainMenu);
     }
 

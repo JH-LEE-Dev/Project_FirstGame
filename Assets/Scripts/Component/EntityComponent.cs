@@ -23,14 +23,12 @@ public class EntityComponent : MonoBehaviour
 
     private void BindEvent()
     {
-        ctx.unit.UnitIsDeadEvent -= UnitIsDead;
-        ctx.unit.UnitIsDeadEvent += UnitIsDead;
+
     }
 
     private void ReleaseEvent()
     {
-        if (ctx != null)
-            ctx.unit.UnitIsDeadEvent -= UnitIsDead;
+
     }
 
     protected virtual void FixedUpdate()
@@ -46,10 +44,5 @@ public class EntityComponent : MonoBehaviour
     protected virtual void Start()
     {
 
-    }
-
-    private void UnitIsDead()
-    {
-        bDead = true;
     }
 }

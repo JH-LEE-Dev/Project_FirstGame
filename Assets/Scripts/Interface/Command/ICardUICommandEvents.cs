@@ -4,5 +4,5 @@ using System.Collections.Generic;
 
 public interface ICardUICommandEvents
 {
-    event Action<List<JobType_CardSystemUI>> JobDispatchEvent;
+    public event Action<List<Job_CardSystemUI>> JobDispatchEvent;
 }
