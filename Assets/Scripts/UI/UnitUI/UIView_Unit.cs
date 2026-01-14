@@ -11,11 +11,6 @@ public class UIView_Unit : UIView
     // 불릿 슬롯을 관리하는 시스템
     [SerializeField] private BulletSocketSystem bulletSocketSystem;
 
-    // 외부 테스트
-    [Header("BulletSocketTest")]
-    float temp = 0f;
-    int itp = 3;
-
 
     protected override void Awake()
     {
