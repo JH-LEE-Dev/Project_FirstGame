@@ -37,6 +37,7 @@ public class UIView_HUD : UIView
 
     private void Start()
     {
+        waveEndDeclareText.gameObject.SetActive(false);
         hpText?.Init(playerData.GetMaxHealth(), this);
     }
 
@@ -66,6 +67,7 @@ public class UIView_HUD : UIView
 
     public void PlayerTurnStarted(int waveIdx)
     {
+        waveEndDeclareText?.gameObject.SetActive(false); 
         waveText.text = "Wave : " + (waveIdx + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
