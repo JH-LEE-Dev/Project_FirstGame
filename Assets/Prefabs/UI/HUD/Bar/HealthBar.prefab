@@ -567,8 +567,8 @@ MonoBehaviour:
   overrideColor: 1
   startColor: {r: 0.8627452, g: 0.1921569, b: 0.1960784, a: 1}
   finalColor: {r: 1, g: 1, b: 1, a: 1}
-  warningColor: {r: 1, g: 0.79122853, b: 0.015686274, a: 1}
-  dangerColor: {r: 1, g: 0.49922678, b: 0, a: 1}
+  warningColor: {r: 1, g: 0.95566803, b: 0.015686274, a: 1}
+  dangerColor: {r: 1, g: 0.28634188, b: 0, a: 1}
   visualRect: {fileID: 5390877133657610586}
   shakeDuration: 1
   shakePower: 10
