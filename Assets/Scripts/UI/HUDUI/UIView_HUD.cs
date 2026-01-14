@@ -16,6 +16,8 @@ public class UIView_HUD : UIView
     [Space]
     [SerializeField] private TMP_Text turnIndicatorText;
     [SerializeField] private TMP_Text turnProcessIndicatorText;
+    [SerializeField] private TMP_Text waveText;
+    [SerializeField] private TMP_Text waveEndDeclareText;
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
@@ -64,6 +66,7 @@ public class UIView_HUD : UIView
 
     public void PlayerTurnStarted(int waveIdx)
     {
+        waveText.text = "Wave : " + (waveIdx + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
     }

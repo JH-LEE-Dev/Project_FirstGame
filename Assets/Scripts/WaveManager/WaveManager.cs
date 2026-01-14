@@ -14,6 +14,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
     private WaveDatabase waveDatabase;
 
     private uint currentEnemyCount = 0;
+    private bool bIsWaveEnded = false;
 
     public void Initialize(WaveDatabase _waveDatabase)
     {
@@ -68,6 +69,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
 
         if (currentEnemyCount == 0)
         {
+            bIsWaveEnded = true;
             WaveEndEvent?.Invoke();
         }
     }
