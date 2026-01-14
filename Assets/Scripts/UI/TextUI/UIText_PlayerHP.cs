@@ -7,7 +7,7 @@ using UnityEngine;
 
 using Sequence = DG.Tweening.Sequence;
 
-public class UIText_HP : MonoBehaviour
+public class UIText_PlayerHP : MonoBehaviour
 {
     [Header("Main Settings")]
     [SerializeField] private TextMeshProUGUI mainText;
@@ -36,10 +36,9 @@ public class UIText_HP : MonoBehaviour
 
     [Header("Damage Number")]
     [ShowIf("damageNumber"), SerializeField] private float damageWait = 0.5f;
-    [ShowIf("damageNumber"), SerializeField] private RectTransform damageTargetPoint;
-    private Camera mainCam;
+    [ShowIf("damageNumber"), SerializeField] private RectTransform damageSpawnPoint;
+    [ShowIf("damageNumber"), SerializeField] private RectTransform damageEndPoint;
 
-    private Sequence damageSeq = null;
     private Sequence colorSeq = null;
     private Sequence shakeSeq = null;
 
@@ -49,11 +48,6 @@ public class UIText_HP : MonoBehaviour
     {
         if(null != visualRect)
             originalAnchoredPos = visualRect.anchoredPosition;
-    }
-
-    private void Start()
-    {
-        mainCam = Camera.main;
     }
     
     public void Init<T>(T _value, UIView_HUD _hudSystem) where T : struct
@@ -68,16 +62,15 @@ public class UIText_HP : MonoBehaviour
         mainText.text = Mathf.RoundToInt(convertedValue).ToString();
     }
 
-    public void OnHit(float _prev, float _current, float _progress, float _damage, 
-        float _motionDuration = -1f, GameObject _damagNum = null)
+    public void OnHit(float _prev, float _current, float _progress, float _damage, GameObject _damagNum = null)
     {
         if (null == mainText)
             return;
 
         if (!damageNumber)
-            OnDefaultHit(_prev, _current, _progress, _motionDuration);
+            OnDefaultHit(_prev, _current, _progress);
         else
-            OnDamageNumberHit(_prev, _current, _progress, _motionDuration, _damagNum);
+            OnDamageNumberHit(_prev, _current, _damage, _progress, _damagNum);
     }
 
 
@@ -108,12 +101,10 @@ public class UIText_HP : MonoBehaviour
             .SetUpdate(false));
     }
 
-    private void OnShake(float _motionDuration)
+    private void OnShake()
     {
         if (!shaking || null == visualRect)
             return;
-
-        float finalDuration = _motionDuration < 0f ? shakeDuration : _motionDuration;
 
         shakeSeq = CancelPrevMotion(shakeSeq);
 
@@ -122,12 +113,12 @@ public class UIText_HP : MonoBehaviour
             visualRect.anchoredPosition = originalAnchoredPos;
         });
 
-        shakeSeq.Append(visualRect.DOShakeAnchorPos(finalDuration, shakePower)
+        shakeSeq.Append(visualRect.DOShakeAnchorPos(shakeDuration, shakePower)
             .SetEase(shakeEase)
             .SetUpdate(false));
     }
 
-    private void OnDefaultHit(float _prev, float _current, float _progress, float _motionDuration)
+    private void OnDefaultHit(float _prev, float _current, float _progress)
     {
         DOVirtual.Float(_prev, _current, motionDuration, (value) =>
         {
@@ -135,28 +126,25 @@ public class UIText_HP : MonoBehaviour
         }).SetEase(motionEase).SetUpdate(false);
 
         OnColorChange(_progress);
-        OnShake(_motionDuration);
+        OnShake();
     }
 
-    private void OnDamageNumberHit(float _prev, float _current, float _progress, float _motionDuration, GameObject _damagNum)
+    private void OnDamageNumberHit(float _prev, float _current, float _damage, float _progress, GameObject _damagNum)
     {
-        _damagNum.transform.position = damageTargetPoint.position;
+        UIText_DamageNumPlayer script = _damagNum?.GetComponent<UIText_DamageNumPlayer>();
+        if (null == script || null == visualRect)
+            return;
 
-        // 여기서 넘버링 변경
+        string damageString = "-" + Mathf.RoundToInt(_damage).ToString();
+        script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint.position);
 
-        damageSeq = CancelPrevMotion(damageSeq);
-
-        damageSeq.AppendInterval(damageWait);
-        damageSeq.Append(_damagNum.transform.DOMove(transform.position, motionDuration)
-            .SetEase(motionEase));
-        damageSeq.Append(_damagNum.transform.DOScale(0f, motionDuration)
-            .SetEase(motionEase));
-
-        damageSeq.SetUpdate(false);
-        damageSeq.OnComplete(() =>
+        Action callback = () =>
         {
+            OnDefaultHit(_prev, _current, _progress);
             hudSystem?.ReturnDamageText(_damagNum);
-        });
+        };
+
+        script.PlayMotion(callback);
     }
 
     private Sequence CancelPrevMotion(Sequence target)
@@ -174,7 +162,7 @@ public class UIText_HP : MonoBehaviour
         float next = 35f;
         float damage = prev - next;
 
-        OnHit(prev, next, 1f, damage);
+        OnHit(prev, next, 1f, damage, hudSystem?.GetDamageObj());
     }
 
     [Button]

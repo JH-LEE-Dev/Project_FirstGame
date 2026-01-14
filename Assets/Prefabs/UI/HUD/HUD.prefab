@@ -277,7 +277,7 @@ MonoBehaviour:
   hpBar: {fileID: 2492851807881466662}
   hpText: {fileID: 7683775203455921574}
   targetBar: {fileID: 4694876721956356493}
-  damagePooling: {fileID: 0}
+  damagePooling: {fileID: 5798511087296296503}
 --- !u!1 &3534484546545379159
 GameObject:
   m_ObjectHideFlags: 0

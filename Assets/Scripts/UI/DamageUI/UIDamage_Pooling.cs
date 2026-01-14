@@ -24,12 +24,11 @@ public class UIDamage_Pooling : MonoBehaviour
 
     private GameObject PoolCreate()
     {
-        return Instantiate(prefab);
+        return Instantiate(prefab, this.transform);
     }
 
     private void PoolGet(GameObject target)
     {
-
     }
 
     private void PoolRelease(GameObject target)

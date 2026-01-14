@@ -351,6 +351,41 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &2521034318660795143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4946014613896883741}
+  m_Layer: 5
+  m_Name: DamageEndPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4946014613896883741
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2521034318660795143}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 417412318454431439}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -61, y: 89}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2640233281060150556
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +513,7 @@ RectTransform:
   - {fileID: 1659419304295798913}
   - {fileID: 5390877133657610586}
   - {fileID: 3833970105179035452}
+  - {fileID: 4946014613896883741}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -499,21 +535,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BarMotion
   activeGhost: 1
   activeShaking: 1
-  activeParticle: 0
   mainSlider: {fileID: 960927694609446203}
   mainDuration: 0.5
   mainEase: 1
   ghostSlider: {fileID: 2653825454776584448}
-  ghostDelay: 0.35
+  ghostDelay: 0.5
   ghostDuration: 0.5
   ghostEase: 6
   visualRect: {fileID: 417412318454431439}
   shakeDuration: 0.5
   shakePower: 15
   shakeEase: 0
-  particle: {fileID: 0}
-  particleCnt: 10
-  particlePower: 1
 --- !u!114 &2552050044179500779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,7 +574,8 @@ MonoBehaviour:
   shakePower: 10
   shakeEase: 1
   damageWait: 0.5
-  damageTargetPoint: {fileID: 3833970105179035452}
+  damageSpawnPoint: {fileID: 3833970105179035452}
+  damageEndPoint: {fileID: 4946014613896883741}
 --- !u!1 &3310002035067660516
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +973,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3833970105179035452}
   m_Layer: 5
-  m_Name: DamagePoint
+  m_Name: DamageSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -962,6 +995,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155, y: 89}
+  m_AnchoredPosition: {x: -45, y: 148}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

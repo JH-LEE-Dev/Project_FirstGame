@@ -19,7 +19,7 @@ public class UIView_HUD : UIView
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
-    [SerializeField] private UIText_HP hpText;
+    [SerializeField] private UIText_PlayerHP hpText;
     [SerializeField] private BarMotion targetBar;
 
     [Header("Pooling System")]
@@ -100,6 +100,7 @@ public class UIView_HUD : UIView
     }
 
     public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
+    public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
 
     public void PlayerSpawned()
     {
