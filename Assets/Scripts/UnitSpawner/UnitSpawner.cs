@@ -28,7 +28,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
     private IWaveSystemEvents waveSystemEvents;
     private GameServiceLocator gameServiceLocator;
     private ICardSystemEvents cardSystemEvents;
-    private ICardSystemActions cardSystemActions;
+    private ICardSystemFlowActions cardSystemFlowActions;
     private IGameFlowProvider gameFlowProvider;
     private IUnitLogicSystemActions unitLogicSystemActions;
     private IOrbitPathProvider orbitPathProvider;
@@ -94,7 +94,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
     public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions,
         IWaveSystemEvents _waveSystemEvents,
         GameServiceLocator _gameServiceLocator, ICardSystemEvents _cardSystemEvent,
-        ICardSystemActions _cardSystemActions, GameController _gameController,
+        ICardSystemFlowActions _cardSystemFlowActions, GameController _gameController,
         UnitLogicSystem _unitLogicSystem, IOrbitPathProvider _orbitPathProvider)
     {
         inputManager = _inputManager;
@@ -102,7 +102,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         waveSystemEvents = _waveSystemEvents;
         gameServiceLocator = _gameServiceLocator;
         cardSystemEvents = _cardSystemEvent;
-        cardSystemActions = _cardSystemActions;
+        cardSystemFlowActions = _cardSystemFlowActions;
         gameFlowProvider = _gameController;
         unitLogicSystemActions = _unitLogicSystem;
         orbitPathProvider = _orbitPathProvider;
@@ -128,7 +128,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, orbitPathProvider, gameServiceLocator);
-            gameRuleEventController.Bind_Character(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+            gameRuleEventController.Bind_Character(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemFlowActions);
             characterUnit = spawnedUnit;
 
             PlayerSpawnedEvent?.Invoke();
@@ -259,7 +259,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     public void Release()
     {
-        gameRuleEventController.Release_Character(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+        gameRuleEventController.Release_Character(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemFlowActions);
 
         ReleaseAllEnemy();
     }

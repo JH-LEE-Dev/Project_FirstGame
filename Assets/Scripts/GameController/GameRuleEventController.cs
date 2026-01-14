@@ -2,7 +2,7 @@ public class GameRuleEventController
 {
     //Character의존 DIP 적용 해야 함.
     public void Bind_Character(Character character, IGameFlowProvider gameFlowProvider,ICardSystemEvents cardSystemEvent,
-        ICardSystemActions cardSystemActions)
+        ICardSystemFlowActions cardSystemFlowActions)
     {
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -17,12 +17,12 @@ public class GameRuleEventController
         cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
         cardSystemEvent.CardDrawedEvent += character.PlayerTurnStarted;
 
-        character.PlayerAttackFinishedEvent -= cardSystemActions.PlayerTurnFinished;
-        character.PlayerAttackFinishedEvent += cardSystemActions.PlayerTurnFinished;
+        character.PlayerAttackFinishedEvent -= cardSystemFlowActions.PlayerTurnFinished;
+        character.PlayerAttackFinishedEvent += cardSystemFlowActions.PlayerTurnFinished;
     }
 
     public void Release_Character(Character character, IGameFlowProvider gameFlowProvider, ICardSystemEvents cardSystemEvent
-        , ICardSystemActions cardSystemActions)
+        , ICardSystemFlowActions cardSystemFlowActions)
     {
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -34,7 +34,7 @@ public class GameRuleEventController
         cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
         cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
 
-        character.PlayerAttackFinishedEvent -= cardSystemActions.PlayerTurnFinished;
+        character.PlayerAttackFinishedEvent -= cardSystemFlowActions.PlayerTurnFinished;
     }
 
     public void Bind_Enemy(Enemy enemy, IWaveSystemEvents waveSystemEvents, IWaveSystemActions waveSystemActions)

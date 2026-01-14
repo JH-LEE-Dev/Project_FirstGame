@@ -9,8 +9,8 @@ using UnityEngine.Pool;
 using static UnityEngine.Rendering.GPUSort;
 
 
-public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectCommandHandler,
-    ICardSystemEvents, ICardSystemActions
+public class CardManager : MonoBehaviour, ICardSystemActions, ICardEffectCommandHandler,
+    ICardSystemEvents, ICardSystemFlowActions,ICardSystemData
 {
     public event Action CardDrawFinishedEvent;
     public event Action CardUsingTurnFinishedEvent;
@@ -30,9 +30,9 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
     private List<CardDataInstance> handPile = new List<CardDataInstance>(20);
     private List<CardDataInstance> gravePile = new List<CardDataInstance>(50);
 
-    IReadOnlyList<CardDataInstance> ICardSystemProvider.deckCards => deckPile;
-    IReadOnlyList<CardDataInstance> ICardSystemProvider.handCards => handPile;
-    IReadOnlyList<CardDataInstance> ICardSystemProvider.graveCards => gravePile;
+    IReadOnlyList<CardDataInstance> ICardSystemData.deckCards => deckPile;
+    IReadOnlyList<CardDataInstance> ICardSystemData.handCards => handPile;
+    IReadOnlyList<CardDataInstance> ICardSystemData.graveCards => gravePile;
 
     private Queue<CardEffectSystemCommand> cardSystemActions_BeforeAttack = new Queue<CardEffectSystemCommand>();
     private Queue<CardEffectSystemCommand> cardSystemActions_AfterAttack = new Queue<CardEffectSystemCommand>();

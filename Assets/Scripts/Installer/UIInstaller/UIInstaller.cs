@@ -8,17 +8,19 @@ public class UIInstaller : MonoBehaviour
 {
     //외부 의존성
     private InputManager inputManager;
-    private ICardSystemProvider cardSystemProvider;
+    private ICardSystemActions cardSystemActions;
     private ICardSystemEvents cardSystemEvent;
     private IGameFlowProvider gameFlowProvider;
     private IBootStrapProvider bootStrapProvider;
-    private IUnitLogicSystemProvider unitLogicSystemProvider;
+    private IUnitLogicSystemData unitLogicSystemData;
     private IUnitEventAccessor unitEventAccessor;
     private IUnitSpawnSystemEvent unitSpawnSystemEvent;
+    private ICardSystemData cardSystemData;
 
     //내부 의존성
     private UIManager uiManager;
     private UICommandManager uiCommandManager;
+    private CardUICoordinator cardUICoordinator;
 
 
     [Header("MainMenu Scene Objects")]
@@ -41,28 +43,30 @@ public class UIInstaller : MonoBehaviour
     public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
     {
         inputManager = _inputManager;
+        bootStrapProvider = _bootStrapProvider;
         uiManager = GetComponent<UIManager>();
         uiCommandManager = GetComponent<UICommandManager>();
-        bootStrapProvider = _bootStrapProvider;
+        cardUICoordinator = new CardUICoordinator();
 
         uiCommandManager.Initialize();
         uiManager.Initialize(inputManager);
+
     }
 
-    public void ReceiveDependency_Gameplay(ICardSystemEvents _cardSystemEvent,
-        ICardSystemProvider _cardSystemProvider, IGameFlowProvider _gameFlowProvider,
-        IUnitLogicSystemProvider _unitLogicSystemProvider, IUnitEventAccessor _unitEventAccessor,
+    public void ReceiveDependency_Gameplay(ICardSystemEvents _cardSystemEvent,ICardSystemData _cardSystemData,
+        ICardSystemActions _cardSystemActions, IGameFlowProvider _gameFlowProvider,
+        IUnitLogicSystemData _unitLogicSystemData, IUnitEventAccessor _unitEventAccessor,
         IUnitSpawnSystemEvent _unitSpawnSystemEvent)
     {
         cardSystemEvent = _cardSystemEvent;
-        cardSystemProvider = _cardSystemProvider;
+        cardSystemActions = _cardSystemActions;
         gameFlowProvider = _gameFlowProvider;
-        unitLogicSystemProvider = _unitLogicSystemProvider;
+        unitLogicSystemData = _unitLogicSystemData;
         unitEventAccessor = _unitEventAccessor;
         unitSpawnSystemEvent = _unitSpawnSystemEvent;
+        cardSystemData = _cardSystemData;
 
-        uiManager.Initialize_GameplayScene(cardSystemProvider, unitLogicSystemProvider);
-
+        uiManager.Initialize_GameplayScene(cardSystemData,unitLogicSystemData);
         SetupUIElement();
 
         GS_PlayerTurnState playerTurnState = gameFlowProvider.GetGameState<GS_PlayerTurnState>();
@@ -70,14 +74,13 @@ public class UIInstaller : MonoBehaviour
         if (playerTurnState != null)
         {
             UIView_HUD uiViewHUD = uiManager.GetView<UIView_HUD>();
-            UIView_CardSystem uIView_CardSystem = uiManager.GetView<UIView_CardSystem>();
 
             if (uiViewHUD != null)
             {
                 playerTurnState.PlayerTurnStartEvent -= uiViewHUD.PlayerTurnStarted;
                 playerTurnState.PlayerTurnStartEvent += uiViewHUD.PlayerTurnStarted;
-                playerTurnState.PlayerTurnStartEvent -= uIView_CardSystem.PlayerTurnStarted;
-                playerTurnState.PlayerTurnStartEvent += uIView_CardSystem.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent -= cardUICoordinator.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent += cardUICoordinator.PlayerTurnStarted;
             }
         }
     }
@@ -189,12 +192,15 @@ public class UIInstaller : MonoBehaviour
         UIView_HUD HUDObject = uiManager.Open<UIView_HUD>();
         UIView_CardSystem cardSystemObject = uiManager.Open<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.Open<UIView_Gameplay>();
+        UIView_Unit unitUIObject = uiManager.Open<UIView_Unit>();
+
+        cardUICoordinator.Initialize(cardSystemObject, unitUIObject);
 
         SetAnchorToCanvas(HUDObject.transform);
         SetAnchorToCanvas(cardSystemObject.transform);
         SetAnchorToCanvas(gameplayObject.transform);
 
-        BindEvent_Gameplay(HUDObject, cardSystemObject, gameplayObject);
+        BindEvent_Gameplay(HUDObject, gameplayObject);
     }
 
     private void OpenMainMenuUIView()
@@ -205,11 +211,6 @@ public class UIInstaller : MonoBehaviour
 
         mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
         mainMenuUIView.PlayButtonClickedEvent += bootStrapProvider.GoToGameplayScene;
-    }
-
-    private void ResetVariable()
-    {
-        cardSystemProvider = null;
     }
 
     private void SetAnchorToCanvas(Transform transform)
@@ -223,12 +224,12 @@ public class UIInstaller : MonoBehaviour
         rt.offsetMax = Vector2.zero;   // Right, Top
     }
 
-    private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
+    private void BindEvent_Gameplay(UIView_HUD HUDObject, UIView_Gameplay gameplayObject)
     {
-        cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardSystemEvent.CardDrawFinishedEvent += cardSystemObject.CardDrawFinished;
-        cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
-        cardSystemEvent.CardUsingVerificationEvent += cardSystemObject.CardUsingApproved;
+        cardSystemEvent.CardDrawFinishedEvent -= cardUICoordinator.CardDrawFinished;
+        cardSystemEvent.CardDrawFinishedEvent += cardUICoordinator.CardDrawFinished;
+        cardSystemEvent.CardUsingVerificationEvent -= cardUICoordinator.CardUsingApproved;
+        cardSystemEvent.CardUsingVerificationEvent += cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         cardSystemEvent.CardDrawFinishedEvent += HUDObject.CardUseTimeStarted;
         unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
@@ -236,10 +237,15 @@ public class UIInstaller : MonoBehaviour
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
         cardSystemEvent.CardUsingTurnFinishedEvent += gameplayObject.CardUsingFinished;
 
-        uiCommandManager.JobDispatchEvent -= cardSystemObject.RecieveUIJob;
-        uiCommandManager.JobDispatchEvent += cardSystemObject.RecieveUIJob;
-        cardSystemObject.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
-        cardSystemObject.UICommandCompleteEvent += uiCommandManager.DecreaseJobBatchCount;
+        uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;
+        uiCommandManager.JobDispatchEvent += cardUICoordinator.RecieveUIJob;
+
+        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
+        cardUICoordinator.UICommandCompleteEvent += uiCommandManager.DecreaseJobBatchCount;
+        cardUICoordinator.CardUsedEvent -= cardSystemActions.CardUsed;
+        cardUICoordinator.CardUsedEvent += cardSystemActions.CardUsed;
+        cardUICoordinator.CardUsingFinishedEvent -= cardSystemActions.CardUsingFinished;
+        cardUICoordinator.CardUsingFinishedEvent += cardSystemActions.CardUsingFinished;
 
         IUnitEvent playerEventSource = unitEventAccessor.GetPlayerEventSource();
         playerEventSource.TakeDamageEvent -= HUDObject.OnPlayerHit;
@@ -251,8 +257,8 @@ public class UIInstaller : MonoBehaviour
         {
             enemyTurnState.EnemyTurnStartEvent -= HUDObject.EnemyTurnStarted;
             enemyTurnState.EnemyTurnStartEvent += HUDObject.EnemyTurnStarted;
-            enemyTurnState.EnemyTurnStartEvent -= cardSystemObject.EnemyTurnStarted;
-            enemyTurnState.EnemyTurnStartEvent += cardSystemObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= cardUICoordinator.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent += cardUICoordinator.EnemyTurnStarted;
             enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
             enemyTurnState.EnemyTurnStartEvent += gameplayObject.EnemyTurnStarted;
         }
@@ -261,24 +267,25 @@ public class UIInstaller : MonoBehaviour
     private void ReleaseEvent_Gameplay()
     {
         UIView_HUD HUDObject = uiManager.GetView<UIView_HUD>();
-        UIView_CardSystem cardSystemObject = uiManager.GetView<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.GetView<UIView_Gameplay>();
 
-        cardSystemEvent.CardDrawFinishedEvent -= cardSystemObject.CardDrawFinished;
-        cardSystemEvent.CardUsingVerificationEvent -= cardSystemObject.CardUsingApproved;
+        cardSystemEvent.CardDrawFinishedEvent -= cardUICoordinator.CardDrawFinished;
+        cardSystemEvent.CardUsingVerificationEvent -= cardUICoordinator.CardUsingApproved;
         cardSystemEvent.CardDrawFinishedEvent -= HUDObject.CardUseTimeStarted;
         unitSpawnSystemEvent.PlayerSpawnedEvent -= HUDObject.PlayerSpawned;
         cardSystemEvent.CardUsingTurnFinishedEvent -= gameplayObject.CardUsingFinished;
 
-        uiCommandManager.JobDispatchEvent -= cardSystemObject.RecieveUIJob;
-        cardSystemObject.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
+        uiCommandManager.JobDispatchEvent -= cardUICoordinator.RecieveUIJob;
+        cardUICoordinator.UICommandCompleteEvent -= uiCommandManager.DecreaseJobBatchCount;
+        cardUICoordinator.CardUsedEvent -= cardSystemActions.CardUsed;
+        cardUICoordinator.CardUsingFinishedEvent -= cardSystemActions.CardUsingFinished;
 
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
         if (enemyTurnState != null)
         {
             enemyTurnState.EnemyTurnStartEvent -= HUDObject.EnemyTurnStarted;
-            enemyTurnState.EnemyTurnStartEvent -= cardSystemObject.EnemyTurnStarted;
+            enemyTurnState.EnemyTurnStartEvent -= cardUICoordinator.EnemyTurnStarted;
             enemyTurnState.EnemyTurnStartEvent -= gameplayObject.EnemyTurnStarted;
         }
 
@@ -286,15 +293,14 @@ public class UIInstaller : MonoBehaviour
 
         if (playerTurnState != null)
         {
-            UIView_HUD uiViewHUD = uiManager.GetView<UIView_HUD>();
-            UIView_CardSystem uIView_CardSystem = uiManager.GetView<UIView_CardSystem>();
-
-            if (uiViewHUD != null)
+            if (HUDObject != null)
             {
-                playerTurnState.PlayerTurnStartEvent -= uiViewHUD.PlayerTurnStarted;
-                playerTurnState.PlayerTurnStartEvent -= uIView_CardSystem.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent -= HUDObject.PlayerTurnStarted;
+                playerTurnState.PlayerTurnStartEvent -= cardUICoordinator.PlayerTurnStarted;
             }
         }
+
+        cardUICoordinator.Release();
     }
 
     public void ReleaseEvent_MainMenu()
