@@ -30,13 +30,10 @@ public class Character : Unit, ICharacterData
     /// 구현 속성 존 ------------------------------------------
     /// </summary>
 
-
     private Vector2 mousePos;
     private Vector2 fireDir;
 
     [SerializeField] private Character_Visual character_Visual;
-    [SerializeField] private BulletSocketSystem bulletSocket;
-
 
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
@@ -67,8 +64,6 @@ public class Character : Unit, ICharacterData
 
         BindEvent();
         character_Visual?.Bind(this, cutsceneComponent);
-
-        bulletSocket.SetCount(2); // 현재 캐릭터 임시.
     }
 
     private void BindEvent()
@@ -139,31 +134,11 @@ public class Character : Unit, ICharacterData
     /// 구현 코드 존.--------------------------------------------
     /// </summary>
 
-    float temp = 0f;
-    int itp = 3;
     protected override void Update()
     {
         base.Update();
 
         UpdateAimLine();
-
-        temp += Time.deltaTime;
-
-        if (temp > 5f)
-        {
-            if (itp == 2)
-            {
-                bulletSocket.SetCount(itp);
-                itp = 3;
-            }
-            else
-            {
-                bulletSocket.SetCount(itp);
-                itp = 2;
-            }
-
-            temp = 0f;
-        }
     }
 
     //입력 시스템에 의해서 호출되는 움직임 함수.

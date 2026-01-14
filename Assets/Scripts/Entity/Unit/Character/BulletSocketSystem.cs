@@ -5,10 +5,14 @@ using UnityEngine;
 public class BulletSocketSystem : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private Transform pivot;              
+    private Transform characterTransform;
+    // 소켓 메인 피봇
+    [SerializeField] private Transform pivot;
+    // 소켓 프리팹
     [SerializeField] private GameObject slotPrefab;        
 
     [Header("Capacity")]
+    // 최대 5개 까지
     [SerializeField, Range(1, 5)] private int maxSlots = 5;
 
 
@@ -20,8 +24,7 @@ public class BulletSocketSystem : MonoBehaviour
 
     private readonly List<SocketVisual> slots = new();
 
-
-    private void Awake()
+    public void Init(Transform _characterTransform, int _slotCount)
     {
         if (pivot == null)
         {
@@ -30,7 +33,8 @@ public class BulletSocketSystem : MonoBehaviour
         }
 
         BuildSlotsIfNeeded();
-        SetCount(0);
+        characterTransform = _characterTransform;
+        SetCount(_slotCount);
     }
 
     private void BuildSlotsIfNeeded()
@@ -46,14 +50,11 @@ public class BulletSocketSystem : MonoBehaviour
             go.SetActive(false);
 
             var visual = go.GetComponent<SocketVisual>();
-            if (visual == null)
-            {
-                Debug.LogError("SlotPrefab must have SocketVisual component.");
-                continue;
-            }
-
+            if (visual == null) continue;
             slots.Add(visual);
         }
+
+        Debug.Log(slots.Count);
     }
 
     public void SetCount(int count)
@@ -78,6 +79,7 @@ public class BulletSocketSystem : MonoBehaviour
         RelayoutSlots();
     }
 
+    // 모든 피봇의 위치를 잡아주기
     private void RelayoutSlots()
     {
         for (int i = 0; i < Count; i++)
@@ -87,7 +89,7 @@ public class BulletSocketSystem : MonoBehaviour
         }
     }
 
-    // 위치 잡아주기.
+    // 단일 위치 잡아주기
     public Vector3 GetLocalSlotPosition(int index)
     {
         if (Count <= 0)
@@ -101,6 +103,7 @@ public class BulletSocketSystem : MonoBehaviour
         return new Vector3(x, yOffset, 0f);
     }
 
+    // 끼워넣기
     public void Attach(CardInstance card, int index)
     {
         if (card == null) return;
