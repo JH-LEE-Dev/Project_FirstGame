@@ -21,7 +21,8 @@ public class CutsceneComponent : MonoBehaviour
     public bool IsCutscene => bCutscene;
 
     [Header("TurnStart")]
-    [SerializeField] private float turnStartDur = 0.4f;
+    [SerializeField] private float turnStartDur = 1f;
+    [SerializeField] private float turnEndDur = 0.5f;
     [SerializeField] private float maxTurnStartScale = 12f;
     private float OriginScale = 4.25f;
 
@@ -147,7 +148,7 @@ public class CutsceneComponent : MonoBehaviour
 
 
         Tween moveTween = null;
-        moveTween = ct.DOMove(endPos, turnStartDur)
+        moveTween = ct.DOMove(endPos, turnEndDur)
             .SetEase(Ease.OutCubic)
             .OnUpdate(() =>
             {
@@ -164,7 +165,7 @@ public class CutsceneComponent : MonoBehaviour
                 characterVisual.SetCutsceneLeanTargets(ringLean, bodyLean);
             });
 
-        Tween scaleTween = ct.DOScale(targetScale, turnStartDur)
+        Tween scaleTween = ct.DOScale(targetScale, turnEndDur)
             .From(startScale, true)
             .SetEase(Ease.OutCubic);
 

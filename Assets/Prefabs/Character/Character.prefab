@@ -376,7 +376,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character_Cutscene
   turnStartPointPrefab: {fileID: 6225297960522730106, guid: a60eb439c7e784b43bc241bf5143ec66, type: 3}
-  turnStartDur: 0.4
+  turnStartDur: 1
+  turnEndDur: 0.5
   maxTurnStartScale: 12
 --- !u!1 &577053996168498907
 GameObject:
