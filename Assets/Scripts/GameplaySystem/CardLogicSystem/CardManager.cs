@@ -16,6 +16,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
     public event Action CardUsingTurnFinishedEvent;
     public event Action<CardDataInstance> CardUsedEvent;
     public event Action<bool> CardUsingVerificationEvent;
+    public event Action CardDrawedEvent;
 
     //외부 의존성
     private IUnitLogicSystemActions unitLogicSystem;
@@ -158,6 +159,7 @@ public class CardManager : MonoBehaviour, ICardSystemProvider, ICardEffectComman
 
     private void StartCardPileDraw(int amount)
     {
+        CardDrawedEvent?.Invoke();
         CardPileDraw(amount, false);
 
         cardUICommandSystem.DispatchCommand();

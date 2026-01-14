@@ -115,12 +115,10 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     public void OnDestroy()
     {
-        gameRuleEventController.Release(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+        Release();
 
         PlayerSpawnedEvent = null;
         EnemySpawnedEvent = null;
-
-        ReleaseAllEnemy();
     }
 
     private void SpawnCharacter()
@@ -130,7 +128,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, orbitPathProvider, gameServiceLocator);
-            gameRuleEventController.Bind(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+            gameRuleEventController.Bind_Character(spawnedUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
             characterUnit = spawnedUnit;
 
             PlayerSpawnedEvent?.Invoke();
@@ -206,14 +204,8 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
                 spawnedUnit.Activate(spawnPosition);
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
-                spawnedUnit.UnitIsDeadEvent -= waveSystemActions.EnemyIsDead;
-                spawnedUnit.UnitIsDeadEvent += waveSystemActions.EnemyIsDead;
 
-                //파괴된 객체들은 구독을 취소하도록 조치를 취해야 함. 
-                //일단 풀링된 Enemy들이기 때문에 WaveSystem과 함께 파괴되어 문제는 발생하지 않을 것임.
-                waveSystemEvents.StartMoveEvent -= spawnedUnit.OnMove;
-                waveSystemEvents.StartMoveEvent += spawnedUnit.OnMove;
-
+                gameRuleEventController.Bind_Enemy(spawnedUnit, waveSystemEvents, waveSystemActions);
                 enemies.Add(spawnedUnit);
             }
         }
@@ -256,9 +248,19 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         for (int i = 0; i < enemies.Count; ++i)
         {
             if (enemies[i] != null)//씬이 종료되면 gameObject는 즉시 파괴되므로 접근해서는 안됨.
+            {
+                gameRuleEventController.Release_Enemy(enemies[i],waveSystemEvents,waveSystemActions);
                 enemyPool.Release(enemies[i]);
+            }
         }
 
         enemyPool.Dispose();
+    }
+
+    public void Release()
+    {
+        gameRuleEventController.Release_Character(characterUnit, gameFlowProvider, cardSystemEvents, cardSystemActions);
+
+        ReleaseAllEnemy();
     }
 }

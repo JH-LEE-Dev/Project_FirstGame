@@ -1,7 +1,7 @@
 public class GameRuleEventController
 {
     //Character의존 DIP 적용 해야 함.
-    public void Bind(Character character, IGameFlowProvider gameFlowProvider,ICardSystemEvents cardSystemEvent,
+    public void Bind_Character(Character character, IGameFlowProvider gameFlowProvider,ICardSystemEvents cardSystemEvent,
         ICardSystemActions cardSystemActions)
     {
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
@@ -14,13 +14,15 @@ public class GameRuleEventController
 
         cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
         cardSystemEvent.CardUsingTurnFinishedEvent += character.SetbCanAction;
+        cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
+        cardSystemEvent.CardDrawedEvent += character.PlayerTurnStarted;
 
         character.PlayerAttackFinishedEvent -= cardSystemActions.PlayerTurnFinished;
         character.PlayerAttackFinishedEvent += cardSystemActions.PlayerTurnFinished;
     }
 
-    public void Release(Character character, IGameFlowProvider gameFlowProvider, ICardSystemEvents cardEventSetter
-        ,ICardSystemActions cardSystemActions)
+    public void Release_Character(Character character, IGameFlowProvider gameFlowProvider, ICardSystemEvents cardSystemEvent
+        , ICardSystemActions cardSystemActions)
     {
         GS_EnemyTurnState enemyTurnState = gameFlowProvider.GetGameState<GS_EnemyTurnState>();
 
@@ -29,8 +31,23 @@ public class GameRuleEventController
             enemyTurnState.EnemyTurnStartEvent -= character.ResetbCanAction;
         }
 
-        cardEventSetter.CardUsingTurnFinishedEvent -= character.SetbCanAction;
+        cardSystemEvent.CardDrawedEvent -= character.PlayerTurnStarted;
+        cardSystemEvent.CardUsingTurnFinishedEvent -= character.SetbCanAction;
 
         character.PlayerAttackFinishedEvent -= cardSystemActions.PlayerTurnFinished;
+    }
+
+    public void Bind_Enemy(Enemy enemy, IWaveSystemEvents waveSystemEvents, IWaveSystemActions waveSystemActions)
+    {
+        enemy.UnitIsDeadEvent -= waveSystemActions.EnemyIsDead;
+        enemy.UnitIsDeadEvent += waveSystemActions.EnemyIsDead;
+        waveSystemEvents.StartMoveEvent -= enemy.OnMove;
+        waveSystemEvents.StartMoveEvent += enemy.OnMove;
+    }
+
+    public void Release_Enemy(Enemy enemy, IWaveSystemEvents waveSystemEvents, IWaveSystemActions waveSystemActions)
+    {
+        enemy.UnitIsDeadEvent -= waveSystemActions.EnemyIsDead;
+        waveSystemEvents.StartMoveEvent -= enemy.OnMove;
     }
 }
