@@ -5230,6 +5230,59 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &3009638299716659184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3589732782878639990}
+  - component: {fileID: 7552622282124451134}
+  m_Layer: 0
+  m_Name: FallBoundaryComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3589732782878639990
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009638299716659184}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -11.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4737121153119196882}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7552622282124451134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009638299716659184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e82262d9c3c13b9408b069ba9e5b3ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallBoundaryComponent
+  center: {fileID: 0}
+  radius: 11.3
+  startAngleDeg: 63
+  endAngleDeg: 117
+  LineCount: 40
+  LineSpeedPerSec: 0.05
+  fallBoundaryPrefab: {fileID: 4643352628927584374, guid: 35e19ba6ae5c9b14e91682abc11c19e0, type: 3}
+  alphaFadeDuration: 0.25
+  globalAlpha: 0.35
 --- !u!1 &3132615358195672310
 GameObject:
   m_ObjectHideFlags: 0
@@ -10244,6 +10297,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5223334871247944760}
+  - {fileID: 3589732782878639990}
   m_Father: {fileID: 7045863790459964670}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4266073514408420827
