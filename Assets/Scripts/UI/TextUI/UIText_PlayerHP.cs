@@ -58,7 +58,7 @@ public class UIText_PlayerHP : MonoBehaviour
             return;
 
         float convertedValue = Convert.ToSingle(_value);
-        Debug.Log(convertedValue);
+        //Debug.Log(convertedValue);
         mainText.text = Mathf.RoundToInt(convertedValue).ToString();
     }
 

@@ -146,7 +146,7 @@ public class Enemy : Unit,IEnemyData
             col.enabled = false;
             sr.enabled = false;
 
-            InvokeUnitIsDead();
+            UnitIsDead();
             gameServiceLocator.PlayCameraShake();
 
             combatComponent.ApplyAttack(other);

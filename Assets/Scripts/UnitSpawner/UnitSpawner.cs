@@ -1,19 +1,20 @@
+using GameControlSignals;
 using NUnit.Framework;
 using System;
-using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 using System.Collections.Generic;
-using UnityEngine.Pool;
+using UnitSpawnSystemSignals;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Pool;
+using UnityEngine.WSA;
+using WaveSystemSignals;
+using static UnityEngine.EventSystems.EventTrigger;
 
-public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEvent, IUnitSignalHubProvider
+public class UnitSpawner : MonoBehaviour, IUnitEventAccessor
 {
-    public ICharacterSignalHub characterSignalHub => characterUnit;
-    public IPlayerSignalHub playerSignalHub => earthUnit;
+    //외부 의존성
+    private SignalHub signalHub;
 
-    public event Action<IPlayerData> PlayerSpawnedEvent;
-    public event Action EnemySpawnedEvent;
-    public event Action<ICharacterData> CharacterSpawnedEvent;
 
     [Header("Enemy Pool Settings")]
     [SerializeField] const int enemyMaxCount = 40;
@@ -28,18 +29,12 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     //외부 의존성
     private InputManager inputManager;
-    private IWaveSystemActions waveSystemActions;
-    private IWaveSystemEvents waveSystemEvents;
     private GameServiceLocator gameServiceLocator;
-    private ICardSystemEvents cardSystemEvents;
-    private ICardSystemFlowActions cardSystemFlowActions;
     private IUnitLogicSystemActions unitLogicSystemActions;
     private IOrbitPathProvider orbitPathProvider;
 
-    //내부 의존성
-    private GameRuleEventController gameRuleEventController;
 
-    private uint curUnitCnt;
+    private int curUnitCnt;
 
     public Character characterUnit { get; private set; }
     public Earth earthUnit { get; private set; }
@@ -86,7 +81,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     private void OnReleaseEnemy(Enemy enemy)
     {
-        waveSystemEvents.StartMoveEvent -= enemy.OnMove;
+
     }
 
     //풀 용량 초기화 상황에서 Enemy 파괴.
@@ -95,30 +90,39 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         Destroy(enemy.gameObject);
     }
 
-    public void Initiallize(InputManager _inputManager, IWaveSystemActions _waveSystemActions,
-        IWaveSystemEvents _waveSystemEvents,
-        GameServiceLocator _gameServiceLocator, ICardSystemEvents _cardSystemEvent,
-        ICardSystemFlowActions _cardSystemFlowActions, GameController _gameController,
+    public void Initiallize(SignalHub _signalHub,InputManager _inputManager,
+        GameServiceLocator _gameServiceLocator,
         UnitLogicSystem _unitLogicSystem, IOrbitPathProvider _orbitPathProvider)
     {
+        signalHub = _signalHub;
         inputManager = _inputManager;
-        waveSystemActions = _waveSystemActions;
-        waveSystemEvents = _waveSystemEvents;
         gameServiceLocator = _gameServiceLocator;
-        cardSystemEvents = _cardSystemEvent;
-        cardSystemFlowActions = _cardSystemFlowActions;
         unitLogicSystemActions = _unitLogicSystem;
         orbitPathProvider = _orbitPathProvider;
 
-        gameRuleEventController = new GameRuleEventController();
+        SpawnPlayerAndCharacter();
+
+        SubscribeEvents();
     }
+
+    private void SubscribeEvents()
+    {
+        signalHub.Subscribe<SpawnWaveEvent>(SpawnWave);
+        signalHub.Subscribe<AllEnemyDeadEvent>(ResetCurrentEnemies);
+        signalHub.Subscribe<ActivatePlayerEvent>(ActivatePlayerAndCharacter);
+    }
+
+    private void UnSubscribeEvents()
+    {
+        signalHub.UnSubscribe<SpawnWaveEvent>(SpawnWave);
+        signalHub.UnSubscribe<AllEnemyDeadEvent>(ResetCurrentEnemies);
+        signalHub.UnSubscribe<ActivatePlayerEvent>(ActivatePlayerAndCharacter);
+    }
+
 
     public void OnDestroy()
     {
         Release();
-
-        PlayerSpawnedEvent = null;
-        EnemySpawnedEvent = null;
     }
 
     public void SpawnPlayerAndCharacter()
@@ -134,12 +138,11 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         if (spawnedUnit != null)
         {
             spawnedUnit.Initialize_Character(inputManager, orbitPathProvider, gameServiceLocator);
-            gameRuleEventController.Bind_Character(spawnedUnit, cardSystemEvents, cardSystemFlowActions);
             characterUnit = spawnedUnit;
 
-            CharacterSpawnedEvent?.Invoke(spawnedUnit);
-
             SetUnitLogicSystem_Character();
+
+            spawnedUnit.gameObject.SetActive(false);
         }
     }
 
@@ -151,10 +154,19 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         {
             earthUnit = spawnedUnit;
 
-            PlayerSpawnedEvent?.Invoke(earthUnit);
-
             SetUnitLogicSystem_Earth();
+
+            spawnedUnit.gameObject.SetActive(false);
         }
+    }
+
+    public void ActivatePlayerAndCharacter(ActivatePlayerEvent activatePlayerEvent)
+    {
+        signalHub.Publish(new PlayerSpawnedEvent(earthUnit));
+        signalHub.Publish(new CharacterSpawnedEvent(characterUnit));
+
+        characterUnit.gameObject.SetActive(true);
+        earthUnit.gameObject.SetActive(true);
     }
 
     Vector3 GetRandomPointInEllipse()
@@ -193,9 +205,9 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         Gizmos.matrix = oldMatrix;
     }
 
-    public void SpawnWave(uint cnt)
+    public void SpawnWave(SpawnWaveEvent spawnWaveEvent)
     {
-        curUnitCnt = cnt;
+        curUnitCnt = spawnWaveEvent.waveIdx;
 
         for (uint i = 0; i < curUnitCnt; ++i)
         {
@@ -213,29 +225,28 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
 
-                gameRuleEventController.Bind_Enemy(spawnedUnit, waveSystemEvents, waveSystemActions);
                 enemies.Add(spawnedUnit);
             }
         }
 
-        EnemySpawnedEvent?.Invoke();
+        signalHub.Publish(new EnemySpawnedEvent());
 
         SetUnitLogicSystem_Enemy();
     }
 
     private void SetUnitLogicSystem_Character()
     {
-        unitLogicSystemActions.Initialize(characterUnit);
+        unitLogicSystemActions.DependencyInjection_Character(characterUnit);
     }
 
     private void SetUnitLogicSystem_Enemy()
     {
-        unitLogicSystemActions.Initialize(enemies);
+        unitLogicSystemActions.DependencyInjection_Enemy(enemies);
     }
 
     private void SetUnitLogicSystem_Earth()
     {
-        unitLogicSystemActions.Initialize(earthUnit);
+        unitLogicSystemActions.DependencyInjection_Earth(earthUnit);
     }
 
     public IUnitEvent GetPlayerEventSource()
@@ -243,7 +254,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         return earthUnit;
     }
 
-    public void ResetCurrentEnemies()
+    public void ResetCurrentEnemies(AllEnemyDeadEvent allEnemyDeadEvent)
     {
         for (int i = 0; i < enemies.Count; ++i)
         {
@@ -257,7 +268,6 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
         {
             if (enemies[i] != null)//씬이 종료되면 gameObject는 즉시 파괴되므로 접근해서는 안됨.
             {
-                gameRuleEventController.Release_Enemy(enemies[i],waveSystemEvents,waveSystemActions);
                 enemyPool.Release(enemies[i]);
             }
         }
@@ -267,7 +277,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor, IUnitSpawnSystemEv
 
     public void Release()
     {
-        gameRuleEventController.Release_Character(characterUnit, cardSystemEvents, cardSystemFlowActions);
+        UnSubscribeEvents();
 
         ReleaseAllEnemy();
     }

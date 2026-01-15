@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public interface IUnitLogicSystemActions
 {
-    void Initialize(Character character);
-    void Initialize(Earth earth);
-    void Initialize(List<Enemy> enemies);
+    void DependencyInjection_Character(Character character);
+    void DependencyInjection_Earth(Earth earth);
+    void DependencyInjection_Enemy(List<Enemy> enemies);
 
     bool CanApplyBulletEffect();
 }

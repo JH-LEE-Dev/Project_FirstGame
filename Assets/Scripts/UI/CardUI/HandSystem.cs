@@ -440,7 +440,7 @@ public class HandSystem : MonoBehaviour
 
         Vector3 GravePosition = cardSystem.GetGraveAnchoredPos();
 
-        Debug.Log(GravePosition);
+        //Debug.Log(GravePosition);
 
 
         // ÇöÀç ¼ÕÆÐ(InHand)¸¸ ½º³À¼¦

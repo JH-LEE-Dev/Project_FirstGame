@@ -322,7 +322,7 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(false);
     }
 
-    public void PlayerTurnStarted(int waveIdx)
+    public void PlayerTurnStarted()
     {
         //handRoot.gameObject.SetActive(true);
     }

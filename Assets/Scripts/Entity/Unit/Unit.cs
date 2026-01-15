@@ -59,6 +59,7 @@ public class Unit : MonoBehaviour, IDamageable
     public void HandleDead()
     {
         gameObject.SetActive(false);
+        UnitIsDead();
     }
 
 
@@ -101,7 +102,7 @@ public class Unit : MonoBehaviour, IDamageable
         UnitIsDeadEvent = null;
     }
 
-    protected void InvokeUnitIsDead()
+    protected void UnitIsDead()
     {
         UnitIsDeadEvent?.Invoke();
     }

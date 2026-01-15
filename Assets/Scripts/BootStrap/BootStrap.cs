@@ -10,7 +10,6 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     private static BootStrap Instance;
 
     private SceneController sceneManager;
-    private UIInstaller uiInstaller;
     private AudioManager audioManager;
     private InputManager inputManager;
 
@@ -18,8 +17,10 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
 
     [Header("Gameplay Level Object")]
     [SerializeField] GameInstaller gameInstaller_Prefab;
+    [SerializeField] MainMenuInstaller mainMenuInstaller_Prefab;
 
     private GameInstaller gameInstaller;
+    private MainMenuInstaller mainMenuInstaller;
 
     private void BootTempScene()
     {
@@ -42,11 +43,9 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
 
         audioManager = GetComponent<AudioManager>();
         sceneManager = GetComponent<SceneController>();
-        uiInstaller = GetComponentInChildren<UIInstaller>();
         inputManager = GetComponent<InputManager>();
 
         inputManager.Initialize();
-        uiInstaller.Initialize(this, inputManager);
 
         BindEvent();
     }
@@ -81,10 +80,17 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     public void SetupGameplayScene()
     {
         gameInstaller = Instantiate(gameInstaller_Prefab);
-        gameInstaller.Initialize(inputManager, uiInstaller, uiInstaller);
-        uiInstaller.DependencyInjection_Gameplay(gameInstaller);
+        gameInstaller.Initialize(this,inputManager);
+    }
 
-        uiInstaller.GameplayLevelStarted();
+    private void StartGameplayScene()
+    {
+        gameInstaller.StartGameplayScene();
+    }
+
+    private void StartMainMenuScene()
+    {
+        mainMenuInstaller.StartMainMenuScene();
     }
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -92,14 +98,21 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
         string sceneName = SceneManager.GetActiveScene().name;
 
         if (sceneName == "GameplayScene")
+        {
             SetupGameplayScene();
+            StartGameplayScene();
+        }
         else if (sceneName == "MainMenuScene")
+        {
             SetupMainMenuScene();
+            StartMainMenuScene();
+        }
     }
 
     public void SetupMainMenuScene()
     {
-        uiInstaller.MainMenuLevelStarted();
+        mainMenuInstaller = Instantiate(mainMenuInstaller_Prefab);
+        mainMenuInstaller.Initialize(this, inputManager);
     }
 
     public void GoToMainMenuScene()
@@ -107,14 +120,13 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
         if (bTempScene)
             return;
 
-        uiInstaller.Release_Gameplay();
         gameInstaller.Release();
         sceneManager.ChangeScene(SceneType.MainMenu);
     }
 
     public void GoToGameplayScene()
     {
-        uiInstaller.Release_MainMenu();
+        mainMenuInstaller.Release();
         sceneManager.ChangeScene(SceneType.Gameplay);
     }
 }

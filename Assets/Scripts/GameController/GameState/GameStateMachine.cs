@@ -46,4 +46,12 @@ public class GameStateMachine
 
         return (T)instance;
     }
+
+    public void ReleaseAllState()
+    {
+        foreach (var (type, state) in states)
+        {
+            state.Release();
+        }
+    }
 }
