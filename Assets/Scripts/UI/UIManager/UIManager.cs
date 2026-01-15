@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    //외부 의존성
-    ICardSystemData cardSystemData;
+    protected UIViewContext viewCtx;
 
-    private UIViewContext viewCtx;
-
-    private Transform screenLayerRoot;
-    private Transform popupLayerRoot;
-    private Transform overlayLayerRoot;
-    private Transform tooltipLayerRoot;
+    protected Transform screenLayerRoot;
+    protected Transform popupLayerRoot;
+    protected Transform overlayLayerRoot;
+    protected Transform tooltipLayerRoot;
 
     [Header("등록된 UIView Prefab들")]
     [SerializeField] private List<UIView> viewPrefabs = new List<UIView>();
@@ -39,7 +36,7 @@ public class UIManager : MonoBehaviour
         viewCtx.Initialize(inputManager);
     }
 
-    private void Awake()
+    protected void Awake()
     {
         // 타입별 Prefab 사전 구성
         foreach (var view in viewPrefabs)
@@ -157,29 +154,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Initialize_MainMenuScene()
+    public void ReleaseDependency()
     {
+        viewCtx.ReleaseDependency();
     }
 
-    public void Initialize_GameplayScene(ICardSystemData _cardSystemData)
-    { 
-        cardSystemData = _cardSystemData;
-    }
-
-    public void ReleaseDependency_GameplayScene()
+    protected virtual void DataInjection(UIView view)
     {
-        viewCtx.ReleaseDependency_GameplayScene();
-    }
-
-    public void DataInjection(UIView view)
-    {
-        if (view is UIView_CardSystem cardUI)
-            cardUI.DataInjection(cardSystemData.deckCards,cardSystemData.handCards,cardSystemData.graveCards);
-
-        if (view is UIView_HUD hudUI)
-            hudUI.DataInjection();
-
-        if (view is UIView_Unit unitUI)
-            unitUI.DataInjection();
+        
     }
 }

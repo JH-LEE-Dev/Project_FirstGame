@@ -1,134 +1,86 @@
+using GameControlSignals;
 using System;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using WaveSystemSignals;
 
-public class GameController : MonoBehaviour, IGameFlowController
+public class GameController : MonoBehaviour
 {
-    public event Action<int> SpawnWaveEvent;
-    public event Action SpawnPlayerEvent;
-
     //외부 의존성.
-    private InputManager inputManager;
-    private ICardSystemFlowActions cardSystemFlowActions;
-    private IWaveSystemActions waveSystemActions;
-    private IUISignalHubProvider uiSignalHubProvider;
-    private IUnitSignalHubProvider unitSignalHubProvider;
+    private SignalHub signalHub;
 
     //내부 의존성
     private GameStateMachine gameStateMachine;
 
-
-    private int waveIdx = 0;
-
-    public void Initialize(IWaveSystemActions _waveSystemActions, InputManager _inputManager,
-        ICardSystemFlowActions _cardSystemFlowActions,IUISignalHubProvider _uiHubProvider,
-        IUnitSignalHubProvider _unitSignalProvider)
+    public void Initialize(SignalHub _signalHub)
     {
-        waveSystemActions = _waveSystemActions;
-        inputManager = _inputManager;
-        cardSystemFlowActions = _cardSystemFlowActions;
-        uiSignalHubProvider = _uiHubProvider;
-        unitSignalHubProvider = _unitSignalProvider;
+        signalHub = _signalHub; 
         gameStateMachine = new GameStateMachine();
 
-        SetGameState();
+        SetupGameState();
+
+        SubscribeEvents();
     }
 
-    private void SetGameState()
+    private void SubscribeEvents()
     {
-        GS_PlayerTurnState playerTurn = new GS_PlayerTurnState();
-        playerTurn.Initialize(gameStateMachine);
+        signalHub.Subscribe<WaveMoveEndEvent>(ChangeGameStateToPlayerTurn);
+    }
+
+    private void UnSubscribeEvents()
+    {
+        signalHub.UnSubscribe<WaveMoveEndEvent>(ChangeGameStateToPlayerTurn);
+    }
+
+    public void SetupGameController()
+    {
+        BindEvent();
+    }
+
+    private void SetupGameState()
+    {
+        GS_PlayerTurn playerTurn = new GS_PlayerTurn();
+        playerTurn.Initialize(signalHub,gameStateMachine);
         gameStateMachine.AddState(playerTurn);
 
-        GS_EnemyTurnState enemyTurn = new GS_EnemyTurnState();
-        enemyTurn.Initialize(gameStateMachine);
+        GS_EnemyTurn enemyTurn = new GS_EnemyTurn();
+        enemyTurn.Initialize(signalHub,gameStateMachine);
         gameStateMachine.AddState(enemyTurn);
 
         GS_GameStarted gameStarted = new GS_GameStarted();
-        gameStarted.Initialize(gameStateMachine);
+        gameStarted.Initialize(signalHub,gameStateMachine);
         gameStateMachine.AddState(gameStarted);
 
-        BindEvent(enemyTurn, playerTurn, gameStarted);
+        GS_WaveStarted waveStarted = new GS_WaveStarted();
+        waveStarted.Initialize(signalHub, gameStateMachine);
+        gameStateMachine.AddState(waveStarted);
+
+        GS_WaveEnded waveEnded = new GS_WaveEnded();
+        waveEnded.Initialize(signalHub, gameStateMachine);
+        gameStateMachine.AddState(waveEnded);
     }
 
-    public void BindEvent(GS_EnemyTurnState enemyTurn, GS_PlayerTurnState playerTurn,GS_GameStarted gameStarted)
+    public void GameStart()
     {
-        gameStarted.SpawnUnitsEvent -= SpawnUnits;
-        gameStarted.SpawnUnitsEvent += SpawnUnits;
-
-        enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
-        enemyTurn.EnemyTurnStartEvent += waveSystemActions.StartEnemyMoveTurn;
-
-        enemyTurn.EnemyTurnStartEvent -= uiSignalHubProvider.cardUISignalHub.EnemyTurnStarted;
-        enemyTurn.EnemyTurnStartEvent += uiSignalHubProvider.cardUISignalHub.EnemyTurnStarted;
-
-        enemyTurn.EnemyTurnStartEvent -= uiSignalHubProvider.gameplayUISignalHub.EnemyTurnStarted;
-        enemyTurn.EnemyTurnStartEvent += uiSignalHubProvider.gameplayUISignalHub.EnemyTurnStarted;
-
-        playerTurn.PlayerTurnStartEvent -= cardSystemFlowActions.StartCardDrawTurn;
-        playerTurn.PlayerTurnStartEvent += cardSystemFlowActions.StartCardDrawTurn;
-
-        playerTurn.PlayerTurnStartEvent -= uiSignalHubProvider.cardUISignalHub.PlayerTurnStarted;
-        playerTurn.PlayerTurnStartEvent += uiSignalHubProvider.cardUISignalHub.PlayerTurnStarted;
-
-        playerTurn.PlayerTurnStartEvent -= uiSignalHubProvider.gameplayUISignalHub.PlayerTurnStarted;
-        playerTurn.PlayerTurnStartEvent += uiSignalHubProvider.gameplayUISignalHub.PlayerTurnStarted;
+        gameStateMachine.ChangeState<GS_GameStarted>();
     }
 
-    public void BindCharacter()
+    private void BindEvent()
     {
-        GS_EnemyTurnState enemyTurnState = gameStateMachine.GetState<GS_EnemyTurnState>();
-
-        if (enemyTurnState != null)
-        {
-            enemyTurnState.EnemyTurnStartEvent -= unitSignalHubProvider.characterSignalHub.ResetbCanAction;
-            enemyTurnState.EnemyTurnStartEvent += unitSignalHubProvider.characterSignalHub.ResetbCanAction;
-        }
     }
 
-    public void ReleaseCharacter()
+    private void ReleaseEvent()
     {
-        GS_EnemyTurnState enemyTurnState = gameStateMachine.GetState<GS_EnemyTurnState>();
-
-        if (enemyTurnState != null)
-        {
-            enemyTurnState.EnemyTurnStartEvent -= unitSignalHubProvider.characterSignalHub.ResetbCanAction;
-        }
-    }
-
-    public void BindEnemy()
-    {
-
-    }
-
-    public void ReleaseEvent()
-    {
-        GS_PlayerTurnState playerTurn = gameStateMachine.GetState<GS_PlayerTurnState>();
-        GS_EnemyTurnState enemyTurn = gameStateMachine.GetState<GS_EnemyTurnState>();
-        GS_GameStarted gameStarted = gameStateMachine.GetState<GS_GameStarted>();
-
-        gameStarted.SpawnUnitsEvent -= SpawnUnits;
-
-        enemyTurn.EnemyTurnStartEvent -= waveSystemActions.StartEnemyMoveTurn;
-        enemyTurn.EnemyTurnStartEvent -= uiSignalHubProvider.cardUISignalHub.EnemyTurnStarted;
-        enemyTurn.EnemyTurnStartEvent -= uiSignalHubProvider.gameplayUISignalHub.EnemyTurnStarted;
-
-        playerTurn.PlayerTurnStartEvent -= cardSystemFlowActions.StartCardDrawTurn;
-        playerTurn.PlayerTurnStartEvent -= uiSignalHubProvider.cardUISignalHub.PlayerTurnStarted;
-        playerTurn.PlayerTurnStartEvent -= uiSignalHubProvider.gameplayUISignalHub.PlayerTurnStarted;
-
-        ReleaseCharacter();
     }
 
     public void OnDestroy()
     {
-        SpawnWaveEvent = null;
         ReleaseEvent();
     }
 
-    public void Start()
+    private void Start()
     {
-        gameStateMachine.ChangeState<GS_GameStarted>();
+
     }
 
     public bool IsState<T>() where T : GameState
@@ -146,37 +98,20 @@ public class GameController : MonoBehaviour, IGameFlowController
         gameStateMachine.ChangeState<T>();
     }
 
-    public void PlayerTurnIsFinished()
+    public void ChangeGameStateToPlayerTurn(WaveMoveEndEvent waveMoveEndEvent)
     {
-        ChangeGameState<GS_EnemyTurnState>();
-    }
-
-    public void ChangeGameStateToPlayerTurn()
-    {
-        ChangeGameState<GS_PlayerTurnState>();
-    }
-
-    public void WaveEnded()
-    {
-
-    }
-
-    public void SpawnUnits()
-    {
-        SpawnWaveEvent?.Invoke(waveIdx);
-        SpawnPlayerEvent?.Invoke();
-
-        BindCharacter();
-    }
-
-    public void SpawnWave()
-    {
-        SpawnWaveEvent?.Invoke(waveIdx);
+        ChangeGameState<GS_PlayerTurn>();
     }
 
     public void Release()
     {
+        UnSubscribeEvents();
+        gameStateMachine.ReleaseAllState();
         ReleaseEvent();
-        ReleaseCharacter();
+    }
+
+    private void ReleaseAllState()
+    {
+
     }
 }

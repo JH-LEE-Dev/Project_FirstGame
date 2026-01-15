@@ -1,3 +1,5 @@
+using CardEffectSystemSignal;
+using CardSystemSignals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,33 +7,53 @@ using UnityEngine;
 
 public class CardEffectCommandManager : MonoBehaviour
 {
-    public event Action<CardEffectSystemCommand> CardEffectSystemCommandDispatchEvent;
-    public event Action<CardEffectStatusCommand> CardEffectStatusCommandDispatchEvent;
+    //외부 의존성
+    private SignalHub signalHub;
 
     [SerializeField] private List<CardEffectStatusCommand> cardStatusCommands = new List<CardEffectStatusCommand>();
     [SerializeField] private List<CardEffectSystemCommand> cardSystemCommands = new List<CardEffectSystemCommand>();
 
-    public void AnalysisCardEffect(CardDataInstance card)
+    public void Initialize(SignalHub _signalHub)
     {
-        List<CardStatusEffectType> cardStatusEffectTypes = card.GetCardData().cardStatusEffects;
-        List<CardSystemEffectType> cardSystemEffectTypes = card.GetCardData().cardSystemEffects;
+        signalHub = _signalHub;
+
+        SubscribeEvent();
+    }
+
+    private void SubscribeEvent()
+    {
+        signalHub.Subscribe<CardUsedEvent>(AnalysisCardEffect);
+    }
+
+    private void UnSubscribeEvent()
+    {
+        signalHub.UnSubscribe<CardUsedEvent>(AnalysisCardEffect);
+    }
+
+    public void AnalysisCardEffect(CardUsedEvent cardUsedEvent)
+    {
+        CardDataInstance usedCard = cardUsedEvent.usedCard;
+
+        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
+        List<CardSystemEffectType> cardSystemEffectTypes = usedCard.GetCardData().cardSystemEffects;
 
         for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
         {
             CardEffectStatusCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
-            CardEffectStatusCommandDispatchEvent?.Invoke(effectCommand);
+
+            signalHub.Publish(new CardEffectStatusCommandDispatchEvent(effectCommand));
         }
 
         for (int i = 0; i < cardSystemEffectTypes.Count; ++i)
         {
             CardEffectSystemCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
-            CardEffectSystemCommandDispatchEvent?.Invoke(effectCommand);
+
+            signalHub.Publish(new CardEffectSystemCommandDispatchEvent(effectCommand));
         }
     }
 
-    public void OnDestroy()
+    public void Release()
     {
-        CardEffectSystemCommandDispatchEvent = null;
-        CardEffectStatusCommandDispatchEvent = null;
+        UnSubscribeEvent();
     }
 }

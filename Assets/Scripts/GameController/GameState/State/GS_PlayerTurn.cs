@@ -1,25 +1,14 @@
+using GameControlSignals;
 using System;
+using UnitLogicSystemSignals;
 using UnityEngine;
 
-public class GS_PlayerTurnState : GameState
+public class GS_PlayerTurn : GameState
 {
-    public event Action<int> PlayerTurnStartEvent;
-
-    private int waveIdx = 0;
-
-    public override void SetWaveIdx(int idx)
-    {
-        waveIdx = idx;
-    }
-
-    public override void Initialize(GameStateMachine stateMachine)
-    {
-        gameStateMachine = stateMachine;
-    }
 
     public override void Enter()
     {
-        PlayerTurnStartEvent?.Invoke(waveIdx);
+        signalHub.Publish(new PlayerTurnStartEvent());
     }
 
     public override void Exit()
@@ -32,8 +21,18 @@ public class GS_PlayerTurnState : GameState
        
     }
 
-    public override void Release()
+    protected override void SubscribeEvents()
     {
-        PlayerTurnStartEvent = null;
+        signalHub.Subscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
+    }
+
+    protected override void UnSubscribeEvents()
+    {
+        signalHub.UnSubscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
+    }
+
+    private void PlayerTurnFinished(PlayerTurnFinishedEvent playerTurnFinishedEvent)
+    {
+        gameStateMachine.ChangeState<GS_EnemyTurn>();
     }
 }

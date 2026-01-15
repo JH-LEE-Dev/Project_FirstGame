@@ -89,6 +89,87 @@ MonoBehaviour:
   pathLinePrefab: {fileID: 7938705195784025681, guid: 778b26b2ec6989c4198fbeef9fd72bd5, type: 3}
   alphaFadeDuration: 0.25
   globalAlpha: 1
+--- !u!1 &1304812929871981835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1150113239499201892}
+  - component: {fileID: 5212957816586645379}
+  - component: {fileID: 6668742716584127980}
+  - component: {fileID: 2669582842453573755}
+  m_Layer: 0
+  m_Name: UIInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1150113239499201892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7045863790459964670}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5212957816586645379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc27db168df4b474f8a98d60c8c3955c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIInstaller
+  canvasRootPrefab:
+    screenLayerRoot: {fileID: 0}
+    popupLayerRoot: {fileID: 8460043745105849495, guid: ef74ea278336bb3459fe6fe5713cefe6, type: 3}
+    overlayLayerRoot: {fileID: 3971935038539339945, guid: 8b0f969fce41c0f4bad9b217ad439303, type: 3}
+    tooltipLayerRoot: {fileID: 0}
+  canvasPrefab: {fileID: 1108041376251214764, guid: e1f21de538dc67948b2b4ac655e74f3f, type: 3}
+--- !u!114 &6668742716584127980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba467594dd9ead4ab9db01354fbb56d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
+  viewPrefabs:
+  - {fileID: -4060187404860509694, guid: f3def2b9578b88a45b7e451ab5068ff2, type: 3}
+  - {fileID: 8004459324530729153, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
+  - {fileID: 5906714827194331106, guid: 2e1ac48127c7b2042a3791b20e940111, type: 3}
+  - {fileID: 2524402950988499541, guid: 8c2e27bd2120b3c49bbb5ed56c773b1e, type: 3}
+--- !u!114 &2669582842453573755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0
@@ -5246,7 +5327,7 @@ GameObject:
   - component: {fileID: -3014418931989348951}
   - component: {fileID: -1934595178798189937}
   m_Layer: 0
-  m_Name: GameplaySystem
+  m_Name: GameplayInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15390,6 +15471,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4737121153119196882}
+  - {fileID: 1150113239499201892}
   m_Father: {fileID: 2715298809759021445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8204895467648919775

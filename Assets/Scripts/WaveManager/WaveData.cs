@@ -5,6 +5,6 @@ using UnityEngine.Audio;
 [System.Serializable]
 public class WaveData
 {
-    public uint waveIdx = 0;
-    public uint enemyCnt = 1;
+    public int waveIdx = 0;
+    public int enemyCnt = 1;
 }
