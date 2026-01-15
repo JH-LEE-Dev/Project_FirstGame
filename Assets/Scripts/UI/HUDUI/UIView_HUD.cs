@@ -17,7 +17,7 @@ public class UIView_HUD : UIView
     [SerializeField] private TMP_Text turnIndicatorText;
     [SerializeField] private TMP_Text turnProcessIndicatorText;
     [SerializeField] private TMP_Text waveText;
-    [SerializeField] private TMP_Text waveEndDeclareText;
+    [SerializeField] private TMP_Text waveStateDeclareText;
 
     [Header("UI Bar")]
     [SerializeField] private BarMotion hpBar;
@@ -35,9 +35,16 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
+    public void Initialize(IPlayerData _playerData)
+    {
+        playerData = _playerData;
+
+        hpText?.Init(playerData.GetMaxHealth(), this);
+    }
+
     private void Start()
     {
-        waveEndDeclareText.gameObject.SetActive(false);
+        
     }
 
     public void DataInjection()
@@ -64,10 +71,30 @@ public class UIView_HUD : UIView
 
     }
 
-    public void PlayerTurnStarted(int waveIdx)
+    public void WaveStarted(int _waveIdx)
     {
-        waveEndDeclareText?.gameObject.SetActive(false); 
-        waveText.text = "Wave : " + (waveIdx + 1).ToString();
+        waveStateDeclareText.text = "WaveStarted!!";
+        waveText.text = "Wave : " + (_waveIdx + 1).ToString();
+        turnIndicatorText.text = "WaveStarted";
+        turnProcessIndicatorText.text = "Prepare For Wave";
+    }
+
+    public void GameStarted()
+    {
+        waveStateDeclareText.gameObject.SetActive(true);
+        waveStateDeclareText.text = "GameStarted!!!";
+    }
+
+    public void WaveEnded()
+    {
+        waveStateDeclareText.gameObject.SetActive(true);
+        waveStateDeclareText.text = "Prepare For Next Wave!!";
+    }
+
+    public void PlayerTurnStarted()
+    {
+        waveStateDeclareText?.gameObject.SetActive(false); 
+        waveText.text = "Wave : " + (0 + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
     }
@@ -105,11 +132,4 @@ public class UIView_HUD : UIView
 
     public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
     public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
-
-    public void Initialize(IPlayerData _playerData)
-    {
-        playerData = _playerData;
-
-        hpText?.Init(playerData.GetMaxHealth(), this);
-    }
 }

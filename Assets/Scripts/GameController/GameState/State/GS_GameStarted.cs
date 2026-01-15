@@ -1,3 +1,4 @@
+using GameControlSignals;
 using System;
 using System.Collections;
 
@@ -6,31 +7,20 @@ using UnityEngine;
 //gameStateMachine 인터페이스 추상화할 것.
 public class GS_GameStarted : GameState
 {
-    public event Action SpawnUnitsEvent;
-
-    private float unitSpawnDelay = 1f;
+    private float unitSpawnDelay = 2f;
 
     public async void SpawnUnitsTask()
     {
         await Awaitable.WaitForSecondsAsync(unitSpawnDelay);
 
-        SpawnUnitsEvent?.Invoke();
-
-        gameStateMachine.ChangeState<GS_PlayerTurnState>();
-    }
-
-    public override void SetWaveIdx(int idx)
-    {
-
-    }
-
-    public override void Initialize(GameStateMachine stateMachine)
-    {
-        gameStateMachine = stateMachine;
+        gameStateMachine.ChangeState<GS_WaveStarted>();
     }
 
     public override void Enter()
     {
+        signalHub.Publish(new GameStartedEvent());
+        signalHub.Publish(new ActivatePlayerEvent());
+
         SpawnUnitsTask();
     }
 
@@ -44,8 +34,13 @@ public class GS_GameStarted : GameState
 
     }
 
-    public override void Release()
+    protected override void SubscribeEvents()
     {
-        SpawnUnitsEvent = null;
+
+    }
+
+    protected override void UnSubscribeEvents()
+    {
+
     }
 }

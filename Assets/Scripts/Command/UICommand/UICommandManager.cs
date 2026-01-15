@@ -2,26 +2,45 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UICommandSystemSignals;
 
-public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUICommandEvents
+public class UICommandManager : MonoBehaviour, ICardUICommandSystem
 {
-    // 인터페이스의 이벤트를 dispatcher에 직접 연결
-    public event Action<UIJobBatch_CardSystem> JobDispatchEvent
-    {
-        add => dispatcher.CardSystem_JobDispatchEvent += value;
-        remove => dispatcher.CardSystem_JobDispatchEvent -= value;
-    }
+    //외부 의존성
+    SignalHub signalHub;
 
+    //내부 의존성
     private UICommandDispatcher dispatcher;
     private UICommandFactory_CardSystem commandFactory_CardSystem;
 
-    public void Initialize()
+    public void Initialize(SignalHub _signalHub)
     {
+        signalHub = _signalHub;
+
         dispatcher = new UICommandDispatcher();
         commandFactory_CardSystem = new UICommandFactory_CardSystem();
 
+        dispatcher.Initialize(signalHub);
         commandFactory_CardSystem.Initialize();
+
+        SubscribeEvents();
     }
+
+    public void Release()
+    {
+        UnSubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
+        signalHub.Subscribe<UICommandCompleteEvent>(ReleaseJobBatch);
+    }
+
+    private void UnSubscribeEvents()
+    {
+        signalHub.UnSubscribe<UICommandCompleteEvent>(ReleaseJobBatch);
+    }
+
 
     public void OnDestroy()
     {
@@ -61,8 +80,8 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUIComma
         dispatcher.Dispatch_CardSystem(commandFactory_CardSystem.GetJobBatch());
     }
 
-    public void ReleaseJobBatch(int idx)
+    public void ReleaseJobBatch(UICommandCompleteEvent uiCommandCompleteEvent)
     {
-        commandFactory_CardSystem.ReleaseSlot(idx);
+        commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteEvent.commandIdx);
     }
 }

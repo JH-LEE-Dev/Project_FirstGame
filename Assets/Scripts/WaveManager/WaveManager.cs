@@ -1,47 +1,67 @@
+using GameControlSignals;
 using System;
-using UnityEngine;
 using System.Collections;
+using UnitLogicSystemSignals;
+using UnityEngine;
+using WaveSystemSignals;
 
-public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
+public class WaveManager : MonoBehaviour
 {
-    [SerializeField] private float MoveTurnDelay = 2f;
+    //외부 의존성
+    SignalHub signalHub;
 
-    public event Action StartMoveEvent;
-    public event Action<uint> SpawnWaveEvent;
-    public event Action WaveMoveEndEvent;
-    public event Action WaveEndEvent;
+    [SerializeField] private float MoveTurnDelay = 2f;
 
     private WaveDatabase waveDatabase;
 
-    private uint currentEnemyCount = 0;
+    private int currentEnemyCount = 0;
     private bool bIsWaveEnded = false;
 
-    public void Initialize(WaveDatabase _waveDatabase)
+    public void Initialize(SignalHub _signalHub, WaveDatabase _waveDatabase)
     {
+        signalHub = _signalHub;
         waveDatabase = _waveDatabase;
+
+        SubscribeEvents();
+    }
+
+    public void Release()
+    {
+        UnSubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
+        signalHub.Subscribe<StartSpawnWaveEvent>(SpawnWave);
+        signalHub.Subscribe<EnemyTurnStartEvent>(StartEnemyMoveTurn);
+        signalHub.Subscribe<EnemyIsDeadEvent>(EnemyIsDead);
+    }
+
+    private void UnSubscribeEvents()
+    {
+        signalHub.UnSubscribe<StartSpawnWaveEvent>(SpawnWave);
+        signalHub.UnSubscribe<EnemyTurnStartEvent>(StartEnemyMoveTurn);
+        signalHub.UnSubscribe<EnemyIsDeadEvent>(EnemyIsDead);
     }
 
     private void OnDestroy()
     {
-        StartMoveEvent = null;
-        SpawnWaveEvent = null;
-        WaveMoveEndEvent = null;
-        WaveEndEvent = null;
+
     }
 
-    public void SpawnWave(int idx)
+    public void SpawnWave(StartSpawnWaveEvent startSpawnWaveEvent)
     {
         bIsWaveEnded = false;
-        WaveData curWaveData = waveDatabase.GetWaveData(idx);
+        WaveData curWaveData = waveDatabase.GetWaveData(startSpawnWaveEvent.waveIdx);
 
         if (curWaveData != null)
         {
             currentEnemyCount = curWaveData.enemyCnt;
-            SpawnWaveEvent?.Invoke(currentEnemyCount);
+            signalHub.Publish(new SpawnWaveEvent(currentEnemyCount));
         }
     }
 
-    public void StartEnemyMoveTurn()
+    public void StartEnemyMoveTurn(EnemyTurnStartEvent enemyTurnStartEvent)
     {
         StartCoroutine(MoveTurnCoroutine());
     }
@@ -51,28 +71,29 @@ public class WaveManager : MonoBehaviour, IWaveSystemActions, IWaveSystemEvents
         yield return new WaitForSeconds(MoveTurnDelay);
 
         if (bIsWaveEnded == false)
-            WaveMoveEndEvent?.Invoke();
+            signalHub.Publish(new WaveMoveEndEvent());
+        else
+            signalHub.Publish(new AllEnemyDeadEvent());
     }
 
     private IEnumerator MoveTurnCoroutine()
     {
         yield return new WaitForSeconds(MoveTurnDelay);
 
-        StartMoveEvent?.Invoke();
+        signalHub.Publish(new StartMoveEvent());
 
         yield return new WaitForSeconds(MoveTurnDelay);
 
         StartCoroutine(WaveMoveEnd());
     }
 
-    public void EnemyIsDead()
+    public void EnemyIsDead(EnemyIsDeadEvent enemyIsDeadEvent)
     {
         --currentEnemyCount;
 
         if (currentEnemyCount == 0)
         {
             bIsWaveEnded = true;
-            WaveEndEvent?.Invoke();
         }
     }
 }

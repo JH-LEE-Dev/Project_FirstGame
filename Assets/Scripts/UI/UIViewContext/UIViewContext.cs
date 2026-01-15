@@ -14,7 +14,7 @@ public class UIViewContext
 
     }
 
-    public void ReleaseDependency_GameplayScene()
+    public void ReleaseDependency()
     {
 
     }
