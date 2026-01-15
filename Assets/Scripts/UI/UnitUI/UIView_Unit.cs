@@ -24,6 +24,7 @@ public class UIView_Unit : UIView
 
     public void Initialize(ICharacterData _characterData)
     {
+        Debug.Log("1");
         characterData = _characterData;
         // 임시로 시작은 2개 연출중. 나중에 매개변수로 캐릭터 타입 넣어주면 될듯.
         SetBulletSocket();
