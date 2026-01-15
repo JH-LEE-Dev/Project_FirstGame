@@ -4,7 +4,7 @@ using UnityEngine;
 public class SocketVisual : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private Transform visual;
+    [SerializeField] private RectTransform visual;
 
     [Header("Layout Follow (Root moves)")]
     [SerializeField] private float moveDuration = 0.25f;
@@ -34,12 +34,6 @@ public class SocketVisual : MonoBehaviour
 
     private void Awake()
     {
-        if (visual == null)
-        {
-            // 안전망: 자식 0번을 visual로 간주 (가능하면 인스펙터로 꽂아줘)
-            if (transform.childCount > 0) visual = transform.GetChild(0);
-        }
-
         targetRootLocalPos = transform.localPosition;
 
         if (visual != null)

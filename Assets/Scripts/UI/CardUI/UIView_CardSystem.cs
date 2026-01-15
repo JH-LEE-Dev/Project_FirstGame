@@ -1,12 +1,9 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class UIView_CardSystem : UIView
 {
@@ -61,10 +58,6 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
-    public MeshRenderer testImpact = null;
-    private Material mat = null;
-    private ParticleSystem particle = null;
-
     public override void OnDestroy()
     {
         UICommandCompleteEvent = null;
@@ -93,31 +86,6 @@ public class UIView_CardSystem : UIView
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
         clickCatchSystem?.Init(this);
-
-        Test();
-    }
-
-    public void Test()
-    {
-        mat = testImpact?.material;
-        particle = testImpact?.gameObject.GetComponentInChildren<ParticleSystem>();
-
-        DG.Tweening.Sequence seq = DOTween.Sequence();
-
-        seq.AppendCallback(() =>
-        {
-            if (particle != null)
-            {
-                particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                particle.Play();
-            }
-            mat.SetFloat("_Ratio", 0f);
-        });
-
-        seq.Append(mat.DOFloat(1f, "_Ratio", 2f)
-            .SetEase(Ease.OutQuad));
-
-        seq.SetLoops(-1);
     }
 
     // For PoolingSystem

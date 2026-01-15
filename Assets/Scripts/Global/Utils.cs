@@ -2,6 +2,31 @@
 
 public static class UIWorldUtil
 {
+    // worldPos를 "targetRt의 부모 기준 anchoredPosition"으로 변환해서 반환
+    // (Canvas가 Overlay라는 전제)
+    public static Vector2 WorldToAnchoredPosition_Overlay(
+        RectTransform targetRt,
+        Vector3 worldPos,
+        Camera worldCam
+    )
+    {
+        if (targetRt == null || worldCam == null) return Vector2.zero;
+
+        RectTransform parent = targetRt.parent as RectTransform;
+        if (parent == null) return Vector2.zero;
+
+        Vector2 screenPos = worldCam.WorldToScreenPoint(worldPos);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parent,
+            screenPos,
+            null,                   // Overlay는 null
+            out Vector2 localPoint
+        );
+
+        return localPoint;
+    }
+
     // 반대쪽 좌표 변환
     public static Vector3 OverlayAnchoredToWorld_FlipX(
         RectTransform canvasRt,

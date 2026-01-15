@@ -144,7 +144,9 @@ public class UIText_PlayerHP : MonoBehaviour
             hudSystem?.ReturnDamageText(_damagNum);
         };
 
-        script.PlayMotion(callback);
+        bool dangerDamage = 0.5f <= (_damage / _prev);
+
+        script.PlayMotion(dangerDamage, callback);
     }
 
     private Sequence CancelPrevMotion(Sequence target)
