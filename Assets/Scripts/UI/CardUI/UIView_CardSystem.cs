@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIView_CardSystem : UIView
 {
-    public event Action UICommandCompleteEvent;
+    public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> CardUsedEvent;
     public event Action CardUsingFinishedEvent;
 
@@ -327,16 +327,16 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public async void RecieveUIJob(List<Job_CardSystemUI> _jobQueue)
+    public async void RecieveUIJob(UIJobBatch_CardSystem _jobBatch)
     {
-        var currentBatchList = _jobQueue;
+        var currentUIJobList = _jobBatch.jobList;
 
         float turnWaitSecond = 0.5f;
 
-        int size = currentBatchList.Count;
+        int size = currentUIJobList.Count;
         for (int i = 0; i < size; ++i)
         {
-            Job_CardSystemUI currentJob = currentBatchList[i];
+            Job_CardSystemUI currentJob = currentUIJobList[i];
 
             JobType_CardSystemUI currenType = currentJob.jobType;
 
@@ -351,7 +351,7 @@ public class UIView_CardSystem : UIView
 
                 case JobType_CardSystemUI.GraveToDeck:
 
-                    graveSystem?.CardMoveToDeckEffect(currentBatchList[i].cards.Count);
+                    graveSystem?.CardMoveToDeckEffect(currentUIJobList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
@@ -374,7 +374,7 @@ public class UIView_CardSystem : UIView
 
         SetText();
 
-        UICommandCompleteEvent?.Invoke();
+        UICommandCompleteEvent?.Invoke(_jobBatch.idx);
     }
 
     void DrawingCards(List<CardDataInstance> _datas)

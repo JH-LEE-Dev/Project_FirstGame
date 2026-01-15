@@ -33,25 +33,71 @@ public class UICommandFactory_CardSystem : UICommandFactory
             maxSize: maxBatchPoolSize
         );
 
-    private List<List<Job_CardSystemUI>> usedBatches = new List<List<Job_CardSystemUI>>(batchPoolSize);
+    private Queue<int> availableSlots = new Queue<int>(maxBatchPoolSize); // 사용 가능한 슬롯 인덱스들
+    private List<List<Job_CardSystemUI>> jobSlots = new List<List<Job_CardSystemUI>>(maxBatchPoolSize);
+    private UIJobBatch_CardSystem currentJobBatch;
 
     private int currentUsingBatchCnt = 0;
-    private int currentBatchPoolSize = batchPoolSize;
-    private int writeIndex = 0;
+
+    private bool bGeneratingJobBatch = false;
 
     public void Initialize()
     {
-        for (int i = 0; i < batchPoolSize; i++)
+        for (int i = 0; i < batchPoolSize; ++i)
         {
-            usedBatches.Add(jobBatchPool.Get());
+            jobSlots.Add(jobBatchPool.Get());
+            availableSlots.Enqueue(i); // 처음에 모든 인덱스를 사용 가능 상태로 넣음
         }
     }
 
-    private List<Job_CardSystemUI> GetActiveBatch() => usedBatches[writeIndex];
+    public void ReleaseSlot(int index)
+    {
+        PrepareNextSlot(index); // 해당 인덱스 리스트 청소
+        availableSlots.Enqueue(index); // 이제 다시 써도 된다고 큐에 삽입
+        --currentUsingBatchCnt;
+
+        if (currentUsingBatchCnt < 0)
+            currentUsingBatchCnt = 0;
+    }
+
+    private UIJobBatch_CardSystem GetAvailableBatch()
+    {
+        UIJobBatch_CardSystem availableBatch;
+        availableBatch.jobList = null;
+        availableBatch.idx = 0;
+
+        if (availableSlots.Count == 0)
+        {
+            // 만약 여유 슬롯이 없으면 새로 생성 (동적 확장)
+            if (jobSlots.Count < maxBatchPoolSize)
+            {
+                int newIdx = jobSlots.Count;
+                jobSlots.Add(jobBatchPool.Get());
+
+                availableBatch.jobList = jobSlots[newIdx];
+                availableBatch.idx = newIdx;
+
+                return availableBatch;
+            }
+
+            Debug.Log("UI 연출 명령이 포화상태입니다.");
+
+            return availableBatch;
+        }
+
+        int slotIdx = availableSlots.Dequeue(); // 비어있는 인덱스 하나 추출
+
+        availableBatch.jobList = jobSlots[slotIdx];
+        availableBatch.idx = slotIdx;
+
+        return availableBatch;
+    }
 
     public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards, bool bAdditional)
     {
-        var batch = GetActiveBatch();
+        var batch = InitializeJobBatch();
+        if (batch.jobList == null)
+            return;
 
         var drawList = cardListPool.Get();
 
@@ -61,13 +107,13 @@ public class UICommandFactory_CardSystem : UICommandFactory
         }
 
         if (bAdditional == false)
-            batch.Add(new Job_CardSystemUI
+            batch.jobList.Add(new Job_CardSystemUI
             {
                 jobType = JobType_CardSystemUI.Draw,
                 cards = drawList
             });
         else
-            batch.Add(new Job_CardSystemUI
+            batch.jobList.Add(new Job_CardSystemUI
             {
                 jobType = JobType_CardSystemUI.AdditionalDraw,
                 cards = drawList
@@ -76,7 +122,9 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_ToGrave(ReadOnlySpan<CardDataInstance> toGraveCards)
     {
-        var batch = GetActiveBatch();
+        var batch = InitializeJobBatch();
+        if (batch.jobList == null)
+            return;
 
         var drawList = cardListPool.Get();
 
@@ -85,7 +133,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             drawList.Add(toGraveCards[i]);
         }
 
-        batch.Add(new Job_CardSystemUI
+        batch.jobList.Add(new Job_CardSystemUI
         {
             jobType = JobType_CardSystemUI.HandToGrave,
             cards = drawList
@@ -94,7 +142,9 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_ToDeck(ReadOnlySpan<CardDataInstance> toDeckCards)
     {
-        var batch = GetActiveBatch();
+        var batch = InitializeJobBatch();
+        if (batch.jobList == null)
+            return;
 
         var toDeckList = cardListPool.Get();
 
@@ -103,54 +153,42 @@ public class UICommandFactory_CardSystem : UICommandFactory
             toDeckList.Add(toDeckCards[i]);
         }
 
-        batch.Add(new Job_CardSystemUI
+        batch.jobList.Add(new Job_CardSystemUI
         {
             jobType = JobType_CardSystemUI.GraveToDeck,
             cards = toDeckList
         });
     }
 
-    public List<Job_CardSystemUI> GetJobBatch()
+    public UIJobBatch_CardSystem GetJobBatch()
     {
-        List<Job_CardSystemUI> batchToReturn = usedBatches[writeIndex];
-
+        bGeneratingJobBatch = false;
         ++currentUsingBatchCnt;
 
-        if (currentUsingBatchCnt > maxBatchPoolSize)
-        {
-            Debug.Log("UI 연출 명령이 포화 상태입니다.");
-            return null;
-        }
-
-        if (currentUsingBatchCnt > currentBatchPoolSize)
-        {
-            for (int i = 0; i < currentUsingBatchCnt - currentBatchPoolSize; ++i)
-            {
-                usedBatches.Add(jobBatchPool.Get());
-            }
-
-            currentBatchPoolSize = currentUsingBatchCnt;
-        }
-
-        writeIndex = (writeIndex + 1) % currentBatchPoolSize;
-
-        PrepareNextSlot(writeIndex);
-
-        return batchToReturn;
+        return currentJobBatch;
     }
 
-    public void DecreaseBatchCount()
+    private UIJobBatch_CardSystem InitializeJobBatch()
     {
-        --currentUsingBatchCnt;
+        UIJobBatch_CardSystem batch;
 
-        //이런 일은 발생해서는 안됨.
-        if (currentUsingBatchCnt < 0)
-            currentUsingBatchCnt = 0;
+        if (bGeneratingJobBatch)
+            batch = currentJobBatch;
+        else
+        {
+            currentJobBatch = GetAvailableBatch();
+            batch = currentJobBatch;
+
+            if (batch.jobList != null)
+                bGeneratingJobBatch = true;
+        }
+
+        return batch;
     }
 
     private void PrepareNextSlot(int index)
     {
-        List<Job_CardSystemUI> nextBatch = usedBatches[index];
+        List<Job_CardSystemUI> nextBatch = jobSlots[index];
 
         // 들어있던 내부 카드 리스트들 풀에 반납
         foreach (var job in nextBatch)

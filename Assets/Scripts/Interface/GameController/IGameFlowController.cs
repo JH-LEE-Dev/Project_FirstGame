@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IGameFlowController : IGameFlowProvider
+public interface IGameFlowController
 {
     void PlayerTurnIsFinished();
 }

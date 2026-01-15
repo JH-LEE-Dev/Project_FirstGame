@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class GameStateMachine
 {
-    private IState currentState;
-    private Dictionary<Type, IState> states = new Dictionary<Type, IState>();
+    private GameState currentState;
+    private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
 
-    public void AddState(IState state)
+    public void AddState(GameState state)
     {
         states[state.GetType()] = state;
     }
 
-    public void ChangeState<T>() where T : IState
+    public void ChangeState<T>() where T : GameState
     {
         var type = typeof(T);
 
@@ -30,16 +30,16 @@ public class GameStateMachine
         currentState?.Update();
     }
 
-    public bool IsState<T>() where T : IState
+    public bool IsState<T>() where T : GameState
     {
         return currentState != null && currentState.GetType() == typeof(T);
     }
 
-    public T GetState<T>() where T : IState
+    public T GetState<T>() where T : GameState
     {
         var type = typeof(T);
 
-        if (!states.TryGetValue(type, out IState instance) || instance == null)
+        if (!states.TryGetValue(type, out GameState instance) || instance == null)
         {
             return default(T);
         }

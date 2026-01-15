@@ -1,38 +1,38 @@
 using System;
 using UnityEngine;
 
-public class GS_EnemyTurnState : IState
+public class GS_EnemyTurnState : GameState
 {
     public event Action EnemyTurnStartEvent;
 
     private int waveIdx = 0;
 
-    public void Enter()
+    public override void Enter()
     {
         EnemyTurnStartEvent?.Invoke();
     }
 
-    public void Exit()
+    public override void Exit()
     {
 
     }
 
-    public void Initialize()
+    public override void Initialize(GameStateMachine stateMachine)
     {
-
+        gameStateMachine = stateMachine;
     }
 
-    public void SetWaveIdx(int idx)
+    public override void SetWaveIdx(int idx)
     {
         waveIdx = idx;
     }
 
-    public void Update()
+    public override void Update()
     {
 
     }
 
-    public void Release()
+    public override void Release()
     {
         EnemyTurnStartEvent = null;
     }

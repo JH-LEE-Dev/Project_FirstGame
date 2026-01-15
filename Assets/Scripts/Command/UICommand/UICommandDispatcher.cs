@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class UICommandDispatcher 
+public class UICommandDispatcher
 {
-    public event Action<List<Job_CardSystemUI>> CardSystem_JobDispatchEvent;
+    public event Action<UIJobBatch_CardSystem> CardSystem_JobDispatchEvent;
 
-    public void Dispatch_CardSystem(List<Job_CardSystemUI> JobBatch)
+    public void Dispatch_CardSystem(in UIJobBatch_CardSystem _jobBatch)
     {
-        CardSystem_JobDispatchEvent?.Invoke(JobBatch);
+        if (_jobBatch.jobList != null)
+            CardSystem_JobDispatchEvent?.Invoke(_jobBatch);
     }
 
     public void Release()

@@ -6,7 +6,7 @@ using System;
 public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUICommandEvents
 {
     // 인터페이스의 이벤트를 dispatcher에 직접 연결
-    public event Action<List<Job_CardSystemUI>> JobDispatchEvent
+    public event Action<UIJobBatch_CardSystem> JobDispatchEvent
     {
         add => dispatcher.CardSystem_JobDispatchEvent += value;
         remove => dispatcher.CardSystem_JobDispatchEvent -= value;
@@ -61,25 +61,8 @@ public class UICommandManager : MonoBehaviour, ICardUICommandSystem,ICardUIComma
         dispatcher.Dispatch_CardSystem(commandFactory_CardSystem.GetJobBatch());
     }
 
-    public void BindDispatchEvent(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
+    public void ReleaseJobBatch(int idx)
     {
-        dispatcher.CardSystem_JobDispatchEvent -= cardSystemObject.RecieveUIJob;
-        dispatcher.CardSystem_JobDispatchEvent += cardSystemObject.RecieveUIJob;
-        cardSystemObject.UICommandCompleteEvent -= commandFactory_CardSystem.DecreaseBatchCount;
-        cardSystemObject.UICommandCompleteEvent += commandFactory_CardSystem.DecreaseBatchCount;
-    }
-
-    public void DecreaseJobBatchCount()
-    {
-        commandFactory_CardSystem.DecreaseBatchCount();
-    }
-
-    public void ReleaseDispatchEvent(UIView_HUD HUDObject, UIView_CardSystem cardSystemObject, UIView_Gameplay gameplayObject)
-    {
-        if (cardSystemObject != null)
-        {
-            dispatcher.CardSystem_JobDispatchEvent -= cardSystemObject.RecieveUIJob;
-            cardSystemObject.UICommandCompleteEvent -= commandFactory_CardSystem.DecreaseBatchCount;
-        }
+        commandFactory_CardSystem.ReleaseSlot(idx);
     }
 }

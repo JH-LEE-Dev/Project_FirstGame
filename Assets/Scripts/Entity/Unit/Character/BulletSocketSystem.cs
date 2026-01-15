@@ -38,10 +38,13 @@ public class BulletSocketSystem : MonoBehaviour
 
     private void LateUpdate()
     {
-        float offset = characterTransform.localScale.x * scaleOffset;
+        if (characterTransform != null)
+        {
+            float offset = characterTransform.localScale.x * scaleOffset;
 
-        pivot.position = characterTransform.position + (yOffset * offset);
-        pivot.localScale = characterTransform.localScale * scaleOffset;
+            pivot.position = characterTransform.position + (yOffset * offset);
+            pivot.localScale = characterTransform.localScale * scaleOffset;
+        }
     }
 
     // 풀링 함수
