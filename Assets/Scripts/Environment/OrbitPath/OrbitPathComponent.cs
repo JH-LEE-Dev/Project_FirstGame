@@ -25,7 +25,11 @@ public class OrbitPathComponent : MonoBehaviour
 
     [Header("Alpha Settings")]
     [SerializeField] private float alphaFadeDuration = 0.25f;
-    [SerializeField] private float globalAlpha = 1f;
+    [SerializeField] private float globalAlpha = 0.7f;
+    [SerializeField] private float globalMaxAlpha = 0.7f;
+    [SerializeField] private float globalMinAlpha = 0f;
+
+
     private Tween alphaTween;
 
 
@@ -133,7 +137,7 @@ public class OrbitPathComponent : MonoBehaviour
 
     public void SetPathActive(bool value)
     {
-        float targetAlpha = value ? 1f : 0f;
+        float targetAlpha = value ? globalMaxAlpha : globalMinAlpha;
 
         // 기존 트윈이 있으면 중단
         alphaTween?.Kill();

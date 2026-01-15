@@ -88,7 +88,9 @@ MonoBehaviour:
   flowSpeedPerSec: 0.1
   pathLinePrefab: {fileID: 7938705195784025681, guid: 778b26b2ec6989c4198fbeef9fd72bd5, type: 3}
   alphaFadeDuration: 0.25
-  globalAlpha: 1
+  globalAlpha: 0.7
+  globalMaxAlpha: 0.7
+  globalMinAlpha: 0
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0
@@ -5282,7 +5284,13 @@ MonoBehaviour:
   LineSpeedPerSec: 0.05
   fallBoundaryPrefab: {fileID: 4643352628927584374, guid: 35e19ba6ae5c9b14e91682abc11c19e0, type: 3}
   alphaFadeDuration: 0.25
-  globalAlpha: 0.35
+  globalAlpha: 0.15
+  globalMinAlpha: 0.02
+  globalMaxAlpha: 0.15
+  testMonsters: []
+  dangerNear: 0.8
+  dangerFar: 3
+  dangerSmoothTime: 0.15
 --- !u!1 &3132615358195672310
 GameObject:
   m_ObjectHideFlags: 0

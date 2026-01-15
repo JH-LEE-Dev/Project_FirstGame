@@ -103,4 +103,6 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f6030e04b14b8c4a80f1008ba873ff7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FallBoundaryLineSegment
+  m_EditorClassIdentifier: Assembly-CSharp::FallBoundarySegment
+  warningOnColor: {r: 1, g: 0.35, b: 0, a: 1}
+  warningOffColor: {r: 0.53, g: 0.58, b: 0.85, a: 1}

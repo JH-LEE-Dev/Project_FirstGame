@@ -5,10 +5,10 @@ using UnityEngine;
 public class FallBoundaryComponent : MonoBehaviour
 {
     [Header("Arc Definition")]
-    [SerializeField] public Transform center;                   // 구 센터
-    [SerializeField] public float radius = 11.3f;                // 반지름
-    [SerializeField] public float startAngleDeg = 63f;          // 시작 각도(도)
-    [SerializeField] public float endAngleDeg = 117f;           // 끝 각도(도)
+    [SerializeField] public Transform center;                       // 구 센터
+    [SerializeField] public float radius = 11.3f;                   // 반지름
+    [SerializeField] public float startAngleDeg = 63f;              // 시작 각도(도)
+    [SerializeField] public float endAngleDeg = 117f;               // 끝 각도(도)
 
     [Header("Line Settings")]
     [SerializeField] private int LineCount = 40;
@@ -20,24 +20,49 @@ public class FallBoundaryComponent : MonoBehaviour
 
     [Header("Color Settings")]
     [SerializeField] private float alphaFadeDuration = 0.25f;
-    [SerializeField] private float globalAlpha = 0.35f;
+    [SerializeField] private float globalAlpha = 0.15f;
+    [SerializeField] private float globalMinAlpha = 0.02f;
+    [SerializeField] private float globalMaxAlpha = 0.15f;
 
     private Tween alphaTween;
 
     // 전체 흐름 제어 변수
     private float globalT;
 
+
+    // Danger (TEST)
+    [Header("Danger (TEST)")]
+    [SerializeField] private List<Transform> testMonsters = new();
+    [SerializeField] private float dangerNear = 0.8f;
+    [SerializeField] private float dangerFar = 3f;
+
+    [Tooltip("위험도 변화 부드럽게")]
+    [SerializeField] private float dangerSmoothTime = 0.15f;
+
+    // 세그먼트마다 위험도 스무딩용
+    private float[] dangerSmoothed;
+    private float[] dangerVel;
+
+    ///
+
     private void Awake()
     {
         if (!center) center = transform;
 
+        dangerSmoothed = new float[LineCount];
+        dangerVel = new float[LineCount];
+
         for (int i = 0; i < LineCount; i++)
         {
             var go = Instantiate(fallBoundaryPrefab, center);
-            var line = go.GetComponent<FallBoundarySegment>();
-            if (!line) line = go.AddComponent<FallBoundarySegment>();
-            fallBoundarySegments.Add(line);
+            var seg = go.GetComponent<FallBoundarySegment>();
+            if (!seg) seg = go.AddComponent<FallBoundarySegment>();
+
+            seg.SetSeed(i * 97 + 13);
+
+            fallBoundarySegments.Add(seg);
         }
+
     }
 
     private void Update()
@@ -47,9 +72,9 @@ public class FallBoundaryComponent : MonoBehaviour
 
     private void DrawPathLine()
     {
-
         float segmentLen = 1f / LineCount;
 
+        // 기존 눈속임 유지
         globalT = Mathf.Repeat(globalT + LineSpeedPerSec * Time.deltaTime, segmentLen);
 
         int last = fallBoundarySegments.Count - 1;
@@ -78,8 +103,41 @@ public class FallBoundaryComponent : MonoBehaviour
             else if (i == last - 1) alpha = Mathf.Lerp(0.5f, 0.25f, local01);
             else if (i == last) alpha = Mathf.Lerp(0.25f, 0f, local01);
 
-            fallBoundarySegments[i].SetTransform(pos, rot, alpha * globalAlpha);
+            // danger
+            float dangerRaw = ComputeDanger01(pos);
+            float danger = Mathf.SmoothDamp(
+                dangerSmoothed[i],
+                dangerRaw,
+                ref dangerVel[i],
+                dangerSmoothTime
+            );
+            dangerSmoothed[i] = danger;
+
+            fallBoundarySegments[i].SetTransform(pos, rot, alpha * globalAlpha, danger);
         }
+    }
+
+    private float ComputeDanger01(Vector3 worldPos)
+    {
+        if (testMonsters == null || testMonsters.Count == 0)
+            return 0f;
+
+        float minDist = float.MaxValue;
+
+        for (int i = 0; i < testMonsters.Count; i++)
+        {
+            var t = testMonsters[i];
+            if (!t) continue;
+
+            float d = Vector3.Distance(worldPos, t.position);
+            if (d < minDist) minDist = d;
+        }
+
+        if (minDist == float.MaxValue)
+            return 0f;
+
+        float x = Mathf.InverseLerp(dangerFar, dangerNear, minDist); // far->0, near->1
+        return Mathf.SmoothStep(0f, 1f, x);
     }
 
     private Vector3 PointOnArc(float t01)
@@ -95,7 +153,6 @@ public class FallBoundaryComponent : MonoBehaviour
     {
         float ang = Mathf.Lerp(startAngleDeg, endAngleDeg, Mathf.Clamp01(t01));
 
-        // 진행 방향(end-start)에 따라 접선 보정 부호
         float dirSign = Mathf.Sign(endAngleDeg - startAngleDeg);
         float tangentAdd = (dirSign >= 0f) ? 90f : -90f;
 
@@ -105,18 +162,11 @@ public class FallBoundaryComponent : MonoBehaviour
 
     public void SetPathActive(bool value)
     {
-        float targetAlpha = value ? 0.35f : 0.03f;
+        float targetAlpha = value ? globalMaxAlpha : globalMinAlpha;
 
         alphaTween?.Kill();
-
         alphaTween = DOTween
-            .To(
-                () => globalAlpha,
-                x => globalAlpha = x,
-                targetAlpha,
-                alphaFadeDuration
-            )
+            .To(() => globalAlpha, x => globalAlpha = x, targetAlpha, alphaFadeDuration)
             .SetEase(Ease.Linear);
     }
-
 }
