@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public static class UIWorldUtil
 {
     // worldPos를 "targetRt의 부모 기준 anchoredPosition"으로 변환해서 반환
     // (Canvas가 Overlay라는 전제)
+
     public static Vector2 WorldToAnchoredPosition_Overlay(
         RectTransform targetRt,
         Vector3 worldPos,
@@ -25,6 +27,22 @@ public static class UIWorldUtil
         );
 
         return localPoint;
+    }
+
+    public static Vector2 GetAnchoredPosToTarget(RectTransform target, RectTransform performer)
+    {
+        Vector2 finalPos = Vector2.zero;
+
+        if (null == target || null == performer)
+            return finalPos;
+
+        RectTransform parentRect = performer.parent as RectTransform;
+        if (null != parentRect)
+            finalPos = parentRect.InverseTransformPoint(target.position);
+        else
+            finalPos = target.position;
+
+        return finalPos;
     }
 
     // 반대쪽 좌표 변환

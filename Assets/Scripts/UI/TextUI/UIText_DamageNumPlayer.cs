@@ -29,7 +29,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
     private float waitSecond = 0f;
     private Vector3 startPosition;
-    private Vector3 targetPosition;
+    private RectTransform target;
 
     private Vector3 originScale;
 
@@ -52,10 +52,10 @@ public class UIText_DamageNumPlayer : MonoBehaviour
             coll.isTrigger = !collision;
     }
 
-    public void Setup(string _text, float _waitSecond, Vector3 _startPosition, Vector3 _targetPosition)
+    public void Setup(string _text, float _waitSecond, Vector3 _startPosition, RectTransform _target)
     {
         startPosition = _startPosition;
-        targetPosition = _targetPosition;
+        target = _target;
         waitSecond = _waitSecond;
 
         if (null != mainText)
@@ -116,7 +116,11 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
     private void FinaltMotion()
     {
-        seq.Append(visualRect.DOMove(targetPosition, finalDuration)
+        Vector2 targetPos = UIWorldUtil.GetAnchoredPosToTarget(target, visualRect);
+
+        Debug.Log(targetPos);
+
+        seq.Append(visualRect.DOAnchorPos(targetPos, finalDuration)
             .SetEase(finalEase)
             .OnStart(()=>
             {

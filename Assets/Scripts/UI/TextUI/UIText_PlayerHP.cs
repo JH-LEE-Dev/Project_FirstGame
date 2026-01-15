@@ -136,7 +136,7 @@ public class UIText_PlayerHP : MonoBehaviour
             return;
 
         string damageString = "-" + Mathf.RoundToInt(_damage).ToString();
-        script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint.position);
+        script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint);
 
         Action callback = () =>
         {
