@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Orbit Path Settings
   m_EditorClassIdentifier: Assembly-CSharp::OrbitPathSettings
   center: {fileID: 0}
-  radius: 8.9
+  radius: 8.3
   startAngleDeg: 63
   endAngleDeg: 117
   pathLineCount: 20

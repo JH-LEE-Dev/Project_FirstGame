@@ -141,7 +141,9 @@ public class Character_Visual : MonoBehaviour
 
     private void LateUpdate()
     {
+        // 누적타임
         float t = useUnscaledTime ? Time.unscaledTime : Time.time;
+        // 델타타임
         float dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
         UpdateSmoothing(dt);
