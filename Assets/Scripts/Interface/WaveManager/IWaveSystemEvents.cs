@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-public interface IWaveSystemEvents
+public interface IWaveSystemData
 {
-    public event Action WaveEndEvent;
-    public event Action StartMoveEvent;
+    public int GetCurrentWaveProgress();
+    public int GetMaxWaveProgress();
 }

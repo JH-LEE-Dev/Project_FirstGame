@@ -25,6 +25,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     private void BootTempScene()
     {
         SetupGameplayScene();
+        StartGameplayScene();
     }
 
     private void Awake()

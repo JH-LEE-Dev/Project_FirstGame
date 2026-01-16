@@ -5,7 +5,7 @@ using UnitLogicSystemSignals;
 using UnityEngine;
 using WaveSystemSignals;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : MonoBehaviour, IWaveSystemData
 {
     //외부 의존성
     SignalHub signalHub;
@@ -15,7 +15,19 @@ public class WaveManager : MonoBehaviour
     private WaveDatabase waveDatabase;
 
     private int currentEnemyCount = 0;
+    private int maxEnemyCount = 0;
     private bool bIsWaveEnded = false;
+
+    //인터페이스 구현 존
+    public int GetCurrentWaveProgress()
+    {
+        return currentEnemyCount;
+    }
+
+    public int GetMaxWaveProgress()
+    {
+        return maxEnemyCount;
+    }
 
     public void Initialize(SignalHub _signalHub, WaveDatabase _waveDatabase)
     {
@@ -57,6 +69,7 @@ public class WaveManager : MonoBehaviour
         if (curWaveData != null)
         {
             currentEnemyCount = curWaveData.enemyCnt;
+            maxEnemyCount = currentEnemyCount;
             signalHub.Publish(new SpawnWaveEvent(currentEnemyCount));
         }
     }

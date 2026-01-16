@@ -176,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BootStrap
   bTempScene: 1
   gameInstaller_Prefab: {fileID: 8604905100499276182, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
-  mainMenuInstaller_Prefab: {fileID: 0}
+  mainMenuInstaller_Prefab: {fileID: 8419068320727180628, guid: 6d25c4972c2a4ab4d9512e3e931668f1, type: 3}
 --- !u!4 &32807645
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,7 +1026,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1506261591}
   - component: {fileID: 1506261593}
-  - component: {fileID: 1506261592}
   - component: {fileID: 1506261594}
   m_Layer: 0
   m_Name: UIInstaller
@@ -1050,30 +1049,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 32807645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1506261592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1506261590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a049a75b15251949b87ab8c5fa36b41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIInstaller
-  mainMenuLevelRoots_Prefab:
-    screenLayerRoot: {fileID: 0}
-    popupLayerRoot: {fileID: 9076234465882006345, guid: b3d7173f795eeb04e8a7cab8f1023a25, type: 3}
-    overlayLayerRoot: {fileID: 692954274329377204, guid: 5eddca7ec6a777a47911387a20d6ea61, type: 3}
-    tooltipLayerRoot: {fileID: 0}
-  gameplayLevelRoots_Prefab:
-    screenLayerRoot: {fileID: 0}
-    popupLayerRoot: {fileID: 8460043745105849495, guid: ef74ea278336bb3459fe6fe5713cefe6, type: 3}
-    overlayLayerRoot: {fileID: 3971935038539339945, guid: 8b0f969fce41c0f4bad9b217ad439303, type: 3}
-    tooltipLayerRoot: {fileID: 0}
-  canvas_GamplayScene_Prefab: {fileID: 1108041376251214764, guid: e1f21de538dc67948b2b4ac655e74f3f, type: 3}
-  canvas_MainMenuScene_Prefab: {fileID: 3575439225224453345, guid: 23f2fb711168ae6409b1e173bace7179, type: 3}
 --- !u!114 &1506261593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1339,6 +1314,10 @@ PrefabInstance:
     - target: {fileID: 3132615358195672310, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
       propertyPath: m_Name
       value: GameplaySystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 3132615358195672310, guid: 5aab9d38d950c4a48bba492a3571916e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
