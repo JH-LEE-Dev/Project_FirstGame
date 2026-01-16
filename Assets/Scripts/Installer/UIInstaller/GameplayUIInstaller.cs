@@ -13,6 +13,7 @@ public class GameplayUIInstaller : MonoBehaviour,IUIModuleProvider
     private IBootStrapProvider bootStrapProvider;
     private SignalHub signalHub;
     private ICardSystemData cardSystemData;
+    private IWaveSystemData waveSystemData;
 
     //내부 의존성
     private GameplayUIManager uiManager;
@@ -30,12 +31,13 @@ public class GameplayUIInstaller : MonoBehaviour,IUIModuleProvider
 
 
     public void Initialize(IBootStrapProvider _bootStrapProvider,SignalHub _signalHub, 
-        InputManager _inputManager,ICardSystemData _cardSystemData)
+        InputManager _inputManager,ICardSystemData _cardSystemData,IWaveSystemData _waveSystemData)
     {
         inputManager = _inputManager;
         bootStrapProvider = _bootStrapProvider;
         signalHub = _signalHub;
         cardSystemData = _cardSystemData;
+        waveSystemData = _waveSystemData;
 
         uiManager = GetComponent<GameplayUIManager>();
         uiCommandManager = GetComponent<UICommandManager>();
@@ -43,7 +45,7 @@ public class GameplayUIInstaller : MonoBehaviour,IUIModuleProvider
         gameplayUICoordinator = new GameplayUICoordinator();
 
         uiCommandManager.Initialize(signalHub);
-        uiManager.Initialize(inputManager,cardSystemData);
+        uiManager.Initialize(inputManager,cardSystemData,waveSystemData);
 
         SetupUIElement();
     }

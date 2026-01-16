@@ -45,7 +45,7 @@ public class Enemy : Unit, IEnemyData
 
     public void Activate(Vector3 spawnPos)
     {
-        bDead = true;
+        bDead = false;
         gameObject.SetActive(true);
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();

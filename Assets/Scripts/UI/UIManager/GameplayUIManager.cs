@@ -4,12 +4,15 @@ public class GameplayUIManager : UIManager
 {
     //외부 의존성
     ICardSystemData cardSystemData;
+    IWaveSystemData waveSystemData;
 
-    public void Initialize(InputManager inputManager, ICardSystemData _cardSystemData)
+    public void Initialize(InputManager inputManager, ICardSystemData _cardSystemData,
+        IWaveSystemData _waveSystemData)
     {
         base.Initialize(inputManager);
 
         cardSystemData = _cardSystemData;
+        waveSystemData = _waveSystemData;
     }
 
     protected override void DataInjection(UIView view)
@@ -18,7 +21,7 @@ public class GameplayUIManager : UIManager
             cardUI.DataInjection(cardSystemData.deckCards, cardSystemData.handCards, cardSystemData.graveCards);
 
         if (view is UIView_HUD hudUI)
-            hudUI.DataInjection();
+            hudUI.DataInjection(waveSystemData);
 
         if (view is UIView_Unit unitUI)
             unitUI.DataInjection();

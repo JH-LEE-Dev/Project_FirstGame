@@ -34,6 +34,7 @@ public class GameplayUICoordinator
         signalHub.Subscribe<WaveStartEvent>(WaveStarted);
         signalHub.Subscribe<WaveEndEvent>(WaveEnded);
         signalHub.Subscribe<GameStartedEvent>(GameStarted);
+        signalHub.Subscribe<EnemyIsDeadEvent>(EnemyIsDead);
     }
 
     private void UnSubscribeEvents()
@@ -47,6 +48,7 @@ public class GameplayUICoordinator
         signalHub.UnSubscribe<WaveStartEvent>(WaveStarted);
         signalHub.UnSubscribe<WaveEndEvent>(WaveEnded);
         signalHub.UnSubscribe<GameStartedEvent>(GameStarted);
+        signalHub.UnSubscribe<EnemyIsDeadEvent>(EnemyIsDead);
     }
 
     public void Release()
@@ -72,7 +74,7 @@ public class GameplayUICoordinator
 
     public void PlayerSpawned(PlayerSpawnedEvent playerSpawnedEvent)
     {
-        hudUISystem.Initialize(playerSpawnedEvent.playerData);
+        hudUISystem.PlayerSpawned(playerSpawnedEvent.playerData);
     }
 
     public void CardUsingFinished(CardUsingTurnFinishedEvent cardUsingTurnFinishedEvent)
@@ -98,5 +100,10 @@ public class GameplayUICoordinator
     private void WaveEnded(WaveEndEvent waveEndEvent)
     {
         hudUISystem.WaveEnded();
+    }
+
+    private void EnemyIsDead(EnemyIsDeadEvent enemyIsDeadEvent)
+    {
+        hudUISystem.EnemyIsDead(enemyIsDeadEvent.position);
     }
 }
