@@ -1,10 +1,14 @@
 using DG.Tweening;
 using UnityEngine;
+using TMPro;
+
 
 public class SocketVisual : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private RectTransform visual;
+    [SerializeField] private Transform visual;
+    [SerializeField] private TextMeshProUGUI overlapCount;
+    private int overlapCountIndex;
 
     [Header("Layout Follow (Root moves)")]
     [SerializeField] private float moveDuration = 0.25f;
@@ -127,4 +131,25 @@ public class SocketVisual : MonoBehaviour
         hoverTween = null;
         rotateTween = null;
     }
+
+    public Transform GetSocketVisualTransform()
+    {
+        return visual;
+    }
+
+    public void SetOverlapCount(int count)
+    {
+        if (count <= 0)
+        {
+            if (overlapCount) overlapCount.gameObject.SetActive(false);
+            overlapCountIndex = 0;
+            return;
+        }
+
+        overlapCountIndex = count;
+        overlapCount.gameObject.SetActive(true);
+        if (overlapCount) overlapCount.SetText(overlapCountIndex.ToString());
+    }
+
+    public int GetOverlapCount() { return overlapCountIndex; }
 }

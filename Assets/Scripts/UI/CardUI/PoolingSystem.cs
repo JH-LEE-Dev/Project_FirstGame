@@ -13,11 +13,11 @@ public class PoolingSystem : MonoBehaviour
 
     [Header("Pools")]
     // ºñÈ°¼ºÁßÀÎ ÆÐ
-    [SerializeField] private List<CardInstance> inactiveHandPool = new();
+    [SerializeField] private List<MainCardInstance> inactiveHandPool = new();
 
     // ¼Ò¸ê, ¿úÈ¦, µ¦
-    [SerializeField] private List<CardInstance> otherCardPool = new();
-    public List<CardInstance> OtherCardPool { get { return otherCardPool; } }
+    [SerializeField] private List<MainCardInstance> otherCardPool = new();
+    public List<MainCardInstance> OtherCardPool { get { return otherCardPool; } }
 
     [SerializeField] private int handPoolSize = 20;
     [SerializeField] private int otherPoolSize = 50;
@@ -49,7 +49,7 @@ public class PoolingSystem : MonoBehaviour
         for (int i = 0; i < handPoolSize; ++i)
         {
             GameObject go = Instantiate(cardUIPrefab, this.transform);
-            CardInstance card = go.GetComponent<CardInstance>();
+            MainCardInstance card = go.GetComponent<MainCardInstance>();
             card.gameObject.SetActive(false);
 
             card.Initialize(cardSystem, CardInstanceType.Hand);
@@ -62,7 +62,7 @@ public class PoolingSystem : MonoBehaviour
         {
             GameObject go = Instantiate(cardUIPrefab, cardSystem?.PannelContent.transform);
             go.transform.localScale = new Vector3(5f, 5f, 1f);
-            CardInstance card = go.GetComponent<CardInstance>();
+            MainCardInstance card = go.GetComponent<MainCardInstance>();
             card.gameObject.SetActive(false);
             card.Initialize(cardSystem, CardInstanceType.Other);
 
@@ -89,7 +89,7 @@ public class PoolingSystem : MonoBehaviour
     }
 
     // Ä«µå ·£Æ®.
-    public CardInstance RentHandCard()
+    public MainCardInstance RentHandCard()
     {
         if (inactiveHandPool.Count == 0) return null;
 
@@ -104,7 +104,7 @@ public class PoolingSystem : MonoBehaviour
 
 
     // Ä«µå ¹Ý³³
-    public void ReturnHandCard(CardInstance card)
+    public void ReturnHandCard(MainCardInstance card)
     {
         if (card == null) return;
 
@@ -115,7 +115,7 @@ public class PoolingSystem : MonoBehaviour
     private GameObject CreateStarEffect()
     {
         GameObject newObj = Instantiate(starEffectPrefab, this.transform);
-        StarEffect script = newObj?.GetComponent<StarEffect>();
+        VFX_CardStar script = newObj?.GetComponent<VFX_CardStar>();
         script?.Init(this);
 
         return newObj;

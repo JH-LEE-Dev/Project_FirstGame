@@ -18,52 +18,20 @@ public class CardInstance : MonoBehaviour
     private static readonly Color BulletColor = new Color32(255, 210, 102, 255);
     private static readonly Color MagicColor = new Color32(102, 190, 255, 255);
 
-    // 이 카드의 풀링 전용이 HandSystem인가 아니면 Other인가에 대한 열거
-    public CardInstanceType cardInstanceType { get; private set; }
-
-    // HandSystem전용. 상태를 나타냄.
-    public CardState cardState { get; private set; } = CardState.Hidden;
-
-    public void SetUIState(CardState state)
-    {
-        cardState = state;
-    }
-
     // 데이터
     private CardDataInstance cardData;
     public CardDataInstance CardData => cardData;
 
-
-    // 시스템
-    private UIView_CardSystem cardSystem;
-    public UIView_CardSystem CardSystem => cardSystem;
-
-
-    // 컴포넌트
-    public CardMotion Motion { get; private set; }
-    public CardVisualFloat VisualFloat { get; private set; }
-    public CardInput Input { get; private set; }
-
     private void Awake()
     {
-        Motion = GetComponent<CardMotion>();
-        Input = GetComponent<CardInput>();
-        VisualFloat = GetComponentInChildren<CardVisualFloat>(true);
 
-        if (Motion) Motion.Bind(this);
-        if (Input) Input.Bind(this);
-        if (VisualFloat) VisualFloat.Bind(this);
-    }
-
-    public void Initialize(UIView_CardSystem system, CardInstanceType type)
-    {
-        cardSystem = system;
-        cardInstanceType = type;
     }
 
     // 옷 입히기
     public void ApplyData(CardDataInstance dataInstance)
     {
+        if (dataInstance == null) return;
+
         ResetVisual();
 
         cardData = dataInstance;

@@ -12,7 +12,7 @@ public class UIView_CardSystem : UIView
     public event Action CardUsingFinishedEvent;
 
     //사용 승인을 받은 카드
-    private CardInstance verificationWaitCard;
+    private MainCardInstance verificationWaitCard;
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<CardDataInstance> deckCards;
@@ -89,11 +89,11 @@ public class UIView_CardSystem : UIView
     }
 
     // For PoolingSystem
-    public CardInstance RentHandCard()
+    public MainCardInstance RentHandCard()
     {
         return poolingSystem?.RentHandCard();
     }
-    public void ReturnHandCard(CardInstance card)
+    public void ReturnHandCard(MainCardInstance card)
     {
         poolingSystem?.ReturnHandCard(card);
     }
@@ -101,7 +101,7 @@ public class UIView_CardSystem : UIView
 
 
     // For HandSystem
-    public void TryUseCard(CardInstance _card)
+    public void TryUseCard(MainCardInstance _card)
     {
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
@@ -128,18 +128,18 @@ public class UIView_CardSystem : UIView
         }
     }
 
-    public void OnCardLeftClick(CardInstance _card)
+    public void OnCardLeftClick(MainCardInstance _card)
     {
         // 좌클릭을 했을 때 이쪽으로 온다. (프리뷰)
         handSystem?.OnCardLeftClick(_card);
     }
 
-    public void OnCardHoverEnter(CardInstance _card)
+    public void OnCardHoverEnter(MainCardInstance _card)
     {
         // 호버 ON (벌어지는 연출위함)
         handSystem?.OnCardHoverEnter(_card);
     }
-    public void OnCardHoverExit(CardInstance _card)
+    public void OnCardHoverExit(MainCardInstance _card)
     {
         // 호버 OFF (축소되는 연출 위함)
         handSystem?.OnCardHoverExit(_card);

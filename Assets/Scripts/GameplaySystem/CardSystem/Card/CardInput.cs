@@ -4,9 +4,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private CardInstance owner;
+    private MainCardInstance owner;
 
-    public void Bind(CardInstance card) => owner = card;
+    public void Bind(MainCardInstance card) => owner = card;
 
     // 호버되는 상황.
     public void OnPointerEnter(PointerEventData eventData)

@@ -45,6 +45,22 @@ public static class UIWorldUtil
         return finalPos;
     }
 
+    public static Vector3 GetGenerateTheAnchoredPosfromWorldPos(Vector3 target, RectTransform performer)
+    {
+        Vector2 finalPos = Vector2.zero;
+
+        if (null == performer)
+            return finalPos;
+
+        RectTransform parentRect = performer.parent as RectTransform;
+        if (null != parentRect)
+            finalPos = parentRect.InverseTransformPoint(target);
+        else
+            finalPos = target;
+
+        return finalPos;
+    }
+
     // 반대쪽 좌표 변환
     public static Vector3 OverlayAnchoredToWorld_FlipX(
         RectTransform canvasRt,

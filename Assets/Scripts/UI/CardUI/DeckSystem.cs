@@ -138,7 +138,7 @@ public class DeckSystem : MonoBehaviour,
         for (int i = 0; i < currentDrawCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
-            StarEffect script = performer?.GetComponent<StarEffect>();
+            VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
             if (null == script)
                 continue;
 

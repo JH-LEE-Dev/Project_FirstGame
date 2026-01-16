@@ -147,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Character
   aimLength: 1
   character_Visual: {fileID: 8944357440580461192}
+  bspf: {fileID: 6922502279702456963, guid: ff156f6272b09e849958add35f5fa146, type: 3}
 --- !u!58 &-3339691030104686882
 CircleCollider2D:
   m_ObjectHideFlags: 0

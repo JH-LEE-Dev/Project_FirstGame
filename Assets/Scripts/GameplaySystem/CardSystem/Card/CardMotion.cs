@@ -4,7 +4,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CardMotion : MonoBehaviour
 {
-    private CardInstance owner;
+    private MainCardInstance owner;
     private RectTransform rt;
 
     [Header("MainMoving")]
@@ -66,7 +66,7 @@ public class CardMotion : MonoBehaviour
     }
 
 
-    public void Bind(CardInstance card)
+    public void Bind(MainCardInstance card)
     {
         owner = card;
         rt = GetComponent<RectTransform>();

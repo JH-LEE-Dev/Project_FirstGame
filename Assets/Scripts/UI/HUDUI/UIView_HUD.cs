@@ -1,9 +1,7 @@
-using DamageNumbersPro;
-using System.Collections.Generic;
+using System;
+using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIView_HUD : UIView
 {
@@ -24,9 +22,11 @@ public class UIView_HUD : UIView
     [SerializeField] private BarMotion hpBar;
     [SerializeField] private UIText_PlayerHP hpText;
     [SerializeField] private BarMotion targetBar;
+    [SerializeField] private UIText_TargetGage targetGageText;
 
     [Header("Pooling System")]
-    [SerializeField] private UIDamage_Pooling damagePooling;
+    [SerializeField] private ObjectPoolingSystem damagePool;
+    [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
 
     protected override void Awake()
     {
@@ -40,7 +40,7 @@ public class UIView_HUD : UIView
     {
         playerData = _playerData;
 
-        hpText?.Init(playerData.GetMaxHealth(), this);
+        IntializeChildrenHUD();
     }
 
     private void Start()
@@ -78,6 +78,8 @@ public class UIView_HUD : UIView
         waveText.text = "Wave : " + (_waveIdx + 1).ToString();
         turnIndicatorText.text = "WaveStarted";
         turnProcessIndicatorText.text = "Prepare For Wave";
+
+        IntializeChildrenHUD();
     }
 
     public void GameStarted()
@@ -108,7 +110,7 @@ public class UIView_HUD : UIView
 
     public void EnemyIsDead(Vector2 deadPosition)
     {
-
+        Target_BarUpdate(deadPosition);
     }
 
     public void CardUseTimeStarted()
@@ -117,6 +119,11 @@ public class UIView_HUD : UIView
     }
 
     public void OnPlayerHit(float damage)
+    {
+        HP_BarUpdate(damage);
+    }
+
+    private void HP_BarUpdate(float damage)
     {
         if (null == hpBar)
             return;
@@ -133,9 +140,61 @@ public class UIView_HUD : UIView
             hpBar.OnHit(oneProgress);
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePooling.DamagePool.Get());
+            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePool.Pool.Get());
     }
 
-    public void ReturnDamageText(GameObject target) => damagePooling?.DamagePool.Release(target);
-    public GameObject GetDamageObj() => damagePooling.DamagePool.Get();
+    private void Target_BarUpdate(Vector2 worldDeadPos)
+    {
+        if (null == targetBar)
+            return;
+
+        GameObject vfx = targetBarEffectPool?.Pool.Get();
+        if (null == vfx)
+            return;
+
+        RectTransform vfxRect = vfx.GetComponent<RectTransform>();
+        if (null == vfxRect)
+            return;
+
+        VFX_TargetBarStar script = vfx.GetComponent<VFX_TargetBarStar>();
+        if (null == script)
+            return;
+
+        vfx.SetActive(true);
+        vfxRect.anchoredPosition = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(worldDeadPos, vfxRect);
+
+        int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
+        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress() - 1;
+        float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
+
+        float currentProgress = currentKillCnt / maxEnemyCnt;
+
+        Action callback = () =>
+        {
+            targetBar.OnFill(currentProgress);
+            targetGageText?.DataUpdate(currentKillCnt, maxEnemyCnt);
+            StartCoroutine(ReleaseEffect(script));
+        };
+
+        script.Play(targetBar.GetAnchoredPos(), callback);
+    }
+
+    private IEnumerator ReleaseEffect(VFX_TargetBarStar target)
+    {
+        while (target.CheckAliveParticle())
+            yield return new WaitForSeconds(0.2f);
+
+        targetBarEffectPool.Pool.Release(target.gameObject);
+    }
+
+    private void IntializeChildrenHUD()
+    {
+        hpText?.Init(playerData.GetMaxHealth(), this);
+        hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
+        targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
+        targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
+    }
+
+    public void ReturnDamageText(GameObject target) => damagePool?.Pool.Release(target);
+    public GameObject GetDamageObj() => damagePool.Pool.Get();
 }
