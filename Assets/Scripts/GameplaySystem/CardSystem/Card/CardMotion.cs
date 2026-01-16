@@ -47,15 +47,6 @@ public class CardMotion : MonoBehaviour
     private Tween flyRotateTween;
     private Tween flyScaleTween;
 
-
-    [Header("For Attach")]
-    [SerializeField] private Camera worldCamera;          // Orthographic 카메라
-    [SerializeField] private Canvas overlayCanvas;        // Screen Space - Overlay
-    [SerializeField] private RectTransform canvasRect;    // overlayCanvas의 RectTransform
-    [SerializeField] private SpriteRenderer TargetsocketSprite;
-
-
-
     public void AllKillTweens()
     {
         hoverTween.Kill();
@@ -81,13 +72,6 @@ public class CardMotion : MonoBehaviour
         rt = GetComponent<RectTransform>();
         originScale = transform.localScale;
         targetPos = rt.anchoredPosition;
-
-
-
-        overlayCanvas = GetComponentInParent<Canvas>();
-        if (overlayCanvas != null)
-            canvasRect = overlayCanvas.GetComponent<RectTransform>();
-
     }
 
 
@@ -95,9 +79,6 @@ public class CardMotion : MonoBehaviour
     {
         // 핸드에서의 움직임
         InHand(Time.unscaledDeltaTime);
-
-        // 불릿 안에서의 움직임 (Attach)
-        InBulletSocket(Time.unscaledDeltaTime);
     }
 
     public void SetTarget(Vector2 pos, float angleZ)
@@ -133,18 +114,6 @@ public class CardMotion : MonoBehaviour
         float z = Mathf.LerpAngle(currentZ, targetAngleZ, 1f - Mathf.Exp(-rotateLerp * dt));
         rt.localRotation = Quaternion.Euler(0, 0, z);
     }
-
-    public void InBulletSocket(float dt)
-    {
-        if (owner.cardInstanceType != CardInstanceType.Hand) return;
-        if (owner.cardState != CardState.Equipped) return;
-
-
-
-
-
-    }
-
 
     // 못 쓸때.
     public void PlayReject()
@@ -274,5 +243,10 @@ public class CardMotion : MonoBehaviour
             .SetUpdate(true);
 
         flyTween.OnComplete(() => onComplete?.Invoke());
+    }
+
+    public void FlyToBulletSocket(Vector3 SocketPos, System.Action onComplete = null)
+    {
+
     }
 }

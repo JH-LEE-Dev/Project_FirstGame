@@ -1,5 +1,64 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &55630997923769042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7891817660583578993}
+  - component: {fileID: 3383773849486676693}
+  m_Layer: 0
+  m_Name: FallBoundaryComponent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7891817660583578993
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55630997923769042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -11.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4737121153119196882}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3383773849486676693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55630997923769042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e82262d9c3c13b9408b069ba9e5b3ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallBoundaryComponent
+  center: {fileID: 0}
+  radius: 11.3
+  startAngleDeg: 63
+  endAngleDeg: 117
+  LineCount: 40
+  LineSpeedPerSec: 0.05
+  fallBoundaryPrefab: {fileID: 4643352628927584374, guid: 35e19ba6ae5c9b14e91682abc11c19e0, type: 3}
+  alphaFadeDuration: 0.25
+  globalAlpha: 0.15
+  globalMinAlpha: 0.02
+  globalMaxAlpha: 0.15
+  testMonsters: []
+  dangerNear: 0.8
+  dangerFar: 3
+  dangerSmoothTime: 0.15
 --- !u!1 &618528844524211827
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +148,8 @@ MonoBehaviour:
   pathLinePrefab: {fileID: 7938705195784025681, guid: 778b26b2ec6989c4198fbeef9fd72bd5, type: 3}
   alphaFadeDuration: 0.25
   globalAlpha: 1
+  globalMaxAlpha: 0.7
+  globalMinAlpha: 0
 --- !u!1 &1304812929871981835
 GameObject:
   m_ObjectHideFlags: 0
@@ -10325,6 +10386,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5223334871247944760}
+  - {fileID: 7891817660583578993}
   m_Father: {fileID: 7045863790459964670}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4266073514408420827
