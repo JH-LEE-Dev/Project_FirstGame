@@ -6,7 +6,7 @@ public class FallBoundaryComponent : MonoBehaviour
 {
     [Header("Arc Definition")]
     [SerializeField] public Transform center;                       // 구 센터
-    [SerializeField] public float radius = 11.3f;                   // 반지름
+    [SerializeField] public float radius = 11f;                   // 반지름
     [SerializeField] public float startAngleDeg = 63f;              // 시작 각도(도)
     [SerializeField] public float endAngleDeg = 117f;               // 끝 각도(도)
 

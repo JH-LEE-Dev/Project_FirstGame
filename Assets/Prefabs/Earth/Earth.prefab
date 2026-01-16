@@ -45,10 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4894101f2031e346a9048203d1fbc4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Earth_Visual
-  earthVisualObject_Prefab: {fileID: 0}
   degreesPerSecond: 1
-  floatAmplitude: 0.003
-  floatSpeed: 1.2
+  floatAmplitude: 0.03
+  floatSpeed: 1.5
 --- !u!1 &2712387788131542545
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,10 +166,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7657409726134063642}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.29, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -11.47, z: 0}
+  m_LocalScale: {x: 12.5, y: 12.5, z: 12.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4485261263878439972}
   m_Father: {fileID: 0}

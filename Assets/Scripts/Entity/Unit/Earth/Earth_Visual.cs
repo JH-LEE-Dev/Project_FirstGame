@@ -6,18 +6,15 @@ public class Earth_Visual : MonoBehaviour
     [SerializeField] private float degreesPerSecond = 1f;
 
     [Header("Floating")]
-    [SerializeField] private float floatAmplitude = 0.003f;
-    [SerializeField] private float floatSpeed = 1.2f;
+    [SerializeField] private float floatAmplitude = 0.03f;
+    [SerializeField] private float floatSpeed = 1.5f;
 
-    private RectTransform rt;
-    private Vector2 baseAnchoredPos;
+    private Vector2 basePos;
     private float timeOffset;
 
     private void Awake()
     {
-        rt = (RectTransform)transform;
-        baseAnchoredPos = rt.anchoredPosition;
-
+        basePos = transform.position;
         timeOffset = Random.Range(0f, Mathf.PI * 2f);
     }
 
@@ -25,11 +22,11 @@ public class Earth_Visual : MonoBehaviour
     private void Update()
     {
         // 회전
-        rt.Rotate(0f, 0f, degreesPerSecond * Time.deltaTime);
+        transform.Rotate(0f, 0f, degreesPerSecond * Time.deltaTime);
 
         // Floating (Y축만)
         float yOffset = Mathf.Sin(Time.time * floatSpeed + timeOffset) * floatAmplitude;
-        rt.anchoredPosition = baseAnchoredPos + Vector2.up * yOffset;
+        transform.position = basePos + Vector2.up * yOffset;
     }
 
 }
