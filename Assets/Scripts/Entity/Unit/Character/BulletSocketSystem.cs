@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -138,6 +139,18 @@ public class BulletSocketSystem : MonoBehaviour
 
     //////////////////////////////////////////////// 카드 장착 및 해제
 
+    [Button]
+    private void Equip()
+    {
+        EquipBulletCard(0, null);
+    }
+    [Button]
+    private void UnEquip()
+    {
+        UnEquipBulletCard(0);
+    }
+
+
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
         CardData data = _data?.GetCardData();
@@ -151,7 +164,7 @@ public class BulletSocketSystem : MonoBehaviour
         targetCardInstance.gameObject.SetActive(true);
         targetCardInstance.ApplyData(_data);
 
-        // socketVisual -> 연출. 
+        socketVisual.PlayImpactSlam();
     }
 
     public void UnEquipBulletCard(int _index)
@@ -169,6 +182,6 @@ public class BulletSocketSystem : MonoBehaviour
             targetCardInstance.Clear();
         }
 
-        // socketVisual -> 연출. 
+        socketVisual.PlayUnequip();
     }
 }
