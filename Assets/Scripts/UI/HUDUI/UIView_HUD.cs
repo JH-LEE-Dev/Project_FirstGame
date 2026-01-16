@@ -191,8 +191,17 @@ public class UIView_HUD : UIView
     {
         hpText?.Init(playerData.GetMaxHealth(), this);
         hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
-        targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
-        targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
+
+        int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
+        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress();
+
+        float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
+        float currentProgress = currentKillCnt / maxEnemyCnt;
+
+        Debug.Log(currentProgress);
+
+        targetBar?.Init(currentProgress, waveSystemData.GetMaxWaveProgress());
+        targetGageText?.DataUpdate(currentKillCnt, waveSystemData.GetMaxWaveProgress());
     }
 
     public void ReturnDamageText(GameObject target) => damagePool?.Pool.Release(target);
