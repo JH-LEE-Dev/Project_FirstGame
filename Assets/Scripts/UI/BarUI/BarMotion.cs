@@ -8,12 +8,16 @@ public class BarMotion : MonoBehaviour
     [Header("Bar Settings")]
     [SerializeField] private bool activeGhost = false;
     [SerializeField] private bool activeShaking = false;
-    //[SerializeField] private bool activeParticle = false;
+    [SerializeField] private bool activeJelly = false;
+
+    private bool activateVisual => activeShaking || activeJelly;
 
     [Header("Main Settings")]
-    [HideIf("activeGhost"),SerializeField] private Slider mainSlider;
-    [HideIf("activeGhost"), SerializeField] private float mainDuration = 0.5f;
-    [HideIf("activeGhost"), SerializeField] private Ease mainEase = Ease.Linear;
+    [SerializeField] private Slider mainSlider;
+    [SerializeField] private float mainDelay = 0f;
+    [SerializeField] private float mainDuration = 0.5f;
+    [SerializeField] private Ease mainEase = Ease.Linear;
+    [ShowIf("activateVisual"), SerializeField] private RectTransform visualRect;
 
     [Header("Ghost Settings")]
     [ShowIf("activeGhost"), SerializeField] private Slider ghostSlider;
@@ -22,37 +26,66 @@ public class BarMotion : MonoBehaviour
     [ShowIf("activeGhost"), SerializeField] private Ease ghostEase = Ease.Linear;
 
     [Header("Shake Settings")]
-    [ShowIf("activeShaking"), SerializeField] private RectTransform visualRect;
     [ShowIf("activeShaking"), SerializeField] private float shakeDuration = 0.5f;
     [ShowIf("activeShaking"), SerializeField] private float shakePower = 100f;
     [ShowIf("activeShaking"), SerializeField] private Ease shakeEase = Ease.Linear;
-    private Vector2 originAnchoredPos = Vector2.zero;
 
-    [Header("Particle Settings")]
-    //[ShowIf("activeParticle"), SerializeField] private ParticleSystem particle;
-    //[ShowIf("activeParticle"), SerializeField] private int particleCnt = 10;
-    //[ShowIf("activeParticle"), SerializeField, Range(1f, 10f)] private float particlePower = 1f;
+    [Header("Jelly Settings")]
+    [ShowIf("activeJelly"), SerializeField] private float jellyDuration = 0.5f;
+    [ShowIf("activeJelly"), SerializeField] private float jellyPower = 100f;
+    [ShowIf("activeJelly"), SerializeField] private Ease jellyEase = Ease.Linear;
+
+    private Vector2 originAnchoredPos = Vector2.zero;
+    private Vector3 originlocalScale = Vector3.zero;
 
     private Sequence mainSeq = null;
     private Sequence ghostSeq = null;
 
-    private void Awake()
-    {
-        Setup_Particle();
+    private RectTransform mainRect;
 
-        if(null != visualRect)
-            originAnchoredPos = visualRect.anchoredPosition;
+    private int maxValue = 0;
+
+    public void Init(float _progressValue, int _maxValue = 0)
+    {
+        if (mainSlider)
+            mainSlider.value = _progressValue;
+
+        if (ghostSlider)
+            ghostSlider.value = _progressValue;
+
+        maxValue = _maxValue;
     }
 
     public void OnHit(float _progressValue)
     {
         if (activeGhost)
-            OnHitGhost(_progressValue);
+            OnHitGhostSlider(_progressValue);
         else 
-            OnHitNotGhost(_progressValue);
+            OnNotGhostSlider(_progressValue);
     }
 
-    private void OnHitNotGhost(float _progressValue)
+    public void OnFill(float _progressValue)
+    {
+        if (activeGhost)
+            OnFillGhostSlider(_progressValue);
+        else
+            OnNotGhostSlider(_progressValue);
+    }
+
+    public Vector2 GetAnchoredPos() => mainRect.anchoredPosition;
+
+    private void Awake()
+    {
+        if(null != visualRect)
+        {
+            originAnchoredPos = visualRect.anchoredPosition;
+            originlocalScale = visualRect.localScale;
+        }
+
+        mainRect = GetComponent<RectTransform>(); 
+    }
+
+    private void OnNotGhostSlider(float _progressValue)
     {
         if (null == mainSlider)
             return;
@@ -61,14 +94,17 @@ public class BarMotion : MonoBehaviour
 
         mainSeq = DOTween.Sequence();
 
+        mainSeq.AppendInterval(mainDelay);
+
         mainSeq.Append(mainSlider.DOValue(_progressValue, mainDuration)
             .SetEase(mainEase)
             .SetUpdate(false));
 
         ShakeBar();
+        JellyBar();
     }
 
-    private void OnHitGhost(float _progressValue)
+    private void OnHitGhostSlider(float _progressValue)
     {
         if (null == mainSlider || null == ghostSlider)
             return;
@@ -86,6 +122,30 @@ public class BarMotion : MonoBehaviour
             .SetUpdate(false));
 
         ShakeBar();
+        JellyBar();
+    }
+
+    private void OnFillGhostSlider(float _progressValue)
+    {
+        if (null == mainSlider || null == ghostSlider)
+            return;
+
+        CancelPrevMotion(mainSeq);
+        mainSeq = DOTween.Sequence();
+        mainSeq.AppendInterval(mainDelay);
+        mainSeq.Append(mainSlider.DOValue(_progressValue, mainDuration)
+            .SetEase(mainEase)
+            .SetUpdate(false));
+
+        CancelPrevMotion(ghostSeq);
+        ghostSeq = DOTween.Sequence();
+        ghostSeq.AppendInterval(ghostDelay);
+        ghostSeq.Append(ghostSlider.DOValue(_progressValue, ghostDuration)
+            .SetEase(ghostEase)
+            .SetUpdate(false));
+
+        ShakeBar();
+        JellyBar();
     }
 
     private void ShakeBar()
@@ -106,12 +166,20 @@ public class BarMotion : MonoBehaviour
             });
     }
 
-    private void Setup_Particle()
+    private void JellyBar()
     {
-        //if (!activeParticle || null == particle)
-        //    return;
+        if (false == activeJelly || null == visualRect)
+            return;
 
+        visualRect.DOKill();
 
+        visualRect.DOShakeScale(jellyDuration, jellyPower)
+            .SetEase(jellyEase)
+            .SetUpdate(false)
+            .OnComplete(() =>
+            {
+                visualRect.localScale = originlocalScale;
+            });
     }
 
     private void CancelPrevMotion(Sequence target)
@@ -121,7 +189,7 @@ public class BarMotion : MonoBehaviour
     }
 
     [Button]
-    private void PlayMotionTest()
+    private void PlaHitTest()
     {
         OnHit(0.5f);
     }
@@ -140,5 +208,11 @@ public class BarMotion : MonoBehaviour
             ghostSlider.value = 1f;
             CancelPrevMotion(ghostSeq);
         }
+    }
+
+    [ShowIf("activeJelly"), Button]
+    private void PlayJellyMotionTest()
+    {
+        JellyBar();
     }
 }
