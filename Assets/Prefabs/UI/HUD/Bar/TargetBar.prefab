@@ -52,22 +52,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarMotion
   activeGhost: 0
-  activeShaking: 0
-  activeParticle: 0
-  mainSlider: {fileID: 0}
+  activeShaking: 1
+  mainSlider: {fileID: 8634236022681328983}
   mainDuration: 0.5
   mainEase: 1
   ghostSlider: {fileID: 0}
   ghostDelay: 0.5
   ghostDuration: 0.5
   ghostEase: 1
-  visualRect: {fileID: 0}
+  visualRect: {fileID: 6932584751967535715}
   shakeDuration: 0.5
-  shakePower: 100
+  shakePower: 10
   shakeEase: 1
-  particle: {fileID: 0}
-  particleCnt: 10
-  particlePower: 1
 --- !u!1 &2001603817724369051
 GameObject:
   m_ObjectHideFlags: 0
