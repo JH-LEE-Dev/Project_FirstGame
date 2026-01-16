@@ -21,6 +21,7 @@ MonoBehaviour:
     - fa3b78cc0c2aa654f816ff16e06f0cae
     - dca690d606050c64a937008c5b24bfc0
     - a5569885632c04a46a7f42833223f5ea
+    - 60da9805ecc015349b464bbb9491eadc
     values:
     - iconNameOrGuid: SceneAsset Icon
       colorIndex: 10
@@ -48,6 +49,10 @@ MonoBehaviour:
       isColorRecursive: 1
     - iconNameOrGuid: cs Script Icon
       colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 1
+    - iconNameOrGuid: 
+      colorIndex: 8
       isIconRecursive: 0
       isColorRecursive: 1
   bookmarks:

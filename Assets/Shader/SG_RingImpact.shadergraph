@@ -1365,8 +1365,8 @@
     "m_ObjectId": "a079a26438234941ad40eb3bb8e5f474",
     "m_Title": "Make the Ring Texture",
     "m_Position": {
-        "x": -1727.0001220703125,
-        "y": -231.00003051757813
+        "x": -1727.0,
+        "y": -230.99998474121095
     }
 }
 
@@ -2509,6 +2509,6 @@
     "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
-    "m_SupportVFX": false
+    "m_SupportVFX": true
 }
 

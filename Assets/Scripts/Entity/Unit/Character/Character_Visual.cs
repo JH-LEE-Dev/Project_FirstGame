@@ -324,7 +324,10 @@ public class Character_Visual : MonoBehaviour
             body.localScale = bs;
         }
 
-        ringLeanZ = (dir == Dir.Left) ? +ringLeanAngle : -ringLeanAngle;
+        float lean = (dir == Dir.Left) ? +ringLeanAngle : -ringLeanAngle;
+
+        ringLeanZ = lean;
+        ringLeanZTarget = lean;
     }
 
     public void SetWallPushing(bool pushing, Dir dir)
