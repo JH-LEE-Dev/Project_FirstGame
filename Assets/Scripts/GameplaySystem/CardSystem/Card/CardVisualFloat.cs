@@ -6,7 +6,7 @@ using TMPro;
 [DisallowMultipleComponent]
 public class CardVisualFloat : MonoBehaviour
 {
-    private CardInstance owner;
+    private MainCardInstance owner;
     private RectTransform visual;
 
     private Vector2 basePos;
@@ -48,7 +48,7 @@ public class CardVisualFloat : MonoBehaviour
         }
     }
 
-    public void Bind(CardInstance card)
+    public void Bind(MainCardInstance card)
     {
         owner = card;
         visual = GetComponent<RectTransform>();

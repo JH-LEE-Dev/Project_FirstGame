@@ -300,8 +300,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5270766083236416482}
-  - component: {fileID: 3527566122688614154}
   - component: {fileID: 7782737598329683519}
+  - component: {fileID: 3896604757948162179}
   - component: {fileID: 7831457537719056636}
   m_Layer: 0
   m_Name: Card
@@ -330,25 +330,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3527566122688614154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5863989176703220490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd15e503bd82a1a4582006b3e0a6760d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardInstance
-  cardImage: {fileID: 5545467125092109145}
-  cardFrame: {fileID: 7268042661200779867}
-  cardIcon: {fileID: 4890697203593287301}
-  cardName: {fileID: 2010789194705691865}
-  cardDescription: {fileID: 4219192507650260008}
-  rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
-  extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
 --- !u!114 &7782737598329683519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +358,25 @@ MonoBehaviour:
   graveDuration: 0.4
   graveTiltZ: 60
   graveScale: 0.3
+--- !u!114 &3896604757948162179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34f5dacf699c5d42855caba990d4ad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainCardInstance
+  cardImage: {fileID: 5545467125092109145}
+  cardFrame: {fileID: 7268042661200779867}
+  cardIcon: {fileID: 4890697203593287301}
+  cardName: {fileID: 2010789194705691865}
+  cardDescription: {fileID: 4219192507650260008}
+  rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
+  extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
 --- !u!114 &7831457537719056636
 MonoBehaviour:
   m_ObjectHideFlags: 0

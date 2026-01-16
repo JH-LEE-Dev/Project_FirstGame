@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Character : Unit, ICharacterData,ICharacterSignalHub
 {
@@ -25,7 +26,6 @@ public class Character : Unit, ICharacterData,ICharacterSignalHub
 
 
 
-
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
     /// </summary>
@@ -34,6 +34,10 @@ public class Character : Unit, ICharacterData,ICharacterSignalHub
     private Vector2 fireDir;
 
     [SerializeField] private Character_Visual character_Visual;
+
+    // Test
+    [SerializeField] private GameObject bspf;
+    private BulletSocketSystem bs;
 
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
@@ -64,6 +68,13 @@ public class Character : Unit, ICharacterData,ICharacterSignalHub
 
         BindEvent();
         character_Visual?.Bind(this, cutsceneComponent);
+
+
+
+        GameObject go = Instantiate(bspf, this.transform);
+        bs = go.GetComponent<BulletSocketSystem>();
+        // Test
+        bs.Init(2);
     }
 
     private void BindEvent()
