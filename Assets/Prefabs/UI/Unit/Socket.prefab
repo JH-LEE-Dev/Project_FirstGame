@@ -50,10 +50,19 @@ MonoBehaviour:
   overlapCount: {fileID: 5220740849728032982}
   moveDuration: 0.25
   moveEase: 9
-  hoverAmplitude: 0.02
+  hoverAmplitude: 0.028
   hoverDuration: 2.2
-  wobbleDeg: 2.2
+  wobbleDeg: 3
   wobbleDuration: 2.4
+  impactTotal: 0.4
+  impactScaleUp: 1.3
+  scaleUpTime: 0.02
+  scaleDownTime: 0.38
+  hitPressY: 0.04
+  hitPressTime: 0.05
+  shakeAmp: 0.18
+  shakeFreq: 15
+  shakeRotDeg: 5
 --- !u!1 &2087415299388916041
 GameObject:
   m_ObjectHideFlags: 0
