@@ -13,15 +13,15 @@ public struct CanvasRoot
    public Transform tooltipLayerRoot;
 }
 
-public struct Job_CardSystemUI
+public struct ActionData_CardSystem
 {
-    public JobType_CardSystemUI jobType;
+    public ActionType_CardSystem actionDataType;
     public List<CardDataInstance> cards;
 }
 
-public struct UIJobBatch_CardSystem
+public struct ActionDataBatch_CardSystem
 {
-    public List<Job_CardSystemUI> jobList;
+    public List<ActionData_CardSystem> actionDataList;
     public int idx;
 }
 

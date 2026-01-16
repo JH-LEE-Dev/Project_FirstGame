@@ -106,9 +106,9 @@ public enum CurrentPannel
     NONE
 }
 
-public enum JobType_CardSystemUI
+public enum ActionType_CardSystem
 {
-    Draw,
+    PileDraw,
     AdditionalDraw,
     GraveToDeck,
     HandToGrave

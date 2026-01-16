@@ -327,42 +327,42 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public async void RecieveUIJob(UIJobBatch_CardSystem _jobBatch)
+    public async void RecieveUIJob(ActionDataBatch_CardSystem _jobBatch)
     {
-        var currentUIJobList = _jobBatch.jobList;
+        var currentActionDataList = _jobBatch.actionDataList;
 
         float turnWaitSecond = 0.5f;
 
-        int size = currentUIJobList.Count;
+        int size = currentActionDataList.Count;
         for (int i = 0; i < size; ++i)
         {
-            Job_CardSystemUI currentJob = currentUIJobList[i];
+            ActionData_CardSystem currentActionData = currentActionDataList[i];
 
-            JobType_CardSystemUI currenType = currentJob.jobType;
+            ActionType_CardSystem currenType = currentActionData.actionDataType;
 
             switch(currenType)
             {
-                case JobType_CardSystemUI.Draw:
+                case ActionType_CardSystem.PileDraw:
 
-                    DrawingCards(currentJob.cards);
-
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-                    break;
-
-                case JobType_CardSystemUI.GraveToDeck:
-
-                    graveSystem?.CardMoveToDeckEffect(currentUIJobList[i].cards.Count);
+                    DrawingCards(currentActionData.cards);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case JobType_CardSystemUI.AdditionalDraw:
+                case ActionType_CardSystem.GraveToDeck:
 
-                    DrawingCards(currentJob.cards);
+                    graveSystem?.CardMoveToDeckEffect(currentActionDataList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
-                case JobType_CardSystemUI.HandToGrave:
+
+                case ActionType_CardSystem.AdditionalDraw:
+
+                    DrawingCards(currentActionData.cards);
+
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    break;
+                case ActionType_CardSystem.HandToGrave:
 
                     AllCardReturnToPool(CardState.InHand);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);

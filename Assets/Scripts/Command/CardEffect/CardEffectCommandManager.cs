@@ -8,12 +8,12 @@ using UnityEngine;
 public class CardEffectCommandManager : MonoBehaviour
 {
     //외부 의존성
-    private SignalHub signalHub;
+    private ISignalHub<IPulicSignal> signalHub;
 
     [SerializeField] private List<CardEffectStatusCommand> cardStatusCommands = new List<CardEffectStatusCommand>();
     [SerializeField] private List<CardEffectSystemCommand> cardSystemCommands = new List<CardEffectSystemCommand>();
 
-    public void Initialize(SignalHub _signalHub)
+    public void Initialize(ISignalHub<IPulicSignal> _signalHub)
     {
         signalHub = _signalHub;
 

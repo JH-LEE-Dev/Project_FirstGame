@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace UnitLogicSystemSignals
 {
-    public struct PlayerTurnFinishedEvent { }
-    public struct EnemyIsDeadEvent 
+    public struct PlayerTurnFinishedEvent : IPulicSignal { }
+    public struct EnemyIsDeadEvent : IPulicSignal
     {
         public Vector2 position;
 
@@ -13,7 +13,7 @@ namespace UnitLogicSystemSignals
         }
     }
 
-    public struct PlayerTakeDamageEvent
+    public struct PlayerTakeDamageEvent : IPulicSignal
     {
         public float damage;
 

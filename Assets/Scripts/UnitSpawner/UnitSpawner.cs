@@ -13,7 +13,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class UnitSpawner : MonoBehaviour, IUnitEventAccessor
 {
     //외부 의존성
-    private SignalHub signalHub;
+    private ISignalHub<IPulicSignal> signalHub;
 
 
     [Header("Enemy Pool Settings")]
@@ -90,7 +90,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor
         Destroy(enemy.gameObject);
     }
 
-    public void Initiallize(SignalHub _signalHub,InputManager _inputManager,
+    public void Initiallize(ISignalHub<IPulicSignal> _signalHub,InputManager _inputManager,
         GameServiceLocator _gameServiceLocator,
         UnitLogicSystem _unitLogicSystem, IOrbitPathProvider _orbitPathProvider)
     {

@@ -1,17 +1,18 @@
+using System;
 
 namespace UICommandSystemSignals
 {
-    public struct CardSystem_JobDispatchEvent
+    public struct CardSystem_JobDispatchEvent : IPulicSignal
     {
-        public UIJobBatch_CardSystem jobBatch;
+        public ActionDataBatch_CardSystem actionDataBatch;
 
-        public CardSystem_JobDispatchEvent(UIJobBatch_CardSystem _jobBatch)
+        public CardSystem_JobDispatchEvent(ActionDataBatch_CardSystem _actionDataBatch)
         {
-            jobBatch = _jobBatch;
+            actionDataBatch = _actionDataBatch;
         }
     }
 
-    public struct UICommandCompleteEvent
+    public struct UICommandCompleteEvent : IPulicSignal
     {
         public int commandIdx;
 

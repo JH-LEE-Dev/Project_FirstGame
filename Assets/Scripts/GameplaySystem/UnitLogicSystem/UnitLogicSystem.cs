@@ -12,7 +12,7 @@ using WaveSystemSignals;
 public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogicSystemData, IUnitLogicCommandHandler
 {
     //외부 의존성
-    private SignalHub signalHub;
+    private ISignalHub<IPulicSignal> signalHub;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -28,7 +28,7 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogi
 
     private List<CardEffectStatusCommand> cardEffectCommands = new List<CardEffectStatusCommand>(10);
 
-    public void Initialize(SignalHub _signalHub)
+    public void Initialize(ISignalHub<IPulicSignal> _signalHub)
     {
         signalHub = _signalHub;
 
@@ -62,7 +62,7 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogi
         signalHub.Subscribe<CardEffectStatusCommandDispatchEvent>(InsertCommand);
         signalHub.Subscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
         signalHub.Subscribe<CardUsingTurnFinishedEvent>(CardUsingTurnFinishedEvent);
-        signalHub.Subscribe<CardDrawedEvent>(CardDrawed);
+        signalHub.Subscribe<CardDrawStartEvent>(CardDrawed);
         signalHub.Subscribe<StartMoveEvent>(StartEnemyMove);
     }
 
@@ -71,7 +71,7 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogi
         signalHub.UnSubscribe<CardEffectStatusCommandDispatchEvent>(InsertCommand);
         signalHub.UnSubscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
         signalHub.UnSubscribe<CardUsingTurnFinishedEvent>(CardUsingTurnFinishedEvent);
-        signalHub.UnSubscribe<CardDrawedEvent>(CardDrawed);
+        signalHub.UnSubscribe<CardDrawStartEvent>(CardDrawed);
         signalHub.UnSubscribe<StartMoveEvent>(StartEnemyMove);
     }
 
@@ -146,7 +146,7 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogi
         characterUnit.ResetbCanAction();
     }
 
-    private void CardDrawed(CardDrawedEvent cardDrawedEvent)
+    private void CardDrawed(CardDrawStartEvent cardDrawStartEvent)
     {
         characterUnit.PlayerTurnStarted();
     }
