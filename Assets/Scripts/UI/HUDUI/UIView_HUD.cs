@@ -164,7 +164,7 @@ public class UIView_HUD : UIView
         vfxRect.anchoredPosition = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(worldDeadPos, vfxRect);
 
         int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
-        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress() - 1;
+        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress();
         float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
 
         float currentProgress = currentKillCnt / maxEnemyCnt;
