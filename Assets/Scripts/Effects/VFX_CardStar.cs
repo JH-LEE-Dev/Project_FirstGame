@@ -2,8 +2,9 @@ using DG.Tweening;
 using System;
 using System.Diagnostics.Tracing;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
-public class StarEffect : MonoBehaviour
+public class VFX_CardStar : MonoBehaviour
 {
     [Header("Visual Settings")]
     [SerializeField] private Transform visual = null;
@@ -12,6 +13,7 @@ public class StarEffect : MonoBehaviour
     private PoolingSystem poolingSystem = null;
 
     private TrailRenderer trail = null;
+    private ParticleSystem particle;
 
     private Sequence activeSeq = null;
     private Tween activeRotate = null;
@@ -22,7 +24,9 @@ public class StarEffect : MonoBehaviour
     public void Init(PoolingSystem _poolingSystem)
     {
         poolingSystem = _poolingSystem;
+
         trail = gameObject.GetComponentInChildren<TrailRenderer>();
+        particle = gameObject.GetComponentInChildren<ParticleSystem>();
     }
 
     public void PlayingEventforDeck(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
@@ -66,6 +70,7 @@ public class StarEffect : MonoBehaviour
             activeSeq.Kill();
 
         trail?.Clear();
+        particle?.Play(true);
 
         activeSeq = DOTween.Sequence();
         activeSeq.AppendInterval(_idx * _spawnDelay);

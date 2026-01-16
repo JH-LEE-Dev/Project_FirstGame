@@ -1,24 +1,23 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class UIDamage_Pooling : MonoBehaviour
+public class ObjectPoolingSystem : MonoBehaviour
 {
     [Header("Main Settings")]
     [SerializeField] private GameObject prefab;
+    [SerializeField] private int maxPoolSize = 15;
 
-    private ObjectPool<GameObject> damagePool = null;
-    public ObjectPool<GameObject> DamagePool { get { return damagePool; } }
+    private ObjectPool<GameObject> pool = null;
+    public ObjectPool<GameObject> Pool { get { return pool; } }
 
     private void Awake()
     {
-        int poolCnt = 15;
+        pool = new ObjectPool<GameObject>(PoolCreate, PoolGet, PoolRelease, PoolDestroy, maxSize: maxPoolSize);
 
-        damagePool = new ObjectPool<GameObject>(PoolCreate, PoolGet, PoolRelease, PoolDestroy, maxSize: poolCnt);
-
-        for(int i = 0; i < poolCnt; ++i)
+        for(int i = 0; i < maxPoolSize; ++i)
         {
-            GameObject getObj = damagePool.Get();
-            damagePool.Release(getObj);
+            GameObject getObj = pool.Get();
+            pool.Release(getObj);
         }
     }
 

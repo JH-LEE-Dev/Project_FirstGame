@@ -115,7 +115,7 @@ public class PoolingSystem : MonoBehaviour
     private GameObject CreateStarEffect()
     {
         GameObject newObj = Instantiate(starEffectPrefab, this.transform);
-        StarEffect script = newObj?.GetComponent<StarEffect>();
+        VFX_CardStar script = newObj?.GetComponent<VFX_CardStar>();
         script?.Init(this);
 
         return newObj;

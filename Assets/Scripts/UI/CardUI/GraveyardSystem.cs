@@ -180,7 +180,7 @@ public class GraveyardSystem : MonoBehaviour
         for (int i = 0; i < spawningCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
-            StarEffect script = performer?.GetComponent<StarEffect>();
+            VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
             if (null == script)
                 continue;
 
