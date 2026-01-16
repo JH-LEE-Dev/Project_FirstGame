@@ -22,7 +22,7 @@ public class BulletSocketSystem : MonoBehaviour
     public int Count { get; private set; } = 0;
 
     private readonly List<SocketVisual> sockets = new();
-    private readonly List<BulletSocketCardInstance> cards = new();
+    private readonly List<SocketCardInstance> cards = new();
 
 
     public void Init(int _slotCount)
@@ -61,7 +61,7 @@ public class BulletSocketSystem : MonoBehaviour
             go.transform.localRotation = Quaternion.identity;
             go.SetActive(false);
 
-            var card = go.GetComponent<BulletSocketCardInstance>();
+            var card = go.GetComponent<SocketCardInstance>();
             if (card == null) continue;
             cards.Add(card);
 
@@ -147,7 +147,7 @@ public class BulletSocketSystem : MonoBehaviour
         count++;
         socketVisual.SetOverlapCount(count);
 
-        BulletSocketCardInstance targetCardInstance = cards[_index];
+        SocketCardInstance targetCardInstance = cards[_index];
         targetCardInstance.gameObject.SetActive(true);
         targetCardInstance.ApplyData(_data);
 
@@ -164,7 +164,7 @@ public class BulletSocketSystem : MonoBehaviour
 
         if (count <= 0)
         {
-            BulletSocketCardInstance targetCardInstance = cards[_index];
+            SocketCardInstance targetCardInstance = cards[_index];
             targetCardInstance.gameObject.SetActive(false);
             targetCardInstance.Clear();
         }

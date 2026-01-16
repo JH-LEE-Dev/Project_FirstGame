@@ -18,17 +18,17 @@ public class HandSystem : MonoBehaviour
 
     [Header("Preview")]
     [SerializeField] private RectTransform previewRoot;
-    private CardInstance previewCard; // 미리보기 카드
+    private MainCardInstance previewCard; // 미리보기 카드
 
     [Header("Hand Order")]
-    [SerializeField] private List<CardInstance> cards = new();
+    [SerializeField] private List<MainCardInstance> cards = new();
 
     [Header("Bullet Slots (Temp)")]
     [SerializeField] private List<RectTransform> BulletRoots = new();
-    private readonly List<CardInstance> equippedBullets = new();
+    private readonly List<MainCardInstance> equippedBullets = new();
 
     // 호버된 카드 인덱스
-    private CardInstance hoveredCard = null;
+    private MainCardInstance hoveredCard = null;
 
     [Header("ToGrave")]
     [SerializeField] private float discardInterval = 0.09f;
@@ -41,7 +41,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 좌클릭 해서 들어온 카드
-    public void OnCardLeftClick(CardInstance _card)
+    public void OnCardLeftClick(MainCardInstance _card)
     {
         if (_card == null) return;
 
@@ -60,7 +60,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 호버 ON (카드 약간 벌어짐)
-    public void OnCardHoverEnter(CardInstance _card)
+    public void OnCardHoverEnter(MainCardInstance _card)
     {
         if (_card == null) return;
         if (_card.cardState != CardState.InHand) return; // 손패일 때만 벌어짐
@@ -70,7 +70,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 호버 OFF (카드 벌어졌던거 다시 돌아옴)
-    public void OnCardHoverExit(CardInstance _card)
+    public void OnCardHoverExit(MainCardInstance _card)
     {
         if (hoveredCard == _card) hoveredCard = null;
 
@@ -100,7 +100,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    private void StartPreview(CardInstance card)
+    private void StartPreview(MainCardInstance card)
     {
         // 기존 프리뷰 있으면 종료(상태 원복)
         if (previewCard != null && previewCard != card)
@@ -131,7 +131,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    public void UseCard(CardInstance _card)
+    public void UseCard(MainCardInstance _card)
     {
         if (_card == null) return;
 
@@ -169,13 +169,13 @@ public class HandSystem : MonoBehaviour
 
     }
 
-    private void EquipBullet(CardInstance card)
+    private void EquipBullet(MainCardInstance card)
     {
         // 지금은 즉시 반환
         ReturnToPool(card);
     }
 
-    private void ConsumeMagic(CardInstance card)
+    private void ConsumeMagic(MainCardInstance card)
     {
         // 지금은 즉시 반환
         ReturnToPool(card);
@@ -184,7 +184,7 @@ public class HandSystem : MonoBehaviour
 
     // 패 풀링으로부터 생성
     // 패 풀링한테 반납
-    private void ReturnToPool(CardInstance _card)
+    private void ReturnToPool(MainCardInstance _card)
     {
         if (_card == null) return;
 
@@ -211,7 +211,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 장착한 불릿을 다시 손패로 돌리고 싶을 때
-    public void UnequipBulletToHand(CardInstance card)
+    public void UnequipBulletToHand(MainCardInstance card)
     {
         if (card == null) return;
         if (card.cardState != CardState.Equipped) return;
@@ -224,7 +224,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    private bool IsLayoutExcluded(CardInstance c)
+    private bool IsLayoutExcluded(MainCardInstance c)
     {
         if (c == null) return true;
 
@@ -258,7 +258,7 @@ public class HandSystem : MonoBehaviour
 
         // 프리뷰 중일땐, effectiveHover가 null임. 즉 hoveredCard를 없던일로 한다.
         bool hasPreview = (previewCard != null);
-        CardInstance effectiveHover = hasPreview ? null : hoveredCard;
+        MainCardInstance effectiveHover = hasPreview ? null : hoveredCard;
 
         // 만약, 패가 하나라면 바로 가운데에 박아버리고 연산을 하지 않는다.
         if (layoutCount == 1)
@@ -393,11 +393,8 @@ public class HandSystem : MonoBehaviour
 
         Vector3 GravePosition = cardSystem.GetGraveAnchoredPos();
 
-        //Debug.Log(GravePosition);
-
-
         // 현재 손패(InHand)만 스냅샷
-        List<CardInstance> toDiscard = new();
+        List<MainCardInstance> toDiscard = new();
 
         for (int i = 0; i < cards.Count; i++)
         {

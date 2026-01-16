@@ -464,7 +464,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3029011206427382975}
-  - component: {fileID: 3247823761757538194}
+  - component: {fileID: 5838685573002921066}
   m_Layer: 0
   m_Name: SocketCard
   m_TagString: Untagged
@@ -488,7 +488,7 @@ Transform:
   - {fileID: 2140677012865373566}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3247823761757538194
+--- !u!114 &5838685573002921066
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -497,9 +497,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8825815609802249459}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7ab4d7130da1aa49aa4cc73a7054359, type: 3}
+  m_Script: {fileID: 11500000, guid: fec8eea9a6594ae4e8d36ce703531825, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BulletSocketCardInstance
+  m_EditorClassIdentifier: Assembly-CSharp::SocketCardInstance
+  cardImage: {fileID: 8044563130257093147}
+  cardFrame: {fileID: 2463690753758260205}
+  cardIcon: {fileID: 6802905879989331849}
+  cardName: {fileID: 6905545938259258866}
+  cardDescription: {fileID: 2650703344419555068}
+  rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
+  extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
 --- !u!1 &9163349764349850566
 GameObject:
   m_ObjectHideFlags: 0
