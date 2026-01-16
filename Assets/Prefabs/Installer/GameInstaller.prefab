@@ -5388,7 +5388,7 @@ GameObject:
   - component: {fileID: -3014418931989348951}
   - component: {fileID: -1934595178798189937}
   m_Layer: 0
-  m_Name: GameplayInstaller
+  m_Name: GameInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

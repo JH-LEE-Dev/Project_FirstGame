@@ -76,7 +76,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor
 
     private void OnGetEnemy(Enemy enemy)
     {
-        enemy.gameObject.SetActive(true);
+        enemy.ActivateEnemy();
     }
 
     private void OnReleaseEnemy(Enemy enemy)
@@ -258,7 +258,7 @@ public class UnitSpawner : MonoBehaviour, IUnitEventAccessor
     {
         for (int i = 0; i < enemies.Count; ++i)
         {
-            enemies[i].DeActivate();
+            enemyPool.Release(enemies[i]);
         }
     }
 

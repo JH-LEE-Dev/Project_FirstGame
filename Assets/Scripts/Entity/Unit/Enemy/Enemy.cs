@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Unit,IEnemyData
+public class Enemy : Unit, IEnemyData
 {
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -9,7 +9,6 @@ public class Enemy : Unit,IEnemyData
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
     [SerializeField] private LayerMask gravityLayerMask;
-    [SerializeField] private ParticleSystem vfxDeadImpact;
     private EnemyTypeData enemyTypeData;
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
@@ -20,7 +19,7 @@ public class Enemy : Unit,IEnemyData
     /// </summary>
     private Vector2 targetPoint; //지구를 뜻함.
     private bool bAccelerate = false; // true -> 지구로 돌진할 때를 의미.
-
+    [SerializeField] private ParticleSystem vfxDeadImpact;
 
 
 
@@ -33,16 +32,24 @@ public class Enemy : Unit,IEnemyData
         base.Awake();
     }
 
-    public void DeActivate()
+    public void ActivateEnemy()
     {
-        gameObject.SetActive(false);
+        col.gameObject.SetActive(true);
+        sr.gameObject.SetActive(true);
+    }
+
+    public void DeActivateEnemy()
+    {
+
     }
 
     public void Activate(Vector3 spawnPos)
     {
+        bDead = true;
         gameObject.SetActive(true);
-        transform.position = spawnPos;  
+        transform.position = spawnPos;
         healthComponent.ResetHealthComponent();
+        col.enabled = true;
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
@@ -57,13 +64,13 @@ public class Enemy : Unit,IEnemyData
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         visualComponentCoordinator.Initialize(combatComponent, moveComponent);
-        moveComponent.Initialize(ctx,visualComponentCoordinator);
+        moveComponent.Initialize(ctx, visualComponentCoordinator);
 
         SetupEnemyType();
 
         //trail 임시 코드.
         trailRenderer = GetComponent<TrailRenderer>();
-        trailRenderer.material=sr.material;
+        trailRenderer.material = sr.material;
         trailRenderer.material.mainTexture = sr.sprite.texture;
         Color c = trailRenderer.material.color;
         c.a = 0.3f;
@@ -80,23 +87,29 @@ public class Enemy : Unit,IEnemyData
         healthComponent.SetHealth(enemyTypeData.health);
 
         //비주얼 관련 초기화.
-        combatComponent.Initialize(ctx,visualComponentCoordinator, enemyTypeData.attack);
+        combatComponent.Initialize(ctx, visualComponentCoordinator, enemyTypeData.attack);
     }
 
     public override void TakeDamage(float damage)
     {
-        healthComponent.TakeDamange(damage); 
+        healthComponent.TakeDamange(damage);
     }
 
     //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
     public void OnMove()
     {
-        moveComponent.ApplyImpulse();
+        if (bDead == false)
+            moveComponent.ApplyImpulse();
     }
 
+    protected override void HandleDead()
+    {
+        base.HandleDead();
 
-
-
+        sr.gameObject.SetActive(false);
+        col.enabled = false;
+        vfxDeadImpact.Play(true);
+    }
 
 
 
@@ -110,7 +123,7 @@ public class Enemy : Unit,IEnemyData
         base.Update();
     }
 
-   
+
     protected override void OnDestroy()
     {
 
@@ -133,7 +146,7 @@ public class Enemy : Unit,IEnemyData
     //지구에 충돌했을 때 호출됨.
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.isTrigger) 
+        if (!other.isTrigger)
             return;
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Earth"))
