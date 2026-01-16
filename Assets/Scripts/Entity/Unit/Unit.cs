@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour, IDamageable
     /// <summary>
     /// 시스템 속성 존. ----------------------------------------
     /// </summary>
-    public event Action UnitIsDeadEvent;
+    public event Action<Unit> UnitIsDeadEvent;
     [Header("Command System")]
     protected readonly Queue<ICommand> commandQueue = new Queue<ICommand>();
 
@@ -58,6 +58,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected virtual void HandleDead()
     {
+        bDead = true;
         UnitIsDead();
     }
 
@@ -103,7 +104,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected void UnitIsDead()
     {
-        UnitIsDeadEvent?.Invoke();
+        UnitIsDeadEvent?.Invoke(this);
     }
 
 

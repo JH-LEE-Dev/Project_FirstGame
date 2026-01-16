@@ -123,9 +123,9 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicSystemActions, IUnitLogi
         }
     }
 
-    private void EnemyIsDead()
+    private void EnemyIsDead(Unit deadUnit)
     {
-        signalHub.Publish(new EnemyIsDeadEvent());
+        signalHub.Publish(new EnemyIsDeadEvent(deadUnit.transform.position));
     }
 
     private void StartEnemyMove(StartMoveEvent startMoveEvent)

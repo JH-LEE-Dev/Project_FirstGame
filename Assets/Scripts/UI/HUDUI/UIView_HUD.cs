@@ -9,6 +9,7 @@ public class UIView_HUD : UIView
 {
     //외부 데이터
     IPlayerData playerData;
+    IWaveSystemData waveSystemData;
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -35,7 +36,7 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void Initialize(IPlayerData _playerData)
+    public void PlayerSpawned(IPlayerData _playerData)
     {
         playerData = _playerData;
 
@@ -47,9 +48,9 @@ public class UIView_HUD : UIView
         
     }
 
-    public void DataInjection()
+    public void DataInjection(IWaveSystemData _waveSystemData)
     {
-
+        waveSystemData = _waveSystemData;
     }
 
     protected override void OnShow()
@@ -103,6 +104,11 @@ public class UIView_HUD : UIView
     {
         turnIndicatorText.text = "EnemyTurn";
         turnProcessIndicatorText.text = "Enemy Moving!";
+    }
+
+    public void EnemyIsDead(Vector2 deadPosition)
+    {
+
     }
 
     public void CardUseTimeStarted()

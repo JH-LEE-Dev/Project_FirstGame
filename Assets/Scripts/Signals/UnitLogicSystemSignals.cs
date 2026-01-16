@@ -3,7 +3,15 @@ using UnityEngine;
 namespace UnitLogicSystemSignals
 {
     public struct PlayerTurnFinishedEvent { }
-    public struct EnemyIsDeadEvent { }
+    public struct EnemyIsDeadEvent 
+    {
+        public Vector2 position;
+
+        public EnemyIsDeadEvent(Vector2 _position)
+        {
+            position = _position;
+        }
+    }
 
     public struct PlayerTakeDamageEvent
     {

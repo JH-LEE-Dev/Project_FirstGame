@@ -43,7 +43,7 @@ public class GameInstaller : MonoBehaviour
         gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
         unitSpawner.Initiallize(signalHub,inputManager,gameServiceLocator,unitLogicSystem,environmentManager);
-        uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager);
+        uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
         IUIModuleProvider uiModuleProvider = uiInstaller;
         cardManager.Initialize(unitLogicSystem, uiModuleProvider.uiCommandSystem, signalHub);
 
