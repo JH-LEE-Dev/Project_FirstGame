@@ -1,7 +1,7 @@
 
 namespace UnitSpawnSystemSignals
 {
-    public struct PlayerSpawnedEvent
+    public struct PlayerSpawnedEvent : IPulicSignal
     {
         public IPlayerData playerData;
 
@@ -10,8 +10,8 @@ namespace UnitSpawnSystemSignals
             playerData = _playerData;
         }
     }
-    public struct EnemySpawnedEvent { }
-    public struct CharacterSpawnedEvent
+    public struct EnemySpawnedEvent : IPulicSignal { }
+    public struct CharacterSpawnedEvent : IPulicSignal
     {
         public ICharacterData characterData;
 

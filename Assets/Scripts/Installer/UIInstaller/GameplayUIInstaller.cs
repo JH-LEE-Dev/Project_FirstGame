@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
-public class GameplayUIInstaller : MonoBehaviour,IUIModuleProvider
+public class GameplayUIInstaller : MonoBehaviour
 {
-    public ICardUICommandSystem uiCommandSystem => uiCommandManager;
 
     //외부 의존성
     private InputManager inputManager;
@@ -44,7 +43,7 @@ public class GameplayUIInstaller : MonoBehaviour,IUIModuleProvider
         cardUICoordinator = new CardUICoordinator();
         gameplayUICoordinator = new GameplayUICoordinator();
 
-        uiCommandManager.Initialize(signalHub);
+        uiCommandManager.Initialize(signalHub,signalHub);
         uiManager.Initialize(inputManager,cardSystemData,waveSystemData);
 
         SetupUIElement();

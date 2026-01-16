@@ -8,12 +8,12 @@ using WaveSystemSignals;
 
 public class GameplayUICoordinator
 {
-    private SignalHub signalHub;
+    private ISignalHub<IPulicSignal> signalHub;
     private UIView_HUD hudUISystem;
     private UIView_Unit unitUISystem;
     private UIView_Gameplay gameplayUISystem;
 
-    public void Initialize(SignalHub _signalHub,UIView_HUD _hudUISystem, UIView_Unit _unitUISystem,UIView_Gameplay _gameplayUISystem)
+    public void Initialize(ISignalHub<IPulicSignal> _signalHub,UIView_HUD _hudUISystem, UIView_Unit _unitUISystem,UIView_Gameplay _gameplayUISystem)
     {
         signalHub = _signalHub;
         hudUISystem = _hudUISystem;

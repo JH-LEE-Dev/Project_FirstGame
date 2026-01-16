@@ -6,16 +6,16 @@ using UICommandSystemSignals;
 public class UICommandDispatcher
 {
     //외부 의존성
-    SignalHub signalHub;
+    ISignalHub<IPulicSignal> signalHub;
 
-    public void Initialize(SignalHub _signalHub)
+    public void Initialize(ISignalHub<IPulicSignal> _signalHub)
     {
         signalHub = _signalHub;
     }
 
-    public void Dispatch_CardSystem(in UIJobBatch_CardSystem _jobBatch)
+    public void Dispatch_CardSystem(in ActionDataBatch_CardSystem _jobBatch)
     {
-        if (_jobBatch.jobList != null)
+        if (_jobBatch.actionDataList != null)
             signalHub.Publish(new CardSystem_JobDispatchEvent(_jobBatch));
     }
 

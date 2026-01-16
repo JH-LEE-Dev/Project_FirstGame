@@ -1,8 +1,8 @@
 
 namespace WaveSystemSignals
 {
-    public struct StartMoveEvent { }
-    public struct SpawnWaveEvent
+    public struct StartMoveEvent : IPulicSignal { }
+    public struct SpawnWaveEvent : IPulicSignal
     {
         public int waveIdx;
         public SpawnWaveEvent(int idx)
@@ -10,8 +10,8 @@ namespace WaveSystemSignals
             waveIdx = idx;
         }
     }
-    public struct WaveMoveEndEvent { }
-    public struct WaveEndEvent { }
-    public struct AllEnemyDeadEvent { }
+    public struct WaveMoveEndEvent : IPulicSignal { }
+    public struct WaveEndEvent : IPulicSignal { }
+    public struct AllEnemyDeadEvent : IPulicSignal { }
 }
 

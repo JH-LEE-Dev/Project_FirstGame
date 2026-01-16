@@ -12,9 +12,9 @@ public class UICommandFactory_CardSystem : UICommandFactory
     const int batchPoolSize = 5;
 
     // Job Batch Pool (Job들을 전달하기 위한 용도)
-    private ObjectPool<List<Job_CardSystemUI>> jobBatchPool =
-        new ObjectPool<List<Job_CardSystemUI>>(
-            createFunc: () => new List<Job_CardSystemUI>(jobListSize),
+    private ObjectPool<List<ActionData_CardSystem>> jobBatchPool =
+        new ObjectPool<List<ActionData_CardSystem>>(
+            createFunc: () => new List<ActionData_CardSystem>(jobListSize),
             actionOnGet: (list) => list.Clear(),
             actionOnRelease: (list) => list.Clear(),
             collectionCheck: true,
@@ -34,8 +34,8 @@ public class UICommandFactory_CardSystem : UICommandFactory
         );
 
     private Queue<int> availableSlots = new Queue<int>(maxBatchPoolSize); // 사용 가능한 슬롯 인덱스들
-    private List<List<Job_CardSystemUI>> jobSlots = new List<List<Job_CardSystemUI>>(maxBatchPoolSize);
-    private UIJobBatch_CardSystem currentJobBatch;
+    private List<List<ActionData_CardSystem>> jobSlots = new List<List<ActionData_CardSystem>>(maxBatchPoolSize);
+    private ActionDataBatch_CardSystem currentJobBatch;
 
     private int currentUsingBatchCnt = 0;
 
@@ -60,10 +60,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
             currentUsingBatchCnt = 0;
     }
 
-    private UIJobBatch_CardSystem GetAvailableBatch()
+    private ActionDataBatch_CardSystem GetAvailableBatch()
     {
-        UIJobBatch_CardSystem availableBatch;
-        availableBatch.jobList = null;
+        ActionDataBatch_CardSystem availableBatch;
+        availableBatch.actionDataList = null;
         availableBatch.idx = 0;
 
         if (availableSlots.Count == 0)
@@ -74,7 +74,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
                 int newIdx = jobSlots.Count;
                 jobSlots.Add(jobBatchPool.Get());
 
-                availableBatch.jobList = jobSlots[newIdx];
+                availableBatch.actionDataList = jobSlots[newIdx];
                 availableBatch.idx = newIdx;
 
                 return availableBatch;
@@ -87,7 +87,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         int slotIdx = availableSlots.Dequeue(); // 비어있는 인덱스 하나 추출
 
-        availableBatch.jobList = jobSlots[slotIdx];
+        availableBatch.actionDataList = jobSlots[slotIdx];
         availableBatch.idx = slotIdx;
 
         return availableBatch;
@@ -95,8 +95,8 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_Draw(ReadOnlySpan<CardDataInstance> drawCards, bool bAdditional)
     {
-        var batch = InitializeJobBatch();
-        if (batch.jobList == null)
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
             return;
 
         var drawList = cardListPool.Get();
@@ -107,23 +107,23 @@ public class UICommandFactory_CardSystem : UICommandFactory
         }
 
         if (bAdditional == false)
-            batch.jobList.Add(new Job_CardSystemUI
+            batch.actionDataList.Add(new ActionData_CardSystem
             {
-                jobType = JobType_CardSystemUI.Draw,
+                actionDataType = ActionType_CardSystem.PileDraw,
                 cards = drawList
             });
         else
-            batch.jobList.Add(new Job_CardSystemUI
+            batch.actionDataList.Add(new ActionData_CardSystem
             {
-                jobType = JobType_CardSystemUI.AdditionalDraw,
+                actionDataType = ActionType_CardSystem.AdditionalDraw,
                 cards = drawList
             });
     }
 
     public void CreateJob_ToGrave(ReadOnlySpan<CardDataInstance> toGraveCards)
     {
-        var batch = InitializeJobBatch();
-        if (batch.jobList == null)
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
             return;
 
         var drawList = cardListPool.Get();
@@ -133,17 +133,17 @@ public class UICommandFactory_CardSystem : UICommandFactory
             drawList.Add(toGraveCards[i]);
         }
 
-        batch.jobList.Add(new Job_CardSystemUI
+        batch.actionDataList.Add(new ActionData_CardSystem
         {
-            jobType = JobType_CardSystemUI.HandToGrave,
+            actionDataType = ActionType_CardSystem.HandToGrave,
             cards = drawList
         });
     }
 
     public void CreateJob_ToDeck(ReadOnlySpan<CardDataInstance> toDeckCards)
     {
-        var batch = InitializeJobBatch();
-        if (batch.jobList == null)
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
             return;
 
         var toDeckList = cardListPool.Get();
@@ -153,14 +153,14 @@ public class UICommandFactory_CardSystem : UICommandFactory
             toDeckList.Add(toDeckCards[i]);
         }
 
-        batch.jobList.Add(new Job_CardSystemUI
+        batch.actionDataList.Add(new ActionData_CardSystem
         {
-            jobType = JobType_CardSystemUI.GraveToDeck,
+            actionDataType = ActionType_CardSystem.GraveToDeck,
             cards = toDeckList
         });
     }
 
-    public UIJobBatch_CardSystem GetJobBatch()
+    public ActionDataBatch_CardSystem GetJobBatch()
     {
         bGeneratingJobBatch = false;
         ++currentUsingBatchCnt;
@@ -168,9 +168,9 @@ public class UICommandFactory_CardSystem : UICommandFactory
         return currentJobBatch;
     }
 
-    private UIJobBatch_CardSystem InitializeJobBatch()
+    private ActionDataBatch_CardSystem InitializeActionDataBatch()
     {
-        UIJobBatch_CardSystem batch;
+        ActionDataBatch_CardSystem batch;
 
         if (bGeneratingJobBatch)
             batch = currentJobBatch;
@@ -179,7 +179,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             currentJobBatch = GetAvailableBatch();
             batch = currentJobBatch;
 
-            if (batch.jobList != null)
+            if (batch.actionDataList != null)
                 bGeneratingJobBatch = true;
         }
 
@@ -188,7 +188,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     private void PrepareNextSlot(int index)
     {
-        List<Job_CardSystemUI> nextBatch = jobSlots[index];
+        List<ActionData_CardSystem> nextBatch = jobSlots[index];
 
         // 들어있던 내부 카드 리스트들 풀에 반납
         foreach (var job in nextBatch)

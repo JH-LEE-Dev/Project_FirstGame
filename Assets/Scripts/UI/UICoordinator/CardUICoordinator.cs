@@ -10,13 +10,13 @@ using UnityEngine;
 public class CardUICoordinator
 {
     //외부 의존성
-    SignalHub signalHub;
+    ISignalHub<IPulicSignal> signalHub;
 
 
     private UIView_CardSystem cardUISystem;
     private UIView_Unit unitUISystem;
 
-    public void Initialize(SignalHub _signalHub,UIView_CardSystem _cardUISystem,UIView_Unit _unitUISystem)
+    public void Initialize(ISignalHub<IPulicSignal> _signalHub,UIView_CardSystem _cardUISystem,UIView_Unit _unitUISystem)
     {
         signalHub = _signalHub;
         cardUISystem = _cardUISystem;
@@ -102,7 +102,7 @@ public class CardUICoordinator
 
     public void RecieveUIJob(CardSystem_JobDispatchEvent cardSystem_JobDispatchEvent)
     {
-        cardUISystem.RecieveUIJob(cardSystem_JobDispatchEvent.jobBatch);
+        cardUISystem.RecieveUIJob(cardSystem_JobDispatchEvent.actionDataBatch);
     }
 
     public void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
