@@ -159,8 +159,7 @@ public class HandSystem : MonoBehaviour
         switch (type)
         {
             case CardType.Bullet:
-                ConsumeMagic(_card); // 임시..
-                //EquipBullet(_card);
+                EquipBullet(_card);
                 break;
 
             case CardType.Magic:
@@ -172,58 +171,12 @@ public class HandSystem : MonoBehaviour
 
     private void EquipBullet(CardInstance card)
     {
-        // 손패또는 프리뷰 상태에서만 장착 허용
-        if (false == (card.cardState == CardState.InHand || card.cardState == CardState.Preview))
-            return;
-
-        // 빈 슬롯 찾기
-        int slot = FindEmptyBulletSlot();
-        if (slot < 0)
-        {
-            card.Motion.PlayReject();
-            return;
-        }
-
-        // 상태 전이
-        card.SetUIState(CardState.Equipped);
-        equippedBullets.Add(card);
-
-        // 필드로 이동
-        card.transform.SetParent(BulletRoots[slot], false);
-
-        // 슬롯 중앙에 고정(임시)
-        var rt = card.GetComponent<RectTransform>();
-        rt.anchoredPosition = Vector2.zero;
-        rt.localRotation = Quaternion.identity;
-
-        computeArc();
-    }
-
-    private int FindEmptyBulletSlot()
-    {
-        if (BulletRoots == null || BulletRoots.Count == 0) return -1;
-
-        // 슬롯에 이미 카드가 붙어있으면 occupied로 판단
-        for (int i = 0; i < BulletRoots.Count; i++)
-        {
-            bool occupied = false;
-            for (int j = 0; j < equippedBullets.Count; j++)
-            {
-                if (equippedBullets[j] != null && equippedBullets[j].transform.parent == BulletRoots[i])
-                {
-                    occupied = true;
-                    break;
-                }
-            }
-            if (!occupied) return i;
-        }
-        return -1;
+        // 지금은 즉시 반환
+        ReturnToPool(card);
     }
 
     private void ConsumeMagic(CardInstance card)
     {
-        // 연출 자리: 여기서 셰이더/불타기 끝나면 Return
-
         // 지금은 즉시 반환
         ReturnToPool(card);
     }
