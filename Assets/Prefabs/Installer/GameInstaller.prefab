@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallBoundaryComponent
   center: {fileID: 0}
-  radius: 11.3
+  radius: 11
   startAngleDeg: 63
   endAngleDeg: 117
   LineCount: 40
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbitPathComponent
   orbitPathSettings: {fileID: 11400000, guid: c4685e60e0e1a3641b88114f3d3e9837, type: 2}
   center: {fileID: 0}
-  radius: 8.9
+  radius: 8.3
   startAngleDeg: 63
   endAngleDeg: 117
   pathLineCount: 20
