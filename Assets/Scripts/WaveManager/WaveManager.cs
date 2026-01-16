@@ -109,6 +109,6 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
             bIsWaveEnded = true;
         }
 
-        signalHub.Publish(new WaveProgressUpdatedEvent());
+        signalHub.Publish(new WaveProgressUpdatedEvent(enemyIsDeadEvent.position));
     }
 }
