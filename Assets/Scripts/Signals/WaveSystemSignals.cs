@@ -1,3 +1,4 @@
+using UnityEngine;
 
 namespace WaveSystemSignals
 {
@@ -13,5 +14,14 @@ namespace WaveSystemSignals
     public struct WaveMoveEndEvent : IPulicSignal { }
     public struct WaveEndEvent : IPulicSignal { }
     public struct AllEnemyDeadEvent : IPulicSignal { }
+    public struct WaveProgressUpdatedEvent : IPulicSignal 
+    {
+        public Vector2 position;
+
+        public WaveProgressUpdatedEvent(Vector2 _position)
+        {
+            position = _position;
+        }
+    }
 }
 

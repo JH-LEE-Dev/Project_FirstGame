@@ -78,8 +78,6 @@ public class UIView_HUD : UIView
         waveText.text = "Wave : " + (_waveIdx + 1).ToString();
         turnIndicatorText.text = "WaveStarted";
         turnProcessIndicatorText.text = "Prepare For Wave";
-
-        IntializeChildrenHUD();
     }
 
     public void GameStarted()
@@ -100,6 +98,8 @@ public class UIView_HUD : UIView
         waveText.text = "Wave : " + (0 + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
+
+        IntializeChildrenHUD();
     }
 
     public void EnemyTurnStarted()
