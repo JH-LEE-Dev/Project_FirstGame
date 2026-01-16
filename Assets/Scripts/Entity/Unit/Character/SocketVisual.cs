@@ -162,9 +162,14 @@ public class SocketVisual : MonoBehaviour
         hoverTween?.Kill();
         rotateTween?.Kill();
 
+        impactSeq?.Kill();
+        unequipTween?.Kill();
+
         layoutTween = null;
         hoverTween = null;
         rotateTween = null;
+        impactSeq = null;
+        unequipTween = null;
     }
 
 
