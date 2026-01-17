@@ -28,6 +28,8 @@ public class UIView_HUD : UIView
     [SerializeField] private ObjectPoolingSystem damagePool;
     [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
 
+    private bool WaveStartFirstTime = true;
+
     protected override void Awake()
     {
         base.Awake();
@@ -78,6 +80,8 @@ public class UIView_HUD : UIView
         waveText.text = "Wave : " + (_waveIdx + 1).ToString();
         turnIndicatorText.text = "WaveStarted";
         turnProcessIndicatorText.text = "Prepare For Wave";
+
+        WaveStartFirstTime = true;
     }
 
     public void GameStarted()
@@ -189,19 +193,15 @@ public class UIView_HUD : UIView
 
     private void IntializeChildrenHUD()
     {
+        if (!WaveStartFirstTime)
+            return;
+
         hpText?.Init(playerData.GetMaxHealth(), this);
         hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
+        targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
+        targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
 
-        int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
-        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress();
-
-        float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
-        float currentProgress = currentKillCnt / maxEnemyCnt;
-
-        Debug.Log(currentProgress);
-
-        targetBar?.Init(currentProgress, waveSystemData.GetMaxWaveProgress());
-        targetGageText?.DataUpdate(currentKillCnt, waveSystemData.GetMaxWaveProgress());
+        WaveStartFirstTime = false;
     }
 
     public void ReturnDamageText(GameObject target) => damagePool?.Pool.Release(target);
