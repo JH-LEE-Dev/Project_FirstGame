@@ -32,12 +32,11 @@ public class SocketVisual : MonoBehaviour
     private float wobblePhase0;
 
 
-    [Header("Equip Impact (0.5s)")]
+    [Header("Equip Impact")]
     [SerializeField] private float impactTotal = 0.4f;
 
     [SerializeField] private float impactScaleUp = 1.3f; 
     [SerializeField] private float scaleUpTime = 0.02f;  
-    [SerializeField] private float scaleDownTime = 0.38f;
 
     [SerializeField] private float hitPressY = 0.04f;    
     [SerializeField] private float hitPressTime = 0.05f; 
