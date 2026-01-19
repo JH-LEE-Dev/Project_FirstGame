@@ -365,6 +365,9 @@ public class UIView_CardSystem : UIView
                 case ActionType_CardSystem.HandToGrave:
 
                     AllCardReturnToPool(CardState.InHand);
+
+                    // 임시요 : 영우
+                    AllCardReturnToPool(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 

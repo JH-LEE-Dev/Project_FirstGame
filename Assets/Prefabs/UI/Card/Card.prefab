@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 102396723257274795}
   - component: {fileID: 3180783046002641786}
+  - component: {fileID: 705134568441123837}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -141,6 +142,19 @@ MonoBehaviour:
   drawStartScale: 0.1
   drawOvershootScale: 1.05
   drawTotalDuration: 0.4
+  canvasGroup: {fileID: 705134568441123837}
+--- !u!225 &705134568441123837
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3094462483522216968}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4476822077776002057
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +372,9 @@ MonoBehaviour:
   graveDuration: 0.4
   graveTiltZ: 60
   graveScale: 0.3
+  socketDuration: 0.22
+  socketTiltZ: -25
+  socketScale: 0.55
 --- !u!114 &3896604757948162179
 MonoBehaviour:
   m_ObjectHideFlags: 0

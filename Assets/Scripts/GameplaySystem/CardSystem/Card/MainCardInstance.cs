@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 public class MainCardInstance : CardInstance
@@ -11,6 +12,8 @@ public class MainCardInstance : CardInstance
     // 시스템
     private UIView_CardSystem cardSystem;
     public UIView_CardSystem CardSystem => cardSystem;
+
+
 
 
     // 컴포넌트
@@ -38,5 +41,10 @@ public class MainCardInstance : CardInstance
     public void SetUIState(CardState state)
     {
         cardState = state;
+    }
+
+    public void SetVisible(bool visible)
+    {
+        VisualFloat?.SetVisible(visible);
     }
 }

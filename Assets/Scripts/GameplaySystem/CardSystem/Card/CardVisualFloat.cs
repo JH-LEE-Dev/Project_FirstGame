@@ -36,6 +36,10 @@ public class CardVisualFloat : MonoBehaviour
     [SerializeField] private float drawTotalDuration = 0.4f;
     private Tween drawScaleTween;
 
+    [Header("CanvasGroup")]
+    [SerializeField] private CanvasGroup canvasGroup;
+
+
 
     private void Awake()
     {
@@ -46,6 +50,9 @@ public class CardVisualFloat : MonoBehaviour
             drawOverlay.color = c;
             drawOverlay.raycastTarget = false;
         }
+
+        if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
+        if (!canvasGroup) canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
     public void Bind(MainCardInstance card)
@@ -126,5 +133,17 @@ public class CardVisualFloat : MonoBehaviour
             )
             .SetUpdate(true)
             .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+
+        SetVisible(true);
     }
+
+    public void SetVisible(bool visible)
+    {
+        if (canvasGroup == null) return;
+
+        canvasGroup.alpha = visible ? 1f : 0f;
+        canvasGroup.blocksRaycasts = visible;
+        canvasGroup.interactable = visible;
+    }
+
 }
