@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe510c1a2425cb749892ec80e26575c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIView_Unit
-  layer: 2
+  layer: 4
   startHidden: 1
   uiRoot: {fileID: 4944410294537709981}
-  bulletSocketSystem: {fileID: 0}

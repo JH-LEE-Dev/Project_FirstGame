@@ -19,6 +19,7 @@ public class GameInstaller : MonoBehaviour
     private GameplayUIInstaller uiInstaller;
     private SignalHub signalHub;
     private UnitSystem unitSystem;
+    private CardSystem cardSystem;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -38,16 +39,18 @@ public class GameInstaller : MonoBehaviour
         environmentManager = GetComponentInChildren<EnvironmentManager>();
         uiInstaller = GetComponentInChildren<GameplayUIInstaller>();
         unitSystem = new UnitSystem();
+        cardSystem = new CardSystem();
 
+        cardSystem.Initialize(signalHub,cardManager, cardEffectCommandManager);
         unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
-        unitLogicSystem.Initialize(signalHub);
-        cardEffectCommandManager.Initialize(signalHub);
+        unitLogicSystem.Initialize();
+        cardEffectCommandManager.Initialize();
         waveManager.Initialize(signalHub,waveDatabase);
         gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
-        unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager,signalHub);
+        unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager);
         uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
-        cardManager.Initialize(unitLogicSystem, signalHub);
+        cardManager.Initialize(unitLogicSystem);
 
         SetupGamePlayScene();
     }
@@ -65,6 +68,7 @@ public class GameInstaller : MonoBehaviour
 
     public void Release()
     {
+        cardSystem.Release();   
         unitSystem.Release(); 
         unitSpawner.Release();
         unitLogicSystem.Release();

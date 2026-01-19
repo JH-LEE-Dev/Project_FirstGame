@@ -29,8 +29,8 @@ public class GameplayUIInstaller : MonoBehaviour
     private Canvas canvas;
 
 
-    public void Initialize(IBootStrapProvider _bootStrapProvider,SignalHub _signalHub, 
-        InputManager _inputManager,ICardSystemData _cardSystemData,IWaveSystemData _waveSystemData)
+    public void Initialize(IBootStrapProvider _bootStrapProvider, SignalHub _signalHub,
+        InputManager _inputManager, ICardSystemData _cardSystemData, IWaveSystemData _waveSystemData)
     {
         inputManager = _inputManager;
         bootStrapProvider = _bootStrapProvider;
@@ -44,7 +44,7 @@ public class GameplayUIInstaller : MonoBehaviour
         gameplayUICoordinator = new GameplayUICoordinator();
 
         uiCommandManager.Initialize(signalHub);
-        uiManager.Initialize(inputManager,cardSystemData,waveSystemData);
+        uiManager.Initialize(inputManager, cardSystemData, waveSystemData);
 
         SetupUIElement();
     }
@@ -65,6 +65,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
         Transform overlayRoot = Instantiate(canvasRootPrefab.overlayLayerRoot, canvas.transform);
         Transform popupLayerRoot = Instantiate(canvasRootPrefab.popupLayerRoot, canvas.transform);
+        Transform worldLayerRoot = Instantiate(canvasRootPrefab.worldLayerRoot, null);
         //Transform screenLayerRoot = Instantiate(gameplayLevelRoots_Prefab.screenLayerRoot, canvas_GamplayScene.transform);
         //Transform tooltipLayerRoot = Instantiate(gameplayLevelRoots_Prefab.tooltipLayerRoot, canvas_GamplayScene.transform);
 
@@ -74,6 +75,7 @@ public class GameplayUIInstaller : MonoBehaviour
         CanvasRoot tempRoot = new CanvasRoot();
         tempRoot.overlayLayerRoot = overlayRoot;
         tempRoot.popupLayerRoot = popupLayerRoot;
+        tempRoot.worldLayerRoot = worldLayerRoot;
         uiManager.SceneChanged(tempRoot);
 
         OpenUIView();
@@ -109,8 +111,8 @@ public class GameplayUIInstaller : MonoBehaviour
         UIView_Gameplay gameplayObject = uiManager.Open<UIView_Gameplay>();
         UIView_Unit unitUIObject = uiManager.Open<UIView_Unit>();
 
-        cardUICoordinator.Initialize(signalHub,cardSystemObject, unitUIObject);
-        gameplayUICoordinator.Initialize(signalHub,hudObject, unitUIObject, gameplayObject);
+        cardUICoordinator.Initialize(signalHub, cardSystemObject, unitUIObject);
+        gameplayUICoordinator.Initialize(signalHub, hudObject, unitUIObject, gameplayObject);
 
         SetAnchorToCanvas(hudObject.transform);
         SetAnchorToCanvas(cardSystemObject.transform);
@@ -142,7 +144,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
     private void ReleaseEvent()
     {
-        
+
     }
 
     public void ReleaseDependency()

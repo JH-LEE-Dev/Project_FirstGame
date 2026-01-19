@@ -7,27 +7,28 @@ using CardSystemSignals;
 using UnitLogicSystemSignals;
 using WaveSystemSignals;
 using UnitSpawnSystemSignals;
+using System;
 
 //캐릭터를 상위 모듈에 노출할 때 인터페이스로 묶어서 노출할 것. 이때 CombatReceiver도 private으로 해서 
 //캐릭터를 Facade로 사용할 것.
 public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogicCommandHandler
 {
-    //외부 의존성
-    private SignalHub signalHub;
+    public event Action EnemySpawnedEvent;
+    public event Action<Character> CharacterSpawendEvent;
+    public event Action<Earth> PlayerSpawnedEvent;
+    public event Action<Vector2> EnemyIsDeadEvent;
+    public event Action PlayerTurnFinishedEvent;
+    public event Action<float> PlayerTakeDamageEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
     private Earth playerUnit;
     private List<Enemy> enemyUnits;
 
-
     private List<CardEffectStatusCommand> cardEffectCommands = new List<CardEffectStatusCommand>(10);
 
-    public void Initialize(SignalHub _signalHub)
+    public void Initialize()
     {
-        signalHub = _signalHub;
-
-        SubscribeEvents();
     }
 
     public void CharacterCreated(Character _character)
@@ -50,36 +51,16 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
 
         BindEvent_Enemy();
 
-        signalHub.Publish(new EnemySpawnedEvent());
+        EnemySpawnedEvent?.Invoke();
     }
 
     public void ActivatePlayerAndCharacter(GameStartedEvent gameStartedEvent)
     {
-        signalHub.Publish(new PlayerSpawnedEvent(playerUnit));
-        signalHub.Publish(new CharacterSpawnedEvent(characterUnit));
+        PlayerSpawnedEvent?.Invoke(playerUnit);
+        CharacterSpawendEvent?.Invoke(characterUnit);
 
         characterUnit.gameObject.SetActive(true);
         playerUnit.gameObject.SetActive(true);
-    }
-
-    private void SubscribeEvents()
-    {
-        signalHub.Subscribe<CardEffectStatusCommandDispatchEvent>(InsertCommand);
-        signalHub.Subscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.Subscribe<CardUsingTurnFinishedEvent>(CardUsingTurnFinishedEvent);
-        signalHub.Subscribe<CardDrawStartEvent>(CardDrawed);
-        signalHub.Subscribe<StartMoveEvent>(StartEnemyMove);
-        signalHub.Subscribe<GameStartedEvent>(ActivatePlayerAndCharacter);
-    }
-
-    private void UnSubscribeEvents()
-    {
-        signalHub.UnSubscribe<CardEffectStatusCommandDispatchEvent>(InsertCommand);
-        signalHub.UnSubscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.UnSubscribe<CardUsingTurnFinishedEvent>(CardUsingTurnFinishedEvent);
-        signalHub.UnSubscribe<CardDrawStartEvent>(CardDrawed);
-        signalHub.UnSubscribe<StartMoveEvent>(StartEnemyMove);
-        signalHub.UnSubscribe<GameStartedEvent>(ActivatePlayerAndCharacter);
     }
 
     public void Release()
@@ -87,7 +68,6 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
         ReleaseEvent_Character();
         ReleaseEvent_Enemy();
         ReleaseEvent_Player();
-        UnSubscribeEvents();
     }
 
     private void BindEvent_Player()
@@ -132,10 +112,10 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
 
     private void EnemyIsDead(Unit deadUnit)
     {
-        signalHub.Publish(new EnemyIsDeadEvent(deadUnit.transform.position));
+        EnemyIsDeadEvent?.Invoke(deadUnit.transform.position);
     }
 
-    private void StartEnemyMove(StartMoveEvent startMoveEvent)
+    public void StartEnemyMove(StartMoveEvent startMoveEvent)
     {
         for (int i = 0; i < enemyUnits.Count; ++i)
         {
@@ -145,20 +125,20 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
 
     private void PlayerTurnFinished()
     {
-        signalHub.Publish(new PlayerTurnFinishedEvent());
+        PlayerTurnFinishedEvent?.Invoke();
     }
 
-    private void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
+    public void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
     {
         characterUnit.ResetbCanAction();
     }
 
-    private void CardDrawed(CardDrawStartEvent cardDrawStartEvent)
+    public void CardDrawed(CardDrawStartEvent cardDrawStartEvent)
     {
         characterUnit.PlayerTurnStarted();
     }
 
-    private void CardUsingTurnFinishedEvent(CardUsingTurnFinishedEvent cardUsingTurnFinishedEvent)
+    public void CardUsingTurnFinished(CardUsingTurnFinishedEvent cardUsingTurnFinishedEvent)
     {
         characterUnit.SetbCanAction();
     }
@@ -197,6 +177,6 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
 
     public void PlayerTakeDamage(float damage)
     {
-        signalHub.Publish(new PlayerTakeDamageEvent(damage));
+        PlayerTakeDamageEvent?.Invoke(damage);
     }
 }

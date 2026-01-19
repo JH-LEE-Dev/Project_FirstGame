@@ -1,16 +1,7 @@
 using UnityEngine;
 
-public class CardSystemPrivateSignal : MonoBehaviour
+//assembly Defines 사용해야 함.
+namespace CardSystemPrivateSignal
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
+

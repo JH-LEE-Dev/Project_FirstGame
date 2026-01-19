@@ -10,18 +10,18 @@ public abstract class UIView : MonoBehaviour
 
     public UILayer Layer => layer;
 
-    private bool _isVisible;
+    private bool bVisible;
 
     protected virtual void Awake()
     {
         if (startHidden)
         {
             gameObject.SetActive(false);
-            _isVisible = false;
+            bVisible = false;
         }
         else
         {
-            _isVisible = gameObject.activeSelf;
+            bVisible = gameObject.activeSelf;
         }
     }
 
@@ -52,10 +52,10 @@ public abstract class UIView : MonoBehaviour
     /// </summary>
     public virtual void Show()
     {
-        if (_isVisible)
+        if (bVisible)
             return;
 
-        _isVisible = true;
+        bVisible = true;
         gameObject.SetActive(true);
         OnShow();
     }
@@ -65,10 +65,10 @@ public abstract class UIView : MonoBehaviour
     /// </summary>
     public virtual void Hide()
     {
-        if (!_isVisible)
+        if (!bVisible)
             return;
 
-        _isVisible = false;
+        bVisible = false;
         OnHide();
         gameObject.SetActive(false);
     }
