@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 
 namespace UnitSpawnSystemSignals
 {
-    public struct PlayerSpawnedEvent : IPulicSignal
+    public struct PlayerSpawnedEvent 
     {
         public IPlayerData playerData;
 
@@ -10,8 +11,8 @@ namespace UnitSpawnSystemSignals
             playerData = _playerData;
         }
     }
-    public struct EnemySpawnedEvent : IPulicSignal { }
-    public struct CharacterSpawnedEvent : IPulicSignal
+    public struct EnemySpawnedEvent  { }
+    public struct CharacterSpawnedEvent
     {
         public ICharacterData characterData;
 

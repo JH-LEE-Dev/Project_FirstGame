@@ -19,7 +19,6 @@ public class GS_GameStarted : GameState
     public override void Enter()
     {
         signalHub.Publish(new GameStartedEvent());
-        signalHub.Publish(new ActivatePlayerEvent());
 
         SpawnUnitsTask();
     }

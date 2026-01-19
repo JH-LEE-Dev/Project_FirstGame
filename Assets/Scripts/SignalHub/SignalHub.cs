@@ -67,47 +67,32 @@ using static SignalHub;
     }
 }*/
 
-public struct ScopeSignal<T>
+public interface ISignalSubscriber
+{
+    public void Subscribe<T>(Action<T> handler) where T : struct;
+
+    public void UnSubscribe<T>(Action<T> handler) where T : struct;
+
+    public void Subscribe<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct;
+
+    public void UnSubscribe<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct;
+}
+
+// 스코프 신호 구조체 (공용 어셈블리에 위치)
+public struct ScopeSignal<T> where T : struct
 {
     public bool IsBegin;
     public T Context;
 }
 
-// 1. 신호 분류를 위한 마커
-public interface ISignalMarker { }
-public interface IPulicSignal : ISignalMarker { } 
-public interface ICardSystemPrivateSignal : ISignalMarker { }
-
-// 2. 제네릭 구독 인터페이스 (이것만 선언하면 모든 도메인에 대응 가능)
-public interface ISignalHub<TMarker> where TMarker : ISignalMarker
+public class SignalHub : ISignalSubscriber
 {
-    public void Publish<T>(T signal) where T : struct;
-    public void Publish<TContext, TData>(TContext context, ReadOnlySpan<TData> data) where TContext : struct;
-
-
-    void Subscribe<T>(Action<T> handler) where T : struct, TMarker;
-    void UnSubscribe<T>(Action<T> handler) where T : struct, TMarker;
-
-    void Subscribe<TContext, TData>(SignalHub.SpanHandler<TContext, TData> handler)
-        where TContext : struct, TMarker;
-    void UnSubscribe<TContext, TData>(SpanHandler<TContext, TData> handler)
-        where TContext : struct, TMarker;
-
-    void BeginScope<T>(T context) where T : struct, ISignalMarker;
-    void EndScope<T>(T context) where T : struct, ISignalMarker;
-
-    void SubscribeScope<T>(Action<ScopeSignal<T>> handler) where T : struct, TMarker;
-    void UnSubscribeScope<T>(Action<ScopeSignal<T>> handler) where T : struct, TMarker;
-}
-
-public class SignalHub : ISignalHub<ICardSystemPrivateSignal>, ISignalHub<IPulicSignal>
-{
-    // --- [내부 구조 정의] ---
     private interface ISignalHandlerList { }
     private class SignalHandlerList<T> : ISignalHandlerList
     {
         public readonly List<Action<T>> Handlers = new(16);
     }
+
     public delegate void SpanHandler<TContext, TData>(TContext context, ReadOnlySpan<TData> data);
     private class SpanSignalHandlerList<TContext, TData> : ISignalHandlerList
     {
@@ -117,66 +102,18 @@ public class SignalHub : ISignalHub<ICardSystemPrivateSignal>, ISignalHub<IPulic
     private readonly Dictionary<Type, ISignalHandlerList> _storage = new();
     private readonly Dictionary<(Type, Type), ISignalHandlerList> _spanStorage = new();
 
-    // ---------------------------------------------------------
-    // [Private 로직] 실제 처리는 여기서 딱 한 번만 정의됩니다.
-    // ---------------------------------------------------------
-
-    private void DoSubscribe<T>(Action<T> handler) where T : struct
+    // --- [기본 구독 및 발행] ---
+    public void Subscribe<T>(Action<T> handler) where T : struct
     {
         var list = GetOrCreateList<T>();
         if (!list.Handlers.Contains(handler)) list.Handlers.Add(handler);
     }
 
-    private void DoUnSubscribe<T>(Action<T> handler) where T : struct
+    public void UnSubscribe<T>(Action<T> handler) where T : struct
     {
         if (_storage.TryGetValue(typeof(T), out var listObj))
-        {
             ((SignalHandlerList<T>)listObj).Handlers.Remove(handler);
-        }
     }
-
-    private void DoSubscribeSpan<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct
-    {
-        var list = GetOrCreateSpanList<TContext, TData>();
-        if (!list.Handlers.Contains(handler)) list.Handlers.Add(handler);
-    }
-
-    private void DoUnSubscribeSpan<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct
-    {
-        var key = (typeof(TContext), typeof(TData));
-        if (_spanStorage.TryGetValue(key, out var listObj))
-        {
-            ((SpanSignalHandlerList<TContext, TData>)listObj).Handlers.Remove(handler);
-        }
-    }
-
-    // ---------------------------------------------------------
-    // [인터페이스 구현] 한 줄씩 포워딩하여 중복 제거
-    // ---------------------------------------------------------
-
-    // --- CardSystem (ICardSignal) ---
-    void ISignalHub<ICardSystemPrivateSignal>.Subscribe<T>(Action<T> h) => DoSubscribe(h);
-    void ISignalHub<ICardSystemPrivateSignal>.UnSubscribe<T>(Action<T> h) => DoUnSubscribe(h);
-    void ISignalHub<ICardSystemPrivateSignal>.Subscribe<TC, TD>(SpanHandler<TC, TD> h) => DoSubscribeSpan<TC, TD>(h);
-    void ISignalHub<ICardSystemPrivateSignal>.UnSubscribe<TC, TD>(SpanHandler<TC, TD> h) => DoUnSubscribeSpan<TC, TD>(h);
-
-    // --- CombatSystem (ICombatSignal) ---
-    void ISignalHub<IPulicSignal>.Subscribe<T>(Action<T> h) => DoSubscribe(h);
-    void ISignalHub<IPulicSignal>.UnSubscribe<T>(Action<T> h) => DoUnSubscribe(h);
-    void ISignalHub<IPulicSignal>.Subscribe<TC, TD>(SpanHandler<TC, TD> h) => DoSubscribeSpan<TC, TD>(h);
-    void ISignalHub<IPulicSignal>.UnSubscribe<TC, TD>(SpanHandler<TC, TD> h) => DoUnSubscribeSpan<TC, TD>(h);
-
-    // 카드 시스템 스코프 구독
-    void ISignalHub<ICardSystemPrivateSignal>.SubscribeScope<T>(Action<ScopeSignal<T>> h) => DoSubscribe(h);
-    void ISignalHub<ICardSystemPrivateSignal>.UnSubscribeScope<T>(Action<ScopeSignal<T>> h) => DoUnSubscribe(h);
-
-    // 범용 스코프 구독
-    void ISignalHub<IPulicSignal>.SubscribeScope<T>(Action<ScopeSignal<T>> h) => DoSubscribe(h);
-    void ISignalHub<IPulicSignal>.UnSubscribeScope<T>(Action<ScopeSignal<T>> h) => DoUnSubscribe(h);
-
-    // ---------------------------------------------------------
-    // [Public] Publish는 발행자의 권한이므로 제약 없이 오픈
-    // ---------------------------------------------------------
 
     public void Publish<T>(T signal) where T : struct
     {
@@ -185,6 +122,20 @@ public class SignalHub : ISignalHub<ICardSystemPrivateSignal>, ISignalHub<IPulic
             var handlers = ((SignalHandlerList<T>)listObj).Handlers;
             for (int i = handlers.Count - 1; i >= 0; i--) handlers[i]?.Invoke(signal);
         }
+    }
+
+    // --- [Span 지원] ---
+    public void Subscribe<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct
+    {
+        var list = GetOrCreateSpanList<TContext, TData>();
+        if (!list.Handlers.Contains(handler)) list.Handlers.Add(handler);
+    }
+
+    public void UnSubscribe<TContext, TData>(SpanHandler<TContext, TData> handler) where TContext : struct
+    {
+        var key = (typeof(TContext), typeof(TData));
+        if (_spanStorage.TryGetValue(key, out var listObj))
+            ((SpanSignalHandlerList<TContext, TData>)listObj).Handlers.Remove(handler);
     }
 
     public void Publish<TContext, TData>(TContext context, ReadOnlySpan<TData> data) where TContext : struct
@@ -197,48 +148,43 @@ public class SignalHub : ISignalHub<ICardSystemPrivateSignal>, ISignalHub<IPulic
         }
     }
 
-    // --- 스코프 메서드 ---
-    public void BeginScope<T>(T context) where T : struct, ISignalMarker
+    // --- [Scope 지원] ---
+    // 시작과 끝을 알리는 헬퍼 메서드
+    public void BeginScope<T>(T context) where T : struct
     {
-        // ScopeSignal<T>은 내부 신호이므로 직접 Publish 로직 호출
-        PublishInternal(new ScopeSignal<T> { IsBegin = true, Context = context });
+        Publish(new ScopeSignal<T> { IsBegin = true, Context = context });
     }
 
-    public void EndScope<T>(T context) where T : struct, ISignalMarker
+    public void EndScope<T>(T context) where T : struct
     {
-        PublishInternal(new ScopeSignal<T> { IsBegin = false, Context = context });
+        Publish(new ScopeSignal<T> { IsBegin = false, Context = context });
     }
 
-    // 내부 전용 발행 로직 (마커 제약 없음)
-    private void PublishInternal<T>(T signal) where T : struct
+    // Scope 전용 구독 (별도 메서드로 분리하여 명확성 유지)
+    public void SubscribeScope<T>(Action<ScopeSignal<T>> handler) where T : struct
     {
-        if (_storage.TryGetValue(typeof(T), out var listObj))
-        {
-            var handlers = ((SignalHandlerList<T>)listObj).Handlers;
-            for (int i = handlers.Count - 1; i >= 0; i--) handlers[i]?.Invoke(signal);
-        }
+        Subscribe(handler);
     }
 
-    // --- 헬퍼 메서드 ---
-    private SignalHandlerList<T> GetOrCreateList<T>()
+    public void UnSubscribeScope<T>(Action<ScopeSignal<T>> handler) where T : struct
     {
-        Type type = typeof(T);
+        UnSubscribe(handler);
+    }
+
+    // --- [내부 유틸리티] ---
+    private SignalHandlerList<T> GetOrCreateList<T>() where T : struct
+    {
+        var type = typeof(T);
         if (!_storage.TryGetValue(type, out var list))
-        {
-            list = new SignalHandlerList<T>();
-            _storage[type] = list;
-        }
+            _storage[type] = list = new SignalHandlerList<T>();
         return (SignalHandlerList<T>)list;
     }
 
-    private SpanSignalHandlerList<TContext, TData> GetOrCreateSpanList<TContext, TData>()
+    private SpanSignalHandlerList<TContext, TData> GetOrCreateSpanList<TContext, TData>() where TContext : struct
     {
         var key = (typeof(TContext), typeof(TData));
         if (!_spanStorage.TryGetValue(key, out var list))
-        {
-            list = new SpanSignalHandlerList<TContext, TData>();
-            _spanStorage[key] = list;
-        }
+            _spanStorage[key] = list = new SpanSignalHandlerList<TContext, TData>();
         return (SpanSignalHandlerList<TContext, TData>)list;
     }
 }

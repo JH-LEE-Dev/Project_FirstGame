@@ -1,9 +1,9 @@
 
 namespace CardSystemSignals
 { 
-    public struct CardDrawFinishedEvent : IPulicSignal { }
-    public struct CardUsingTurnFinishedEvent : IPulicSignal { }
-    public struct CardUsedEvent : IPulicSignal
+    public struct CardDrawFinishedEvent { }
+    public struct CardUsingTurnFinishedEvent { }
+    public struct CardUsedEvent
     {
         public readonly CardDataInstance usedCard;
 
@@ -12,7 +12,7 @@ namespace CardSystemSignals
             usedCard = _usedCard;
         }
     }
-    public struct CardUsingVerificationEvent : IPulicSignal
+    public struct CardUsingVerificationEvent 
     {
         public readonly bool bVerified;
 
@@ -21,20 +21,20 @@ namespace CardSystemSignals
             bVerified = boolean;
         }
     }
-    public struct CardDrawStartEvent : IPulicSignal { }
+    public struct CardDrawStartEvent  { }
 
-    public struct CardPileDrawEvent : ICardSystemPrivateSignal { }
-    public struct CardAdditionalDrawEvent : ICardSystemPrivateSignal { }
-    public struct GraveToDeckEvent : ICardSystemPrivateSignal { }
-    public struct HandToGraveEvent : ICardSystemPrivateSignal { }
+    public struct CardPileDrawEvent  { }
+    public struct CardAdditionalDrawEvent  { }
+    public struct GraveToDeckEvent  { }
+    public struct HandToGraveEvent  { }
 
     //Scope
-    public struct CardActionScope : ICardSystemPrivateSignal { }
+    public struct CardActionScope  { }
 }
 
 namespace CardEffectSystemSignal
 {
-    public struct CardEffectSystemCommandDispatchEvent : IPulicSignal
+    public struct CardEffectSystemCommandDispatchEvent 
     {
         public CardEffectSystemCommand command;
 
@@ -44,7 +44,7 @@ namespace CardEffectSystemSignal
         }
     }
 
-    public struct CardEffectStatusCommandDispatchEvent : IPulicSignal
+    public struct CardEffectStatusCommandDispatchEvent 
     {
         public CardEffectStatusCommand command;
 
@@ -57,7 +57,7 @@ namespace CardEffectSystemSignal
 
 namespace CardUISystemSignals
 {
-    public struct CardUsedEvent : IPulicSignal
+    public struct CardUsedEvent 
     { 
         public readonly CardDataInstance usedCard;
 
@@ -67,5 +67,5 @@ namespace CardUISystemSignals
         }
     }
 
-    public struct CardUsingFinishedEvent : IPulicSignal { }
+    public struct CardUsingFinishedEvent  { }
 }

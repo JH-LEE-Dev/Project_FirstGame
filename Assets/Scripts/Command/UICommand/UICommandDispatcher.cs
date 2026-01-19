@@ -6,9 +6,9 @@ using UICommandSystemSignals;
 public class UICommandDispatcher
 {
     //외부 의존성
-    ISignalHub<IPulicSignal> signalHub;
+    SignalHub signalHub;
 
-    public void Initialize(ISignalHub<IPulicSignal> _signalHub)
+    public void Initialize(SignalHub _signalHub)
     {
         signalHub = _signalHub;
     }

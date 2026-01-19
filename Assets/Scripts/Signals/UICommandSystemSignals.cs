@@ -2,7 +2,7 @@ using System;
 
 namespace UICommandSystemSignals
 {
-    public struct CardSystem_JobDispatchEvent : IPulicSignal
+    public struct CardSystem_JobDispatchEvent 
     {
         public ActionDataBatch_CardSystem actionDataBatch;
 
@@ -12,7 +12,7 @@ namespace UICommandSystemSignals
         }
     }
 
-    public struct UICommandCompleteEvent : IPulicSignal
+    public struct UICommandCompleteEvent 
     {
         public int commandIdx;
 

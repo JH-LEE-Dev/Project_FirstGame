@@ -1,8 +1,8 @@
 
 namespace GameControlSignals
 {
-    public struct GameStartedEvent : IPulicSignal { }
-    public struct StartSpawnWaveEvent : IPulicSignal
+    public struct GameStartedEvent  { }
+    public struct StartSpawnWaveEvent 
     {
         public int waveIdx;
 
@@ -11,11 +11,10 @@ namespace GameControlSignals
             waveIdx = _waveIdx;
         }
     }
-    public struct ActivatePlayerEvent : IPulicSignal { }
 
-    public struct EnemyTurnStartEvent : IPulicSignal { }
-    public struct PlayerTurnStartEvent : IPulicSignal { }
-    public struct WaveStartEvent : IPulicSignal
+    public struct EnemyTurnStartEvent  { }
+    public struct PlayerTurnStartEvent  { }
+    public struct WaveStartEvent
     { 
         public int waveIdx;
 
