@@ -35,7 +35,7 @@ public abstract class UIView : MonoBehaviour
         
     }
 
-    public void Initialize(UIViewContext ctx)
+    public virtual void Initialize(UIViewContext ctx)
     {
         viewCtx = ctx;
 

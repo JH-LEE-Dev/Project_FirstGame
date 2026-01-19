@@ -378,7 +378,6 @@ public class UIView_CardSystem : UIView
                     break;
 
                 case ActionType_CardSystem.GraveToDeck:
-
                     graveSystem?.CardMoveToDeckEffect(currentActionDataList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
