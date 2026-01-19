@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Diagnostics.Tracing;
+using System.Linq;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -12,8 +13,7 @@ public class VFX_CardStar : MonoBehaviour
 
     private PoolingSystem poolingSystem = null;
 
-    private TrailRenderer trail = null;
-    private ParticleSystem particle;
+    private ParticleSystem[] particles;
 
     private Sequence activeSeq = null;
     private Tween activeRotate = null;
@@ -25,8 +25,14 @@ public class VFX_CardStar : MonoBehaviour
     {
         poolingSystem = _poolingSystem;
 
-        trail = gameObject.GetComponentInChildren<TrailRenderer>();
-        particle = gameObject.GetComponentInChildren<ParticleSystem>();
+        particles = GetComponentsInChildren<ParticleSystem>();
+
+        foreach(ParticleSystem vfx in particles)
+        {
+            var main = vfx.main;
+            main.simulationSpace = ParticleSystemSimulationSpace.Custom;
+            main.customSimulationSpace = GetComponentInParent<Canvas>().transform;
+        }
     }
 
     public void PlayingEventforDeck(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
@@ -69,12 +75,12 @@ public class VFX_CardStar : MonoBehaviour
         if (null != activeSeq && activeSeq.IsActive())
             activeSeq.Kill();
 
-        trail?.Clear();
-        particle?.Play(true);
+        foreach (ParticleSystem vfx in particles)
+            vfx?.Play(true);
 
         activeSeq = DOTween.Sequence();
         activeSeq.AppendInterval(_idx * _spawnDelay);
-        activeSeq.Append(transform.DOPath(points, _drawDuration, PathType.CubicBezier, PathMode.TopDown2D, 10, Color.green)
+        activeSeq.Append(transform.DOLocalPath(points, _drawDuration, PathType.CubicBezier, PathMode.TopDown2D, 70, Color.green)
             .SetUpdate(false)
             .SetEase(_drawEase)
             .OnStart(() =>
