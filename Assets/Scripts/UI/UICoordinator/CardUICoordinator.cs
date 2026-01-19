@@ -1,11 +1,7 @@
 using CardSystemSignals;
-using CardUISystemSignals;
 using GameControlSignals;
-using System;
-using System.Collections.Generic;
 using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
-using UnityEngine;
 
 public class CardUICoordinator
 {
@@ -82,7 +78,7 @@ public class CardUICoordinator
 
     public void TryCardUse(CardDataInstance usedCard)
     {
-        signalHub.Publish(new CardUISystemSignals.TryCardUseEvent(usedCard));
+        signalHub.Publish(new TryCardUseEvent(usedCard));
     }
 
     public void CardDrawFinished(CardDrawFinishedEvent cardDrawFinishedEvent)
@@ -92,7 +88,7 @@ public class CardUICoordinator
 
     public void CardUsingFinished()
     {
-        signalHub.Publish(new CardUISystemSignals.CardUsingFinishedEvent());
+        signalHub.Publish(new CardUsingFinishedEvent());
     }
 
     public void CardUsingApproved(CardUsingVerificationEvent cardUsingVerificationEvent)

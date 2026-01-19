@@ -41,15 +41,3 @@ public ref struct RentalScope<T>
 
     public void Dispose() => ArrayPool<T>.Shared.Return(_array, true);
 }
-
-public struct CardUsingResult
-{
-    CardDataInstance usedCard;
-    int slotIdx;
-
-    public CardUsingResult(CardDataInstance _usedCard, int _slotIdx)
-    {
-        usedCard = _usedCard;
-        slotIdx = _slotIdx;
-    }
-}

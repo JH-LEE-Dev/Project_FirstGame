@@ -6,10 +6,12 @@ namespace CardSystemSignals
     public struct CardUsedEvent
     {
         public readonly CardDataInstance usedCard;
+        int slotIdx;
 
-        public CardUsedEvent(CardDataInstance _usedCard)
+        public CardUsedEvent(CardDataInstance _usedCard, int _slotIdx)
         {
             usedCard = _usedCard;
+            slotIdx = _slotIdx;
         }
     }
     public struct CardUsingVerificationEvent 
@@ -32,6 +34,18 @@ namespace CardSystemSignals
 
     //Scope
     public struct CardActionScope  { }
+
+    public struct TryCardUseEvent
+    {
+        public readonly CardDataInstance usedCard;
+
+        public TryCardUseEvent(CardDataInstance _usedCard)
+        {
+            usedCard = _usedCard;
+        }
+    }
+
+    public struct CardUsingFinishedEvent { }
 }
 
 namespace CardEffectSystemSignal
@@ -45,19 +59,4 @@ namespace CardEffectSystemSignal
             command = _command;
         }
     }
-}
-
-namespace CardUISystemSignals
-{
-    public struct TryCardUseEvent 
-    { 
-        public readonly CardDataInstance usedCard;
-
-        public TryCardUseEvent(CardDataInstance _usedCard)
-        {
-            usedCard = _usedCard;
-        }
-    }
-
-    public struct CardUsingFinishedEvent  { }
 }

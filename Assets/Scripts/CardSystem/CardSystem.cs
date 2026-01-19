@@ -2,7 +2,6 @@ using CardEffectSystemSignal;
 using CardSystemSignals;
 using GameControlSignals;
 using System;
-using UnityEngine;
 using UnitLogicSystemSignals;
 
 public class CardSystem
@@ -28,7 +27,7 @@ public class CardSystem
         signalHub.Subscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
         signalHub.Subscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
         signalHub.Subscribe<CardUsedEvent>(cardManager.CardUsed);
-        signalHub.Subscribe<CardUISystemSignals.CardUsingFinishedEvent>(cardManager.CardUsingFinished);
+        signalHub.Subscribe<CardUsingFinishedEvent>(cardManager.CardUsingFinished);
     }
 
     private void UnSubscribeEvents()
@@ -36,7 +35,7 @@ public class CardSystem
         signalHub.UnSubscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
         signalHub.UnSubscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
         signalHub.UnSubscribe<CardUsedEvent>(cardManager.CardUsed);
-        signalHub.UnSubscribe<CardUISystemSignals.CardUsingFinishedEvent>(cardManager.CardUsingFinished);
+        signalHub.UnSubscribe<CardUsingFinishedEvent>(cardManager.CardUsingFinished);
     }
 
     private void BindEvents()

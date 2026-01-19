@@ -172,9 +172,10 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
     }
 
-    public CardUsingResult CanApplyBulletEffect(CardDataInstance usedCard)
+    public void CanApplyBulletEffect(CardDataInstance usedCard)
     {
-        return characterUnit.combatEffectReceiver.CanApplyBulletEffect();
+        characterUnit.combatEffectReceiver.CanApplyBulletEffect();
+        //Signal Publish (CardUsedEvent)
     }
 
     public void PlayerTakeDamage(float damage)

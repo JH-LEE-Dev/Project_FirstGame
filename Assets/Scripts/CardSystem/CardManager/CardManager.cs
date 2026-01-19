@@ -1,6 +1,4 @@
-using CardEffectSystemSignal;
 using CardSystemSignals;
-using CardUISystemSignals;
 using GameControlSignals;
 using System;
 using System.Collections.Generic;
@@ -370,7 +368,7 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         return attackCnt == 0;
     }
 
-    public void CardUsingFinished(CardUISystemSignals.CardUsingFinishedEvent cardUsingFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
     {
         CardUsingTurnFinishedEvent?.Invoke();
     }
