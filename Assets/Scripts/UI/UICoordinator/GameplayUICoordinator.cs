@@ -2,8 +2,6 @@ using CardSystemSignals;
 using GameControlSignals;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
-using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
 using WaveSystemSignals;
 
 public class GameplayUICoordinator
@@ -34,7 +32,8 @@ public class GameplayUICoordinator
         signalHub.Subscribe<WaveStartEvent>(WaveStarted);
         signalHub.Subscribe<WaveEndEvent>(WaveEnded);
         signalHub.Subscribe<GameStartedEvent>(GameStarted);
-        signalHub.Subscribe<EnemyIsDeadEvent>(EnemyIsDead);
+        signalHub.Subscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
+        signalHub.Subscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
     }
 
     private void UnSubscribeEvents()
@@ -48,7 +47,7 @@ public class GameplayUICoordinator
         signalHub.UnSubscribe<WaveStartEvent>(WaveStarted);
         signalHub.UnSubscribe<WaveEndEvent>(WaveEnded);
         signalHub.UnSubscribe<GameStartedEvent>(GameStarted);
-        signalHub.UnSubscribe<EnemyIsDeadEvent>(EnemyIsDead);
+        signalHub.UnSubscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
     }
 
     public void Release()
@@ -102,8 +101,8 @@ public class GameplayUICoordinator
         hudUISystem.WaveEnded();
     }
 
-    private void EnemyIsDead(EnemyIsDeadEvent enemyIsDeadEvent)
+    private void EnemyIsDead(WaveProgressUpdatedEvent waveProgressUpdatedEvent)
     {
-        hudUISystem.EnemyIsDead(enemyIsDeadEvent.position);
+        hudUISystem.EnemyIsDead(waveProgressUpdatedEvent.position);
     }
 }

@@ -28,6 +28,8 @@ public class UIView_HUD : UIView
     [SerializeField] private ObjectPoolingSystem damagePool;
     [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
 
+    private bool WaveStartFirstTime = true;
+
     protected override void Awake()
     {
         base.Awake();
@@ -79,7 +81,7 @@ public class UIView_HUD : UIView
         turnIndicatorText.text = "WaveStarted";
         turnProcessIndicatorText.text = "Prepare For Wave";
 
-        IntializeChildrenHUD();
+        WaveStartFirstTime = true;
     }
 
     public void GameStarted()
@@ -100,6 +102,8 @@ public class UIView_HUD : UIView
         waveText.text = "Wave : " + (0 + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
         turnProcessIndicatorText.text = "Card Draw";
+
+        IntializeChildrenHUD();
     }
 
     public void EnemyTurnStarted()
@@ -164,7 +168,7 @@ public class UIView_HUD : UIView
         vfxRect.anchoredPosition = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(worldDeadPos, vfxRect);
 
         int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
-        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress() - 1;
+        int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress();
         float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
 
         float currentProgress = currentKillCnt / maxEnemyCnt;
@@ -189,10 +193,15 @@ public class UIView_HUD : UIView
 
     private void IntializeChildrenHUD()
     {
+        if (!WaveStartFirstTime)
+            return;
+
         hpText?.Init(playerData.GetMaxHealth(), this);
         hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
         targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
         targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
+
+        WaveStartFirstTime = false;
     }
 
     public void ReturnDamageText(GameObject target) => damagePool?.Pool.Release(target);
