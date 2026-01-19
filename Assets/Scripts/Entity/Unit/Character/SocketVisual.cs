@@ -60,9 +60,6 @@ public class SocketVisual : MonoBehaviour
     private Vector3 baseVisualLocalPos;
     private Vector3 baseVisualLocalScale;
 
-
-
-
     private void Awake()
     {
         targetRootLocalPos = transform.localPosition;
@@ -89,6 +86,8 @@ public class SocketVisual : MonoBehaviour
     {
         KillIdleTween();
     }
+
+
 
     public void SetTargetLocalPosition(Vector3 rootLocalPos, bool snap = false)
     {
@@ -267,7 +266,7 @@ public class SocketVisual : MonoBehaviour
         });
     }
 
-    private static float WrapRad(float x)
+    private float WrapRad(float x)
     {
         float twoPi = Mathf.PI * 2f;
         x %= twoPi;
@@ -275,7 +274,7 @@ public class SocketVisual : MonoBehaviour
         return x;
     }
 
-    private static float AsinClamped(float x)
+    private float AsinClamped(float x)
     {
         return Mathf.Asin(Mathf.Clamp(x, -1f, 1f));
     }
