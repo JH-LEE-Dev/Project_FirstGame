@@ -5,6 +5,13 @@ public class SocketCardInstance : CardInstance, IPointerEnterHandler, IPointerEx
 {
     public int socketIndex { get; private set; }
     private BulletSocketSystem bulletSocketSystem;
+    private WorldCanvasEnabler canvasEnabler;
+
+    public void Awake()
+    {
+        canvasEnabler = GetComponent<WorldCanvasEnabler>();
+        canvasEnabler.Initialize();
+    }
 
     public void Bind(int _socketIndex, BulletSocketSystem _bulletSocketSystem)
     {
