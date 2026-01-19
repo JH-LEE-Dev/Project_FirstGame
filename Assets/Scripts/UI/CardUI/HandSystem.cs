@@ -110,14 +110,22 @@ public class HandSystem : MonoBehaviour
         }
 
 
+        // 날아가는 동안은 Other임
         previewCard = card;
-        previewCard.SetUIState(CardState.Preview);
-
-        previewCard.Motion.StartPreview(previewRoot.anchoredPosition);
-
+        previewCard.SetUIState(CardState.Other);
         hoveredCard = null;
-
         computeArc();
+
+
+        previewCard.Motion.StartPreview(previewRoot.anchoredPosition, () =>
+        {
+            // 도중에 다른 카드로 previewCard가 바뀌었으면 무시함
+            if (previewCard != card) return;
+
+            card.SetUIState(CardState.Preview);
+            computeArc();
+        });
+
     }
 
     public void CancelPreview()
@@ -131,7 +139,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    public void UseCard(MainCardInstance _card)
+    public void UseCard(MainCardInstance _card, int socketIndex = 0)
     {
         if (_card == null) return;
 
@@ -159,7 +167,7 @@ public class HandSystem : MonoBehaviour
         switch (type)
         {
             case CardType.Bullet:
-                EquipBullet(_card);
+                EquipBullet(_card, socketIndex);
                 break;
 
             case CardType.Magic:
@@ -168,11 +176,63 @@ public class HandSystem : MonoBehaviour
         }
 
     }
-
-    private void EquipBullet(MainCardInstance card)
+    private void EquipBullet(MainCardInstance card, int socketIndex)
     {
-        // 지금은 즉시 반환
-        ReturnToPool(card);
+        if (card == null) return;
+        if (socketIndex < 0) return;
+
+        if (previewCard == card)
+        {
+            previewCard.Motion.EndPreview();
+            previewCard = null;
+        }
+
+        // 패 레이아웃에서 빠지게 상태 변경
+        card.SetUIState(CardState.Other);
+        hoveredCard = null;
+        computeArc();
+
+        // 임시
+        Vector2 socketPos = new Vector2(0, 0);
+
+        card.Motion.FlyToBulletSocket(socketPos, () =>
+        {
+            card.SetUIState(CardState.Equipped);
+            card.Motion.SetSocketIndex(socketIndex);
+            card.Motion.AllKillTweens();
+
+            // 5) Hand 카드 “눈속임으로” 숨기기 (SetActive(false) 대신 추천: CanvasGroup alpha 0)
+            card.SetVisible(false); // 아래 3)에서 구현 예시 제공
+        });
+
+
+    }
+
+    // 실제로 누른것은 슬롯에 있는 카드 모습일 것이기 때문에, 어떤 소켓번호에 있는 카드를 눌렀다고 정보를 받을것임.
+    public void UnequipBulletToHand(int socketIndex)
+    {
+        if (socketIndex < 0) return;
+
+
+        // 한 소켓에는 여러장이 들어갈 수 있기 때문에, 해당 소켓안에 있던 모든 카드가 복귀한다.
+        foreach(var card in cards)
+        {
+            if (card == null) continue;
+            if (card.Motion.socketIndex != socketIndex || CardState.Equipped != card.cardState) continue;
+
+            // Hand 카드 다시 보이게 + 상태 복귀
+            card.SetVisible(true);
+            card.SetUIState(CardState.InHand);
+            // 크기만 다시 패 크기로 돌려놓으면, 알아서 패 레이아웃으로 갈 것임. 
+            card.Motion.FlyToHand();
+            card.Motion.SetSocketIndex(-1);
+
+        }
+
+        // 소켓쪽 UI 끄기(그쪽 시스템에 요청)
+        // 현재 통신안되는중. 추후 여기다가 넣기.
+
+        computeArc();
     }
 
     private void ConsumeMagic(MainCardInstance card)
@@ -207,20 +267,6 @@ public class HandSystem : MonoBehaviour
         cardSystem.ReturnHandCard(_card);
 
         // 호 재계산
-        computeArc();
-    }
-
-    // 장착한 불릿을 다시 손패로 돌리고 싶을 때
-    public void UnequipBulletToHand(MainCardInstance card)
-    {
-        if (card == null) return;
-        if (card.cardState != CardState.Equipped) return;
-
-        equippedBullets.Remove(card);
-
-        card.transform.SetParent(handRoot, false);
-        card.SetUIState(CardState.InHand);
-
         computeArc();
     }
 
@@ -283,8 +329,6 @@ public class HandSystem : MonoBehaviour
         int layoutIndex = 0;
         int hoveredLayoutIndex = -1;
 
-        // 위에서 effectiveHover(hoveredCard) 가 있었다면..
-        // tmp가상의 인덱스를 이용해서 hoveredLayoutIndex를 재구성.
         if (effectiveHover != null)
         {
             int tmp = 0;
@@ -297,8 +341,6 @@ public class HandSystem : MonoBehaviour
             }
         }
 
-        // IsLayoutExcluded에 걸러지지 않은 카드들만.
-        // hoveredLayoutIndex 재구성을 통해 계산하여 카드에게 위치정보를 전달한다.
         for (int i = 0; i < cards.Count; i++)
         {
             var card = cards[i];
@@ -351,6 +393,7 @@ public class HandSystem : MonoBehaviour
 
     public int GetCurrentHandCardCount() => cards.Count;
 
+    // 드로우될 카드 위치
     public Vector2 PredictRightmostPosForCount(int nextCount)
     {
         Vector2 basePos = handRoot.position;
@@ -386,6 +429,7 @@ public class HandSystem : MonoBehaviour
         return Count;
     }
 
+    // 전부 묘지에 쏟아부음
     public void AllCardReturnToPool(CardState state)
     {
         if (previewCard != null) CancelPreview();
@@ -393,7 +437,6 @@ public class HandSystem : MonoBehaviour
 
         Vector3 GravePosition = cardSystem.GetGraveAnchoredPos();
 
-        // 현재 손패(InHand)만 스냅샷
         List<MainCardInstance> toDiscard = new();
 
         for (int i = 0; i < cards.Count; i++)
@@ -410,10 +453,11 @@ public class HandSystem : MonoBehaviour
             DOVirtual.DelayedCall(delay, () =>
             {
                 if (card == null) return;
-                if (card.cardState != CardState.InHand) return;
+                if (card.cardState != state) return;
 
                 // 손패 레이아웃에서 즉시 제외
                 card.SetUIState(CardState.Other);
+                card.Motion.SetSocketIndex(-1);
                 computeArc();
 
                 card.Motion.FlyToGrave(GravePosition, () =>

@@ -10,13 +10,13 @@ using UnityEngine;
 public class CardUICoordinator
 {
     //외부 의존성
-    ISignalHub<IPulicSignal> signalHub;
+    SignalHub signalHub;
 
 
     private UIView_CardSystem cardUISystem;
     private UIView_Unit unitUISystem;
 
-    public void Initialize(ISignalHub<IPulicSignal> _signalHub,UIView_CardSystem _cardUISystem,UIView_Unit _unitUISystem)
+    public void Initialize(SignalHub _signalHub,UIView_CardSystem _cardUISystem,UIView_Unit _unitUISystem)
     {
         signalHub = _signalHub;
         cardUISystem = _cardUISystem;

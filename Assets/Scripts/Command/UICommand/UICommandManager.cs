@@ -8,22 +8,20 @@ using CardSystemSignals;
 public class UICommandManager : MonoBehaviour
 {
     //외부 의존성
-    ISignalHub<IPulicSignal> publicSignalHub;
-    ISignalHub<ICardSystemPrivateSignal> cardSystemSignalHub;
+    SignalHub signalHub;
 
     //내부 의존성
     private UICommandDispatcher dispatcher;
     private UICommandFactory_CardSystem commandFactory_CardSystem;
 
-    public void Initialize(ISignalHub<IPulicSignal> _publicSignalHub,ISignalHub<ICardSystemPrivateSignal> _cardSystemSignalHub)
+    public void Initialize(SignalHub _signalHub)
     {
-        publicSignalHub = _publicSignalHub;
-        cardSystemSignalHub = _cardSystemSignalHub;
+        signalHub = _signalHub;
 
         dispatcher = new UICommandDispatcher();
         commandFactory_CardSystem = new UICommandFactory_CardSystem();
 
-        dispatcher.Initialize(publicSignalHub);
+        dispatcher.Initialize(signalHub);
         commandFactory_CardSystem.Initialize();
 
         SubscribeEvents();
@@ -36,22 +34,22 @@ public class UICommandManager : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        publicSignalHub.Subscribe<UICommandCompleteEvent>(ReleaseJobBatch);
-        cardSystemSignalHub.Subscribe<CardPileDrawEvent,CardDataInstance>(CardPileDrawed);
-        cardSystemSignalHub.Subscribe<CardAdditionalDrawEvent,CardDataInstance>(CardAdditionalDrawed);
-        cardSystemSignalHub.Subscribe<HandToGraveEvent,CardDataInstance>(HandToGrave);
-        cardSystemSignalHub.Subscribe<GraveToDeckEvent,CardDataInstance>(GraveToDeck);
-        cardSystemSignalHub.SubscribeScope<CardActionScope>(DispatchCommand);
+        signalHub.Subscribe<UICommandCompleteEvent>(ReleaseJobBatch);
+        signalHub.Subscribe<CardPileDrawEvent,CardDataInstance>(CardPileDrawed);
+        signalHub.Subscribe<CardAdditionalDrawEvent,CardDataInstance>(CardAdditionalDrawed);
+        signalHub.Subscribe<HandToGraveEvent,CardDataInstance>(HandToGrave);
+        signalHub.Subscribe<GraveToDeckEvent,CardDataInstance>(GraveToDeck);
+        signalHub.SubscribeScope<CardActionScope>(DispatchCommand);
     }
 
     private void UnSubscribeEvents()
     {
-        publicSignalHub.UnSubscribe<UICommandCompleteEvent>(ReleaseJobBatch);
-        cardSystemSignalHub.UnSubscribe<CardPileDrawEvent, CardDataInstance>(CardPileDrawed);
-        cardSystemSignalHub.UnSubscribe<CardAdditionalDrawEvent, CardDataInstance>(CardAdditionalDrawed);
-        cardSystemSignalHub.UnSubscribe<HandToGraveEvent, CardDataInstance>(HandToGrave);
-        cardSystemSignalHub.UnSubscribe<GraveToDeckEvent, CardDataInstance>(GraveToDeck);
-        cardSystemSignalHub.UnSubscribeScope<CardActionScope>(DispatchCommand);
+        signalHub.UnSubscribe<UICommandCompleteEvent>(ReleaseJobBatch);
+        signalHub.UnSubscribe<CardPileDrawEvent, CardDataInstance>(CardPileDrawed);
+        signalHub.UnSubscribe<CardAdditionalDrawEvent, CardDataInstance>(CardAdditionalDrawed);
+        signalHub.UnSubscribe<HandToGraveEvent, CardDataInstance>(HandToGrave);
+        signalHub.UnSubscribe<GraveToDeckEvent, CardDataInstance>(GraveToDeck);
+        signalHub.UnSubscribeScope<CardActionScope>(DispatchCommand);
     }
 
 

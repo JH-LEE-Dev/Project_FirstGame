@@ -7,12 +7,12 @@ using WaveSystemSignals;
 public class GameController : MonoBehaviour
 {
     //외부 의존성.
-    private ISignalHub<IPulicSignal> signalHub;
+    private SignalHub signalHub;
 
     //내부 의존성
     private GameStateMachine gameStateMachine;
 
-    public void Initialize(ISignalHub<IPulicSignal> _signalHub)
+    public void Initialize(SignalHub _signalHub)
     {
         signalHub = _signalHub; 
         gameStateMachine = new GameStateMachine();

@@ -64,8 +64,8 @@ public class BulletSocketSystem : MonoBehaviour
 
             var card = go.GetComponent<SocketCardInstance>();
             if (card == null) continue;
+            card.Bind(i, this);
             cards.Add(card);
-
         }
     }
 

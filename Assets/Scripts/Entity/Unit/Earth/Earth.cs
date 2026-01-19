@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class Earth : MonoBehaviour, IDamageable, IPlayerData, IUnitEvent
+public class Earth : MonoBehaviour, IDamageable, IPlayerData
 {
     public event Action<float> TakeDamageEvent;
 

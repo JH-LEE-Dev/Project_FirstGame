@@ -8,7 +8,7 @@ using WaveSystemSignals;
 public class WaveManager : MonoBehaviour, IWaveSystemData
 {
     //외부 의존성
-    ISignalHub<IPulicSignal> signalHub;
+    SignalHub signalHub;
 
     [SerializeField] private float MoveTurnDelay = 2f;
 
@@ -29,7 +29,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         return maxEnemyCount;
     }
 
-    public void Initialize(ISignalHub<IPulicSignal> _signalHub, WaveDatabase _waveDatabase)
+    public void Initialize(SignalHub _signalHub, WaveDatabase _waveDatabase)
     {
         signalHub = _signalHub;
         waveDatabase = _waveDatabase;

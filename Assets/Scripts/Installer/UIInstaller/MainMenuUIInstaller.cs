@@ -59,22 +59,22 @@ public class MainMenuUIInstaller : MonoBehaviour
     public void SetupCanvas()
     {
         canvas = Instantiate(canvasPrefab);
-        CanvasSystem canvasSystem = canvas.GetComponent<CanvasSystem>();
+        CanvasEnabler canvasEnabler = canvas.GetComponent<CanvasEnabler>();
 
-        if (canvasSystem != null)
+        if (canvasEnabler != null)
         {
-            canvasSystem.Initialize();
-            StartCoroutine(canvasSystem.InitializeChildrenCanvas());
+            canvasEnabler.Initialize();
+            StartCoroutine(canvasEnabler.InitializeChildrenCanvas());
         }
     }
 
     private void SetupCanvasChilds()
     {
-        CanvasSystem canvasSystem = canvas.GetComponent<CanvasSystem>();
+        CanvasEnabler canvasEnabler = canvas.GetComponent<CanvasEnabler>();
 
-        if (canvasSystem != null)
+        if (canvasEnabler != null)
         {
-            canvasSystem.Initialize();
+            canvasEnabler.Initialize();
         }
     }
 
