@@ -27,7 +27,7 @@ public class CardSystem
         //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
         signalHub.Subscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
         signalHub.Subscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
-        signalHub.Subscribe<CardUISystemSignals.CardUsedEvent>(cardManager.CardUsed);
+        signalHub.Subscribe<CardUsedEvent>(cardManager.CardUsed);
         signalHub.Subscribe<CardUISystemSignals.CardUsingFinishedEvent>(cardManager.CardUsingFinished);
     }
 
@@ -35,7 +35,7 @@ public class CardSystem
     {
         signalHub.UnSubscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
         signalHub.UnSubscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
-        signalHub.UnSubscribe<CardUISystemSignals.CardUsedEvent>(cardManager.CardUsed);
+        signalHub.UnSubscribe<CardUsedEvent>(cardManager.CardUsed);
         signalHub.UnSubscribe<CardUISystemSignals.CardUsingFinishedEvent>(cardManager.CardUsingFinished);
     }
 

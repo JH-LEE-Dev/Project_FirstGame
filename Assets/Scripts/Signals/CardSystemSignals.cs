@@ -15,10 +15,12 @@ namespace CardSystemSignals
     public struct CardUsingVerificationEvent 
     {
         public readonly bool bVerified;
+        //public readonly int slotIdx;
 
         public CardUsingVerificationEvent(bool boolean)
         {
             bVerified = boolean;
+            //slotIdx = _slotIdx;
         }
     }
     public struct CardDrawStartEvent  { }
@@ -47,11 +49,11 @@ namespace CardEffectSystemSignal
 
 namespace CardUISystemSignals
 {
-    public struct CardUsedEvent 
+    public struct TryCardUseEvent 
     { 
         public readonly CardDataInstance usedCard;
 
-        public CardUsedEvent(CardDataInstance _usedCard)
+        public TryCardUseEvent(CardDataInstance _usedCard)
         {
             usedCard = _usedCard;
         }

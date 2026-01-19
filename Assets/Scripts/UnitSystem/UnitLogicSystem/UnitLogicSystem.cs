@@ -9,9 +9,11 @@ using WaveSystemSignals;
 using UnitSpawnSystemSignals;
 using System;
 
+//이 클래스 책임이 커질 거 같으므로, 컴포넌트로 기능 분할할 것.
+
 //캐릭터를 상위 모듈에 노출할 때 인터페이스로 묶어서 노출할 것. 이때 CombatReceiver도 private으로 해서 
 //캐릭터를 Facade로 사용할 것.
-public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogicCommandHandler
+public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
 {
     public event Action EnemySpawnedEvent;
     public event Action<Character> CharacterSpawendEvent;
@@ -170,7 +172,7 @@ public class UnitLogicSystem : MonoBehaviour,IUnitLogicSystemActions, IUnitLogic
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
     }
 
-    public bool CanApplyBulletEffect()
+    public CardUsingResult CanApplyBulletEffect(CardDataInstance usedCard)
     {
         return characterUnit.combatEffectReceiver.CanApplyBulletEffect();
     }

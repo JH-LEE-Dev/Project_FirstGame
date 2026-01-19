@@ -50,7 +50,7 @@ public class GameInstaller : MonoBehaviour
         gameController.Initialize(signalHub);
         unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager);
         uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
-        cardManager.Initialize(unitLogicSystem);
+        cardManager.Initialize();
 
         SetupGamePlayScene();
     }

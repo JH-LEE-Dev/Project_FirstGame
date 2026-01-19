@@ -27,9 +27,6 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
     public event Action<CardDataInstance> CardUsedEvent;
     public event Action CardUsingTurnFinishedEvent;
 
-    //외부 의존성
-    private IUnitLogicSystemActions unitLogicSystem;
-
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
@@ -56,9 +53,8 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
 
     private int attackCnt = 1;
 
-    public void Initialize(IUnitLogicSystemActions _unitLogicSystem)
+    public void Initialize()
     {
-        unitLogicSystem = _unitLogicSystem;
     }
 
     public void Release()
@@ -177,7 +173,7 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         CardActionEndScope?.Invoke();
     }
 
-    public void CardUsed(CardUISystemSignals.CardUsedEvent cardUsedEvent)
+    public void CardUsed(CardUsedEvent cardUsedEvent)
     {
         CardDataInstance usedCard = cardUsedEvent.usedCard;
 

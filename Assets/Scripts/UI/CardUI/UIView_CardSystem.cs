@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIView_CardSystem : UIView
 {
     public event Action<int> UICommandCompleteEvent;
-    public event Action<CardDataInstance> CardUsedEvent;
+    public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
 
     //사용 승인을 받은 카드
@@ -104,7 +104,7 @@ public class UIView_CardSystem : UIView
         //카드 사용 승인 대기 카드
         verificationWaitCard = _card;
 
-        CardUsedEvent?.Invoke(_card.CardData);
+        TryCardUseEvent?.Invoke(_card.CardData);
     }
 
     public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.

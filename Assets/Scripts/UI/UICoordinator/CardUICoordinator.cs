@@ -60,8 +60,8 @@ public class CardUICoordinator
 
     private void BindEvent()
     {
-        cardUISystem.CardUsedEvent -= CardUsed;
-        cardUISystem.CardUsedEvent += CardUsed;
+        cardUISystem.TryCardUseEvent -= TryCardUse;
+        cardUISystem.TryCardUseEvent += TryCardUse;
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
         cardUISystem.CardUsingFinishedEvent += CardUsingFinished;
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;
@@ -76,13 +76,13 @@ public class CardUICoordinator
     private void ReleaseEvent()
     {
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;
-        cardUISystem.CardUsedEvent -= CardUsed;
+        cardUISystem.TryCardUseEvent -= TryCardUse;
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
     }
 
-    public void CardUsed(CardDataInstance usedCard)
+    public void TryCardUse(CardDataInstance usedCard)
     {
-        signalHub.Publish(new CardUISystemSignals.CardUsedEvent(usedCard));
+        signalHub.Publish(new CardUISystemSignals.TryCardUseEvent(usedCard));
     }
 
     public void CardDrawFinished(CardDrawFinishedEvent cardDrawFinishedEvent)

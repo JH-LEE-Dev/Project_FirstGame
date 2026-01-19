@@ -5,6 +5,7 @@ using UnityEngine;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using WaveSystemSignals;
+using CardUISystemSignals;
 
 public class UnitSystem
 {
@@ -86,6 +87,7 @@ public class UnitSystem
         signalHub.Subscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
         signalHub.Subscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.Subscribe<TryCardUseEvent>(TryCardUse);
     }
 
     private void UnSubscribeEvents()
@@ -98,6 +100,7 @@ public class UnitSystem
         signalHub.UnSubscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
         signalHub.UnSubscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.UnSubscribe<TryCardUseEvent>(TryCardUse);
     }
 
     private void EnemySpawned()
@@ -128,6 +131,11 @@ public class UnitSystem
     private void PlayerTakeDamage(float damage)
     {
         signalHub.Publish(new PlayerTakeDamageEvent(damage));
+    }
+
+    private void TryCardUse(TryCardUseEvent tryCardUseEvent)
+    {
+        unitLogicSystem.CanApplyBulletEffect(tryCardUseEvent.usedCard);
     }
 
     public void Release()
