@@ -180,12 +180,13 @@ public class GraveyardSystem : MonoBehaviour
         for (int i = 0; i < spawningCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
+            RectTransform rect = performer?.GetComponent<RectTransform>();
             VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
-            if (null == script)
+            if (null == script || null == rect)
                 continue;
 
-            Vector3 midPointPos = midPoint.anchoredPosition;
-            Vector3 endPointPos = cardSystem.GetDeckAnchoredPos();
+            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
+            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetDeckWorldPos(), rect);
 
             // mid
             if (bMidPointRandom)
