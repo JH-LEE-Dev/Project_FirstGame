@@ -35,10 +35,6 @@ public class Character : Unit, ICharacterData
 
     [SerializeField] private Character_Visual character_Visual;
 
-    // Test
-    [SerializeField] private GameObject bspf;
-    private BulletSocketSystem bs;
-
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
     /// </summary>
@@ -68,13 +64,6 @@ public class Character : Unit, ICharacterData
 
         BindEvent();
         character_Visual?.Bind(this, cutsceneComponent);
-
-
-
-        GameObject go = Instantiate(bspf, this.transform);
-        bs = go.GetComponent<BulletSocketSystem>();
-        // Test
-        bs.Init(2);
     }
 
     private void BindEvent()

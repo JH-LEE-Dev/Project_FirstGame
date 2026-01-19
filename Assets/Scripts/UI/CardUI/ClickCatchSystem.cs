@@ -1,18 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class ClickCatchSystem : MonoBehaviour, IPointerClickHandler
+public class ClickCatchSystem : MonoBehaviour
 {
-    [SerializeField] private UIView_CardSystem cardSystem;
+    private UIView_Unit uIView_Unit;
 
-    public void Init(UIView_CardSystem _cardSystem)
+    public void Init(UIView_Unit _uIView_Unit)
     {
-        cardSystem = _cardSystem;
+        uIView_Unit = _uIView_Unit;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Left ||
-            eventData.button == PointerEventData.InputButton.Right)
-            cardSystem?.CancelPreview();
-    }
+
+
 }

@@ -32,7 +32,6 @@ public class UIView_CardSystem : UIView
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
-    [SerializeField] private ClickCatchSystem clickCatchSystem;
 
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
@@ -85,7 +84,6 @@ public class UIView_CardSystem : UIView
         deckSystem?.Init(this);
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
-        clickCatchSystem?.Init(this);
     }
 
     // For PoolingSystem
@@ -113,10 +111,14 @@ public class UIView_CardSystem : UIView
     {
         if (boolean)
         {
-            // 우클릭을 했을 때 이쪽으로 온다. (즉시 사용)
+            // 우클릭을 했을 때 이쪽으로 온다. (마법카드면 즉시 사용버전)
             handSystem?.UseCard(verificationWaitCard);
+            return;
 
-
+            // 불릿 카드라면?
+            int socketIndex = 0; // 넣어져야하는 불릿소켓 인덱스 번호 0~
+            Vector3 pos = default; // UIView_Unit.GetSocketPos(socketIndex);
+            handSystem?.UseCard(verificationWaitCard, socketIndex, pos);
         }
         else
         {
@@ -155,6 +157,22 @@ public class UIView_CardSystem : UIView
     {
         handSystem?.AllCardReturnToPool(state);
     }
+
+
+    // 불릿 카드 사용했을때, 호출되는 함수
+    public void EquipBulletCard(int _index, CardDataInstance _data = null)
+    {
+        // UIView_Unit.EquipBulletCard(_index, _data);
+    }
+
+    // 불릿 카드 뺄 때, 호출되는 함수
+    public void UnEquipBulletCard(int _index)
+    {
+        HandSystem.UnequipBulletToHand(_index);
+    }
+
+
+
     /////////////////
 
     public Vector3 GetGraveAnchoredPos()
