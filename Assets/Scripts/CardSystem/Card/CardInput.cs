@@ -40,7 +40,10 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (owner.CardSystem.WorkingBlock) return;
         if (CardInstanceType.Hand != owner.cardInstanceType) return;
 
-
+        // 사용 가능한 놈들 : 프리뷰 or 패에 있는 카드만 사용 가능.
+        if ((CardState.InHand == owner.cardState ||
+            CardState.Preview == owner.cardState) == false) return;
+        
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             owner.CardSystem.TryUseCard(owner);

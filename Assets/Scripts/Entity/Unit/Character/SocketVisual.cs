@@ -32,12 +32,11 @@ public class SocketVisual : MonoBehaviour
     private float wobblePhase0;
 
 
-    [Header("Equip Impact (0.5s)")]
+    [Header("Equip Impact")]
     [SerializeField] private float impactTotal = 0.4f;
 
     [SerializeField] private float impactScaleUp = 1.3f; 
     [SerializeField] private float scaleUpTime = 0.02f;  
-    [SerializeField] private float scaleDownTime = 0.38f;
 
     [SerializeField] private float hitPressY = 0.04f;    
     [SerializeField] private float hitPressTime = 0.05f; 
@@ -60,9 +59,6 @@ public class SocketVisual : MonoBehaviour
 
     private Vector3 baseVisualLocalPos;
     private Vector3 baseVisualLocalScale;
-
-
-
 
     private void Awake()
     {
@@ -90,6 +86,8 @@ public class SocketVisual : MonoBehaviour
     {
         KillIdleTween();
     }
+
+
 
     public void SetTargetLocalPosition(Vector3 rootLocalPos, bool snap = false)
     {
@@ -268,7 +266,7 @@ public class SocketVisual : MonoBehaviour
         });
     }
 
-    private static float WrapRad(float x)
+    private float WrapRad(float x)
     {
         float twoPi = Mathf.PI * 2f;
         x %= twoPi;
@@ -276,7 +274,7 @@ public class SocketVisual : MonoBehaviour
         return x;
     }
 
-    private static float AsinClamped(float x)
+    private float AsinClamped(float x)
     {
         return Mathf.Asin(Mathf.Clamp(x, -1f, 1f));
     }
