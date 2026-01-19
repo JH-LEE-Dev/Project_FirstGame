@@ -297,9 +297,9 @@ MonoBehaviour:
   - {fileID: 7395640516585700209}
   toDeckDelay: 0.07
   toDeckDuration: 0.7
-  toDeckFirstPointDist: 2
+  toDeckFirstPointDist: 200
   bMidPointRandom: 1
-  toDeckMidPointPower: 1.5
+  toDeckMidPointPower: 150
   toDeckEase: 6
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15

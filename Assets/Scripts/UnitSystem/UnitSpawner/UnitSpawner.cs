@@ -27,7 +27,6 @@ public class UnitSpawner : MonoBehaviour
     private InputManager inputManager;
     private GameServiceLocator gameServiceLocator;
     private IOrbitPathProvider orbitPathProvider;
-    private ISignalSubscriber signalSubscriber;
 
 
     private int curUnitCnt;
@@ -88,29 +87,13 @@ public class UnitSpawner : MonoBehaviour
 
     public void Initiallize(InputManager _inputManager,
         GameServiceLocator _gameServiceLocator,
-        IOrbitPathProvider _orbitPathProvider,
-        ISignalSubscriber _signalSubscriber)
+        IOrbitPathProvider _orbitPathProvider)
     {
-        signalSubscriber = _signalSubscriber;
         inputManager = _inputManager;
         gameServiceLocator = _gameServiceLocator;
         orbitPathProvider = _orbitPathProvider;
 
         SpawnPlayerAndCharacter();
-
-        SubscribeEvents();
-    }
-
-    private void SubscribeEvents()
-    {
-        signalSubscriber.Subscribe<SpawnWaveEvent>(SpawnWave);
-        signalSubscriber.Subscribe<AllEnemyDeadEvent>(ResetCurrentEnemies);
-    }
-
-    private void UnSubscribeEvents()
-    {
-        signalSubscriber.UnSubscribe<SpawnWaveEvent>(SpawnWave);
-        signalSubscriber.UnSubscribe<AllEnemyDeadEvent>(ResetCurrentEnemies);
     }
 
     public void OnDestroy()
@@ -239,7 +222,6 @@ public class UnitSpawner : MonoBehaviour
 
     public void Release()
     {
-        UnSubscribeEvents();
         ReleaseAllEnemy();
     }
 }

@@ -34,16 +34,6 @@ namespace CardSystemSignals
 
 namespace CardEffectSystemSignal
 {
-    public struct CardEffectSystemCommandDispatchEvent 
-    {
-        public CardEffectSystemCommand command;
-
-        public CardEffectSystemCommandDispatchEvent(CardEffectSystemCommand _command)
-        {
-            command = _command;
-        }
-    }
-
     public struct CardEffectStatusCommandDispatchEvent 
     {
         public CardEffectStatusCommand command;

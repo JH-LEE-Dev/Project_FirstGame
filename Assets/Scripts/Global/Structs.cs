@@ -7,10 +7,11 @@ using System.Buffers;
 [Serializable]
 public struct CanvasRoot
 {
-   public Transform screenLayerRoot;
-   public Transform popupLayerRoot;
-   public Transform overlayLayerRoot;
-   public Transform tooltipLayerRoot;
+    public Transform screenLayerRoot;
+    public Transform popupLayerRoot;
+    public Transform overlayLayerRoot;
+    public Transform tooltipLayerRoot;
+    public Transform worldLayerRoot;
 }
 
 public struct ActionData_CardSystem

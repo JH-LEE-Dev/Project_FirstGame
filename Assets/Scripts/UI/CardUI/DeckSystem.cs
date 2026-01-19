@@ -36,9 +36,6 @@ public class DeckSystem : MonoBehaviour,
     [Space]
     [SerializeField] private bool bMidPointRandom = false;
     [SerializeField] private float drawMidPointPower = 2f;
-    [Space]
-    [SerializeField] private bool bEndPointRandom = false;
-    [SerializeField] private float drawEndPointPower = 2f;
     [SerializeField] private Ease drawEase = Ease.OutQuad;
 
     [Header("Enter Event Settings")]
@@ -138,12 +135,13 @@ public class DeckSystem : MonoBehaviour,
         for (int i = 0; i < currentDrawCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
+            RectTransform rect = performer?.GetComponent<RectTransform>();
             VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
-            if (null == script)
+            if (null == script || null == rect)
                 continue;
 
-            Vector3 midPointPos = midPoint.position;
-            Vector3 endPointPos = cardSystem.GetHandTargetEndPos(i);
+            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
+            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetHandTargetEndPos(i), rect);
 
             // mid
             if (bMidPointRandom)
@@ -156,12 +154,7 @@ public class DeckSystem : MonoBehaviour,
             Vector3 firstPointPos = midPointPos;
             firstPointPos.x += drawFirstPointDist;
 
-            // end
-            if (bEndPointRandom)
-                endPointPos.x += Random.Range(-1f, 1f) * drawEndPointPower;
-
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
-
             script.CardDataInstance = dataList[i];
             script.PlayingEventforDeck(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
         }

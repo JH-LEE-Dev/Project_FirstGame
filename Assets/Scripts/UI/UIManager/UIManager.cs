@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     protected Transform popupLayerRoot;
     protected Transform overlayLayerRoot;
     protected Transform tooltipLayerRoot;
+    protected Transform worldLayerRoot;
 
     [Header("등록된 UIView Prefab들")]
     [SerializeField] private List<UIView> viewPrefabs = new List<UIView>();
@@ -28,6 +29,7 @@ public class UIManager : MonoBehaviour
         popupLayerRoot = canvasRoot.popupLayerRoot;
         overlayLayerRoot = canvasRoot.overlayLayerRoot;
         tooltipLayerRoot = canvasRoot.tooltipLayerRoot;
+        worldLayerRoot = canvasRoot.worldLayerRoot;
     }
 
     public void Initialize(InputManager inputManager)
@@ -150,6 +152,7 @@ public class UIManager : MonoBehaviour
             case UILayer.Popup: return popupLayerRoot;
             case UILayer.Overlay: return overlayLayerRoot;
             case UILayer.Tooltip: return tooltipLayerRoot;
+            case UILayer.World: return worldLayerRoot;
             default: return screenLayerRoot;
         }
     }

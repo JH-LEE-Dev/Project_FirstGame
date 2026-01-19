@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
@@ -14,30 +15,45 @@ public class VFX_TargetBarStar : MonoBehaviour
     [SerializeField] private Ease ease = Ease.Linear;
 
     private RectTransform mainRect;
-    private ParticleSystem particle;
-    private TrailRenderer trail;
+    private ParticleSystem[] particles;
     private Sequence seq;
 
     private void Awake()
     {
         mainRect = GetComponent<RectTransform>();
-        particle = GetComponentInChildren<ParticleSystem>();
-        trail = GetComponentInChildren<TrailRenderer>();
+        particles = GetComponentsInChildren<ParticleSystem>();
+
+        foreach(ParticleSystem vfx in particles)
+        {
+            if (vfx)
+            {
+                var main = vfx.main;
+                main.simulationSpace = ParticleSystemSimulationSpace.Custom;
+                main.customSimulationSpace = GetComponentInParent<Canvas>().transform;
+            }
+        }
     }
 
     private void OnDisable()
     {
         visualRect?.DOKill();
         seq?.Kill();
-        trail.Clear();
     }
 
     public bool CheckAliveParticle()
     {
-        if (null == particle)
-            return false;
+        int vfxCnt = particles.Count();
+        for (int i = 0; i < vfxCnt; ++i)
+        {
+            bool checker = particles[i].IsAlive();
 
-        return particle.IsAlive(true);
+            if (false == checker)
+                continue;
+
+            return checker;
+        }
+
+        return false;
     }
 
     public void Play(Vector2 finalAnchoredPos, Action callback = null)
@@ -77,8 +93,8 @@ public class VFX_TargetBarStar : MonoBehaviour
 
         seq.OnStart(() =>
         {
-            particle?.Play(true);
-            trail.Clear();
+            foreach (ParticleSystem vfx in particles)
+                vfx?.Play(true);
 
             Rotate_Infinity();
             visualRect.gameObject.SetActive(true);
@@ -86,7 +102,9 @@ public class VFX_TargetBarStar : MonoBehaviour
 
         seq.OnComplete(() =>
         {
-            particle?.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            foreach (ParticleSystem vfx in particles)
+                vfx?.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
             callback?.Invoke();
         });
     }

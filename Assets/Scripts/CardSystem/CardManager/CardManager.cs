@@ -11,9 +11,24 @@ using UnityEngine.Pool;
 
 public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystemData
 {
+    public delegate void CardPileDrawDelegate(ReadOnlySpan<CardDataInstance> cards);
+    public delegate void CardAdditionalDrawDelegate(ReadOnlySpan<CardDataInstance> cards);
+    public delegate void GraveToDeckDelegate(ReadOnlySpan<CardDataInstance> cards);
+    public delegate void HandToGraveDelegate(ReadOnlySpan<CardDataInstance> cards);
+    public event CardPileDrawDelegate CardPileDrawEvent;
+    public event CardAdditionalDrawDelegate CardAdditionalDrawEvent;
+    public event GraveToDeckDelegate GraveToDeckEvent;
+    public event HandToGraveDelegate HandToGraveEvent;
+    public event Action CardDrawStartEvent;
+    public event Action CardActionBeginScope;
+    public event Action CardActionEndScope;
+    public event Action CardDrawFinishedEvent;
+    public event Action<bool> CardUsingVerificationEvent;
+    public event Action<CardDataInstance> CardUsedEvent;
+    public event Action CardUsingTurnFinishedEvent;
+
     //외부 의존성
     private IUnitLogicSystemActions unitLogicSystem;
-    private SignalHub signalHub;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
@@ -41,35 +56,14 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
 
     private int attackCnt = 1;
 
-    public void Initialize(IUnitLogicSystemActions _unitLogicSystem, SignalHub _signalHub)
+    public void Initialize(IUnitLogicSystemActions _unitLogicSystem)
     {
         unitLogicSystem = _unitLogicSystem;
-        signalHub = _signalHub;
-
-        SubscribeEvents();
-    }
-
-    private void SubscribeEvents()
-    {
-        signalHub.Subscribe<CardEffectSystemCommandDispatchEvent>(InsertCommand);
-        signalHub.Subscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
-        signalHub.Subscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
-        signalHub.Subscribe<CardUISystemSignals.CardUsedEvent>(CardUsed);
-        signalHub.Subscribe<CardUISystemSignals.CardUsingFinishedEvent>(CardUsingFinished);
-    }
-
-    private void UnSubscribeEvents()
-    {
-        signalHub.UnSubscribe<CardEffectSystemCommandDispatchEvent>(InsertCommand);
-        signalHub.UnSubscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
-        signalHub.UnSubscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
-        signalHub.UnSubscribe<CardUISystemSignals.CardUsedEvent>(CardUsed);
-        signalHub.UnSubscribe<CardUISystemSignals.CardUsingFinishedEvent>(CardUsingFinished);
     }
 
     public void Release()
     {
-        UnSubscribeEvents();
+
     }
 
     public void Awake()
@@ -152,9 +146,9 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         }
 
         if (bAdditional == false)
-            signalHub.Publish<CardPileDrawEvent, CardDataInstance>(new CardPileDrawEvent(), rentalBuffer.Span);
+            CardPileDrawEvent?.Invoke(rentalBuffer.Span);
         else
-            signalHub.Publish<CardAdditionalDrawEvent, CardDataInstance>(new CardAdditionalDrawEvent(), rentalBuffer.Span);
+            CardAdditionalDrawEvent?.Invoke(rentalBuffer.Span);
 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
@@ -168,19 +162,19 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
 
     private void StartCardPileDraw(int amount)
     {
-        signalHub.Publish(new CardDrawStartEvent());
+        CardDrawStartEvent?.Invoke();
 
         CardPileDraw(amount, false);
-        signalHub.EndScope<CardActionScope>(new CardActionScope());
+        CardActionEndScope?.Invoke();
 
-        signalHub.Publish(new CardDrawFinishedEvent());
+        CardDrawFinishedEvent?.Invoke();
     }
 
     private void CardAdditionalPileDraw(int amount)
     {
         CardPileDraw(amount, true);
 
-        signalHub.EndScope<CardActionScope>(new CardActionScope());
+        CardActionEndScope?.Invoke();
     }
 
     public void CardUsed(CardUISystemSignals.CardUsedEvent cardUsedEvent)
@@ -193,7 +187,7 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
             if (unitLogicSystem.CanApplyBulletEffect() == false)
             {
                 // 불릿 카드를 더 이상 적용할 수 없는 상태임.
-                signalHub.Publish(new CardUsingVerificationEvent(false));
+                CardUsingVerificationEvent?.Invoke(false);
                 return;
             }
         }
@@ -202,8 +196,8 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         gravePile.Add(usedCard);
         ++graveCnt;
 
-        signalHub.Publish(new CardUsingVerificationEvent(true));
-        signalHub.Publish(new CardSystemSignals.CardUsedEvent(usedCard));
+        CardUsingVerificationEvent?.Invoke(true);
+        CardUsedEvent?.Invoke(usedCard);
 
         ExecuteSystemAction_BeforeAttack();
     }
@@ -256,7 +250,7 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
 
         gravePile.Clear();
 
-        signalHub.Publish<GraveToDeckEvent, CardDataInstance>(new GraveToDeckEvent(), rentalBuffer.Span);
+        GraveToDeckEvent?.Invoke(rentalBuffer.Span);
         rentalBuffer.Dispose();
     }
 
@@ -266,10 +260,8 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         ExecuteSystemAction_BeforeTurn();
     }
 
-    public void InsertCommand(CardEffectSystemCommandDispatchEvent effectCommandEvent)
+    public void InsertCommand(CardEffectSystemCommand effectCommand)
     {
-        var effectCommand = effectCommandEvent.command;
-
         CardSystemActionTimingType timing = effectCommand.GetCardSystemActionTimingType();
 
         if (timing == CardSystemActionTimingType.BeforeAttack)
@@ -363,12 +355,12 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         {
             HandToGrave();
 
-            signalHub.Publish<HandToGraveEvent, CardDataInstance>(new HandToGraveEvent(), null);
-            signalHub.EndScope<CardActionScope>(new CardActionScope());
+            HandToGraveEvent?.Invoke(null);
+            CardActionEndScope?.Invoke();
         }
         else
         {
-            signalHub.Publish(new CardUsingTurnFinishedEvent());
+            CardUsingTurnFinishedEvent?.Invoke();
         }
     }
 
@@ -384,6 +376,6 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
 
     public void CardUsingFinished(CardUISystemSignals.CardUsingFinishedEvent cardUsingFinishedEvent)
     {
-        signalHub.Publish(new CardUsingTurnFinishedEvent());
+        CardUsingTurnFinishedEvent?.Invoke();
     }
 }

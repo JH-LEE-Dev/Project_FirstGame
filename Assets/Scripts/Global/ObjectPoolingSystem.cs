@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -23,7 +24,7 @@ public class ObjectPoolingSystem : MonoBehaviour
 
     private GameObject PoolCreate()
     {
-        return Instantiate(prefab, this.transform);
+        return Instantiate(prefab, transform);
     }
 
     private void PoolGet(GameObject target)

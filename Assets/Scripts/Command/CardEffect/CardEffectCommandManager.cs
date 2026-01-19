@@ -7,33 +7,18 @@ using UnityEngine;
 
 public class CardEffectCommandManager : MonoBehaviour
 {
-    //외부 의존성
-    private SignalHub signalHub;
+    public event Action<CardEffectSystemCommand> SystemCommandDispatchEvent;
+    public event Action<CardEffectStatusCommand> StatusCommandDispatchEvent;
 
     [SerializeField] private List<CardEffectStatusCommand> cardStatusCommands = new List<CardEffectStatusCommand>();
     [SerializeField] private List<CardEffectSystemCommand> cardSystemCommands = new List<CardEffectSystemCommand>();
 
-    public void Initialize(SignalHub _signalHub)
+    public void Initialize()
     {
-        signalHub = _signalHub;
-
-        SubscribeEvent();
     }
 
-    private void SubscribeEvent()
+    public void AnalysisCardEffect(CardDataInstance usedCard)
     {
-        signalHub.Subscribe<CardUsedEvent>(AnalysisCardEffect);
-    }
-
-    private void UnSubscribeEvent()
-    {
-        signalHub.UnSubscribe<CardUsedEvent>(AnalysisCardEffect);
-    }
-
-    public void AnalysisCardEffect(CardUsedEvent cardUsedEvent)
-    {
-        CardDataInstance usedCard = cardUsedEvent.usedCard;
-
         List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
         List<CardSystemEffectType> cardSystemEffectTypes = usedCard.GetCardData().cardSystemEffects;
 
@@ -41,19 +26,18 @@ public class CardEffectCommandManager : MonoBehaviour
         {
             CardEffectStatusCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
 
-            signalHub.Publish(new CardEffectStatusCommandDispatchEvent(effectCommand));
+            StatusCommandDispatchEvent?.Invoke(effectCommand);
         }
 
         for (int i = 0; i < cardSystemEffectTypes.Count; ++i)
         {
             CardEffectSystemCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
 
-            signalHub.Publish(new CardEffectSystemCommandDispatchEvent(effectCommand));
+            SystemCommandDispatchEvent?.Invoke(effectCommand);
         }
     }
 
     public void Release()
     {
-        UnSubscribeEvent();
     }
 }
