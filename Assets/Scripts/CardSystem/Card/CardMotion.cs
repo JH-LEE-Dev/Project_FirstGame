@@ -337,6 +337,7 @@ public class CardMotion : MonoBehaviour
 
     public void FlyToHand()
     {
-
+        // юс╫ц
+        AllKillTweens();
     }
 }
