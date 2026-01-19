@@ -1,7 +1,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class SocketCardInstance : CardInstance
+public class SocketCardInstance : CardInstance, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int socketIndex { get; private set; }
     private BulletSocketSystem bulletSocketSystem;
