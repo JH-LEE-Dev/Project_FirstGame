@@ -6,7 +6,6 @@ using UnityEngine.Rendering.Universal;
 
 public class GameplayUIInstaller : MonoBehaviour
 {
-
     //외부 의존성
     private InputManager inputManager;
     private IBootStrapProvider bootStrapProvider;
