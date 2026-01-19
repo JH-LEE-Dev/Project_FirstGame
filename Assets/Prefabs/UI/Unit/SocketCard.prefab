@@ -465,6 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3029011206427382975}
   - component: {fileID: 5838685573002921066}
+  - component: {fileID: 9191606903517851807}
   m_Layer: 0
   m_Name: SocketCard
   m_TagString: Untagged
@@ -507,6 +508,19 @@ MonoBehaviour:
   cardDescription: {fileID: 2650703344419555068}
   rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
   extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
+--- !u!114 &9191606903517851807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8825815609802249459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b50db536b45207c42895ef82910c3cb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldCanvasEnabler
+  canvas: {fileID: 6823371282886669641}
 --- !u!1 &9163349764349850566
 GameObject:
   m_ObjectHideFlags: 0
