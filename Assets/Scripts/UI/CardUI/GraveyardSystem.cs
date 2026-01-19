@@ -184,8 +184,8 @@ public class GraveyardSystem : MonoBehaviour
             if (null == script)
                 continue;
 
-            Vector3 midPointPos = midPoint.position;
-            Vector3 endPointPos = cardSystem.GetDeckWorldPos();
+            Vector3 midPointPos = midPoint.anchoredPosition;
+            Vector3 endPointPos = cardSystem.GetDeckAnchoredPos();
 
             // mid
             if (bMidPointRandom)

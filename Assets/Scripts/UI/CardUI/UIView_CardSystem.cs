@@ -197,8 +197,6 @@ public class UIView_CardSystem : UIView
         if (null == handSystem)
             return Vector2.zero;
 
-        Camera cam = Camera.main;
-
         int currHandCnt = handSystem.GetCurrentHandCardCount();
         Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
 
@@ -266,6 +264,18 @@ public class UIView_CardSystem : UIView
             return Vector3.zero;
 
         return deckSystem.transform.position;
+    }
+
+    public Vector2 GetDeckAnchoredPos()
+    {
+        if (null == deckSystem)
+            return Vector2.zero;
+
+        RectTransform Rt = deckSystem.GetComponent<RectTransform>();
+        if(null == Rt)
+            return Vector2.zero;
+
+        return Rt.anchoredPosition;
     }
 
     public GameObject GetStarPerformerFromPool(Transform target)
