@@ -1328,8 +1328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1996020dd1586a048b83f20222ccab3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CanvasSystem
-  canvas: {fileID: 1108041376833722446}
-  unitforSorting: 5
 --- !u!1 &2252223581178452936
 GameObject:
   m_ObjectHideFlags: 0
