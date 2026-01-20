@@ -139,13 +139,14 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    public void UseCard(MainCardInstance _card, int socketIndex = 0)
+    public void UseCard(MainCardInstance _card, int socketIndex = 0, Vector3 _pos = default)
     {
         if (_card == null) return;
 
         int idx = cards.IndexOf(_card);
         if (idx < 0) return;
-
+        if (_pos == default)
+            _pos = Vector3.zero;
 
         // 프리뷰 카드 사용이라면 프리뷰 상태 정리
         if (previewCard == _card)
@@ -167,7 +168,7 @@ public class HandSystem : MonoBehaviour
         switch (type)
         {
             case CardType.Bullet:
-                EquipBullet(_card, socketIndex);
+                EquipBullet(_card, socketIndex, _pos);
                 break;
 
             case CardType.Magic:
@@ -176,7 +177,7 @@ public class HandSystem : MonoBehaviour
         }
 
     }
-    private void EquipBullet(MainCardInstance card, int socketIndex)
+    private void EquipBullet(MainCardInstance card, int socketIndex, Vector3 socketPos)
     {
         if (card == null) return;
         if (socketIndex < 0) return;
@@ -192,20 +193,15 @@ public class HandSystem : MonoBehaviour
         hoveredCard = null;
         computeArc();
 
-        // 임시
-        Vector2 socketPos = new Vector2(0, 0);
-
         card.Motion.FlyToBulletSocket(socketPos, () =>
         {
             card.SetUIState(CardState.Equipped);
             card.Motion.SetSocketIndex(socketIndex);
             card.Motion.AllKillTweens();
+            card.SetVisible(false);
 
-            // 5) Hand 카드 “눈속임으로” 숨기기 (SetActive(false) 대신 추천: CanvasGroup alpha 0)
-            card.SetVisible(false); // 아래 3)에서 구현 예시 제공
+            cardSystem.EquipBulletCard(socketIndex, card.CardData);
         });
-
-
     }
 
     // 실제로 누른것은 슬롯에 있는 카드 모습일 것이기 때문에, 어떤 소켓번호에 있는 카드를 눌렀다고 정보를 받을것임.
@@ -226,11 +222,7 @@ public class HandSystem : MonoBehaviour
             // 크기만 다시 패 크기로 돌려놓으면, 알아서 패 레이아웃으로 갈 것임. 
             card.Motion.FlyToHand();
             card.Motion.SetSocketIndex(-1);
-
         }
-
-        // 소켓쪽 UI 끄기(그쪽 시스템에 요청)
-        // 현재 통신안되는중. 추후 여기다가 넣기.
 
         computeArc();
     }

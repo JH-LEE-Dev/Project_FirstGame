@@ -25,8 +25,9 @@ public class BulletSocketSystem : MonoBehaviour
     private readonly List<SocketVisual> sockets = new();
     private readonly List<SocketCardInstance> cards = new();
 
+    private UIView_Unit uIView_Unit;
 
-    public void Init(int _slotCount)
+    public void Init(int _slotCount, UIView_Unit _uIView_Unit)
     {
         if (pivot == null) { enabled = false; return; }
 
@@ -34,6 +35,7 @@ public class BulletSocketSystem : MonoBehaviour
         BuildCardIntanceIfneeded();
 
         SetCount(_slotCount);
+        uIView_Unit = _uIView_Unit;
     }
 
     // 풀링 함수
@@ -183,5 +185,6 @@ public class BulletSocketSystem : MonoBehaviour
         }
 
         socketVisual.PlayUnequip();
+        uIView_Unit.UnEquipBulletCard(_index);
     }
 }

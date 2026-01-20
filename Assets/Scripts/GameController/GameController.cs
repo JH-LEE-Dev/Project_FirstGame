@@ -58,6 +58,10 @@ public class GameController : MonoBehaviour
         GS_WaveEnded waveEnded = new GS_WaveEnded();
         waveEnded.Initialize(signalHub, gameStateMachine);
         gameStateMachine.AddState(waveEnded);
+
+        GS_ShopTime shopTime = new GS_ShopTime();
+        shopTime.Initialize(signalHub, gameStateMachine);
+        gameStateMachine.AddState(shopTime);
     }
 
     public void GameStart()

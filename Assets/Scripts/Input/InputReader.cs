@@ -8,6 +8,8 @@ public class InputReader
     public event Action<Vector2> PointerPositionEvent;
     public event Action FireButtonPressedEvent;
     public event Action ESCButtonPressedEvent;
+    public event Action<Vector2> LeftClickEvent;
+    public event Action<Vector2> RightClickEvent;
 
     private InputActionSystem actions;
 
@@ -22,6 +24,8 @@ public class InputReader
             actions.Combat.PointerPositioned.performed += OnPointerPosition;
             actions.Combat.Fire.performed += OnFireButtonPressed;
             actions.Combat.ESC.performed += OnESCButtonPressed;
+            actions.Combat.LeftClick.performed += OnLeftButtonPressed;
+            actions.Combat.RightClick.performed += OnRightButtonPressed;
         }
 
         actions.Combat.Enable();
@@ -34,7 +38,9 @@ public class InputReader
         actions.Combat.Move.canceled -= OnMove;
         actions.Combat.PointerPositioned.canceled -= OnPointerPosition;
         actions.Combat.Fire.performed -= OnFireButtonPressed;
-        actions.Combat.ESC.performed -= OnESCButtonPressed;
+        actions.Combat.ESC.performed -= OnESCButtonPressed; 
+        actions.Combat.LeftClick.performed -= OnLeftButtonPressed;
+        actions.Combat.RightClick.performed -= OnRightButtonPressed;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -67,5 +73,19 @@ public class InputReader
         PointerPositionEvent = null;
         MoveEvent = null;
         FireButtonPressedEvent = null;
+    }
+
+    private void OnLeftButtonPressed(InputAction.CallbackContext context)
+    {
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+
+        LeftClickEvent?.Invoke(mouseScreenPos);
+    }
+
+    private void OnRightButtonPressed(InputAction.CallbackContext context)
+    {
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+
+        RightClickEvent?.Invoke(mouseScreenPos);
     }
 }
