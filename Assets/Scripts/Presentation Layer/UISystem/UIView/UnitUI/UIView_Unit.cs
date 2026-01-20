@@ -1,0 +1,115 @@
+using UnityEngine;
+using System;
+
+public class UIView_Unit : UIView
+{
+    public event Action<int> UnEquipBulletCardEvent;
+    public event Action CancelCardPreviewEvent;
+
+    [Header("UI References")]
+    [SerializeField] private Transform uiRoot;
+
+    ICharacterData characterData;
+
+
+    [Header("Systems")]
+    [SerializeField] private GameObject bulletSocketSystemPrefab;
+    private BulletSocketSystem bulletsocketSystem;
+
+    [SerializeField] private GameObject clickCatchSystemPrefab;
+    private ClickCatchSystem clickCatchSystem;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    public void DataInjection()
+    {
+       
+    }
+
+    public void Initialize(ICharacterData _characterData)
+    {
+        characterData = _characterData;
+
+        InitializeBulletSocketSystem();
+        InitializeClickCatchSystem();
+    }
+
+    private void InitializeBulletSocketSystem()
+    {
+        GameObject go = Instantiate(bulletSocketSystemPrefab, characterData.GetTransform());
+        bulletsocketSystem = go.GetComponent<BulletSocketSystem>();
+
+        // 임시 2개
+        bulletsocketSystem.Init(2, this);
+    }
+
+    private void InitializeClickCatchSystem()
+    {
+        GameObject go = Instantiate(clickCatchSystemPrefab, this.transform);
+        clickCatchSystem = go.GetComponent<ClickCatchSystem>();
+
+        clickCatchSystem.Init(this);
+    }
+
+
+
+    public override void Update()
+    {
+        base.Update();
+    }
+
+    protected override void OnShow()
+    {
+        base.OnShow();
+    }
+
+    protected override void OnHide()
+    {
+        base.OnHide();
+    }
+
+
+
+
+    // For ClickCatchSystem
+
+    // 이게 호출될 때, UIView_CardSystem에 있는 CancelPreview() 함수가 호출되어야 함.
+    public void CancelPreview()
+    {
+        CancelCardPreviewEvent?.Invoke();
+    }
+
+
+
+    // For BulletSocketSystem
+
+    public Vector3 GetSocketPos(int _index)
+    {
+        if (bulletsocketSystem == null) return Vector3.zero;
+
+        return bulletsocketSystem.GetSocketTransform(_index).position;
+    }
+
+
+    // 인게임 중에, 플레이어의 카드 슬롯 개수를 변경해주는 함수. 아직은 필요가 없다.
+    public void SetBulletSocketCount(int _count)
+    {
+        bulletsocketSystem?.SetCount(_count);
+    }
+
+    public void EquipBulletCard(int _index, CardDataInstance _data = null)
+    {
+        bulletsocketSystem?.EquipBulletCard(_index, _data);
+    }
+
+    // 이쪽에서 장착을 취소하면, 이게 호출됨. UIView_CardSystem에서 UnEquipBulletCard가 불려야함.
+    public void UnEquipBulletCard(int _index)
+    {
+        UnEquipBulletCardEvent?.Invoke(_index);
+    }
+
+}
