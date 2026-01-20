@@ -21,17 +21,6 @@ public enum SceneType
     Gameplay
 }
 
-public enum ElementType
-{
-    Rotation, // ·ÎÅ×ÀÌ¼Ç
-    Extinction, // ¼Ò¸ê
-}
-
-public enum UsingType
-{
-    Nesting // ÁßÃ¸
-}
-
 public enum CardInstanceType
 {
     Hand,
