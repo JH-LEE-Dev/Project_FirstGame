@@ -15,10 +15,10 @@ public enum Dir
     Left,
 }
 
-public enum CardType
+public enum SceneType
 {
-    Bullet,
-    Magic,
+    MainMenu,
+    Gameplay
 }
 
 public enum ElementType
@@ -30,57 +30,6 @@ public enum ElementType
 public enum UsingType
 {
     Nesting // ÁßÃ¸
-}
-
-public enum SceneType
-{
-    MainMenu,
-    Gameplay
-}
-
-public enum PlayerTurnStateProcess
-{
-    CardDraw,
-    CardUsing,
-    Fire,
-}
-
-//cardID¿Í È£È¯µÊ.
-public enum CardName
-{
-    BonusDamage,
-    DrawAgain,
-    MeteorShower,
-    Flare,
-    Shield
-}
-
-public enum CardEffectApplyType
-{
-    Status,
-    System
-}
-
-
-public enum CardStatusEffectType
-{
-    BonusDamage,
-    Shield
-}
-
-public enum CardSystemEffectType
-{
-    DrawAgain,
-    MeteorShower,
-    Flare,
-    AttackAgain
-}
-
-public enum CardSystemActionTimingType
-{
-    BeforeAttack,
-    AfterAttack,
-    NextTurn,
 }
 
 public enum CardInstanceType
@@ -105,14 +54,6 @@ public enum CurrentPannel
     Grave,
     Extinction,
     NONE
-}
-
-public enum ActionType_CardSystem
-{
-    PileDraw,
-    AdditionalDraw,
-    GraveToDeck,
-    HandToGrave
 }
 
 public enum CombatActionSignal

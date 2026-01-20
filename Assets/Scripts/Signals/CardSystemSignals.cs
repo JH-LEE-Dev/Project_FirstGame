@@ -2,27 +2,15 @@
 namespace CardSystemSignals
 { 
     public struct CardDrawFinishedEvent { }
-    public struct CardUsingTurnFinishedEvent { }
     public struct CardUsedEvent
     {
-        public readonly CardDataInstance usedCard;
-        int slotIdx;
+        public bool bVerified;
+        public int slotIdx;
 
-        public CardUsedEvent(CardDataInstance _usedCard, int _slotIdx)
+        public CardUsedEvent(bool _bVerified, int _slotIdx)
         {
-            usedCard = _usedCard;
+            bVerified = _bVerified; 
             slotIdx = _slotIdx;
-        }
-    }
-    public struct CardUsingVerificationEvent 
-    {
-        public readonly bool bVerified;
-        //public readonly int slotIdx;
-
-        public CardUsingVerificationEvent(bool boolean)
-        {
-            bVerified = boolean;
-            //slotIdx = _slotIdx;
         }
     }
     public struct CardDrawStartEvent  { }
@@ -50,11 +38,11 @@ namespace CardSystemSignals
 
 namespace CardEffectSystemSignal
 {
-    public struct CardEffectStatusCommandDispatchEvent 
+    public struct CardStatusEffectCommandDispatchEvent 
     {
-        public CardEffectStatusCommand command;
+        public ICardStatusEffectCommand command;
 
-        public CardEffectStatusCommandDispatchEvent(CardEffectStatusCommand _command)
+        public CardStatusEffectCommandDispatchEvent(ICardStatusEffectCommand _command)
         {
             command = _command;
         }

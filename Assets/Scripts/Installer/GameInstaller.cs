@@ -13,7 +13,7 @@ public class GameInstaller : MonoBehaviour
     private CameraController cameraController;
     private GameServiceLocator gameServiceLocator;
     private CardManager cardManager;
-    private CardEffectCommandManager cardEffectCommandManager;
+    private CardSystemController cardSystemController;
     private UnitLogicSystem unitLogicSystem;
     private EnvironmentManager environmentManager;
     private GameplayUIInstaller uiInstaller;
@@ -34,23 +34,23 @@ public class GameInstaller : MonoBehaviour
         gameServiceLocator = new GameServiceLocator();
         signalHub = new SignalHub();
         cardManager = GetComponent<CardManager>();
-        cardEffectCommandManager = GetComponent<CardEffectCommandManager>();
+        cardSystemController = GetComponent<CardSystemController>();
         unitLogicSystem = GetComponent<UnitLogicSystem>();
         environmentManager = GetComponentInChildren<EnvironmentManager>();
         uiInstaller = GetComponentInChildren<GameplayUIInstaller>();
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
 
-        cardSystem.Initialize(signalHub,cardManager, cardEffectCommandManager);
+        cardSystem.Initialize(signalHub,cardManager, cardSystemController);
         unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
         unitLogicSystem.Initialize();
-        cardEffectCommandManager.Initialize();
+        cardSystemController.Initialize();
         waveManager.Initialize(signalHub,waveDatabase);
         gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
         unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager);
-        uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
         cardManager.Initialize();
+        uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
 
         SetupGamePlayScene();
     }
@@ -74,7 +74,7 @@ public class GameInstaller : MonoBehaviour
         unitLogicSystem.Release();
         gameController.Release();
         cardManager.Release();
-        cardEffectCommandManager.Release();
+        cardSystemController.Release();
         waveManager.Release();
         uiInstaller.Release();
     }

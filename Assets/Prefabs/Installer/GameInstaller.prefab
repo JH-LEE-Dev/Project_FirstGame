@@ -5418,8 +5418,8 @@ GameObject:
   - component: {fileID: 8153118365009102916}
   - component: {fileID: 6241203287682593722}
   - component: {fileID: 2872902873382345209}
-  - component: {fileID: -3014418931989348951}
   - component: {fileID: -1934595178798189937}
+  - component: {fileID: 3996470548536073360}
   m_Layer: 0
   m_Name: GameInstaller
   m_TagString: Untagged
@@ -5510,28 +5510,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
-  drawCardCnt: 5
+  cardPileDrawAmount: 5
   initialDeckCnt: 10
---- !u!114 &-3014418931989348951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3132615358195672310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff534d53caf633498282d9ab2875b4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardEffectManager
-  cardStatusCommands:
-  - {fileID: 11400000, guid: cb7784a0a1a26be41b06bd03f6f2a8b9, type: 2}
-  - {fileID: 11400000, guid: 8ca12cec04b3a424d8eea19f235c082d, type: 2}
-  cardSystemCommands:
-  - {fileID: 11400000, guid: ac242b3e0727ff44abd729273aaa8601, type: 2}
-  - {fileID: 11400000, guid: 7e851f1c960a27844a0ed53368046151, type: 2}
-  - {fileID: 11400000, guid: 90ae2b86987e8ee4987f66aa1df35438, type: 2}
-  - {fileID: 11400000, guid: 6b76439a1742a2246bb0a8b6d72b704f, type: 2}
 --- !u!114 &-1934595178798189937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5544,6 +5524,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e437e571287371c4eb8ab34446b720b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitLogicSystem
+--- !u!114 &3996470548536073360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132615358195672310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e080770805085543bc0794841b6dd62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSystemController
+  cardStatusCommands:
+  - {fileID: 11400000, guid: cb7784a0a1a26be41b06bd03f6f2a8b9, type: 2}
+  - {fileID: 11400000, guid: 8ca12cec04b3a424d8eea19f235c082d, type: 2}
+  cardSystemCommands:
+  - {fileID: 11400000, guid: ac242b3e0727ff44abd729273aaa8601, type: 2}
+  - {fileID: 11400000, guid: 7e851f1c960a27844a0ed53368046151, type: 2}
+  - {fileID: 11400000, guid: 90ae2b86987e8ee4987f66aa1df35438, type: 2}
+  cardSystemActionCommands_BeforeTurn:
+  - {fileID: 11400000, guid: c226817e29eec994a88b90e277dca034, type: 2}
+  cardSystemActionCommands_BeforeAttack: []
+  cardSystemActionCommands_AfterAttack: []
 --- !u!1 &3851426605135345241
 GameObject:
   m_ObjectHideFlags: 0

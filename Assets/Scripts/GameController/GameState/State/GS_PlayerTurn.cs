@@ -23,15 +23,15 @@ public class GS_PlayerTurn : GameState
 
     protected override void SubscribeEvents()
     {
-        signalHub.Subscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
+        signalHub.Subscribe<PlayerAttackFinishedEvent>(PlayerTurnFinished);
     }
 
     protected override void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<PlayerTurnFinishedEvent>(PlayerTurnFinished);
+        signalHub.UnSubscribe<PlayerAttackFinishedEvent>(PlayerTurnFinished);
     }
 
-    private void PlayerTurnFinished(PlayerTurnFinishedEvent playerTurnFinishedEvent)
+    private void PlayerTurnFinished(PlayerAttackFinishedEvent playerTurnFinishedEvent)
     {
         gameStateMachine.ChangeState<GS_EnemyTurn>();
     }

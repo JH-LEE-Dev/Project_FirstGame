@@ -10,8 +10,6 @@ public class Unit : MonoBehaviour, IDamageable
     /// 시스템 속성 존. ----------------------------------------
     /// </summary>
     public event Action<Unit> UnitIsDeadEvent;
-    [Header("Command System")]
-    protected readonly Queue<ICommand> commandQueue = new Queue<ICommand>();
 
     protected InputManager inputManager;
     protected GameServiceLocator gameServiceLocator;
@@ -60,40 +58,6 @@ public class Unit : MonoBehaviour, IDamageable
     {
         bDead = true;
         UnitIsDead();
-    }
-
-
-    public void ProcessNextCommand()
-    {
-        if (commandQueue == null)
-        {
-            Debug.Log("commandQueue is null -> Entity::ProcessNextCommand");
-            return;
-        }
-
-        if (commandQueue.Count == 0)
-            return;
-
-        ICommand command = commandQueue.Dequeue();
-
-        if (command == null)
-        {
-            Debug.Log("command is null -> Entity::ProcessNextCommand");
-            return;
-        }
-
-        command.Execute(this);
-    }
-
-    public void EnqueueCommand(ICommand command)
-    {
-        if (command == null)
-        {
-            Debug.Log("command is null -> Entity::EnqueueCommand");
-            return;
-        }
-
-        commandQueue.Enqueue(command);
     }
 
     protected virtual void OnDestroy()
@@ -158,8 +122,6 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected virtual void Update()
     {
-        //미구현. 신경쓰지 마쇼
-        ProcessNextCommand();
     }
 
     //체력 깎이는 함수.

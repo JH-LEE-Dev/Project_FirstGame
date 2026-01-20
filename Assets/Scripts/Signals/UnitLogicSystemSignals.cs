@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnitLogicSystemSignals
 {
-    public struct PlayerTurnFinishedEvent  { }
+    public struct PlayerAttackFinishedEvent  { }
     public struct EnemyIsDeadEvent 
     {
         public Vector2 position;

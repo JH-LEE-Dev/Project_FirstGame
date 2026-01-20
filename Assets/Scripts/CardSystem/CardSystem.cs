@@ -8,13 +8,13 @@ public class CardSystem
 {
     private SignalHub signalHub;
     private CardManager cardManager;
-    private CardEffectCommandManager cardEffectCommandManager;
+    private CardSystemController cardSystemController;
 
-    public void Initialize(SignalHub _signalHub,CardManager _cardManager,CardEffectCommandManager _cardEffectCommandManager)
+    public void Initialize(SignalHub _signalHub, CardManager _cardManager, CardSystemController _cardSystemController)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
-        cardEffectCommandManager = _cardEffectCommandManager;
+        cardSystemController = _cardSystemController;
 
         SubscribeEvents();
         BindEvents();
@@ -24,18 +24,18 @@ public class CardSystem
     {
         //원래는 CardSystem이 StartCardDrawTurn 정의하여 cardManager Forwarding해야 함. (cardManager 이벤트의 디커플링)
         //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
-        signalHub.Subscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
-        signalHub.Subscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
-        signalHub.Subscribe<CardUsedEvent>(cardManager.CardUsed);
-        signalHub.Subscribe<CardUsingFinishedEvent>(cardManager.CardUsingFinished);
+        signalHub.Subscribe<PlayerAttackFinishedEvent>(cardSystemController.PlayerAttackFinished);
+        signalHub.Subscribe<TryCardUseEvent>(TryCardUse);
+        signalHub.Subscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
+        signalHub.Subscribe<CardUsingFinishedEvent>(cardSystemController.CardUsingFinished);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<PlayerTurnStartEvent>(cardManager.StartCardDrawTurn);
-        signalHub.UnSubscribe<PlayerTurnFinishedEvent>(cardManager.PlayerTurnFinished);
-        signalHub.UnSubscribe<CardUsedEvent>(cardManager.CardUsed);
-        signalHub.UnSubscribe<CardUsingFinishedEvent>(cardManager.CardUsingFinished);
+        signalHub.UnSubscribe<PlayerAttackFinishedEvent>(cardSystemController.PlayerAttackFinished);
+        signalHub.UnSubscribe<TryCardUseEvent>(TryCardUse);
+        signalHub.UnSubscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
+        signalHub.UnSubscribe<CardUsingFinishedEvent>(cardSystemController.CardUsingFinished);
     }
 
     private void BindEvents()
@@ -52,29 +52,23 @@ public class CardSystem
         cardManager.HandToGraveEvent -= HandToGrave;
         cardManager.HandToGraveEvent += HandToGrave;
 
-        cardManager.CardDrawStartEvent -= CardDrawStarted;
-        cardManager.CardDrawStartEvent += CardDrawStarted;
+        cardSystemController.CardDrawStartEvent -= CardDrawStarted;
+        cardSystemController.CardDrawStartEvent += CardDrawStarted;
 
-        cardManager.CardActionEndScope -= CardActionEndScope;
-        cardManager.CardActionEndScope += CardActionEndScope;
+        cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
+        cardSystemController.CardDrawFinishedEvent += CardDrawFinished;
 
-        cardManager.CardDrawFinishedEvent -= CardDrawFinished;
-        cardManager.CardActionEndScope += CardDrawFinished;
+        cardSystemController.SystemCommandDispatchEvent -= cardManager.ExecuteCommand;
+        cardSystemController.SystemCommandDispatchEvent += cardManager.ExecuteCommand;
 
-        cardManager.CardUsingVerificationEvent -= CardUsingVefirication;
-        cardManager.CardUsingVerificationEvent += CardUsingVefirication;
+        cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
+        cardSystemController.StatusCommandDispatchEvent += CardStatusEffectDispatch;
 
-        cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
-        cardManager.CardUsedEvent += cardEffectCommandManager.AnalysisCardEffect;
+        cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
+        cardSystemController.CardActionEndScopeEvent += CardActionEndScope;
 
-        cardManager.CardUsingTurnFinishedEvent -= CardUsingTurnFinished;
-        cardManager.CardUsingTurnFinishedEvent += CardUsingTurnFinished;
-
-        cardEffectCommandManager.SystemCommandDispatchEvent -= cardManager.InsertCommand;
-        cardEffectCommandManager.SystemCommandDispatchEvent += cardManager.InsertCommand;
-
-        cardEffectCommandManager.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
-        cardEffectCommandManager.StatusCommandDispatchEvent += CardStatusEffectDispatch;
+        cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
+        cardSystemController.PlayerTurnFinishedEvent += cardManager.PlayerTurnFinished;
     }
 
     private void ReleaseEvents()
@@ -87,41 +81,43 @@ public class CardSystem
 
         cardManager.HandToGraveEvent -= HandToGrave;
 
-        cardManager.CardDrawStartEvent -= CardDrawStarted;
+        cardSystemController.CardDrawStartEvent -= CardDrawStarted;
 
-        cardManager.CardActionEndScope -= CardActionEndScope;
+        cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
 
-        cardManager.CardDrawFinishedEvent -= CardDrawFinished;
+        cardSystemController.SystemCommandDispatchEvent -= cardManager.ExecuteCommand;
 
-        cardManager.CardUsingVerificationEvent -= CardUsingVefirication;
+        cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
 
-        cardManager.CardUsedEvent -= cardEffectCommandManager.AnalysisCardEffect;
+        cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
 
-        cardManager.CardUsingTurnFinishedEvent -= CardUsingTurnFinished;
+        cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
+    }
 
-        cardEffectCommandManager.SystemCommandDispatchEvent -= cardManager.InsertCommand;
-
-        cardEffectCommandManager.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
+    public void Release()
+    {
+        UnSubscribeEvents();
+        ReleaseEvents();
     }
 
     private void CardPileDrawed(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new CardPileDrawEvent(),cards);
+        signalHub.Publish(new CardPileDrawEvent(), cards);
     }
 
     private void CardAdditionalDarwed(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new CardAdditionalDrawEvent(),cards); 
+        signalHub.Publish(new CardAdditionalDrawEvent(), cards);
     }
 
     private void GraveToDeck(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new  GraveToDeckEvent(),cards);
+        signalHub.Publish(new GraveToDeckEvent(), cards);
     }
 
     private void HandToGrave(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new HandToGraveEvent(),cards);
+        signalHub.Publish(new HandToGraveEvent(), cards);
     }
 
     private void CardDrawStarted()
@@ -139,24 +135,23 @@ public class CardSystem
         signalHub.Publish(new CardDrawFinishedEvent());
     }
 
-    private void CardUsingVefirication(bool boolean)
+    private void CardStatusEffectDispatch(CardSystemCommand command)
     {
-        signalHub.Publish(new CardUsingVerificationEvent(boolean));
+        signalHub.Publish(new CardStatusEffectCommandDispatchEvent(command));
     }
 
-    private void CardUsingTurnFinished()
+    private void StartCardDrawTurn(PlayerTurnStartEvent playerTurnStartEvent)
     {
-        signalHub.Publish(new CardUsingTurnFinishedEvent());
+        cardSystemController.StartCardDrawTurn();
     }
 
-    private void CardStatusEffectDispatch(CardEffectStatusCommand command)
+    private void TryCardUse(TryCardUseEvent tryCardUseEvent)
     {
-        signalHub.Publish(new CardEffectStatusCommandDispatchEvent(command)); 
-    }
+        CardUsedResult result = cardSystemController.TryCardUse(tryCardUseEvent.usedCard);
 
-    public void Release()
-    {
-        UnSubscribeEvents();
-        ReleaseEvents();
+        if (result.bVerified == true)
+            cardManager.CardUsed(result.usedCard);
+
+        signalHub.Publish(new CardUsedEvent(result.bVerified, result.slotIdx));
     }
 }

@@ -13,7 +13,7 @@ using System;
 
 //캐릭터를 상위 모듈에 노출할 때 인터페이스로 묶어서 노출할 것. 이때 CombatReceiver도 private으로 해서 
 //캐릭터를 Facade로 사용할 것.
-public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
+public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 {
     public event Action EnemySpawnedEvent;
     public event Action<Character> CharacterSpawendEvent;
@@ -26,8 +26,6 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
     private Character characterUnit;
     private Earth playerUnit;
     private List<Enemy> enemyUnits;
-
-    private List<CardEffectStatusCommand> cardEffectCommands = new List<CardEffectStatusCommand>(10);
 
     public void Initialize()
     {
@@ -140,26 +138,16 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
         characterUnit.PlayerTurnStarted();
     }
 
-    public void CardUsingTurnFinished(CardUsingTurnFinishedEvent cardUsingTurnFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
     {
         characterUnit.SetbCanAction();
     }
 
-    public void InsertCommand(CardEffectStatusCommandDispatchEvent cardEffectCommandEvent)
+    public void ExecuteCommand(CardStatusEffectCommandDispatchEvent cardEffectCommandEvent)
     {
         var cardEffectCommand = cardEffectCommandEvent.command;
 
-        cardEffectCommands.Add(cardEffectCommand);
-
-        ExecuteCommands();
-    }
-
-    private void ExecuteCommands()
-    {
-        for (int i = 0; i < cardEffectCommands.Count; ++i)
-        {
-            cardEffectCommands[i].Execute(this);
-        }
+        cardEffectCommand.Execute(this);
     }
 
     public void ApplyShieldModifier(float bonusShield)
@@ -172,14 +160,13 @@ public class UnitLogicSystem : MonoBehaviour, IUnitLogicCommandHandler
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
     }
 
-    public void CanApplyBulletEffect(CardDataInstance usedCard)
-    {
-        characterUnit.combatEffectReceiver.CanApplyBulletEffect();
-        //Signal Publish (CardUsedEvent)
-    }
-
     public void PlayerTakeDamage(float damage)
     {
         PlayerTakeDamageEvent?.Invoke(damage);
+    }
+
+    public void AttackAgain()
+    {
+        throw new NotImplementedException();
     }
 }

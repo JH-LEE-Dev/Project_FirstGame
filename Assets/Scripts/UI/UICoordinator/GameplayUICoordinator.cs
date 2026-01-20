@@ -27,7 +27,7 @@ public class GameplayUICoordinator
         signalHub.Subscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
         signalHub.Subscribe<CardDrawFinishedEvent>(CardUseTimeStarted);
         signalHub.Subscribe<PlayerSpawnedEvent>(PlayerSpawned);
-        signalHub.Subscribe<CardUsingTurnFinishedEvent>(CardUsingFinished);
+        signalHub.Subscribe<CardUsingFinishedEvent>(CardUsingFinished);
         signalHub.Subscribe<PlayerTakeDamageEvent>(OnPlayerHit);
         signalHub.Subscribe<WaveStartEvent>(WaveStarted);
         signalHub.Subscribe<WaveEndEvent>(WaveEnded);
@@ -42,7 +42,7 @@ public class GameplayUICoordinator
         signalHub.UnSubscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardDrawFinishedEvent>(CardUseTimeStarted);
         signalHub.UnSubscribe<PlayerSpawnedEvent>(PlayerSpawned);
-        signalHub.UnSubscribe<CardUsingTurnFinishedEvent>(CardUsingFinished);
+        signalHub.UnSubscribe<CardUsingFinishedEvent>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageEvent>(OnPlayerHit);
         signalHub.UnSubscribe<WaveStartEvent>(WaveStarted);
         signalHub.UnSubscribe<WaveEndEvent>(WaveEnded);
@@ -76,7 +76,7 @@ public class GameplayUICoordinator
         hudUISystem.PlayerSpawned(playerSpawnedEvent.playerData);
     }
 
-    public void CardUsingFinished(CardUsingTurnFinishedEvent cardUsingTurnFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
     {
         gameplayUISystem.CardUsingFinished();
     }

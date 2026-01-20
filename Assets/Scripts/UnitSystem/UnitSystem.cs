@@ -80,26 +80,24 @@ public class UnitSystem
         //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
         signalHub.Subscribe<SpawnWaveEvent>(unitSpawner.SpawnWave);
         signalHub.Subscribe<AllEnemyDeadEvent>(unitSpawner.ResetCurrentEnemies);
-        signalHub.Subscribe<CardEffectStatusCommandDispatchEvent>(unitLogicSystem.InsertCommand);
+        signalHub.Subscribe<CardStatusEffectCommandDispatchEvent>(unitLogicSystem.ExecuteCommand);
         signalHub.Subscribe<EnemyTurnStartEvent>(unitLogicSystem.EnemyTurnStarted);
-        signalHub.Subscribe<CardUsingTurnFinishedEvent>(unitLogicSystem.CardUsingTurnFinished);
+        signalHub.Subscribe<CardUsingFinishedEvent>(unitLogicSystem.CardUsingFinished);
         signalHub.Subscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
         signalHub.Subscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
-        signalHub.Subscribe<TryCardUseEvent>(TryCardUse);
     }
 
     private void UnSubscribeEvents()
     {
         signalHub.UnSubscribe<SpawnWaveEvent>(unitSpawner.SpawnWave);
         signalHub.UnSubscribe<AllEnemyDeadEvent>(unitSpawner.ResetCurrentEnemies);
-        signalHub.UnSubscribe<CardEffectStatusCommandDispatchEvent>(unitLogicSystem.InsertCommand);
+        signalHub.UnSubscribe<CardStatusEffectCommandDispatchEvent>(unitLogicSystem.ExecuteCommand);
         signalHub.UnSubscribe<EnemyTurnStartEvent>(unitLogicSystem.EnemyTurnStarted);
-        signalHub.UnSubscribe<CardUsingTurnFinishedEvent>(unitLogicSystem.CardUsingTurnFinished);
+        signalHub.UnSubscribe<CardUsingFinishedEvent>(unitLogicSystem.CardUsingFinished);
         signalHub.UnSubscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
         signalHub.UnSubscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
-        signalHub.UnSubscribe<TryCardUseEvent>(TryCardUse);
     }
 
     private void EnemySpawned()
@@ -124,17 +122,12 @@ public class UnitSystem
 
     private void PlayerTurnFinished()
     {
-        signalHub.Publish(new PlayerTurnFinishedEvent());
+        signalHub.Publish(new PlayerAttackFinishedEvent());
     }
 
     private void PlayerTakeDamage(float damage)
     {
         signalHub.Publish(new PlayerTakeDamageEvent(damage));
-    }
-
-    private void TryCardUse(TryCardUseEvent tryCardUseEvent)
-    {
-        unitLogicSystem.CanApplyBulletEffect(tryCardUseEvent.usedCard);
     }
 
     public void Release()

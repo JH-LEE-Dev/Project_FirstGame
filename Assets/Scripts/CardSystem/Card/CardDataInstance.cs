@@ -10,6 +10,7 @@ public class CardDataInstance
 {
     private CardData cardData;
     public bool bUpgrade = false;
+    public int nestingCnt = 1;
 
     public void Initialize(CardData cardData)
     {

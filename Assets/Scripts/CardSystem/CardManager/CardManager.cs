@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 
-public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystemData
+public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICardSystemData
 {
     public delegate void CardPileDrawDelegate(ReadOnlySpan<CardDataInstance> cards);
     public delegate void CardAdditionalDrawDelegate(ReadOnlySpan<CardDataInstance> cards);
@@ -17,13 +17,6 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
     public event CardAdditionalDrawDelegate CardAdditionalDrawEvent;
     public event GraveToDeckDelegate GraveToDeckEvent;
     public event HandToGraveDelegate HandToGraveEvent;
-    public event Action CardDrawStartEvent;
-    public event Action CardActionBeginScope;
-    public event Action CardActionEndScope;
-    public event Action CardDrawFinishedEvent;
-    public event Action<bool> CardUsingVerificationEvent;
-    public event Action<CardDataInstance> CardUsedEvent;
-    public event Action CardUsingTurnFinishedEvent;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
@@ -36,20 +29,14 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
     IReadOnlyList<CardDataInstance> ICardSystemData.handCards => handPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.graveCards => gravePile;
 
-    private Queue<CardEffectSystemCommand> cardSystemActions_BeforeAttack = new Queue<CardEffectSystemCommand>();
-    private Queue<CardEffectSystemCommand> cardSystemActions_AfterAttack = new Queue<CardEffectSystemCommand>();
-    private Queue<CardEffectSystemCommand> cardSystemActions_NextTurn = new Queue<CardEffectSystemCommand>();
-
 
     [SerializeField] private CardDataBase cardDataBase;
-    [SerializeField] private int drawCardCnt = 5;
+    [SerializeField] private int cardPileDrawAmount = 5;
     [SerializeField] private int initialDeckCnt = 40;
 
     public int deckCnt { get; private set; }
     public int graveCnt { get; private set; }
     public int handCnt { get; private set; }
-
-    private int attackCnt = 1;
 
     public void Initialize()
     {
@@ -154,46 +141,21 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         rentalBuffer.Dispose();
     }
 
-    private void StartCardPileDraw(int amount)
+    public void StartCardPileDraw()
     {
-        CardDrawStartEvent?.Invoke();
-
-        CardPileDraw(amount, false);
-        CardActionEndScope?.Invoke();
-
-        CardDrawFinishedEvent?.Invoke();
+        CardPileDraw(cardPileDrawAmount, false);
     }
 
     private void CardAdditionalPileDraw(int amount)
     {
         CardPileDraw(amount, true);
-
-        CardActionEndScope?.Invoke();
     }
 
-    public void CardUsed(CardUsedEvent cardUsedEvent)
+    public void CardUsed(CardDataInstance usedCard)
     {
-        CardDataInstance usedCard = cardUsedEvent.usedCard;
-
-        //unitLogicSystem에 현재 불릿 카드가 사용 가능한 상태인지 물어봐야 함.
-        if (usedCard.GetCardData().cardType == CardType.Bullet)
-        {
-            if (unitLogicSystem.CanApplyBulletEffect() == false)
-            {
-                // 불릿 카드를 더 이상 적용할 수 없는 상태임.
-                CardUsingVerificationEvent?.Invoke(false);
-                return;
-            }
-        }
-
         handPile.Remove(usedCard);
         gravePile.Add(usedCard);
         ++graveCnt;
-
-        CardUsingVerificationEvent?.Invoke(true);
-        CardUsedEvent?.Invoke(usedCard);
-
-        ExecuteSystemAction_BeforeAttack();
     }
 
     public void ReleaseCard(CardDataInstance card)
@@ -248,28 +210,9 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         rentalBuffer.Dispose();
     }
 
-    public void StartCardDrawTurn(PlayerTurnStartEvent playerTurnStartEvent)
+    public void ExecuteCommand(ICardSystemActionCommand actionCommand)
     {
-        attackCnt = 1;
-        ExecuteSystemAction_BeforeTurn();
-    }
-
-    public void InsertCommand(CardEffectSystemCommand effectCommand)
-    {
-        CardSystemActionTimingType timing = effectCommand.GetCardSystemActionTimingType();
-
-        if (timing == CardSystemActionTimingType.BeforeAttack)
-        {
-            cardSystemActions_BeforeAttack.Enqueue(effectCommand);
-        }
-        else if (timing == CardSystemActionTimingType.AfterAttack)
-        {
-            cardSystemActions_AfterAttack.Enqueue(effectCommand);
-        }
-        else
-        {
-            cardSystemActions_NextTurn.Enqueue(effectCommand);
-        }
+        actionCommand.Execute(this);
     }
 
     public void DrawAgain(int drawAmount)
@@ -292,84 +235,10 @@ public class CardManager : MonoBehaviour, ICardEffectCommandHandler, ICardSystem
         return graveCnt;
     }
 
-    private void ExecuteSystemAction_BeforeAttack()
+    public void PlayerTurnFinished()
     {
-        while (true)
-        {
-            if (cardSystemActions_BeforeAttack.Count == 0)
-                return;
+        HandToGrave();
 
-            var systemAction = cardSystemActions_BeforeAttack.Dequeue();
-
-            systemAction.Execute(this);
-        }
-    }
-
-    private void ExecuteSystemAction_AfterAttack()
-    {
-        while (true)
-        {
-            if (cardSystemActions_AfterAttack.Count == 0)
-            {
-                return;
-            }
-
-            var systemAction = cardSystemActions_AfterAttack.Dequeue();
-
-            systemAction.Execute(this);
-        }
-    }
-
-    private void ExecuteSystemAction_BeforeTurn()
-    {
-        while (true)
-        {
-            if (cardSystemActions_NextTurn.Count == 0)
-            {
-                StartCardPileDraw(drawCardCnt);
-                return;
-            }
-
-            var systemAction = cardSystemActions_NextTurn.Dequeue();
-
-            systemAction.Execute(this);
-        }
-    }
-
-    public void AttackAgain()
-    {
-        ++attackCnt;
-    }
-
-    public void PlayerTurnFinished(PlayerTurnFinishedEvent playerTurnFinishedEvent)
-    {
-        ExecuteSystemAction_AfterAttack();
-
-        if (CheckRemainingAttacks() == true)
-        {
-            HandToGrave();
-
-            HandToGraveEvent?.Invoke(null);
-            CardActionEndScope?.Invoke();
-        }
-        else
-        {
-            CardUsingTurnFinishedEvent?.Invoke();
-        }
-    }
-
-    private bool CheckRemainingAttacks()
-    {
-        --attackCnt;
-
-        if (attackCnt < 0)
-            attackCnt = 0;
-
-        return attackCnt == 0;
-    }
-
-    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
-    {
-        CardUsingTurnFinishedEvent?.Invoke();
+        HandToGraveEvent?.Invoke(null);
     }
 }

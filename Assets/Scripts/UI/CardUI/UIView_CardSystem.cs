@@ -107,18 +107,15 @@ public class UIView_CardSystem : UIView
         TryCardUseEvent?.Invoke(_card.CardData);
     }
 
-    public void CardUsingApproved(bool boolean) // true이면 verificationWaitCard -> 사용 승인.
+    public void CardUsingApproved(bool boolean,int slotIdx,Vector3 slotPos) // true이면 verificationWaitCard -> 사용 승인.
     {
         if (boolean)
         {
             // 우클릭을 했을 때 이쪽으로 온다. (마법카드면 즉시 사용버전)
-            handSystem?.UseCard(verificationWaitCard);
-            return;
+            //handSystem?.UseCard(verificationWaitCard);
 
-            // 불릿 카드라면?
-            int socketIndex = 0; // 넣어져야하는 불릿소켓 인덱스 번호 0~
-            Vector3 pos = default; // UIView_Unit.GetSocketPos(socketIndex);
-            handSystem?.UseCard(verificationWaitCard, socketIndex, pos);
+            Debug.Log(slotIdx);
+            handSystem?.UseCard(verificationWaitCard, slotIdx, slotPos);
         }
         else
         {
@@ -126,7 +123,6 @@ public class UIView_CardSystem : UIView
             Debug.Log("이 카드를 사용할 수 없습니다.");
 
             verificationWaitCard.Motion.PlayReject();
-
         }
     }
 

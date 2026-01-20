@@ -2,6 +2,7 @@ using CardSystemSignals;
 using GameControlSignals;
 using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
+using UnityEngine;
 
 public class CardUICoordinator
 {
@@ -28,9 +29,9 @@ public class CardUICoordinator
         signalHub.Subscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
         signalHub.Subscribe<CardDrawFinishedEvent>(CardDrawFinished);
-        signalHub.Subscribe<CardUsingVerificationEvent>(CardUsingApproved);
         signalHub.Subscribe<CharacterSpawnedEvent>(CharacterSpawned);
         signalHub.Subscribe<CardSystem_JobDispatchEvent>(RecieveUIJob);
+        signalHub.Subscribe<CardUsedEvent>(CardUsed);
     }
 
     private void UnSubscribeEvents()
@@ -38,9 +39,9 @@ public class CardUICoordinator
         signalHub.UnSubscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
         signalHub.UnSubscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardDrawFinishedEvent>(CardDrawFinished);
-        signalHub.UnSubscribe<CardUsingVerificationEvent>(CardUsingApproved);
         signalHub.UnSubscribe<CharacterSpawnedEvent>(CharacterSpawned);
         signalHub.UnSubscribe<CardSystem_JobDispatchEvent>(RecieveUIJob);
+        signalHub.UnSubscribe<CardUsedEvent>(CardUsed);
     }
 
     public void Release()
@@ -91,9 +92,14 @@ public class CardUICoordinator
         signalHub.Publish(new CardUsingFinishedEvent());
     }
 
-    public void CardUsingApproved(CardUsingVerificationEvent cardUsingVerificationEvent)
+    public void CardUsed(CardUsedEvent cardUsedEvent)
     {
-        cardUISystem.CardUsingApproved(cardUsingVerificationEvent.bVerified);
+        Vector3 slotPos = Vector3.zero;
+
+        if(cardUsedEvent.bVerified == true)
+            slotPos = unitUISystem.GetSocketPos(cardUsedEvent.slotIdx);
+
+        cardUISystem.CardUsingApproved(cardUsedEvent.bVerified, cardUsedEvent.slotIdx,slotPos);
     }
 
     public void RecieveUIJob(CardSystem_JobDispatchEvent cardSystem_JobDispatchEvent)
