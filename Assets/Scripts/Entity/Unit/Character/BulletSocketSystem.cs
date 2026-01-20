@@ -9,7 +9,7 @@ public class BulletSocketSystem : MonoBehaviour
     // 소켓 메인 피봇
     [SerializeField] private Transform pivot;
     // 소켓 프리팹
-    [SerializeField] private GameObject slotPrefab;
+    [SerializeField] private GameObject socketPrefab;
     // 카드 프리팹
     [SerializeField] private GameObject CardPrefab;
 
@@ -42,11 +42,11 @@ public class BulletSocketSystem : MonoBehaviour
     private void BuildSlotsIfNeeded()
     {
         sockets.Clear();
-        if (slotPrefab == null) return;
+        if (socketPrefab == null) return;
 
         for (int i = 0; i < maxSockets; i++)
         {
-            GameObject go = Instantiate(slotPrefab, pivot);
+            GameObject go = Instantiate(socketPrefab, pivot);
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
             go.SetActive(false);
@@ -104,6 +104,8 @@ public class BulletSocketSystem : MonoBehaviour
     // 모든 피봇의 위치를 잡아주기
     private void RelayoutSlots()
     {
+        Debug.Log(Count);
+        Debug.Log(sockets.Count);
         for (int i = 0; i < Count; i++)
         {
             Vector3 target = GetLocalSlotPosition(i);

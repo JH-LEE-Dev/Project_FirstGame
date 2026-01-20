@@ -7,8 +7,7 @@ public class SocketVisual : MonoBehaviour
 {
     [Header("Refs")]
     [SerializeField] private Transform visual;
-    [SerializeField] private TextMeshProUGUI overlapCount;
-    private int overlapCountIndex;
+    [SerializeField] private CountUI countUI;
 
     [Header("Layout Follow (Root moves)")]
     [SerializeField] private float moveDuration = 0.25f;
@@ -75,6 +74,9 @@ public class SocketVisual : MonoBehaviour
         // 시작점만 다르게 (박자 동일)
         hoverPhase0 = Random.Range(0f, Mathf.PI * 2f);
         wobblePhase0 = Random.Range(0f, Mathf.PI * 2f);
+
+
+        CountTypeSetting(CountUIType.HideWhenZero, 0);
     }
 
     private void OnEnable()
@@ -333,30 +335,27 @@ public class SocketVisual : MonoBehaviour
         unequipTween = seq;
     }
 
-
-
-
-
-    // For Count
-
     public Transform GetSocketVisualTransform()
     {
         return visual;
     }
 
-    public void SetOverlapCount(int count)
-    {
-        if (count <= 0)
-        {
-            if (overlapCount) overlapCount.gameObject.SetActive(false);
-            overlapCountIndex = 0;
-            return;
-        }
 
-        overlapCountIndex = count;
-        overlapCount.gameObject.SetActive(true);
-        if (overlapCount) overlapCount.SetText(overlapCountIndex.ToString());
+
+
+    // For Count
+    public void CountTypeSetting(CountUIType _type, int _count = -1)
+    {
+        countUI?.TypeSetting(_type, _count);
     }
 
-    public int GetOverlapCount() { return overlapCountIndex; }
+    public void SetOverlapCount(int count)
+    {
+        countUI?.SetCount(count);
+    }
+
+    public int GetOverlapCount()
+    {
+        return countUI.GetCount();
+    }
 }
