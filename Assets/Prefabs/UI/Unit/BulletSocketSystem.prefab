@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletSocketSystem
   pivot: {fileID: 2158369867205646428}
-  slotPrefab: {fileID: 1221661243239068373, guid: 9fb94137fc9638347ba73639cc4d821f, type: 3}
+  socketPrefab: {fileID: 1221661243239068373, guid: 9fb94137fc9638347ba73639cc4d821f, type: 3}
   CardPrefab: {fileID: 8825815609802249459, guid: aff01f5a43f623a43a5093ff6ef6a5a9, type: 3}
   maxSockets: 5
   spacing: 0.1
