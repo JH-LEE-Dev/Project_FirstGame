@@ -26,7 +26,8 @@ public class CountUI : MonoBehaviour
     // 끝에 카운트 안 넣으면 현 count유지하고 타입만 변경됨.
     public void TypeSetting(CountUIType _type, int _count = -1)
     {
-        if (_count == -1) count = _count;
+        // 매개 변수를 넣었을 때만 count값이 바뀐다.
+        if (_count != -1) count = _count;
 
         countUIType = _type;
         SetCount(count);
