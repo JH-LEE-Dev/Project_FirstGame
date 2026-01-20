@@ -84,6 +84,8 @@ public class UIView_CardSystem : UIView
         deckSystem?.Init(this);
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
+
+        deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
     }
 
     // For PoolingSystem
@@ -260,6 +262,7 @@ public class UIView_CardSystem : UIView
 
         handSystem?.ProcessDraw(_endPos, _data);
         poolingSystem?.StarEffects?.Release(_performer);
+        deckSystem?.AddCount(-1);
     }
 
     public void CallGraveToDeckFinished(int currIdx, GameObject _performer)
