@@ -1,24 +1,24 @@
 
 namespace GameControlSignals
 {
-    public struct GameStartedEvent  { }
-    public struct StartSpawnWaveEvent 
+    public struct GameStartedSignal  { }
+    public struct StartSpawnWaveSignal 
     {
         public int waveIdx;
 
-        public StartSpawnWaveEvent(int _waveIdx)
+        public StartSpawnWaveSignal(int _waveIdx)
         {
             waveIdx = _waveIdx;
         }
     }
 
-    public struct EnemyTurnStartEvent  { }
-    public struct PlayerTurnStartEvent  { }
-    public struct WaveStartEvent
+    public struct EnemyTurnStartSignal  { }
+    public struct PlayerTurnStartSignal  { }
+    public struct WaveStartSignal
     { 
         public int waveIdx;
 
-        public WaveStartEvent(int _waveIdx)
+        public WaveStartSignal(int _waveIdx)
         {
             waveIdx = _waveIdx;
         }

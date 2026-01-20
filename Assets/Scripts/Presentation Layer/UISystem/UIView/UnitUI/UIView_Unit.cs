@@ -1,7 +1,11 @@
 using UnityEngine;
+using System;
 
 public class UIView_Unit : UIView
 {
+    public event Action<int> UnEquipBulletCardEvent;
+    public event Action CancelCardPreviewEvent;
+
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
 
@@ -76,8 +80,7 @@ public class UIView_Unit : UIView
     // 이게 호출될 때, UIView_CardSystem에 있는 CancelPreview() 함수가 호출되어야 함.
     public void CancelPreview()
     {
-        Debug.Log("CancelPreview");
-        // UIView_CardSystem.CancelPreview();
+        CancelCardPreviewEvent?.Invoke();
     }
 
 
@@ -106,7 +109,7 @@ public class UIView_Unit : UIView
     // 이쪽에서 장착을 취소하면, 이게 호출됨. UIView_CardSystem에서 UnEquipBulletCard가 불려야함.
     public void UnEquipBulletCard(int _index)
     {
-        // UIView_CardSystem.UnEquipBulletCard(_index);
+        UnEquipBulletCardEvent?.Invoke(_index);
     }
 
 }

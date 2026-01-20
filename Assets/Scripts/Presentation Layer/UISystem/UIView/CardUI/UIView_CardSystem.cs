@@ -10,6 +10,7 @@ public class UIView_CardSystem : UIView
     public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
+    public event Action<int,CardDataInstance> CardEquippedEvent;
 
     //사용 승인을 받은 카드
     private MainCardInstance verificationWaitCard;
@@ -111,10 +112,7 @@ public class UIView_CardSystem : UIView
     {
         if (boolean)
         {
-            // 우클릭을 했을 때 이쪽으로 온다. (마법카드면 즉시 사용버전)
-            //handSystem?.UseCard(verificationWaitCard);
-
-            Debug.Log(slotIdx);
+            Debug.Log(slotPos);
             handSystem?.UseCard(verificationWaitCard, slotIdx, slotPos);
         }
         else
@@ -158,7 +156,7 @@ public class UIView_CardSystem : UIView
     // 불릿 카드 사용했을때, 호출되는 함수
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
-        // UIView_Unit.EquipBulletCard(_index, _data);
+        CardEquippedEvent?.Invoke(_index,_data);
     }
 
     // 불릿 카드 뺄 때, 호출되는 함수

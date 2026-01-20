@@ -8,7 +8,7 @@ public class GS_WaveStarted : GameState
 
     public override void Enter()
     {
-        signalHub.Publish(new WaveStartEvent(waveIdx));
+        signalHub.Publish(new WaveStartSignal(waveIdx));
 
         ProceedToPlayerTurn();
     }
@@ -17,7 +17,7 @@ public class GS_WaveStarted : GameState
     {
         await Awaitable.WaitForSecondsAsync(proceedDelay);
 
-        signalHub.Publish(new StartSpawnWaveEvent(waveIdx));
+        signalHub.Publish(new StartSpawnWaveSignal(waveIdx));
         ++waveIdx;
 
         gameStateMachine.ChangeState<GS_PlayerTurn>();

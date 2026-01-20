@@ -24,18 +24,18 @@ public class CardSystem
     {
         //원래는 CardSystem이 StartCardDrawTurn 정의하여 cardManager Forwarding해야 함. (cardManager 이벤트의 디커플링)
         //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
-        signalHub.Subscribe<PlayerAttackFinishedEvent>(cardSystemController.PlayerAttackFinished);
-        signalHub.Subscribe<TryCardUseEvent>(TryCardUse);
-        signalHub.Subscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
-        signalHub.Subscribe<CardUsingFinishedEvent>(cardSystemController.CardUsingFinished);
+        signalHub.Subscribe<PlayerAttackFinishedSignal>(cardSystemController.PlayerAttackFinished);
+        signalHub.Subscribe<TryCardUseSignal>(TryCardUse);
+        signalHub.Subscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
+        signalHub.Subscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<PlayerAttackFinishedEvent>(cardSystemController.PlayerAttackFinished);
-        signalHub.UnSubscribe<TryCardUseEvent>(TryCardUse);
-        signalHub.UnSubscribe<PlayerTurnStartEvent>(StartCardDrawTurn);
-        signalHub.UnSubscribe<CardUsingFinishedEvent>(cardSystemController.CardUsingFinished);
+        signalHub.UnSubscribe<PlayerAttackFinishedSignal>(cardSystemController.PlayerAttackFinished);
+        signalHub.UnSubscribe<TryCardUseSignal>(TryCardUse);
+        signalHub.UnSubscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
+        signalHub.UnSubscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
     }
 
     private void BindEvents()
@@ -102,56 +102,56 @@ public class CardSystem
 
     private void CardPileDrawed(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new CardPileDrawEvent(), cards);
+        signalHub.Publish(new CardPileDrawSignal(), cards);
     }
 
     private void CardAdditionalDarwed(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new CardAdditionalDrawEvent(), cards);
+        signalHub.Publish(new CardAdditionalDrawSignal(), cards);
     }
 
     private void GraveToDeck(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new GraveToDeckEvent(), cards);
+        signalHub.Publish(new GraveToDeckSignal(), cards);
     }
 
     private void HandToGrave(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new HandToGraveEvent(), cards);
+        signalHub.Publish(new HandToGraveSignal(), cards);
     }
 
     private void CardDrawStarted()
     {
-        signalHub.Publish(new CardDrawStartEvent());
+        signalHub.Publish(new CardDrawStartSignal());
     }
 
     private void CardActionEndScope()
     {
-        signalHub.EndScope<CardActionScope>(new CardActionScope());
+        signalHub.EndScope<CardActionScopeSignal>(new CardActionScopeSignal());
     }
 
     private void CardDrawFinished()
     {
-        signalHub.Publish(new CardDrawFinishedEvent());
+        signalHub.Publish(new CardDrawFinishedSignal());
     }
 
     private void CardStatusEffectDispatch(CardSystemCommand command)
     {
-        signalHub.Publish(new CardStatusEffectCommandDispatchEvent(command));
+        signalHub.Publish(new CardStatusEffectCommandDispatchSignal(command));
     }
 
-    private void StartCardDrawTurn(PlayerTurnStartEvent playerTurnStartEvent)
+    private void StartCardDrawTurn(PlayerTurnStartSignal playerTurnStartSignal)
     {
         cardSystemController.StartCardDrawTurn();
     }
 
-    private void TryCardUse(TryCardUseEvent tryCardUseEvent)
+    private void TryCardUse(TryCardUseSignal tryCardUseSignal)
     {
-        CardUsedResult result = cardSystemController.TryCardUse(tryCardUseEvent.usedCard);
+        CardUsedResult result = cardSystemController.TryCardUse(tryCardUseSignal.usedCard);
 
         if (result.bVerified == true)
             cardManager.CardUsed(result.usedCard);
 
-        signalHub.Publish(new CardUsedEvent(result.bVerified, result.slotIdx));
+        signalHub.Publish(new CardUsedSignal(result.bVerified, result.slotIdx));
     }
 }

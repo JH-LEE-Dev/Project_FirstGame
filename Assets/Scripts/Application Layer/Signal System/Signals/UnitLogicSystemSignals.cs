@@ -2,22 +2,22 @@ using UnityEngine;
 
 namespace UnitLogicSystemSignals
 {
-    public struct PlayerAttackFinishedEvent  { }
-    public struct EnemyIsDeadEvent 
+    public struct PlayerAttackFinishedSignal  { }
+    public struct EnemyIsDeadSignal 
     {
         public Vector2 position;
 
-        public EnemyIsDeadEvent(Vector2 _position)
+        public EnemyIsDeadSignal(Vector2 _position)
         {
             position = _position;
         }
     }
 
-    public struct PlayerTakeDamageEvent 
+    public struct PlayerTakeDamageSignal 
     {
         public float damage;
 
-        public PlayerTakeDamageEvent(float _damage)
+        public PlayerTakeDamageSignal(float _damage)
         {
             damage = _damage;
         }

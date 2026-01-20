@@ -54,7 +54,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         EnemySpawnedEvent?.Invoke();
     }
 
-    public void ActivatePlayerAndCharacter(GameStartedEvent gameStartedEvent)
+    public void ActivatePlayerAndCharacter(GameStartedSignal gameStartedSignal)
     {
         PlayerSpawnedEvent?.Invoke(playerUnit);
         CharacterSpawendEvent?.Invoke(characterUnit);
@@ -115,7 +115,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         EnemyIsDeadEvent?.Invoke(deadUnit.transform.position);
     }
 
-    public void StartEnemyMove(StartMoveEvent startMoveEvent)
+    public void StartEnemyMove(StartMoveSignal startMoveSignal)
     {
         for (int i = 0; i < enemyUnits.Count; ++i)
         {
@@ -128,24 +128,24 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         PlayerTurnFinishedEvent?.Invoke();
     }
 
-    public void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
+    public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
     {
         characterUnit.ResetbCanAction();
     }
 
-    public void CardDrawed(CardDrawStartEvent cardDrawStartEvent)
+    public void CardDrawed(CardDrawStartSignal cardDrawStartSignal)
     {
         characterUnit.PlayerTurnStarted();
     }
 
-    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
     {
         characterUnit.SetbCanAction();
     }
 
-    public void ExecuteCommand(CardStatusEffectCommandDispatchEvent cardEffectCommandEvent)
+    public void ExecuteCommand(CardStatusEffectCommandDispatchSignal cardEffectCommandSignal)
     {
-        var cardEffectCommand = cardEffectCommandEvent.command;
+        var cardEffectCommand = cardEffectCommandSignal.command;
 
         cardEffectCommand.Execute(this);
     }

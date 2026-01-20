@@ -2,21 +2,21 @@ using System.Collections.Generic;
 
 namespace UnitSpawnSystemSignals
 {
-    public struct PlayerSpawnedEvent 
+    public struct PlayerSpawnedSignal 
     {
         public IPlayerData playerData;
 
-        public PlayerSpawnedEvent(IPlayerData _playerData)
+        public PlayerSpawnedSignal(IPlayerData _playerData)
         {
             playerData = _playerData;
         }
     }
-    public struct EnemySpawnedEvent  { }
-    public struct CharacterSpawnedEvent
+    public struct EnemySpawnedSignal  { }
+    public struct CharacterSpawnedSignal
     {
         public ICharacterData characterData;
 
-        public CharacterSpawnedEvent(ICharacterData _characterData)
+        public CharacterSpawnedSignal(ICharacterData _characterData)
         {
             characterData = _characterData;
         }

@@ -1,48 +1,58 @@
 
 namespace CardSystemSignals
 { 
-    public struct CardDrawFinishedEvent { }
-    public struct CardUsedEvent
+    public struct CardDrawFinishedSignal { }
+    public struct CardUsedSignal
     {
         public bool bVerified;
         public int slotIdx;
 
-        public CardUsedEvent(bool _bVerified, int _slotIdx)
+        public CardUsedSignal(bool _bVerified, int _slotIdx)
         {
             bVerified = _bVerified; 
             slotIdx = _slotIdx;
         }
     }
-    public struct CardDrawStartEvent  { }
+    public struct CardDrawStartSignal  { }
 
-    public struct CardPileDrawEvent  { }
-    public struct CardAdditionalDrawEvent  { }
-    public struct GraveToDeckEvent  { }
-    public struct HandToGraveEvent  { }
+    public struct CardPileDrawSignal  { }
+    public struct CardAdditionalDrawSignal  { }
+    public struct GraveToDeckSignal  { }
+    public struct HandToGraveSignal  { }
 
     //Scope
-    public struct CardActionScope  { }
+    public struct CardActionScopeSignal  { }
 
-    public struct TryCardUseEvent
+    public struct TryCardUseSignal
     {
         public readonly CardDataInstance usedCard;
 
-        public TryCardUseEvent(CardDataInstance _usedCard)
+        public TryCardUseSignal(CardDataInstance _usedCard)
         {
             usedCard = _usedCard;
         }
     }
 
-    public struct CardUsingFinishedEvent { }
+    public struct CardUsingFinishedSignal { }
+
+    public struct DiscardBulletCardSignal
+    {
+        public int slotIdx;
+
+        public DiscardBulletCardSignal(int _slotIdx)
+        {
+            slotIdx = _slotIdx;
+        }
+    }
 }
 
 namespace CardEffectSystemSignal
 {
-    public struct CardStatusEffectCommandDispatchEvent 
+    public struct CardStatusEffectCommandDispatchSignal 
     {
         public ICardStatusEffectCommand command;
 
-        public CardStatusEffectCommandDispatchEvent(ICardStatusEffectCommand _command)
+        public CardStatusEffectCommandDispatchSignal(ICardStatusEffectCommand _command)
         {
             command = _command;
         }

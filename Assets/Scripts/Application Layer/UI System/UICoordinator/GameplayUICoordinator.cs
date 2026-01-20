@@ -23,31 +23,30 @@ public class GameplayUICoordinator
 
     private void SubscribeEvents()
     {
-        signalHub.Subscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.Subscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
-        signalHub.Subscribe<CardDrawFinishedEvent>(CardUseTimeStarted);
-        signalHub.Subscribe<PlayerSpawnedEvent>(PlayerSpawned);
-        signalHub.Subscribe<CardUsingFinishedEvent>(CardUsingFinished);
-        signalHub.Subscribe<PlayerTakeDamageEvent>(OnPlayerHit);
-        signalHub.Subscribe<WaveStartEvent>(WaveStarted);
-        signalHub.Subscribe<WaveEndEvent>(WaveEnded);
-        signalHub.Subscribe<GameStartedEvent>(GameStarted);
-        signalHub.Subscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
-        signalHub.Subscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
+        signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
+        signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
+        signalHub.Subscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
+        signalHub.Subscribe<PlayerSpawnedSignal>(PlayerSpawned);
+        signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
+        signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
+        signalHub.Subscribe<WaveStartSignal>(WaveStarted);
+        signalHub.Subscribe<WaveEndSignal>(WaveEnded);
+        signalHub.Subscribe<GameStartedSignal>(GameStarted);
+        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.UnSubscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardDrawFinishedEvent>(CardUseTimeStarted);
-        signalHub.UnSubscribe<PlayerSpawnedEvent>(PlayerSpawned);
-        signalHub.UnSubscribe<CardUsingFinishedEvent>(CardUsingFinished);
-        signalHub.UnSubscribe<PlayerTakeDamageEvent>(OnPlayerHit);
-        signalHub.UnSubscribe<WaveStartEvent>(WaveStarted);
-        signalHub.UnSubscribe<WaveEndEvent>(WaveEnded);
-        signalHub.UnSubscribe<GameStartedEvent>(GameStarted);
-        signalHub.UnSubscribe<WaveProgressUpdatedEvent>(EnemyIsDead);
+        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
+        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
+        signalHub.UnSubscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
+        signalHub.UnSubscribe<PlayerSpawnedSignal>(PlayerSpawned);
+        signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
+        signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
+        signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
+        signalHub.UnSubscribe<WaveEndSignal>(WaveEnded);
+        signalHub.UnSubscribe<GameStartedSignal>(GameStarted);
+        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
     }
 
     public void Release()
@@ -55,54 +54,54 @@ public class GameplayUICoordinator
         UnSubscribeEvents();
     }
 
-    public void PlayerTurnStarted(PlayerTurnStartEvent playerTurnStartEvent)
+    public void PlayerTurnStarted(PlayerTurnStartSignal playerTurnStartSignal)
     {
         hudUISystem.PlayerTurnStarted();
     }
 
-    public void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
+    public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
     {
         hudUISystem.EnemyTurnStarted();
         gameplayUISystem.EnemyTurnStarted();
     }
 
-    public void CardUseTimeStarted(CardDrawFinishedEvent cardDrawFinishedEvent)
+    public void CardUseTimeStarted(CardDrawFinishedSignal cardDrawFinishedSignal)
     {
         hudUISystem.CardUseTimeStarted();
     }
 
-    public void PlayerSpawned(PlayerSpawnedEvent playerSpawnedEvent)
+    public void PlayerSpawned(PlayerSpawnedSignal playerSpawnedSignal)
     {
-        hudUISystem.PlayerSpawned(playerSpawnedEvent.playerData);
+        hudUISystem.PlayerSpawned(playerSpawnedSignal.playerData);
     }
 
-    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
     {
         gameplayUISystem.CardUsingFinished();
     }
 
-    public void OnPlayerHit(PlayerTakeDamageEvent playerTakeDamageEvent)
+    public void OnPlayerHit(PlayerTakeDamageSignal playerTakeDamageSignal)
     {
-        hudUISystem.OnPlayerHit(playerTakeDamageEvent.damage);
+        hudUISystem.OnPlayerHit(playerTakeDamageSignal.damage);
     }
 
-    private void WaveStarted(WaveStartEvent waveStartEvent)
+    private void WaveStarted(WaveStartSignal waveStartSignal)
     {
-        hudUISystem.WaveStarted(waveStartEvent.waveIdx);
+        hudUISystem.WaveStarted(waveStartSignal.waveIdx);
     }
 
-    private void GameStarted(GameStartedEvent gameStartedEvent)
+    private void GameStarted(GameStartedSignal gameStartedSignal)
     {
         hudUISystem.GameStarted();
     }
 
-    private void WaveEnded(WaveEndEvent waveEndEvent)
+    private void WaveEnded(WaveEndSignal waveEndSignal)
     {
         hudUISystem.WaveEnded();
     }
 
-    private void EnemyIsDead(WaveProgressUpdatedEvent waveProgressUpdatedEvent)
+    private void EnemyIsDead(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
     {
-        hudUISystem.EnemyIsDead(waveProgressUpdatedEvent.position);
+        hudUISystem.EnemyIsDead(waveProgressUpdatedSignal.position);
     }
 }

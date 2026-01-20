@@ -3,6 +3,7 @@ using GameControlSignals;
 using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
+using System;
 
 public class CardUICoordinator
 {
@@ -26,22 +27,22 @@ public class CardUICoordinator
 
     private void SubscribeEvents()
     {
-        signalHub.Subscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.Subscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
-        signalHub.Subscribe<CardDrawFinishedEvent>(CardDrawFinished);
-        signalHub.Subscribe<CharacterSpawnedEvent>(CharacterSpawned);
-        signalHub.Subscribe<CardSystem_JobDispatchEvent>(RecieveUIJob);
-        signalHub.Subscribe<CardUsedEvent>(CardUsed);
+        signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
+        signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
+        signalHub.Subscribe<CardDrawFinishedSignal>(CardDrawFinished);
+        signalHub.Subscribe<CharacterSpawnedSignal>(CharacterSpawned);
+        signalHub.Subscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
+        signalHub.Subscribe<CardUsedSignal>(CardUsed);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<EnemyTurnStartEvent>(EnemyTurnStarted);
-        signalHub.UnSubscribe<PlayerTurnStartEvent>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardDrawFinishedEvent>(CardDrawFinished);
-        signalHub.UnSubscribe<CharacterSpawnedEvent>(CharacterSpawned);
-        signalHub.UnSubscribe<CardSystem_JobDispatchEvent>(RecieveUIJob);
-        signalHub.UnSubscribe<CardUsedEvent>(CardUsed);
+        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
+        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
+        signalHub.UnSubscribe<CardDrawFinishedSignal>(CardDrawFinished);
+        signalHub.UnSubscribe<CharacterSpawnedSignal>(CharacterSpawned);
+        signalHub.UnSubscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
+        signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
     }
 
     public void Release()
@@ -52,67 +53,86 @@ public class CardUICoordinator
 
     private void UICommandComplete(int idx)
     {
-        signalHub.Publish(new  UICommandCompleteEvent(idx));
+        signalHub.Publish(new  UICommandCompleteSignal(idx));
     }
 
     private void BindEvent()
     {
         cardUISystem.TryCardUseEvent -= TryCardUse;
         cardUISystem.TryCardUseEvent += TryCardUse;
+
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
         cardUISystem.CardUsingFinishedEvent += CardUsingFinished;
+
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;
         cardUISystem.UICommandCompleteEvent += UICommandComplete;
+
+        cardUISystem.CardEquippedEvent -= unitUISystem.EquipBulletCard;
+        cardUISystem.CardEquippedEvent += unitUISystem.EquipBulletCard;
+
+        unitUISystem.UnEquipBulletCardEvent -= cardUISystem.UnEquipBulletCard;
+        unitUISystem.UnEquipBulletCardEvent += cardUISystem.UnEquipBulletCard;
+
+        unitUISystem.CancelCardPreviewEvent -= cardUISystem.CancelPreview;
+        unitUISystem.CancelCardPreviewEvent += cardUISystem.CancelPreview;
     }
 
-    public void CharacterSpawned(CharacterSpawnedEvent characterSpawnedEvent)
+    public void CharacterSpawned(CharacterSpawnedSignal characterSpawnedSignal)
     {
-        unitUISystem.Initialize(characterSpawnedEvent.characterData);
+        unitUISystem.Initialize(characterSpawnedSignal.characterData);
     }
 
     private void ReleaseEvent()
     {
         cardUISystem.UICommandCompleteEvent -= UICommandComplete;
+
         cardUISystem.TryCardUseEvent -= TryCardUse;
+
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
+
+        cardUISystem.CardEquippedEvent -= unitUISystem.EquipBulletCard;
+
+        unitUISystem.UnEquipBulletCardEvent -= cardUISystem.UnEquipBulletCard;
+
+        unitUISystem.CancelCardPreviewEvent -= cardUISystem.CancelPreview;
     }
 
     public void TryCardUse(CardDataInstance usedCard)
     {
-        signalHub.Publish(new TryCardUseEvent(usedCard));
+        signalHub.Publish(new TryCardUseSignal(usedCard));
     }
 
-    public void CardDrawFinished(CardDrawFinishedEvent cardDrawFinishedEvent)
+    public void CardDrawFinished(CardDrawFinishedSignal cardDrawFinishedSignal)
     {
         cardUISystem.CardDrawFinished();
     }
 
     public void CardUsingFinished()
     {
-        signalHub.Publish(new CardUsingFinishedEvent());
+        signalHub.Publish(new CardUsingFinishedSignal());
     }
 
-    public void CardUsed(CardUsedEvent cardUsedEvent)
+    public void CardUsed(CardUsedSignal cardUsedSignal)
     {
         Vector3 slotPos = Vector3.zero;
 
-        if(cardUsedEvent.bVerified == true)
-            slotPos = unitUISystem.GetSocketPos(cardUsedEvent.slotIdx);
+        if(cardUsedSignal.bVerified == true)
+            slotPos = unitUISystem.GetSocketPos(cardUsedSignal.slotIdx);
 
-        cardUISystem.CardUsingApproved(cardUsedEvent.bVerified, cardUsedEvent.slotIdx,slotPos);
+        cardUISystem.CardUsingApproved(cardUsedSignal.bVerified, cardUsedSignal.slotIdx,slotPos);
     }
 
-    public void RecieveUIJob(CardSystem_JobDispatchEvent cardSystem_JobDispatchEvent)
+    public void RecieveUIJob(CardSystem_JobDispatchSignal cardSystem_JobDispatchSignal)
     {
-        cardUISystem.RecieveUIJob(cardSystem_JobDispatchEvent.actionDataBatch);
+        cardUISystem.RecieveUIJob(cardSystem_JobDispatchSignal.actionDataBatch);
     }
 
-    public void EnemyTurnStarted(EnemyTurnStartEvent enemyTurnStartEvent)
+    public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
     {
         cardUISystem.EnemyTurnStarted();
     }
 
-    public void PlayerTurnStarted(PlayerTurnStartEvent playerTurnStartEvent)
+    public void PlayerTurnStarted(PlayerTurnStartSignal playerTurnStartSignal)
     {
         cardUISystem.PlayerTurnStarted();
     }

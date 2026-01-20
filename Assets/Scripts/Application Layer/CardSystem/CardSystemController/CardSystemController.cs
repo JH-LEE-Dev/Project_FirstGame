@@ -120,7 +120,7 @@ public class CardSystemController : MonoBehaviour
         }
     }
 
-    public void CardUsingFinished(CardUsingFinishedEvent cardUsingFinishedEvent)
+    public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
     {
         for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
@@ -131,7 +131,7 @@ public class CardSystemController : MonoBehaviour
         DispatchCardEffect_AfterAttack();
     }
 
-    public void PlayerAttackFinished(PlayerAttackFinishedEvent playerAttackFinishedEvent)
+    public void PlayerAttackFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
     {
         PlayerTurnFinishedEvent?.Invoke();
     }
@@ -213,5 +213,10 @@ public class CardSystemController : MonoBehaviour
         result.usedCard = null;
 
         return result;
+    }
+
+    public void DiscardBulletCard(int slotIdx)
+    {
+        bulletCardSlot.RemoveAt(slotIdx);
     }
 }

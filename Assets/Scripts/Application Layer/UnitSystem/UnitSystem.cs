@@ -78,56 +78,56 @@ public class UnitSystem
     {
         //원래는 UnitSystem이 SpawnWave함수를 정의하여 unitSpawner로 Forwarding해야 함. (unitSpawner와 이벤트의 디커플링)
         //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
-        signalHub.Subscribe<SpawnWaveEvent>(unitSpawner.SpawnWave);
-        signalHub.Subscribe<AllEnemyDeadEvent>(unitSpawner.ResetCurrentEnemies);
-        signalHub.Subscribe<CardStatusEffectCommandDispatchEvent>(unitLogicSystem.ExecuteCommand);
-        signalHub.Subscribe<EnemyTurnStartEvent>(unitLogicSystem.EnemyTurnStarted);
-        signalHub.Subscribe<CardUsingFinishedEvent>(unitLogicSystem.CardUsingFinished);
-        signalHub.Subscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
-        signalHub.Subscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
-        signalHub.Subscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.Subscribe<SpawnWaveSignal>(unitSpawner.SpawnWave);
+        signalHub.Subscribe<AllEnemyDeadSignal>(unitSpawner.ResetCurrentEnemies);
+        signalHub.Subscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
+        signalHub.Subscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
+        signalHub.Subscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
+        signalHub.Subscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
+        signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
+        signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<SpawnWaveEvent>(unitSpawner.SpawnWave);
-        signalHub.UnSubscribe<AllEnemyDeadEvent>(unitSpawner.ResetCurrentEnemies);
-        signalHub.UnSubscribe<CardStatusEffectCommandDispatchEvent>(unitLogicSystem.ExecuteCommand);
-        signalHub.UnSubscribe<EnemyTurnStartEvent>(unitLogicSystem.EnemyTurnStarted);
-        signalHub.UnSubscribe<CardUsingFinishedEvent>(unitLogicSystem.CardUsingFinished);
-        signalHub.UnSubscribe<CardDrawStartEvent>(unitLogicSystem.CardDrawed);
-        signalHub.UnSubscribe<StartMoveEvent>(unitLogicSystem.StartEnemyMove);
-        signalHub.UnSubscribe<GameStartedEvent>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.UnSubscribe<SpawnWaveSignal>(unitSpawner.SpawnWave);
+        signalHub.UnSubscribe<AllEnemyDeadSignal>(unitSpawner.ResetCurrentEnemies);
+        signalHub.UnSubscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
+        signalHub.UnSubscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
+        signalHub.UnSubscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
+        signalHub.UnSubscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
+        signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
+        signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
     }
 
     private void EnemySpawned()
     {
-        signalHub.Publish(new EnemySpawnedEvent());
+        signalHub.Publish(new EnemySpawnedSignal());
     }
 
     private void CharacterSpawend(Character character)
     {
-        signalHub.Publish(new CharacterSpawnedEvent(character));
+        signalHub.Publish(new CharacterSpawnedSignal(character));
     }
 
     private void PlayerSpawned(Earth player)
     {
-        signalHub.Publish(new PlayerSpawnedEvent(player));
+        signalHub.Publish(new PlayerSpawnedSignal(player));
     }
 
     private void EnemyIsDead(Vector2 position)
     {
-        signalHub.Publish(new EnemyIsDeadEvent(position));
+        signalHub.Publish(new EnemyIsDeadSignal(position));
     }
 
     private void PlayerTurnFinished()
     {
-        signalHub.Publish(new PlayerAttackFinishedEvent());
+        signalHub.Publish(new PlayerAttackFinishedSignal());
     }
 
     private void PlayerTakeDamage(float damage)
     {
-        signalHub.Publish(new PlayerTakeDamageEvent(damage));
+        signalHub.Publish(new PlayerTakeDamageSignal(damage));
     }
 
     public void Release()

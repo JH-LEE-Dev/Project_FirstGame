@@ -24,12 +24,12 @@ public class GameController : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        signalHub.Subscribe<WaveMoveEndEvent>(ChangeGameStateToPlayerTurn);
+        signalHub.Subscribe<WaveMoveEndSignal>(ChangeGameStateToPlayerTurn);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<WaveMoveEndEvent>(ChangeGameStateToPlayerTurn);
+        signalHub.UnSubscribe<WaveMoveEndSignal>(ChangeGameStateToPlayerTurn);
     }
 
     public void SetupGameController()
@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
         gameStateMachine.ChangeState<T>();
     }
 
-    public void ChangeGameStateToPlayerTurn(WaveMoveEndEvent waveMoveEndEvent)
+    public void ChangeGameStateToPlayerTurn(WaveMoveEndSignal waveMoveEndSignal)
     {
         ChangeGameState<GS_PlayerTurn>();
     }

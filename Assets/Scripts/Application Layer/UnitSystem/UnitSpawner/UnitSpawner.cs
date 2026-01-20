@@ -172,9 +172,9 @@ public class UnitSpawner : MonoBehaviour
         Gizmos.matrix = oldMatrix;
     }
 
-    public void SpawnWave(SpawnWaveEvent spawnWaveEvent)
+    public void SpawnWave(SpawnWaveSignal spawnWaveSignal)
     {
-        curUnitCnt = spawnWaveEvent.waveIdx;
+        curUnitCnt = spawnWaveSignal.waveIdx;
 
         for (uint i = 0; i < curUnitCnt; ++i)
         {
@@ -199,7 +199,7 @@ public class UnitSpawner : MonoBehaviour
         EnemyCreatedEvent?.Invoke(enemies);
     }
 
-    public void ResetCurrentEnemies(AllEnemyDeadEvent allEnemyDeadEvent)
+    public void ResetCurrentEnemies(AllEnemyDeadSignal allEnemyDeadSignal)
     {
         for (int i = 0; i < enemies.Count; ++i)
         {

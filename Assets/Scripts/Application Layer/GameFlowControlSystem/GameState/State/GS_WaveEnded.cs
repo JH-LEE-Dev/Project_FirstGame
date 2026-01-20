@@ -7,7 +7,7 @@ public class GS_WaveEnded : GameState
 
     public override void Enter()
     {
-        signalHub.Publish(new WaveEndEvent());
+        signalHub.Publish(new WaveEndSignal());
         MoveToNextWave();
     }
 

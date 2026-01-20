@@ -34,22 +34,22 @@ public class UICommandManager : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        signalHub.Subscribe<UICommandCompleteEvent>(ReleaseJobBatch);
-        signalHub.Subscribe<CardPileDrawEvent,CardDataInstance>(CardPileDrawed);
-        signalHub.Subscribe<CardAdditionalDrawEvent,CardDataInstance>(CardAdditionalDrawed);
-        signalHub.Subscribe<HandToGraveEvent,CardDataInstance>(HandToGrave);
-        signalHub.Subscribe<GraveToDeckEvent,CardDataInstance>(GraveToDeck);
-        signalHub.SubscribeScope<CardActionScope>(DispatchCommand);
+        signalHub.Subscribe<UICommandCompleteSignal>(ReleaseJobBatch);
+        signalHub.Subscribe<CardPileDrawSignal,CardDataInstance>(CardPileDrawed);
+        signalHub.Subscribe<CardAdditionalDrawSignal,CardDataInstance>(CardAdditionalDrawed);
+        signalHub.Subscribe<HandToGraveSignal,CardDataInstance>(HandToGrave);
+        signalHub.Subscribe<GraveToDeckSignal,CardDataInstance>(GraveToDeck);
+        signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
     }
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<UICommandCompleteEvent>(ReleaseJobBatch);
-        signalHub.UnSubscribe<CardPileDrawEvent, CardDataInstance>(CardPileDrawed);
-        signalHub.UnSubscribe<CardAdditionalDrawEvent, CardDataInstance>(CardAdditionalDrawed);
-        signalHub.UnSubscribe<HandToGraveEvent, CardDataInstance>(HandToGrave);
-        signalHub.UnSubscribe<GraveToDeckEvent, CardDataInstance>(GraveToDeck);
-        signalHub.UnSubscribeScope<CardActionScope>(DispatchCommand);
+        signalHub.UnSubscribe<UICommandCompleteSignal>(ReleaseJobBatch);
+        signalHub.UnSubscribe<CardPileDrawSignal, CardDataInstance>(CardPileDrawed);
+        signalHub.UnSubscribe<CardAdditionalDrawSignal, CardDataInstance>(CardAdditionalDrawed);
+        signalHub.UnSubscribe<HandToGraveSignal, CardDataInstance>(HandToGrave);
+        signalHub.UnSubscribe<GraveToDeckSignal, CardDataInstance>(GraveToDeck);
+        signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
     }
 
 
@@ -59,22 +59,22 @@ public class UICommandManager : MonoBehaviour
             dispatcher.Release();
     }
 
-    private void CardPileDrawed(CardPileDrawEvent cardPileDrawEvent, ReadOnlySpan<CardDataInstance> cards)
+    private void CardPileDrawed(CardPileDrawSignal cardPileDrawSignal, ReadOnlySpan<CardDataInstance> cards)
     {
         CreateCommand(ActionType_CardSystem.PileDraw, cards);
     }
 
-    private void CardAdditionalDrawed(CardAdditionalDrawEvent cardAdditionalDrawEvent, ReadOnlySpan<CardDataInstance> cards)
+    private void CardAdditionalDrawed(CardAdditionalDrawSignal cardAdditionalDrawSignal, ReadOnlySpan<CardDataInstance> cards)
     {
         CreateCommand(ActionType_CardSystem.AdditionalDraw, cards);
     }
 
-    private void HandToGrave(HandToGraveEvent handToGraveEvent, ReadOnlySpan<CardDataInstance> cards)
+    private void HandToGrave(HandToGraveSignal handToGraveSignal, ReadOnlySpan<CardDataInstance> cards)
     {
         CreateCommand(ActionType_CardSystem.HandToGrave, cards);
     }
 
-    private void GraveToDeck(GraveToDeckEvent graveToDeckEvent, ReadOnlySpan<CardDataInstance> cards)
+    private void GraveToDeck(GraveToDeckSignal graveToDeckSignal, ReadOnlySpan<CardDataInstance> cards)
     {
         CreateCommand(ActionType_CardSystem.GraveToDeck, cards);
     }
@@ -106,13 +106,13 @@ public class UICommandManager : MonoBehaviour
         }
     }
 
-    private void DispatchCommand(ScopeSignal<CardActionScope> signal)
+    private void DispatchCommand(ScopeSignal<CardActionScopeSignal> signal)
     {
         dispatcher.Dispatch_CardSystem(commandFactory_CardSystem.GetJobBatch());
     }
 
-    public void ReleaseJobBatch(UICommandCompleteEvent uiCommandCompleteEvent)
+    public void ReleaseJobBatch(UICommandCompleteSignal uiCommandCompleteSignal)
     {
-        commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteEvent.commandIdx);
+        commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
     }
 }

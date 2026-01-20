@@ -2,21 +2,21 @@ using System;
 
 namespace UICommandSystemSignals
 {
-    public struct CardSystem_JobDispatchEvent 
+    public struct CardSystem_JobDispatchSignal 
     {
         public ActionDataBatch_CardSystem actionDataBatch;
 
-        public CardSystem_JobDispatchEvent(ActionDataBatch_CardSystem _actionDataBatch)
+        public CardSystem_JobDispatchSignal(ActionDataBatch_CardSystem _actionDataBatch)
         {
             actionDataBatch = _actionDataBatch;
         }
     }
 
-    public struct UICommandCompleteEvent 
+    public struct UICommandCompleteSignal 
     {
         public int commandIdx;
 
-        public UICommandCompleteEvent(int idx)
+        public UICommandCompleteSignal(int idx)
         {
             commandIdx = idx;
         }

@@ -7,7 +7,7 @@ public class GS_EnemyTurn : GameState
 {
     public override void Enter()
     {
-        signalHub.Publish(new EnemyTurnStartEvent());
+        signalHub.Publish(new EnemyTurnStartSignal());
     }
 
     public override void Exit()
@@ -20,18 +20,18 @@ public class GS_EnemyTurn : GameState
 
     }
 
-    private void AllEnemyDead(AllEnemyDeadEvent allEnemyDeadEvent)
+    private void AllEnemyDead(AllEnemyDeadSignal allEnemyDeadSignal)
     {
         gameStateMachine.ChangeState<GS_WaveEnded>();
     }
 
     protected override void SubscribeEvents()
     {
-        signalHub.Subscribe<AllEnemyDeadEvent>(AllEnemyDead);
+        signalHub.Subscribe<AllEnemyDeadSignal>(AllEnemyDead);
     }
 
     protected override void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<AllEnemyDeadEvent>(AllEnemyDead);
+        signalHub.UnSubscribe<AllEnemyDeadSignal>(AllEnemyDead);
     }
 }
