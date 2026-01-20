@@ -16,6 +16,8 @@ public class DeckSystem : MonoBehaviour,
     [Space]
     public RectTransform wealthyRect = null;
     public RectTransform cardBackRect = null;
+    [Space]
+    public CountUI deckCount = null;
 
     private RectTransform topRect = null;
     private UIView_CardSystem cardSystem = null;
@@ -278,6 +280,12 @@ public class DeckSystem : MonoBehaviour,
         impactParticle.Stop();
         impactParticle.Play();
     }
+
+    public void SetCount(int _count) => deckCount?.SetCount(_count);
+
+    public void AddCount(int _count) => deckCount?.SetCount(deckCount.GetCount() + _count);
+
+    public void SetupCount(CountUIType _type, int _count) => deckCount?.TypeSetting(_type, _count);
 
     public void OnPointerDown(PointerEventData _eventData)
     {

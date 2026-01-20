@@ -36,10 +36,12 @@ public class CardVisualFloat : MonoBehaviour
     [SerializeField] private float drawTotalDuration = 0.4f;
     private Tween drawScaleTween;
 
+    [Header("Draw Pop")]
+    [SerializeField] private float dissolveDuration = 1f;
+    [SerializeField] private Ease dissolveEase = Ease.Linear;
+
     [Header("CanvasGroup")]
     [SerializeField] private CanvasGroup canvasGroup;
-
-
 
     private void Awake()
     {

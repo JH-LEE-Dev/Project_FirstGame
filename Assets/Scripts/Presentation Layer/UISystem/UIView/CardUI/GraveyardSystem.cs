@@ -10,8 +10,10 @@ using Image = UnityEngine.UI.Image;
 public class GraveyardSystem : MonoBehaviour
     , IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    private RectTransform topRect = null;
     public RectTransform visualRect = null;
+    public CountUI graveCount = null;
+
+    private RectTransform topRect = null;
     private Image visualImage = null;
     private UIView_CardSystem cardSystem = null;
 
@@ -81,6 +83,10 @@ public class GraveyardSystem : MonoBehaviour
     {
         cardSystem = _cardSystem;
     }
+
+    public void SetupCount(CountUIType _type, int _count) => graveCount?.TypeSetting(_type, _count);
+    public void AddCount(int _count) => graveCount?.SetCount(graveCount.GetCount() + _count);
+    public void SetCount(int _count) => graveCount?.SetCount(_count);
 
     public void OnPointerDown(PointerEventData eventData)
     {

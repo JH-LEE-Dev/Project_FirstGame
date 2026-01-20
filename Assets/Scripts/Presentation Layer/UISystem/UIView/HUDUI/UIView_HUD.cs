@@ -196,7 +196,7 @@ public class UIView_HUD : UIView
         if (!WaveStartFirstTime)
             return;
 
-        hpText?.Init(playerData.GetMaxHealth(), this);
+        hpText?.Init(playerData.GetCurrentHealth(), this);
         hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
         targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
         targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
