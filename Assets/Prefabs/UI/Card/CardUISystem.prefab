@@ -709,7 +709,6 @@ MonoBehaviour:
   handCntText: {fileID: 2883755119941639183}
   turnFinishedButton: {fileID: 442856584252448782}
   poolingSystem: {fileID: 4063027610150049034}
-  clickCatchSystem: {fileID: 0}
   handSystem: {fileID: 6061865260737894705}
   deckSystem: {fileID: 4229179034747352173}
   graveSystem: {fileID: 8356947880062379578}
@@ -1885,6 +1884,18 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1914,11 +1925,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -800
+      value: -773
       objectReference: {fileID: 0}
     - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -465
+      value: -335
       objectReference: {fileID: 0}
     - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1932,13 +1943,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4369365747650638079, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4369365747650638079, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
+    - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

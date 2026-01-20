@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 public class ExtinctionSystem : MonoBehaviour
     , IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
+    public CountUI extinctionCount = null;
+
     private RectTransform visualRect = null;
     private UIView_CardSystem cardSystem = null;
 
@@ -45,6 +47,10 @@ public class ExtinctionSystem : MonoBehaviour
     {
         
     }
+
+    public void SetupCount(CountUIType _type, int _count) => extinctionCount?.TypeSetting(_type, _count);
+    public void AddCount(int _count) => extinctionCount?.SetCount(extinctionCount.GetCount() + _count);
+    public void SetCount(int _count) => extinctionCount?.SetCount(_count);
 
     public void Init(UIView_CardSystem _cardSystem)
     {

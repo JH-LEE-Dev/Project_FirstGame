@@ -68,6 +68,10 @@ public class UIView_CardSystem : UIView
         deckCards = _deckCards;
         handCards = _handCards;
         graveCards = _graveCards;
+
+        deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
+        graveSystem?.SetupCount(CountUIType.VisibleWhenZero, graveCards.Count);
+        //extinctionSystem?.SetupCount(CountUIType.VisibleWhenZero, extinctionCards.Count);
     }
 
     protected override void Awake()
@@ -84,8 +88,6 @@ public class UIView_CardSystem : UIView
         deckSystem?.Init(this);
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
-
-        deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
     }
 
     // For PoolingSystem
@@ -262,7 +264,6 @@ public class UIView_CardSystem : UIView
 
         handSystem?.ProcessDraw(_endPos, _data);
         poolingSystem?.StarEffects?.Release(_performer);
-        deckSystem?.AddCount(-1);
     }
 
     public void CallGraveToDeckFinished(int currIdx, GameObject _performer)
@@ -374,6 +375,7 @@ public class UIView_CardSystem : UIView
             switch(currenType)
             {
                 case ActionType_CardSystem.PileDraw:
+                case ActionType_CardSystem.AdditionalDraw:
 
                     DrawingCards(currentActionData.cards);
 
@@ -386,12 +388,6 @@ public class UIView_CardSystem : UIView
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case ActionType_CardSystem.AdditionalDraw:
-
-                    DrawingCards(currentActionData.cards);
-
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-                    break;
                 case ActionType_CardSystem.HandToGrave:
 
                     AllCardReturnToPool(CardState.InHand);
@@ -406,11 +402,18 @@ public class UIView_CardSystem : UIView
         }
 
         SetText();
+        UpdateCardsCounts();
 
         UICommandCompleteEvent?.Invoke(_jobBatch.idx);
     }
 
-    void DrawingCards(List<CardDataInstance> _datas)
+    private void UpdateCardsCounts()
+    {
+        graveSystem?.SetCount(graveCards.Count);
+        deckSystem?.SetCount(deckCards.Count);
+    }
+
+    private void DrawingCards(List<CardDataInstance> _datas)
     {
         if (null == deckSystem)
             return;
