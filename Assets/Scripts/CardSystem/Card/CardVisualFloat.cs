@@ -43,9 +43,6 @@ public class CardVisualFloat : MonoBehaviour
     [Header("CanvasGroup")]
     [SerializeField] private CanvasGroup canvasGroup;
 
-    private Image image;
-    private Material mat;
-
     private void Awake()
     {
         if (drawOverlay != null)
@@ -58,9 +55,6 @@ public class CardVisualFloat : MonoBehaviour
 
         if (!canvasGroup) canvasGroup = GetComponent<CanvasGroup>();
         if (!canvasGroup) canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
-        image = GetComponent<Image>();
-        mat = image?.GetComponent<Material>();
     }
 
     public void Bind(MainCardInstance card)
@@ -149,19 +143,9 @@ public class CardVisualFloat : MonoBehaviour
     {
         if (canvasGroup == null) return;
 
-        //canvasGroup.alpha = visible ? 1f : 0f;
+        canvasGroup.alpha = visible ? 1f : 0f;
         canvasGroup.blocksRaycasts = visible;
         canvasGroup.interactable = visible;
-
-        if (false == visible)
-        {
-            mat.SetFloat("_DirectionalGlowFadeFade", 1f);
-            return;
-        }
-
-        mat.DOKill();
-        mat.DOFloat(-1f, "_DirectionalGlowFadeFade", dissolveDuration)
-            .SetEase(dissolveEase);
     }
 
 }
