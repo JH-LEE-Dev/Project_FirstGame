@@ -76,11 +76,6 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
         bulletObject.ApplyAttackModifier(bonusDamage);
     }
 
-    public bool CanApplyBulletEffect()
-    {
-        return bulletObject.CanApplyBulletEffect();
-    }
-
     /// <summary>
     /// 구현 코드 존. ----------------------------------------------------
     /// </summary>

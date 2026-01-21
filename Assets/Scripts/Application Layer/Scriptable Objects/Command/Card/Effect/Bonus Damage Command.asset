@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106dc9c8d3c9aa1408169cfab9ae5f1b, type: 3}
   m_Name: Bonus Damage Command
   m_EditorClassIdentifier: Assembly-CSharp::BonusDamageStrategy
-  cardSystemActionTimingType: 0
+  cardSystemActionTimingType: 1
   effectApplyType: 0
+  nestingCnt: 0
   bonusDamage: 2

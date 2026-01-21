@@ -116,7 +116,7 @@ public class UIView_CardSystem : UIView
     {
         if (boolean)
         {
-            Debug.Log(slotPos);
+            //Debug.Log(slotPos);
             handSystem?.UseCard(verificationWaitCard, slotIdx, slotPos);
         }
         else

@@ -22,28 +22,6 @@ namespace CardSystemSignals
 
     //Scope
     public struct CardActionScopeSignal  { }
-
-    public struct TryCardUseSignal
-    {
-        public readonly CardDataInstance usedCard;
-
-        public TryCardUseSignal(CardDataInstance _usedCard)
-        {
-            usedCard = _usedCard;
-        }
-    }
-
-    public struct CardUsingFinishedSignal { }
-
-    public struct DiscardBulletCardSignal
-    {
-        public int slotIdx;
-
-        public DiscardBulletCardSignal(int _slotIdx)
-        {
-            slotIdx = _slotIdx;
-        }
-    }
 }
 
 namespace CardEffectSystemSignal

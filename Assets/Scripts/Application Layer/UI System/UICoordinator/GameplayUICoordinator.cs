@@ -3,6 +3,7 @@ using GameControlSignals;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using WaveSystemSignals;
+using CardSystemUISignal;
 
 public class GameplayUICoordinator
 {

@@ -1,8 +1,6 @@
-using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Generic;
 using System;
-using UICommandSystemSignals;
+using CardSystemUISignal;
 using CardSystemSignals;
 
 public class UICommandManager : MonoBehaviour

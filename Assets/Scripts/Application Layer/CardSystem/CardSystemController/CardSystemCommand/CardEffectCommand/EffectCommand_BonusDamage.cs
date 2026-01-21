@@ -9,7 +9,7 @@ public class EffectCommand_BonusDamage : CardEffectCommand
 
     public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage);
+        cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * (1 + nestingCnt));
 
         ResetCommandData();
     }

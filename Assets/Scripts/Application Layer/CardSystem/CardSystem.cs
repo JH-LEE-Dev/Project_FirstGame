@@ -3,6 +3,7 @@ using CardSystemSignals;
 using GameControlSignals;
 using System;
 using UnitLogicSystemSignals;
+using CardSystemUISignal;
 
 public class CardSystem
 {

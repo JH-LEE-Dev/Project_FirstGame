@@ -11,15 +11,5 @@ namespace UICommandSystemSignals
             actionDataBatch = _actionDataBatch;
         }
     }
-
-    public struct UICommandCompleteSignal 
-    {
-        public int commandIdx;
-
-        public UICommandCompleteSignal(int idx)
-        {
-            commandIdx = idx;
-        }
-    }
 }
 

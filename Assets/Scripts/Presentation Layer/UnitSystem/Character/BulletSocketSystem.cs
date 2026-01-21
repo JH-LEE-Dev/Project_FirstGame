@@ -104,8 +104,8 @@ public class BulletSocketSystem : MonoBehaviour
     // 모든 피봇의 위치를 잡아주기
     private void RelayoutSlots()
     {
-        Debug.Log(Count);
-        Debug.Log(sockets.Count);
+        //Debug.Log(Count);
+        //Debug.Log(sockets.Count);
         for (int i = 0; i < Count; i++)
         {
             Vector3 target = GetLocalSlotPosition(i);
