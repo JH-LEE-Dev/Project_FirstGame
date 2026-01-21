@@ -159,6 +159,7 @@ public class DeckSystem : MonoBehaviour,
             Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
             script.CardDataInstance = dataList[i];
             script.PlayingEventforDeck(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
+            //Debug.Log("Idx: " + i + "Last: " + (currentDrawCount - 1) + " " + (i == (currentDrawCount - 1)));
         }
     }
 
