@@ -59,6 +59,12 @@ public class CardSystem
         cardManager.HandToGraveEvent -= HandToGrave;
         cardManager.HandToGraveEvent += HandToGrave;
 
+        cardManager.ToExtinctionEvent -= ToExtinction;
+        cardManager.ToExtinctionEvent += ToExtinction;
+
+        cardManager.ExtinctionToDeckEvent -= ExtinctionToDeck;
+        cardManager.ExtinctionToDeckEvent += ExtinctionToDeck;
+
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
         cardSystemController.CardDrawStartEvent += CardDrawStarted;
 
@@ -79,6 +85,12 @@ public class CardSystem
 
         cardSystemController.CardUsedEvent -= cardManager.CardUsed;
         cardSystemController.CardUsedEvent += cardManager.CardUsed;
+
+        cardSystemController.BulletCardAppliedEvent -= cardManager.ToExtinction;
+        cardSystemController.BulletCardAppliedEvent += cardManager.ToExtinction;
+
+        cardSystemController.ExtinctionToDeckEvent -= cardManager.ExtinctionToDeck;
+        cardSystemController.ExtinctionToDeckEvent += cardManager.ExtinctionToDeck;
     }
 
     private void ReleaseEvents()
@@ -90,6 +102,10 @@ public class CardSystem
         cardManager.GraveToDeckEvent -= GraveToDeck;
 
         cardManager.HandToGraveEvent -= HandToGrave;
+
+        cardManager.ToExtinctionEvent -= ToExtinction;
+
+        cardManager.ExtinctionToDeckEvent -= ExtinctionToDeck;
 
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
 
@@ -104,6 +120,10 @@ public class CardSystem
         cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
 
         cardSystemController.CardUsedEvent -= cardManager.CardUsed;
+
+        cardSystemController.BulletCardAppliedEvent -= cardManager.ToExtinction;
+
+        cardSystemController.ExtinctionToDeckEvent -= cardManager.ExtinctionToDeck;
     }
 
     public void Release()
@@ -130,6 +150,16 @@ public class CardSystem
     private void HandToGrave(ReadOnlySpan<CardDataInstance> cards = default)
     {
         signalHub.Publish(new HandToGraveSignal(), cards);
+    }
+
+    private void ToExtinction()
+    {
+        signalHub.Publish(new ToExtinctionSignal());
+    }
+
+    private void ExtinctionToDeck()
+    {
+        signalHub.Publish(new ExtinctionToDeckSignal());
     }
 
     private void CardDrawStarted()
@@ -176,6 +206,6 @@ public class CardSystem
 
     private void WaveStarted(WaveStartSignal waveStartSignal)
     {
-        cardManager.ExtinctionToDeck();
+        cardSystemController.GameStarted();
     }
 }

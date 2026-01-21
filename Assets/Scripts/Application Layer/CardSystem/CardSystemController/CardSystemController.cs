@@ -12,6 +12,8 @@ public class CardSystemController : MonoBehaviour
     //public event Action CardActionBeginScopeEvent;
     public event Action CardActionEndScopeEvent;
     public event Action PlayerTurnFinishedEvent;
+    public event Action<CardDataInstance> BulletCardAppliedEvent;
+    public event Action ExtinctionToDeckEvent;
 
     public event Action<CardSystemCommand> SystemCommandDispatchEvent;
     public event Action<CardSystemCommand> SlotSystemCommandDispatchEvent;
@@ -30,7 +32,6 @@ public class CardSystemController : MonoBehaviour
     private List<CardEffectCommand> cardEffect_AfterAttack = new List<CardEffectCommand>(30);
 
     private CardSlotManager cardSlotManager;
-
 
     public void Initialize()
     {
@@ -128,9 +129,10 @@ public class CardSystemController : MonoBehaviour
 
     private void CardUsed(CardDataInstance usedCard)
     {
+        CardUsedEvent?.Invoke(usedCard);
+
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
-            CardUsedEvent?.Invoke(usedCard);
             OrginizeCardEffectCommand(usedCard);
             DispatchCardEffect_BeforeAttack();
         }
@@ -264,9 +266,17 @@ public class CardSystemController : MonoBehaviour
 
         for(int i = 0;i<bulletCardSlot.Count;++i)
         {
-            CardUsedEvent?.Invoke(bulletCardSlot[i]);
+            BulletCardAppliedEvent?.Invoke(bulletCardSlot[i]);
         }
 
         cardSlotManager.ClearAllBulletCard();
+
+        CardActionEndScopeEvent?.Invoke();
+    }
+
+    public void GameStarted()
+    {
+        ExtinctionToDeckEvent?.Invoke();
+        CardActionEndScopeEvent?.Invoke();
     }
 }

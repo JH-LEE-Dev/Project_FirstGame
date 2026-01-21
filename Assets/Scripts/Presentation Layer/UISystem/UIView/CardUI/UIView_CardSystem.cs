@@ -393,6 +393,14 @@ public class UIView_CardSystem : UIView
                     AllCardReturnToPool(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
+                case ActionType_CardSystem.ToExtinction:
+                    Debug.Log("ToExtinction");
+
+                    break;
+                case ActionType_CardSystem.ExtinctionToDeck:
+                    Debug.Log("ExtinctionToDeck");
+
+                    break;
 
                 default: break;
             }

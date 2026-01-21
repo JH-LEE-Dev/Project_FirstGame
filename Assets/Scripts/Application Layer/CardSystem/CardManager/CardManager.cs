@@ -16,6 +16,8 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     public event CardAdditionalDrawDelegate CardAdditionalDrawEvent;
     public event GraveToDeckDelegate GraveToDeckEvent;
     public event HandToGraveDelegate HandToGraveEvent;
+    public event Action ToExtinctionEvent;
+    public event Action ExtinctionToDeckEvent;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
@@ -167,7 +169,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void CardUsed(CardDataInstance usedCard)
     {
-        if (usedCard.GetCardData().elementType == ElementType.Extinction)
+        if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
             handPile.Remove(usedCard);
 
@@ -176,8 +178,6 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         else
         {
             handPile.Remove(usedCard);
-
-            extinctionPile.Add(usedCard);
         }
     }
 
@@ -245,6 +245,14 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         }
 
         extinctionPile.Clear();
+
+        ExtinctionToDeckEvent?.Invoke();
+    }
+
+    public void ToExtinction(CardDataInstance usedCard)
+    {
+        extinctionPile.Add(usedCard);
+        ToExtinctionEvent?.Invoke();
     }
 
     public void ExecuteCommand(ICardSystemActionCommand actionCommand)

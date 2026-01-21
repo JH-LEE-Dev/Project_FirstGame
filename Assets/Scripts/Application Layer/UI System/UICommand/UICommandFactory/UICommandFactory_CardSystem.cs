@@ -160,6 +160,32 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
+    public void CreateJob_ToExtinction()
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
+            return;
+
+        batch.actionDataList.Add(new ActionData_CardSystem
+        {
+            actionDataType = ActionType_CardSystem.ToExtinction,
+            cards = null
+        });
+    }
+
+    public void CreateJob_ExtinctionToDeck()
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
+            return;
+
+        batch.actionDataList.Add(new ActionData_CardSystem
+        {
+            actionDataType = ActionType_CardSystem.ExtinctionToDeck,
+            cards = null
+        });
+    }
+
     public ActionDataBatch_CardSystem GetJobBatch()
     {
         bGeneratingJobBatch = false;

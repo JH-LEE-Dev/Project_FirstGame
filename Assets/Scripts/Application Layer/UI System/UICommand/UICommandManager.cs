@@ -38,6 +38,8 @@ public class UICommandManager : MonoBehaviour
         signalHub.Subscribe<HandToGraveSignal,CardDataInstance>(HandToGrave);
         signalHub.Subscribe<GraveToDeckSignal,CardDataInstance>(GraveToDeck);
         signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
+        signalHub.Subscribe<ToExtinctionSignal>(ToExtinction);
+        signalHub.Subscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
     }
 
     private void UnSubscribeEvents()
@@ -48,6 +50,8 @@ public class UICommandManager : MonoBehaviour
         signalHub.UnSubscribe<HandToGraveSignal, CardDataInstance>(HandToGrave);
         signalHub.UnSubscribe<GraveToDeckSignal, CardDataInstance>(GraveToDeck);
         signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
+        signalHub.UnSubscribe<ToExtinctionSignal>(ToExtinction);
+        signalHub.UnSubscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
     }
 
 
@@ -101,6 +105,16 @@ public class UICommandManager : MonoBehaviour
                     commandFactory_CardSystem.CreateJob_ToDeck(cards);
                     break;
                 }
+            case ActionType_CardSystem.ToExtinction:
+                {
+                    commandFactory_CardSystem.CreateJob_ToExtinction();
+                    break;
+                }
+            case ActionType_CardSystem.ExtinctionToDeck:
+                {
+                    commandFactory_CardSystem.CreateJob_ExtinctionToDeck();
+                    break;
+                }
         }
     }
 
@@ -112,5 +126,15 @@ public class UICommandManager : MonoBehaviour
     public void ReleaseJobBatch(UICommandCompleteSignal uiCommandCompleteSignal)
     {
         commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
+    }
+
+    private void ToExtinction(ToExtinctionSignal toExtinctionSignal)
+    {
+        CreateCommand(ActionType_CardSystem.ToExtinction);
+    }
+
+    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal)
+    {
+        CreateCommand(ActionType_CardSystem.ExtinctionToDeck);
     }
 }
