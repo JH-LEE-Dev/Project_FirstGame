@@ -61,7 +61,7 @@ public class CardMotion : MonoBehaviour
 
     public int socketIndex { get; private set; }
 
-    public void AllKillTweens()
+    public void AllKillTweens(bool bRestoreScale = true)
     {
         hoverTween?.Kill();
 
@@ -76,7 +76,11 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        transform.localScale = originScale;
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
+
+        if (bRestoreScale) transform.localScale = originScale;
     }
 
 
@@ -140,20 +144,7 @@ public class CardMotion : MonoBehaviour
     public void PlayReject()
     {
         // 다른 연출들 정리
-        KillHoverOnly();
-        previewMoveTween?.Kill();
-        previewScaleTween?.Kill();
-        previewRotateTween?.Kill();
-        previewEndScaleTween?.Kill();
-        rejectSeq?.Kill();
-
-        flyTween?.Kill();
-        flyRotateTween?.Kill();
-        flyScaleTween?.Kill();
-
-        BulletSocketTween?.Kill();
-        BulletSocketRotateTween?.Kill();
-        BulletSocketScaleTween?.Kill();
+        AllKillTweens(false);
 
         Vector3 baseScale = transform.localScale;
         float baseZ = transform.localEulerAngles.z;
@@ -183,6 +174,7 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardState != CardState.InHand) return;
 
+
         hoverTween?.Kill();
         hoverTween = transform.DOScale(originScale * hoverScale, hoverDuration)
             .SetEase(Ease.OutBack)
@@ -199,31 +191,11 @@ public class CardMotion : MonoBehaviour
             .SetUpdate(true);
     }
 
-    private void KillHoverOnly()
-    {
-        hoverTween?.Kill();
-        hoverTween = null;
-    }
-
-
     // Preview
     public void StartPreview(Vector2 centerPos, System.Action onArrive = null)
     {
         // 다른 연출들 정리
-        KillHoverOnly();
-        previewMoveTween?.Kill();
-        previewScaleTween?.Kill();
-        previewRotateTween?.Kill();
-        previewEndScaleTween?.Kill();
-        rejectSeq?.Kill();
-
-        flyTween?.Kill();
-        flyRotateTween?.Kill();
-        flyScaleTween?.Kill();
-
-        BulletSocketTween?.Kill();
-        BulletSocketRotateTween?.Kill();
-        BulletSocketScaleTween?.Kill();
+        AllKillTweens(false);
 
         previewMoveTween = rt.DOAnchorPos(centerPos, previewMoveDuration)
             .SetEase(Ease.OutCubic)
@@ -244,20 +216,7 @@ public class CardMotion : MonoBehaviour
     public void EndPreview()
     {
         // 다른 연출들 정리
-        KillHoverOnly();
-        previewMoveTween?.Kill();
-        previewScaleTween?.Kill();
-        previewRotateTween?.Kill();
-        previewEndScaleTween?.Kill();
-        rejectSeq?.Kill();
-
-        flyTween?.Kill();
-        flyRotateTween?.Kill();
-        flyScaleTween?.Kill();
-
-        BulletSocketTween?.Kill();
-        BulletSocketRotateTween?.Kill();
-        BulletSocketScaleTween?.Kill();
+        AllKillTweens(false);
 
         velocity = Vector2.zero;
 
@@ -271,20 +230,7 @@ public class CardMotion : MonoBehaviour
     public void FlyToGrave(Vector3 graveAnchoredPos, System.Action onComplete = null)
     {
         // 다른 연출들 정리
-        KillHoverOnly();
-        previewMoveTween?.Kill();
-        previewScaleTween?.Kill();
-        previewRotateTween?.Kill();
-        previewEndScaleTween?.Kill();
-        rejectSeq?.Kill();
-
-        flyTween?.Kill();
-        flyRotateTween?.Kill();
-        flyScaleTween?.Kill();
-
-        BulletSocketTween?.Kill();
-        BulletSocketRotateTween?.Kill();
-        BulletSocketScaleTween?.Kill();
+        AllKillTweens(false);
 
         velocity = Vector2.zero;
 
@@ -306,20 +252,7 @@ public class CardMotion : MonoBehaviour
     public void FlyToBulletSocket(bool bIsHand,Transform socketTransform, System.Action onComplete = null)
     {
         // 다른 연출들 정리
-        KillHoverOnly();
-        previewMoveTween?.Kill();
-        previewScaleTween?.Kill();
-        previewRotateTween?.Kill();
-        previewEndScaleTween?.Kill();
-        rejectSeq?.Kill();
-
-        flyTween?.Kill();
-        flyRotateTween?.Kill();
-        flyScaleTween?.Kill();
-
-        BulletSocketTween?.Kill();
-        BulletSocketRotateTween?.Kill();
-        BulletSocketScaleTween?.Kill();
+        AllKillTweens(false);
 
         velocity = Vector2.zero;
 
@@ -354,7 +287,6 @@ public class CardMotion : MonoBehaviour
 
                     Vector3 recoilPos = transform.position + recoilDir * recoilDist;
 
-                    // 회전은 Z축만 "툭" 꺾이는 게 손맛 좋음 (2D 카드 느낌)
                     Quaternion recoilRot = transform.rotation * Quaternion.Euler(0f, 0f, recoilAngle);
 
                     Sequence seq = DOTween.Sequence();
@@ -364,7 +296,6 @@ public class CardMotion : MonoBehaviour
                     seq.Append(transform.DOMove(recoilPos, recoilDur).SetEase(Ease.OutCubic));
                     seq.Join(transform.DORotateQuaternion(recoilRot, recoilDur).SetEase(Ease.OutCubic));
 
-                    // 2) 즉시 0.4초에 꽂힘
                     seq.Append(transform.DOMove(targetPos, insertPreviewDur).SetEase(insertEasePos));
                     seq.Join(transform.DORotateQuaternion(targetRot, insertPreviewDur).SetEase(insertEaseRot));
                     seq.Join(transform.DOScale(targetScale, insertPreviewDur).SetEase(insertEaseScale));
@@ -377,7 +308,16 @@ public class CardMotion : MonoBehaviour
 
     public void FlyToHand()
     {
-        // 임시
-        AllKillTweens();
+        AllKillTweens(false);
+
+        owner.Input.SetIgnoreHover(true);
+
+        BulletSocketScaleTween = transform
+                .DOScale(originScale, 0.3f)
+                .SetEase(Ease.OutCubic)
+                .OnComplete(() =>
+                {
+                    owner.Input.SetIgnoreHover(false);
+                });
     }
 }
