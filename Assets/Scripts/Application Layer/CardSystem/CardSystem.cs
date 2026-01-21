@@ -31,6 +31,7 @@ public class CardSystem
         signalHub.Subscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
+        signalHub.Subscribe<WaveStartSignal>(WaveStarted);
     }
 
     private void UnSubscribeEvents()
@@ -41,6 +42,7 @@ public class CardSystem
         signalHub.UnSubscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
+        signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
     }
 
     private void BindEvents()
@@ -75,8 +77,8 @@ public class CardSystem
         cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
         cardSystemController.PlayerTurnFinishedEvent += cardManager.PlayerTurnFinished;
 
-        cardSystemController.CardUsedEvent -= cardManager.CardToGrave;
-        cardSystemController.CardUsedEvent += cardManager.CardToGrave;
+        cardSystemController.CardUsedEvent -= cardManager.CardUsed;
+        cardSystemController.CardUsedEvent += cardManager.CardUsed;
     }
 
     private void ReleaseEvents()
@@ -101,7 +103,7 @@ public class CardSystem
 
         cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
 
-        cardSystemController.CardUsedEvent -= cardManager.CardToGrave;
+        cardSystemController.CardUsedEvent -= cardManager.CardUsed;
     }
 
     public void Release()
@@ -170,5 +172,10 @@ public class CardSystem
     private void PlayerAttacked(PlayerAttackedSignal playerAttackedSignal)
     {
         cardSystemController.ClearAllBulletCard();
+    }
+
+    private void WaveStarted(WaveStartSignal waveStartSignal)
+    {
+        cardManager.ExtinctionToDeck();
     }
 }

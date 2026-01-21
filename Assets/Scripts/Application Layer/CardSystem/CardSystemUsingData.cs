@@ -13,38 +13,42 @@ public enum ElementType
 
 public enum UsingType
 {
-    Nesting // ÁßÃ¸
+    Nesting, // ÁßÃ¸
+    NotNesting,
 }
 
 //cardID¿Í È£È¯µÊ.
 public enum CardName
 {
     BonusDamage,
-    DrawAgain,
-    MeteorShower,
-    Flare,
-    Shield
+    Shield,
+    BonusRange,
+    Amplify,
 }
 
 public enum CardEffectApplyType
 {
     Status,
-    System
+    System,
+    SlotSystem
 }
 
 
 public enum CardStatusEffectType
 {
     BonusDamage,
-    Shield
+    Shield,
+    BonusRange,
 }
 
 public enum CardSystemEffectType
 {
-    DrawAgain,
-    MeteorShower,
-    Flare,
-    AttackAgain
+
+}
+
+public enum CardSlotSystemEffectType
+{
+    Amplify,
 }
 
 public enum CardSystemActionTimingType
@@ -52,4 +56,11 @@ public enum CardSystemActionTimingType
     BeforeAttack,
     AfterAttack,
     NextTurn,
+}
+
+public enum CardEffectPriority
+{
+    Multiplier,
+    Adder,
+    Normal,
 }

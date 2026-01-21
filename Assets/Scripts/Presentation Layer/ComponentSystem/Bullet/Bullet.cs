@@ -9,7 +9,10 @@ public class Bullet : MonoBehaviour
 {
     public event Action BulletEffectIsFinishedEvent;
 
+    //statComponent로 기능 분리할 것.
     [SerializeField] float speed = 1f;
+    [SerializeField] float knockBackPower = 1f;
+    [SerializeField] float range = 1f;
     [SerializeField] float attack = 1f;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask outOfRangeMask;
@@ -17,7 +20,8 @@ public class Bullet : MonoBehaviour
     private EffectComponent effectComponent;
 
     private SpriteRenderer sr;
-    private CircleCollider2D circleCollider;
+    [SerializeField] private CircleCollider2D circleCollider;
+    [SerializeField] private CircleCollider2D explosionRangeCollider;
 
     private Vector2 flyDir;
     private Vector2 prevPosition;
@@ -25,12 +29,16 @@ public class Bullet : MonoBehaviour
     private bool bFired = false;
 
     private float attackModifier = 0;
+    private float rangeModifier = 0;
 
     private void Awake()
     {
-        circleCollider = GetComponent<CircleCollider2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         effectComponent = GetComponentInChildren<EffectComponent>();
+
+        circleCollider.enabled = false;
+        explosionRangeCollider.enabled = false;
+        range = explosionRangeCollider.radius;
     }
 
     private void OnDestroy()
@@ -65,8 +73,9 @@ public class Bullet : MonoBehaviour
 
     private bool CheckCollision_Enemy(Vector2 delta,float distance)
     {
-        RaycastHit2D hit = Physics2D.Raycast(
+        RaycastHit2D hit = Physics2D.CircleCast(
             prevPosition,
+            circleCollider.radius,
             delta.normalized,
             distance,
             targetMask
@@ -79,13 +88,25 @@ public class Bullet : MonoBehaviour
             Sound.Play("Impact", transform.position);
             sr.gameObject.SetActive(false);
 
-            Debug.Log("Damage : " + attack + attackModifier);
-            ResetAttackModifier();
+            CheckExplosion();
+
+            ResetModifier();
 
             return true;
         }
 
         return false;
+    }
+
+    private void CheckExplosion()
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, 
+            explosionRangeCollider.radius, targetMask);
+
+        foreach (var enemy in hitEnemies)
+        {
+            ApplyDamage(enemy);
+        }
     }
 
     private bool CheckCollision_OutofRange(Vector2 delta,float distance)
@@ -119,7 +140,15 @@ public class Bullet : MonoBehaviour
         if (hit != null)
         {
             hit.TakeDamage(attack + attackModifier);
+            ApplyKnockBack(hit, other.transform.position);
         }
+    }
+
+    private void ApplyKnockBack(IDamageable enemy,Vector2 enemyPos)
+    {
+        Vector2 dir = enemyPos - (Vector2)transform.position;
+
+        enemy.KnockBack(dir.normalized, explosionRangeCollider.radius);
     }
 
     public void Fire(Vector2 dir)
@@ -142,15 +171,24 @@ public class Bullet : MonoBehaviour
         attackModifier += bonusDamage;
     }
 
+    public void ApplyRangeModifier(float bonusRange)
+    {
+        bonusRange = range * bonusRange;
+
+        rangeModifier += bonusRange;
+    }
     public void BulletEffectIsFinished()
     {
         BulletEffectIsFinishedEvent?.Invoke();
 
-        ResetAttackModifier();
+        ResetModifier();
     }
 
-    public void ResetAttackModifier()
+    public void ResetModifier()
     {
-        attackModifier = 0; 
+        attackModifier = 0;
+        rangeModifier = 0;
+
+        explosionRangeCollider.radius = range;
     }
 }

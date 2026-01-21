@@ -76,6 +76,11 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
         bulletObject.ApplyAttackModifier(bonusDamage);
     }
 
+    public void ApplyRangeModifier(float bonusRange)
+    {
+        bulletObject.ApplyRangeModifier(bonusRange);
+    }
+
     /// <summary>
     /// 구현 코드 존. ----------------------------------------------------
     /// </summary>

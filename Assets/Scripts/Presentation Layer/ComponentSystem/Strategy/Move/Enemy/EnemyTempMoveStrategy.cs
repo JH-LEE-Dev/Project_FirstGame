@@ -9,6 +9,7 @@ public class EnemyTempMoveStrategy : EnemyMoveStrategy
     /// 구현 속성 존, ----------------------------------------
     /// </summary>
     [SerializeField] private float forceDelta = 1f;
+    [SerializeField] private float knockBackforceDelta = 1f;
 
     private Rigidbody2D rb;
 
@@ -23,8 +24,8 @@ public class EnemyTempMoveStrategy : EnemyMoveStrategy
     //한 번만 트리거됨.
     public override void Move_Impulse(Vector2 direction, float power)
     {
-        forceDelta = UnityEngine.Random.Range(-forceDelta, forceDelta);
-        power += forceDelta;
+        float forceDeltaValue = UnityEngine.Random.Range(-forceDelta, forceDelta);
+        power += forceDeltaValue;
 
         if (rb != null)
             rb.AddForce(direction * power, ForceMode2D.Impulse);
@@ -36,5 +37,14 @@ public class EnemyTempMoveStrategy : EnemyMoveStrategy
         Vector2 v = rb.linearVelocity;
         v += direction * acceleration * Time.fixedDeltaTime;
         rb.linearVelocity = Vector2.ClampMagnitude(v, maxSpeed);
+    }
+
+    public override void KnockBack(Vector2 direction, float power)
+    {
+        float knockBackforceDeltaValue = UnityEngine.Random.Range(-knockBackforceDelta, knockBackforceDelta);
+        power += knockBackforceDeltaValue;
+
+        if (rb != null)
+            rb.AddForce(direction * power, ForceMode2D.Impulse);
     }
 }

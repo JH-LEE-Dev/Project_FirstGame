@@ -7,5 +7,7 @@ public interface ICardStatusEffectCommandHandler
 
     void ApplyAttackModifier(float bonusDamage);
 
-    void AttackAgain();
+    void ApplyRangeModifier(float bonusRange);  
+
+    void ApplyAttackCntModifier(int cnt);
 }

@@ -18,14 +18,38 @@ MonoBehaviour:
     cardType: 0
     elementType: 0
     usingType: 0
+    priority: 1
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 00000000
+    cardSlotSystemEffects: 
   - id: 1
-    cardName: 4
+    cardName: 1
     cardType: 1
     elementType: 0
     usingType: 0
+    priority: 2
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 01000000
+    cardSlotSystemEffects: 
+  - id: 2
+    cardName: 2
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    priority: 1
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 02000000
+    cardSlotSystemEffects: 
+  - id: 3
+    cardName: 3
+    cardType: 0
+    elementType: 1
+    usingType: 1
+    priority: 0
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 00000000

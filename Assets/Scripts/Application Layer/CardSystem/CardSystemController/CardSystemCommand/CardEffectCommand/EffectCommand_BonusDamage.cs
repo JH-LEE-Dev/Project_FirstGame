@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/BonusDamage")]
 public class EffectCommand_BonusDamage : CardEffectCommand
@@ -9,7 +7,7 @@ public class EffectCommand_BonusDamage : CardEffectCommand
 
     public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * (1 + nestingCnt));
+        cardStatusEffectCommandHandler.ApplyAttackModifier((bonusDamage * valueModifier) * (1 + nestingCnt));
 
         ResetCommandData();
     }

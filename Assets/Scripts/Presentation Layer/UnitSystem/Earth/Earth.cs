@@ -54,4 +54,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     {
         return healthComponent.GetPrevShield();
     }
+
+    public void KnockBack(Vector2 dir, float power)
+    {
+        return;
+    }
 }

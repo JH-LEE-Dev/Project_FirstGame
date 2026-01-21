@@ -11,6 +11,8 @@ public class CardSystemCommand : ScriptableObject, ICardStatusEffectCommand, ICa
 
     public virtual void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler) { }
 
+    public virtual void Execute(ICardSlotSystemActionCommandHandler  cardSlotSystemActionCommandHandler) { }
+
     public void Activate() => IsActive = true;
 
     public void Deactivate() => IsActive = false;

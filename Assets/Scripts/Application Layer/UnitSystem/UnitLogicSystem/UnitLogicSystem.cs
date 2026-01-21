@@ -169,13 +169,18 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         PlayerTakeDamageEvent?.Invoke(damage);
     }
 
-    public void AttackAgain()
-    {
-        throw new NotImplementedException();
-    }
-
     private void PlayerAttacked()
     {
         PlayerAttackedEvent?.Invoke();
+    }
+
+    public void ApplyRangeModifier(float bonusRange)
+    {
+        characterUnit.combatEffectReceiver.ApplyRangeModifier(bonusRange);
+    }
+
+    public void ApplyAttackCntModifier(int cnt)
+    {
+        
     }
 }

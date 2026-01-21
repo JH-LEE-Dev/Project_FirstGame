@@ -23,19 +23,16 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     private List<CardDataInstance> deckPile = new List<CardDataInstance>(50);
     private List<CardDataInstance> handPile = new List<CardDataInstance>(20);
     private List<CardDataInstance> gravePile = new List<CardDataInstance>(50);
+    private List<CardDataInstance> extinctionPile = new List<CardDataInstance>(50);
 
     IReadOnlyList<CardDataInstance> ICardSystemData.deckCards => deckPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.handCards => handPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.graveCards => gravePile;
-
+    IReadOnlyList<CardDataInstance> ICardSystemData.extinctionCards => extinctionPile;
 
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int cardPileDrawAmount = 5;
     [SerializeField] private int initialDeckCnt = 40;
-
-    public int deckCnt { get; private set; }
-    public int graveCnt { get; private set; }
-    public int handCnt { get; private set; }
 
     public void Initialize()
     {
@@ -79,17 +76,28 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(0);
+        CardData cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
         ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        for (int i = 0; i < initialDeckCnt; ++i)
+        for (int i = 0; i < 1; ++i)
         {
             CardDataInstance card = pool.Get();
             deckPile.Add(card);
-            ++deckCnt;
+        }
+
+        cardData = cardDataBase.GetCardData(0);
+        if (cardData == null)
+            return;
+
+        pool = cardPools[cardData.id];
+
+        for (int i = 0; i < 1; ++i)
+        {
+            CardDataInstance card = pool.Get();
+            deckPile.Add(card);
         }
     }
 
@@ -139,7 +147,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
-            GraveToDeckMove();
+            GraveToDeck();
             CardPileDraw(restDrawCnt, false);
         }
 
@@ -157,12 +165,20 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         CardPileDraw(amount, true);
     }
 
-    public void CardToGrave(CardDataInstance usedCard)
+    public void CardUsed(CardDataInstance usedCard)
     {
-        handPile.Remove(usedCard);
+        if (usedCard.GetCardData().elementType == ElementType.Extinction)
+        {
+            handPile.Remove(usedCard);
 
-        gravePile.Add(usedCard);
-        ++graveCnt;
+            gravePile.Add(usedCard);
+        }
+        else
+        {
+            handPile.Remove(usedCard);
+
+            extinctionPile.Add(usedCard);
+        }
     }
 
     public void ReleaseCard(CardDataInstance card)
@@ -184,9 +200,6 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         handPile.Clear();
         gravePile.Clear();
         deckPile.Clear();
-
-        deckCnt = 0;
-        graveCnt = 0;
     }
 
     public void HandToGrave()
@@ -200,7 +213,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         handPile.Clear();
     }
 
-    private void GraveToDeckMove()
+    private void GraveToDeck()
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -223,6 +236,17 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         rentalBuffer.Dispose();
     }
 
+    public void ExtinctionToDeck()
+    {
+        for (int i = 0; i < extinctionPile.Count; ++i)
+        {
+            var card = extinctionPile[i];
+            deckPile.Add(card);
+        }
+
+        extinctionPile.Clear();
+    }
+
     public void ExecuteCommand(ICardSystemActionCommand actionCommand)
     {
         actionCommand.Execute(this);
@@ -233,25 +257,19 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         CardAdditionalPileDraw(drawAmount);
     }
 
-    public int GetDeckCnt()
-    {
-        return deckCnt;
-    }
-
-    public int GetHandCnt()
-    {
-        return handCnt;
-    }
-
-    public int GetGraveCnt()
-    {
-        return graveCnt;
-    }
-
     public void PlayerTurnFinished()
     {
         HandToGrave();
 
         HandToGraveEvent?.Invoke(null);
+    }
+
+    public void ApplyValueModifier(int valueModifier)
+    {
+        for (int i = 0; i < handPile.Count; ++i)
+        {
+            if (handPile[i].GetCardData().usingType == UsingType.Nesting)
+                handPile[i].valueModifier *= valueModifier;
+        }
     }
 }
