@@ -23,10 +23,6 @@ public class UIView_CardSystem : UIView
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
     [Space]
-    [SerializeField] private TMP_Text deckCntText;
-    [SerializeField] private TMP_Text graveCntText;
-    [SerializeField] private TMP_Text handCntText;
-    [Space]
     [Header("Buttons")]
     [SerializeField] private Button turnFinishedButton;
     ////////////
@@ -310,18 +306,9 @@ public class UIView_CardSystem : UIView
     }
     /////////////////////////////////////////////////
 
-    private void SetText()
-    {
-        deckCntText.text = "Deck : " + deckCards.Count.ToString();
-        graveCntText.text = "Grave : " + graveCards.Count.ToString();
-        handCntText.text = "Hand : " + handCards.Count.ToString();
-    }
-
     protected override void OnShow()
     {
         base.OnShow();
-
-        SetText();
     }
 
     protected override void OnHide()
@@ -340,7 +327,6 @@ public class UIView_CardSystem : UIView
 
         turnFinishedButton.gameObject.SetActive(false);
         CardUsingFinishedEvent?.Invoke();
-        SetText();
     }
 
     public void CardDrawFinished()
@@ -398,7 +384,6 @@ public class UIView_CardSystem : UIView
             }
         }
 
-        SetText();
         UpdateCardsCounts();
 
         UICommandCompleteEvent?.Invoke(_jobBatch.idx);
