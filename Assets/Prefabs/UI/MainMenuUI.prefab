@@ -129,7 +129,7 @@ MonoBehaviour:
   startHidden: 1
   uiRoot: {fileID: 2466567181962015386}
   uiPrefab: {fileID: 0}
-  startButton: {fileID: 2541093750419082702}
+  startButton: {fileID: 2420328298651117504}
 --- !u!1001 &504881470581182250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -138,14 +138,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2466567181962015386}
     m_Modifications:
-    - target: {fileID: 2780700943086774506, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
-      propertyPath: enterEase
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 2780700943086774506, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
-      propertyPath: enterDuration
-      value: 0.4
-      objectReference: {fileID: 0}
     - target: {fileID: 6819314682872943870, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
       propertyPath: m_Name
       value: MenuButton
@@ -235,17 +227,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
---- !u!114 &2541093750419082702 stripped
+--- !u!114 &2420328298651117504 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2612778589587423972, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 2780700943086774506, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}
   m_PrefabInstance: {fileID: 504881470581182250}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: b1af8982684693047895d4a6f25a99cf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButton_Motion
 --- !u!224 &7033722215375754645 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7394204785220901567, guid: f807e3ecd0e6f224fba618037d841aa0, type: 3}

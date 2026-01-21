@@ -8,8 +8,7 @@ using UnityEngine.EventSystems;
 enum ShowOption
 {
     OnEnter,
-    OnUp,
-    OnDown
+    OnUp
 };
 
 enum RectSelect
@@ -19,7 +18,7 @@ enum RectSelect
     Bottom,
 };
 
-public class MenuButton_Motion : MonoBehaviour
+public class MenuButton : MonoBehaviour
     , IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
 {
     [Header("Main Settings")]
@@ -30,7 +29,6 @@ public class MenuButton_Motion : MonoBehaviour
 
     private bool onEnter => ShowOption.OnEnter == option;
     private bool onUp => ShowOption.OnUp == option;
-    private bool onDown => ShowOption.OnDown == option;
 
     [Space, Header("Enter Options")]
     [ShowIf("onEnter"), SerializeField] private float enterDuration = 1f;
@@ -39,11 +37,17 @@ public class MenuButton_Motion : MonoBehaviour
 
     [Space, Header("Up Options")]
     [ShowIf("onUp"), SerializeField] private float upDuration = 1f;
+    [ShowIf("onUp"), SerializeField] private Vector3 upStartScale = Vector3.one;
+    [ShowIf("onUp"), SerializeField] private Ease upEase = Ease.Linear;
 
-    [Space, Header("Down Options")]
-    [ShowIf("onDown"), SerializeField] private float downDuration = 1f;
+    private Action onCompleteAction;
 
     private Sequence seq;
+
+    private void OnDisable()
+    {
+        seq.Kill();
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -56,7 +60,7 @@ public class MenuButton_Motion : MonoBehaviour
 
         visualRects[selectIdx].eulerAngles = enterStartRot; 
 
-        seq.Append(visualRects[selectIdx].DORotate(Vector3.zero, enterDuration, RotateMode.FastBeyond360)
+        seq.Append(visualRects[selectIdx].DOLocalRotate(Vector3.zero, enterDuration, RotateMode.FastBeyond360)
             .SetEase(enterEase));
 
         seq.OnComplete(() =>
@@ -75,13 +79,37 @@ public class MenuButton_Motion : MonoBehaviour
     public void OnPointerDown(PointerEventData eventData)
     {
         
-
-
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        
+        int selectIdx = (int)RectSelect.Top;
+        if (selectIdx >= visualRects.Count())
+            return;
+
+        CancelPrevMotion(seq);
+        seq = DOTween.Sequence();
+
+        visualRects[selectIdx].eulerAngles = Vector3.zero;
+        visualRects[selectIdx].localScale = upStartScale;
+
+        seq.Append(visualRects[selectIdx].DOScale(Vector3.one, upDuration)
+            .SetEase(upEase));
+
+        seq.OnComplete(() =>
+        {
+            visualRects[selectIdx].localScale = Vector3.one;
+
+            onCompleteAction?.Invoke();
+        });
+
+        seq.SetUpdate(false);
+    }
+
+    public void OnCompleteAction(Action _action)
+    {
+        onCompleteAction -= _action;
+        onCompleteAction += _action;
     }
 
     private void CancelPrevMotion(Sequence _seq)
