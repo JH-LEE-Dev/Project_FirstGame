@@ -3,7 +3,7 @@ using GameControlSignals;
 using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
-using System;
+using CardSystemUISignal;
 
 public class CardUICoordinator
 {

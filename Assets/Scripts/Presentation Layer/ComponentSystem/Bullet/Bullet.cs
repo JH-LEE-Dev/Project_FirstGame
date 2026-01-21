@@ -24,9 +24,7 @@ public class Bullet : MonoBehaviour
 
     private bool bFired = false;
 
-    private int currentOccupiedSlotCnt = 0;
-    private int effectSlotCnt = 2;
-    bool bCanApplyEffect = true;
+    private float attackModifier = 0;
 
     private void Awake()
     {
@@ -81,6 +79,9 @@ public class Bullet : MonoBehaviour
             Sound.Play("Impact", transform.position);
             sr.gameObject.SetActive(false);
 
+            Debug.Log("Damage : " + attack + attackModifier);
+            ResetAttackModifier();
+
             return true;
         }
 
@@ -117,7 +118,7 @@ public class Bullet : MonoBehaviour
 
         if (hit != null)
         {
-            hit.TakeDamage(attack);
+            hit.TakeDamage(attack + attackModifier);
         }
     }
 
@@ -138,28 +139,18 @@ public class Bullet : MonoBehaviour
 
     public void ApplyAttackModifier(float bonusDamage)
     {
-        attack += bonusDamage;
-
-        IncreaseOccupiedSlotCnt();
-    }
-
-    public void IncreaseOccupiedSlotCnt()
-    {
-        ++currentOccupiedSlotCnt;
-
-        if (currentOccupiedSlotCnt >= effectSlotCnt)
-        {
-            bCanApplyEffect = false;
-        }
-    }
-
-    public bool CanApplyBulletEffect()
-    {
-        return bCanApplyEffect;
+        attackModifier += bonusDamage;
     }
 
     public void BulletEffectIsFinished()
     {
         BulletEffectIsFinishedEvent?.Invoke();
+
+        ResetAttackModifier();
+    }
+
+    public void ResetAttackModifier()
+    {
+        attackModifier = 0; 
     }
 }

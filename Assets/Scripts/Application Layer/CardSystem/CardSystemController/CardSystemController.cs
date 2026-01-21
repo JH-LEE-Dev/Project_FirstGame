@@ -1,9 +1,8 @@
-using CardSystemSignals;
 using System;
 using System.Collections.Generic;
 using UnitLogicSystemSignals;
-using Unity.VisualScripting;
 using UnityEngine;
+using CardSystemUISignal;
 
 public class CardSystemController : MonoBehaviour
 {
@@ -132,7 +131,7 @@ public class CardSystemController : MonoBehaviour
 
     public void PlayerAttackFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
     {
-        for(int i = 0;i<bulletCardSlot.Count; ++i)
+        for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
             bulletCardSlot[i].ResetCardData();
         }
@@ -192,35 +191,46 @@ public class CardSystemController : MonoBehaviour
 
         CardData usedCardData = usedCard.GetCardData();
 
-        for (int i = 0; i < bulletCardSlotCnt; ++i)
+        if (usedCardData.cardType == CardType.Bullet)
         {
-            if (i >= bulletCardSlot.Count)
+            for (int i = 0; i < bulletCardSlotCnt; ++i)
             {
-                CardUsed(usedCard);
-                bulletCardSlot.Add(usedCard);
-                result.bVerified = true;
-                result.slotIdx = i;
-                result.usedCard = usedCard;
+                if (i >= bulletCardSlot.Count)
+                {
+                    CardUsed(usedCard);
+                    bulletCardSlot.Add(usedCard);
+                    result.bVerified = true;
+                    result.slotIdx = i;
+                    result.usedCard = usedCard;
 
-                return result;
+                    return result;
+                }
+
+                CardData currentCardData = bulletCardSlot[i].GetCardData();
+
+                if (currentCardData.id == usedCardData.id)
+                {
+                    ++bulletCardSlot[i].nestingCnt;
+                    result.bVerified = true;
+                    result.slotIdx = i;
+                    result.usedCard = usedCard;
+
+                    return result;
+                }
             }
 
-            CardData currentCardData = bulletCardSlot[i].GetCardData();
-
-            if (currentCardData.id == usedCardData.id)
-            {
-                ++bulletCardSlot[i].nestingCnt;
-                result.bVerified = true;
-                result.slotIdx = i;
-                result.usedCard = usedCard;
-
-                return result;
-            }
+            result.bVerified = false;
+            result.slotIdx = -1;
+            result.usedCard = null;
         }
+        else
+        {
+            CardUsed(usedCard);
 
-        result.bVerified = false;
-        result.slotIdx = -1;
-        result.usedCard = null;
+            result.bVerified = true;
+            result.slotIdx = -1;
+            result.usedCard = usedCard;
+        }
 
         return result;
     }

@@ -22,30 +22,6 @@ MonoBehaviour:
     cardSystemEffects: 
     cardStatusEffects: 00000000
   - id: 1
-    cardName: 1
-    cardType: 0
-    elementType: 0
-    usingType: 0
-    bFlash: 0
-    cardSystemEffects: 0000000003000000
-    cardStatusEffects: 
-  - id: 2
-    cardName: 2
-    cardType: 0
-    elementType: 0
-    usingType: 0
-    bFlash: 0
-    cardSystemEffects: 01000000
-    cardStatusEffects: 
-  - id: 3
-    cardName: 3
-    cardType: 0
-    elementType: 0
-    usingType: 0
-    bFlash: 0
-    cardSystemEffects: 02000000
-    cardStatusEffects: 
-  - id: 4
     cardName: 4
     cardType: 1
     elementType: 0
