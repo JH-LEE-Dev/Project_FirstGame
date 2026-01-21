@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using CardEffectSystemSignal;
 using GameControlSignals;
 using CardSystemSignals;
-using UnitLogicSystemSignals;
 using WaveSystemSignals;
-using UnitSpawnSystemSignals;
 using System;
+using CardSystemUISignal;
 
 //이 클래스 책임이 커질 거 같으므로, 컴포넌트로 기능 분할할 것.
 

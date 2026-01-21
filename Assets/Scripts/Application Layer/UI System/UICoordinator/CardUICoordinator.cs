@@ -3,7 +3,7 @@ using GameControlSignals;
 using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
-using System;
+using CardSystemUISignal;
 
 public class CardUICoordinator
 {
@@ -119,12 +119,12 @@ public class CardUICoordinator
 
     public void CardUsed(CardUsedSignal cardUsedSignal)
     {
-        Vector3 slotPos = Vector3.zero;
+        Transform slotTransform = null;
 
         if(cardUsedSignal.bVerified == true)
-            slotPos = unitUISystem.GetSocketPos(cardUsedSignal.slotIdx);
+            slotTransform = unitUISystem.GetSocketPos(cardUsedSignal.slotIdx);
 
-        cardUISystem.CardUsingApproved(cardUsedSignal.bVerified, cardUsedSignal.slotIdx,slotPos);
+        cardUISystem.CardUsingApproved(cardUsedSignal.bVerified, cardUsedSignal.slotIdx, slotTransform);
     }
 
     public void RecieveUIJob(CardSystem_JobDispatchSignal cardSystem_JobDispatchSignal)

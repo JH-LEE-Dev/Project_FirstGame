@@ -5,6 +5,7 @@ using UnityEngine;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using WaveSystemSignals;
+using CardSystemUISignal;
 
 public class UnitSystem
 {
