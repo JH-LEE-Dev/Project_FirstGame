@@ -80,7 +80,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(3);
+        CardData cardData = cardDataBase.GetCardData(0);
         if (cardData == null)
             return;
 
@@ -102,12 +102,6 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     public void CardPileDraw(int amount, bool bAdditional)
     {
         int restDrawCnt = 0;
-
-        if(deckPile.Count == 0)
-        {
-            Debug.Log("덱에 더 이상 카드가 없습니다.");
-            return;
-        }
 
         if (deckPile.Count < amount)
         {
@@ -132,10 +126,13 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             writeBuffer[i] = card;
         }
 
-        if (bAdditional == false)
-            CardPileDrawEvent?.Invoke(rentalBuffer.Span);
-        else
-            CardAdditionalDrawEvent?.Invoke(rentalBuffer.Span);
+        if (rentalBuffer.Span.Length != 0)
+        {
+            if (bAdditional == false)
+                CardPileDrawEvent?.Invoke(rentalBuffer.Span);
+            else
+                CardAdditionalDrawEvent?.Invoke(rentalBuffer.Span);
+        }
 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
@@ -230,21 +227,6 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     public void DrawAgain(int drawAmount)
     {
         CardAdditionalPileDraw(drawAmount);
-    }
-
-    public int GetDeckCnt()
-    {
-        return deckCnt;
-    }
-
-    public int GetHandCnt()
-    {
-        return handCnt;
-    }
-
-    public int GetGraveCnt()
-    {
-        return graveCnt;
     }
 
     public void PlayerTurnFinished()
