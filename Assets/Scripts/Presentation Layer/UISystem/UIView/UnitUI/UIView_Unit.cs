@@ -77,7 +77,6 @@ public class UIView_Unit : UIView
 
     // For ClickCatchSystem
 
-    // 이게 호출될 때, UIView_CardSystem에 있는 CancelPreview() 함수가 호출되어야 함.
     public void CancelPreview()
     {
         CancelCardPreviewEvent?.Invoke();
@@ -87,11 +86,11 @@ public class UIView_Unit : UIView
 
     // For BulletSocketSystem
 
-    public Vector3 GetSocketPos(int _index)
+    public Transform GetSocketPos(int _index)
     {
-        if (bulletsocketSystem == null) return Vector3.zero;
+        if (bulletsocketSystem == null) return null;
 
-        return bulletsocketSystem.GetSocketTransform(_index).position;
+        return bulletsocketSystem.GetSocketTransform(_index);
     }
 
 
@@ -112,4 +111,9 @@ public class UIView_Unit : UIView
         UnEquipBulletCardEvent?.Invoke(_index);
     }
 
+    // 쏠때 이거 불러주면 소켓 카드 전부 초기화.
+    public void UnEquipBulletCardForShoot()
+    {
+        bulletsocketSystem?.UnEquipBulletCardForShoot();
+    }
 }
