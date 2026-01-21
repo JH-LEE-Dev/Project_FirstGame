@@ -412,7 +412,7 @@ public class UIView_CardSystem : UIView
 
     private void DrawingCards(List<CardDataInstance> _datas)
     {
-        if (null == deckSystem)
+        if (null == deckSystem || 0 >= _datas.Count)
             return;
 
         bWorkingBlock = true;

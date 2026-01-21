@@ -10,7 +10,7 @@ public class CardDataInstance
 {
     private CardData cardData;
     public bool bUpgrade = false;
-    public int nestingCnt = 1;
+    public int nestingCnt = 0;
 
     public void Initialize(CardData cardData)
     {
@@ -37,5 +37,10 @@ public class CardDataInstance
     public void AddCardStatusEffect(CardStatusEffectType effectType)
     {
         cardData.cardStatusEffects.Add(effectType);
+    }
+
+    public void ResetCardData()
+    {
+        nestingCnt = 0;
     }
 }

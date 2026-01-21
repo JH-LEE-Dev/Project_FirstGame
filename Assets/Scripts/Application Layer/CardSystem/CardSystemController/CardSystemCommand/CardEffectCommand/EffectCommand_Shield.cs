@@ -8,5 +8,7 @@ public class EffectCommand_Shield : CardEffectCommand
     public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.ApplyShieldModifier(bonusShield);
+
+        ResetCommandData();
     }
 }

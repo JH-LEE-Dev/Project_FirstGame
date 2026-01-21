@@ -8,5 +8,7 @@ public class EffectCommand_DrawAgain : CardEffectCommand
     public override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.DrawAgain(drawAmount + nestingCnt);
+
+        ResetCommandData();
     }
 }

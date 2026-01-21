@@ -80,7 +80,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(3);
+        CardData cardData = cardDataBase.GetCardData(0);
         if (cardData == null)
             return;
 
@@ -126,10 +126,17 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             writeBuffer[i] = card;
         }
 
-        if (bAdditional == false)
-            CardPileDrawEvent?.Invoke(rentalBuffer.Span);
+        if (rentalBuffer.Span.Length != 0)
+        {
+            if (bAdditional == false)
+                CardPileDrawEvent?.Invoke(rentalBuffer.Span);
+            else
+                CardAdditionalDrawEvent?.Invoke(rentalBuffer.Span);
+        }
         else
-            CardAdditionalDrawEvent?.Invoke(rentalBuffer.Span);
+        {
+            Debug.Log("덱에 더 이상 카드가 없어요");
+        }
 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
@@ -197,6 +204,12 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        if (gravePile.Count == 0)
+        {
+            Debug.Log("묘지에 더 이상 카드가 없습니다. 씌발");
+            return;
+        }
 
         for (int i = 0; i < gravePile.Count; ++i)
         {

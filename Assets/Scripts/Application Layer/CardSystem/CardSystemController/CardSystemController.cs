@@ -124,8 +124,7 @@ public class CardSystemController : MonoBehaviour
     {
         for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
-            for (int j = 0; j < bulletCardSlot[i].nestingCnt; ++j)
-                OrginizeCardEffectCommand(bulletCardSlot[i]);
+            OrginizeCardEffectCommand(bulletCardSlot[i]);
         }
 
         DispatchCardEffect_AfterAttack();
@@ -133,6 +132,13 @@ public class CardSystemController : MonoBehaviour
 
     public void PlayerAttackFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
     {
+        for(int i = 0;i<bulletCardSlot.Count; ++i)
+        {
+            bulletCardSlot[i].ResetCardData();
+        }
+
+        bulletCardSlot.Clear();
+
         PlayerTurnFinishedEvent?.Invoke();
     }
 
@@ -145,8 +151,10 @@ public class CardSystemController : MonoBehaviour
         {
             CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
 
+            if (usedCard.GetCardData().cardType == CardType.Bullet)
+                effectCommand.nestingCnt = usedCard.nestingCnt;
+
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            effectCommand.nestingCnt = usedCard.nestingCnt;
             InsertCommandToList(timing, effectCommand);
         }
 
@@ -154,8 +162,10 @@ public class CardSystemController : MonoBehaviour
         {
             CardEffectCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
 
+            if (usedCard.GetCardData().cardType == CardType.Bullet)
+                effectCommand.nestingCnt = usedCard.nestingCnt;
+
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            effectCommand.nestingCnt = usedCard.nestingCnt;
             InsertCommandToList(timing, effectCommand);
         }
     }
@@ -217,6 +227,8 @@ public class CardSystemController : MonoBehaviour
 
     public void DiscardBulletCard(int slotIdx)
     {
+        var slotCard = bulletCardSlot[slotIdx];
+        slotCard.ResetCardData();
         bulletCardSlot.RemoveAt(slotIdx);
     }
 }

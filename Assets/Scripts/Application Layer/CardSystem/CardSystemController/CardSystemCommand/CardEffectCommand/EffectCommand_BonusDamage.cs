@@ -10,5 +10,7 @@ public class EffectCommand_BonusDamage : CardEffectCommand
     public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage);
+
+        ResetCommandData();
     }
 }
