@@ -30,6 +30,7 @@ public class CardSystem
         signalHub.Subscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
         signalHub.Subscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
+        signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
     }
 
     private void UnSubscribeEvents()
@@ -39,6 +40,7 @@ public class CardSystem
         signalHub.UnSubscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
+        signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
     }
 
     private void BindEvents()
@@ -72,6 +74,9 @@ public class CardSystem
 
         cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
         cardSystemController.PlayerTurnFinishedEvent += cardManager.PlayerTurnFinished;
+
+        cardSystemController.CardUsedEvent -= cardManager.CardToGrave;
+        cardSystemController.CardUsedEvent += cardManager.CardToGrave;
     }
 
     private void ReleaseEvents()
@@ -95,6 +100,8 @@ public class CardSystem
         cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
 
         cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
+
+        cardSystemController.CardUsedEvent -= cardManager.CardToGrave;
     }
 
     public void Release()
@@ -152,14 +159,16 @@ public class CardSystem
     {
         CardUsedResult result = cardSystemController.TryCardUse(tryCardUseSignal.usedCard);
 
-        if (result.bVerified == true)
-            cardManager.CardUsed(result.usedCard);
-
         signalHub.Publish(new CardUsedSignal(result.bVerified, result.slotIdx));
     }
 
     private void DiscardBulletCard(DiscardBulletCardSignal discardBulletCardSignal)
     {
         cardSystemController.DiscardBulletCard(discardBulletCardSignal.slotIdx);
+    }
+
+    private void PlayerAttacked(PlayerAttackedSignal playerAttackedSignal)
+    {
+        cardSystemController.ClearAllBulletCard();
     }
 }

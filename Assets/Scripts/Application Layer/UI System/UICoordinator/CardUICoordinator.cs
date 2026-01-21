@@ -4,6 +4,7 @@ using UICommandSystemSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
 using CardSystemUISignal;
+using UnitLogicSystemSignals;
 
 public class CardUICoordinator
 {
@@ -33,6 +34,7 @@ public class CardUICoordinator
         signalHub.Subscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.Subscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
         signalHub.Subscribe<CardUsedSignal>(CardUsed);
+        signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
     }
 
     private void UnSubscribeEvents()
@@ -43,6 +45,7 @@ public class CardUICoordinator
         signalHub.UnSubscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.UnSubscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
         signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
+        signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
     }
 
     public void Release()
@@ -122,7 +125,7 @@ public class CardUICoordinator
         Transform slotTransform = null;
 
         if(cardUsedSignal.bVerified == true)
-            slotTransform = unitUISystem.GetSocketPos(cardUsedSignal.slotIdx);
+            slotTransform = unitUISystem.GetSocketTransform(cardUsedSignal.slotIdx);
 
         cardUISystem.CardUsingApproved(cardUsedSignal.bVerified, cardUsedSignal.slotIdx, slotTransform);
     }
@@ -145,5 +148,10 @@ public class CardUICoordinator
     public void UnEquipBulletCard(int idx)
     {
         signalHub.Publish(new DiscardBulletCardSignal(idx));
+    }
+
+    private void PlayerAttacked(PlayerAttackedSignal playerAttackedSignal)
+    {
+        unitUISystem.UnEquipBulletCardForShoot();
     }
 }

@@ -19,15 +19,22 @@ public class CardInstance : MonoBehaviour
     [SerializeField] private Sprite rotationIcon;
     [SerializeField] private Sprite extinctionIcon;
 
-    private readonly Color bulletFrameColor = new Color32(183, 66, 81, 255);
-    private readonly Color bulletTextFrameColor = new Color32(233, 180, 166, 255);
-    private readonly Color bulletGlowColor = new Color32(121, 13, 22, 255);
-    private readonly Color bulletAOColor = new Color32(41, 31, 22, 38);
+    private static Color Hex(string hex, float alpha)
+    {
+        ColorUtility.TryParseHtmlString(hex, out var c);
+        c.a = alpha;
+        return c;
+    }
 
-    private readonly Color magicFrameColor = new Color32(80, 70, 214, 255);
-    private readonly Color magicTextFrameColor = new Color32(198, 214, 255, 255);
-    private readonly Color magicGlowColor = new Color32(5, 39, 176, 255);
-    private readonly Color magicAOColor = new Color32(33, 38, 61, 38);
+    private readonly Color bulletFrameColor = Hex("#DEAB48", 1f);
+    private readonly Color bulletTextFrameColor = Hex("#FAE1AA", 1f);
+    private readonly Color bulletGlowColor = new Color32(145, 181, 32, 72);
+    private readonly Color bulletAOColor = Hex("#7B6D21", 0.3f);
+
+    private readonly Color magicFrameColor = Hex("#696EC2", 1f);
+    private readonly Color magicTextFrameColor = Hex("#DAD5ED", 1f);
+    private readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
+    private readonly Color magicAOColor = Hex("#0025CD", 0.3f);
 
     // µ•¿Ã≈Õ
     private CardDataInstance cardData;
