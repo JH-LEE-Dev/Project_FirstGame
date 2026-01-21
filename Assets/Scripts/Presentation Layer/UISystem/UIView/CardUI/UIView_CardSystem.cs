@@ -24,7 +24,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Transform uiRoot;
     [Space]
     [Header("Buttons")]
-    [SerializeField] private Button turnFinishedButton;
+    [SerializeField] private TurnEndButton turnFinishedButton;
     ////////////
 
     [Header("Systems")]
@@ -77,7 +77,7 @@ public class UIView_CardSystem : UIView
 
         SetAnchorToCanvas(uiRoot.transform);
 
-        turnFinishedButton.onClick.AddListener(CardUsingFinished);
+        turnFinishedButton.OnCompleteAction(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
         poolingSystem?.Init(this);
