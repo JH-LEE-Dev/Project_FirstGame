@@ -86,45 +86,23 @@ public class CardInstance : MonoBehaviour
 
     private void CardFrameChange(CardType type)
     {
-        //if (!cardFrame || !cardTextFrame || !CardAO || !glowFilter) return;
-
-
-        //switch (type)
-        //{
-        //    case CardType.Bullet: 
-        //        cardFrame.color = bulletFrameColor;
-        //        cardTextFrame.color = bulletTextFrameColor;
-        //        CardAO.color = bulletAOColor;
-        //        glowFilter.Color = bulletGlowColor;
-        //        break;
-        //    case CardType.Magic: 
-        //        cardFrame.color = magicFrameColor;
-        //        cardTextFrame.color = magicTextFrameColor;
-        //        CardAO.color = magicAOColor;
-        //        glowFilter.Color = magicGlowColor;
-        //        break;
-        //}
-
         if (!cardFrame || !cardTextFrame || !CardAO || !glowFilter) return;
 
-        int i = Random.Range(0, 2);
-
-        switch (i)
+        switch (type)
         {
-            case 0:
+            case CardType.Bullet:
                 cardFrame.color = bulletFrameColor;
                 cardTextFrame.color = bulletTextFrameColor;
                 CardAO.color = bulletAOColor;
                 glowFilter.Color = bulletGlowColor;
                 break;
-            case 1:
+            case CardType.Magic:
                 cardFrame.color = magicFrameColor;
                 cardTextFrame.color = magicTextFrameColor;
                 CardAO.color = magicAOColor;
                 glowFilter.Color = magicGlowColor;
                 break;
         }
-
     }
     private void CardIconChange(ElementType type)
     {
