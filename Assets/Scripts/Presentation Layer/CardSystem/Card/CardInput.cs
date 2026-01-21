@@ -12,10 +12,7 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         bIgnoreHover = value;
     }
-    private void Update()
-    {
-        Debug.Log(bIgnoreHover);
-    }
+
     public void Bind(MainCardInstance card) => owner = card;
 
     // 호버되는 상황.
