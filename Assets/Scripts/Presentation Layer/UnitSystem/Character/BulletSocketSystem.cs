@@ -104,8 +104,6 @@ public class BulletSocketSystem : MonoBehaviour
     // 모든 피봇의 위치를 잡아주기
     private void RelayoutSlots()
     {
-        Debug.Log(Count);
-        Debug.Log(sockets.Count);
         for (int i = 0; i < Count; i++)
         {
             Vector3 target = GetLocalSlotPosition(i);
@@ -143,18 +141,6 @@ public class BulletSocketSystem : MonoBehaviour
 
     //////////////////////////////////////////////// 카드 장착 및 해제
 
-    [Button]
-    private void Equip()
-    {
-        EquipBulletCard(0, null);
-    }
-    [Button]
-    private void UnEquip()
-    {
-        UnEquipBulletCard(0);
-    }
-
-
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
         CardData data = _data?.GetCardData();
@@ -170,23 +156,34 @@ public class BulletSocketSystem : MonoBehaviour
 
         socketVisual.PlayImpactSlam();
     }
-
     public void UnEquipBulletCard(int _index)
     {
         SocketVisual socketVisual = sockets[_index];
 
-        int count = socketVisual.GetOverlapCount();
-        count--;
-        socketVisual.SetOverlapCount(count);
+        socketVisual.SetOverlapCount(0);
 
-        if (count <= 0)
-        {
-            SocketCardInstance targetCardInstance = cards[_index];
-            targetCardInstance.gameObject.SetActive(false);
-            targetCardInstance.Clear();
-        }
+        SocketCardInstance targetCardInstance = cards[_index];
+        targetCardInstance.gameObject.SetActive(false);
+        targetCardInstance.Clear();
 
         socketVisual.PlayUnequip();
         uIView_Unit.UnEquipBulletCard(_index);
+    }
+
+    public void UnEquipBulletCardForShoot()
+    {
+        for (int i = 0; i < sockets.Count; i++)
+        {
+            // 슬롯의 넘버 초기화
+            SocketVisual socketVisual = sockets[i];
+            socketVisual.SetOverlapCount(0);
+
+            // 슬롯의 카드 초기화 및 안보이게
+            SocketCardInstance targetCardInstance = cards[i];
+            targetCardInstance.gameObject.SetActive(false);
+            targetCardInstance.Clear();
+
+            socketVisual.PlayUnequip();
+        }
     }
 }

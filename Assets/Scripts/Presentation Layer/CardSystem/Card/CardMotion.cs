@@ -49,12 +49,16 @@ public class CardMotion : MonoBehaviour
 
 
     [Header("Bullet Socket Motion")]
-    [SerializeField] private float socketDuration = 0.22f;
-    [SerializeField] private float socketTiltZ = -25f;     // 왼쪽으로 살짝 기울기
-    [SerializeField] private float socketScale = 0.55f;    // 날아가며 작아짐
-    private Tween socketMoveTween;
-    private Tween socketRotateTween;
-    private Tween socketScaleTween;
+    const float insertDur = 0.2f;
+    const float insertPreviewDur = 0.15f;
+    Ease insertEasePos = Ease.InSine;  
+    Ease insertEaseRot = Ease.InSine; 
+    Ease insertEaseScale = Ease.InSine;
+    private Tween BulletSocketTween;
+    private Tween BulletSocketRotateTween;
+    private Tween BulletSocketScaleTween;
+
+
     public int socketIndex { get; private set; }
 
     public void AllKillTweens()
@@ -147,9 +151,9 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        socketMoveTween?.Kill();
-        socketRotateTween?.Kill();
-        socketScaleTween?.Kill();
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
 
         Vector3 baseScale = transform.localScale;
         float baseZ = transform.localEulerAngles.z;
@@ -217,9 +221,9 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        socketMoveTween?.Kill();
-        socketRotateTween?.Kill();
-        socketScaleTween?.Kill();
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
 
         previewMoveTween = rt.DOAnchorPos(centerPos, previewMoveDuration)
             .SetEase(Ease.OutCubic)
@@ -251,9 +255,9 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        socketMoveTween?.Kill();
-        socketRotateTween?.Kill();
-        socketScaleTween?.Kill();
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
 
         velocity = Vector2.zero;
 
@@ -278,9 +282,9 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        socketMoveTween?.Kill();
-        socketRotateTween?.Kill();
-        socketScaleTween?.Kill();
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
 
         velocity = Vector2.zero;
 
@@ -299,7 +303,7 @@ public class CardMotion : MonoBehaviour
         flyTween.OnComplete(() => onComplete?.Invoke());
     }
 
-    public void FlyToBulletSocket(Vector3 socketAnchoredPos, System.Action onComplete = null)
+    public void FlyToBulletSocket(bool bIsHand,Transform socketTransform, System.Action onComplete = null)
     {
         // 다른 연출들 정리
         KillHoverOnly();
@@ -313,26 +317,62 @@ public class CardMotion : MonoBehaviour
         flyRotateTween?.Kill();
         flyScaleTween?.Kill();
 
-        socketMoveTween?.Kill();
-        socketRotateTween?.Kill();
-        socketScaleTween?.Kill();
+        BulletSocketTween?.Kill();
+        BulletSocketRotateTween?.Kill();
+        BulletSocketScaleTween?.Kill();
 
         velocity = Vector2.zero;
 
-        // 이동/회전/축소 동시에
-        socketMoveTween = rt.DOAnchorPos(socketAnchoredPos, socketDuration)
-            .SetEase(Ease.InOutCubic)
-            .SetUpdate(true);
+        Vector2 targetPos = socketTransform.position;
+        Quaternion targetRot = socketTransform.rotation;
+        Vector3 targetScale = socketTransform.localScale;
 
-        socketRotateTween = rt.DOLocalRotate(new Vector3(0f, 0f, socketTiltZ), socketDuration)
-            .SetEase(Ease.InOutCubic)
-            .SetUpdate(true);
+        switch (bIsHand)
+        {
+            case true:
+                {
+                    BulletSocketTween = transform.DOMove(targetPos, insertDur)
+                        .SetEase(insertEasePos);
 
-        socketScaleTween = transform.DOScale(originScale * socketScale, socketDuration)
-            .SetEase(Ease.InOutCubic)
-            .SetUpdate(true);
+                    BulletSocketRotateTween = transform.DORotateQuaternion(targetRot, insertDur)
+                        .SetEase(insertEaseRot);
 
-        socketMoveTween.OnComplete(() => onComplete?.Invoke());
+                    BulletSocketScaleTween = transform.DOScale(targetScale, insertDur)
+                        .SetEase(insertEaseScale);
+
+                    BulletSocketTween.OnComplete(() => onComplete?.Invoke());
+                    break;
+                }
+
+            case false:
+                {
+                    float recoilDur = 0.1f;
+
+                    Vector3 recoilDir = Vector3.right;
+                    float recoilDist = 2f;         
+                    float recoilAngle = -25f;
+
+                    Vector3 recoilPos = transform.position + recoilDir * recoilDist;
+
+                    // 회전은 Z축만 "툭" 꺾이는 게 손맛 좋음 (2D 카드 느낌)
+                    Quaternion recoilRot = transform.rotation * Quaternion.Euler(0f, 0f, recoilAngle);
+
+                    Sequence seq = DOTween.Sequence();
+
+                    seq.SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+
+                    seq.Append(transform.DOMove(recoilPos, recoilDur).SetEase(Ease.OutCubic));
+                    seq.Join(transform.DORotateQuaternion(recoilRot, recoilDur).SetEase(Ease.OutCubic));
+
+                    // 2) 즉시 0.4초에 꽂힘
+                    seq.Append(transform.DOMove(targetPos, insertPreviewDur).SetEase(insertEasePos));
+                    seq.Join(transform.DORotateQuaternion(targetRot, insertPreviewDur).SetEase(insertEaseRot));
+                    seq.Join(transform.DOScale(targetScale, insertPreviewDur).SetEase(insertEaseScale));
+
+                    seq.OnComplete(() => onComplete?.Invoke());
+                    break;
+                }
+        }
     }
 
     public void FlyToHand()

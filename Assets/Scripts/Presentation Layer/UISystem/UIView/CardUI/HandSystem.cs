@@ -139,14 +139,12 @@ public class HandSystem : MonoBehaviour
         computeArc();
     }
 
-    public void UseCard(MainCardInstance _card, int socketIndex = 0, Vector3 _pos = default)
+    public void UseCard(MainCardInstance _card, int socketIndex = 0, Transform transform = null)
     {
         if (_card == null) return;
 
         int idx = cards.IndexOf(_card);
         if (idx < 0) return;
-        if (_pos == default)
-            _pos = Vector3.zero;
 
         // 프리뷰 카드 사용이라면 프리뷰 상태 정리
         if (previewCard == _card)
@@ -168,7 +166,7 @@ public class HandSystem : MonoBehaviour
         switch (type)
         {
             case CardType.Bullet:
-                EquipBullet(_card, socketIndex, _pos);
+                EquipBullet(_card, socketIndex, transform);
                 break;
 
             case CardType.Magic:
@@ -177,7 +175,7 @@ public class HandSystem : MonoBehaviour
         }
 
     }
-    private void EquipBullet(MainCardInstance card, int socketIndex, Vector3 socketPos)
+    private void EquipBullet(MainCardInstance card, int socketIndex, Transform transform)
     {
         if (card == null) return;
         if (socketIndex < 0) return;
@@ -188,12 +186,14 @@ public class HandSystem : MonoBehaviour
             previewCard = null;
         }
 
+        bool bIsHand = card.cardState == CardState.InHand ? true : false;
+
         // 패 레이아웃에서 빠지게 상태 변경
         card.SetUIState(CardState.Other);
         hoveredCard = null;
         computeArc();
 
-        card.Motion.FlyToBulletSocket(socketPos, () =>
+        card.Motion.FlyToBulletSocket(bIsHand, transform, () =>
         {
             card.SetUIState(CardState.Equipped);
             card.Motion.SetSocketIndex(socketIndex);
@@ -422,7 +422,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 전부 묘지에 쏟아부음
-    public void AllCardReturnToPool(CardState state)
+    public void AllCardReturnToGrave(CardState state)
     {
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
@@ -461,6 +461,16 @@ public class HandSystem : MonoBehaviour
 
             delay += discardInterval;
         }
+    }
 
+    public void AllCardReturnToPool(CardState state)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            var c = cards[i];
+            if (c != null && c.cardState == state)
+                ReturnToPool(c);
+        }
+        computeArc();
     }
 }

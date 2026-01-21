@@ -112,12 +112,11 @@ public class UIView_CardSystem : UIView
         TryCardUseEvent?.Invoke(_card.CardData);
     }
 
-    public void CardUsingApproved(bool boolean,int slotIdx,Vector3 slotPos) // true이면 verificationWaitCard -> 사용 승인.
+    public void CardUsingApproved(bool boolean,int slotIdx, Transform slotTransform) // true이면 verificationWaitCard -> 사용 승인.
     {
         if (boolean)
         {
-            Debug.Log(slotPos);
-            handSystem?.UseCard(verificationWaitCard, slotIdx, slotPos);
+            handSystem?.UseCard(verificationWaitCard, slotIdx, slotTransform);
         }
         else
         {
@@ -151,10 +150,16 @@ public class UIView_CardSystem : UIView
     }
 
     // state에 맞는 카드들이 묘지로 빨려들어가는 기능
+    public void AllCardReturnToGrave(CardState state)
+    {
+        handSystem?.AllCardReturnToGrave(state);
+    }
+
     public void AllCardReturnToPool(CardState state)
     {
         handSystem?.AllCardReturnToPool(state);
     }
+    
 
 
     // 불릿 카드 사용했을때, 호출되는 함수
@@ -384,9 +389,7 @@ public class UIView_CardSystem : UIView
 
                 case ActionType_CardSystem.HandToGrave:
 
-                    AllCardReturnToPool(CardState.InHand);
-
-                    // 임시요 : 영우
+                    AllCardReturnToGrave(CardState.InHand);
                     AllCardReturnToPool(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
