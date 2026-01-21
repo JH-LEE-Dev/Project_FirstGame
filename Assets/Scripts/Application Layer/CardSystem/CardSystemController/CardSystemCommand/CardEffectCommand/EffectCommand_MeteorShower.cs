@@ -9,5 +9,7 @@ public class EffectCommand_MeteorShower : CardEffectCommand
     public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.AttackAgain();
+
+        ResetCommandData();
     }
 }

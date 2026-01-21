@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using ChocDino.UIFX;
 
 
 public class CardInstance : MonoBehaviour
@@ -9,14 +9,25 @@ public class CardInstance : MonoBehaviour
     [Header("Refs: View")]
     [SerializeField] private Image cardImage;
     [SerializeField] private Image cardFrame;
+    [SerializeField] private Image cardTextFrame;
+    [SerializeField] private GlowFilter glowFilter;
+    [SerializeField] private Image CardAO;
+
     [SerializeField] private Image cardIcon;
     [SerializeField] private TextMeshProUGUI cardName;
     [SerializeField] private TextMeshProUGUI cardDescription;
     [SerializeField] private Sprite rotationIcon;
     [SerializeField] private Sprite extinctionIcon;
 
-    private static readonly Color BulletColor = new Color32(255, 210, 102, 255);
-    private static readonly Color MagicColor = new Color32(102, 190, 255, 255);
+    private readonly Color bulletFrameColor = new Color32(183, 66, 81, 255);
+    private readonly Color bulletTextFrameColor = new Color32(233, 180, 166, 255);
+    private readonly Color bulletGlowColor = new Color32(121, 13, 22, 255);
+    private readonly Color bulletAOColor = new Color32(41, 31, 22, 38);
+
+    private readonly Color magicFrameColor = new Color32(80, 70, 214, 255);
+    private readonly Color magicTextFrameColor = new Color32(198, 214, 255, 255);
+    private readonly Color magicGlowColor = new Color32(5, 39, 176, 255);
+    private readonly Color magicAOColor = new Color32(33, 38, 61, 38);
 
     // µ•¿Ã≈Õ
     private CardDataInstance cardData;
@@ -68,15 +79,46 @@ public class CardInstance : MonoBehaviour
 
     private void CardFrameChange(CardType type)
     {
-        if (!cardFrame) return;
+        //if (!cardFrame || !cardTextFrame || !CardAO || !glowFilter) return;
 
-        switch (type)
+
+        //switch (type)
+        //{
+        //    case CardType.Bullet: 
+        //        cardFrame.color = bulletFrameColor;
+        //        cardTextFrame.color = bulletTextFrameColor;
+        //        CardAO.color = bulletAOColor;
+        //        glowFilter.Color = bulletGlowColor;
+        //        break;
+        //    case CardType.Magic: 
+        //        cardFrame.color = magicFrameColor;
+        //        cardTextFrame.color = magicTextFrameColor;
+        //        CardAO.color = magicAOColor;
+        //        glowFilter.Color = magicGlowColor;
+        //        break;
+        //}
+
+        if (!cardFrame || !cardTextFrame || !CardAO || !glowFilter) return;
+
+        int i = Random.Range(0, 2);
+
+        switch (i)
         {
-            case CardType.Bullet: cardFrame.color = BulletColor; break;
-            case CardType.Magic: cardFrame.color = MagicColor; break;
+            case 0:
+                cardFrame.color = bulletFrameColor;
+                cardTextFrame.color = bulletTextFrameColor;
+                CardAO.color = bulletAOColor;
+                glowFilter.Color = bulletGlowColor;
+                break;
+            case 1:
+                cardFrame.color = magicFrameColor;
+                cardTextFrame.color = magicTextFrameColor;
+                CardAO.color = magicAOColor;
+                glowFilter.Color = magicGlowColor;
+                break;
         }
-    }
 
+    }
     private void CardIconChange(ElementType type)
     {
         if (!cardIcon) return;

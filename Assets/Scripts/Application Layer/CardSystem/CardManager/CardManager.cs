@@ -103,6 +103,12 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     {
         int restDrawCnt = 0;
 
+        if(deckPile.Count == 0)
+        {
+            Debug.Log("덱에 더 이상 카드가 없습니다.");
+            return;
+        }
+
         if (deckPile.Count < amount)
         {
             restDrawCnt = amount - deckPile.Count;
@@ -197,6 +203,12 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        if(gravePile.Count == 0)
+        {
+            Debug.Log("묘지에 더 이상 카드가 없습니다. 씌발");
+            return;
+        }
 
         for (int i = 0; i < gravePile.Count; ++i)
         {
