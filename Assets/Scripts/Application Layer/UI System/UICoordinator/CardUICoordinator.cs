@@ -73,6 +73,9 @@ public class CardUICoordinator
         unitUISystem.UnEquipBulletCardEvent -= cardUISystem.UnEquipBulletCard;
         unitUISystem.UnEquipBulletCardEvent += cardUISystem.UnEquipBulletCard;
 
+        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
+        unitUISystem.UnEquipBulletCardEvent += UnEquipBulletCard;
+
         unitUISystem.CancelCardPreviewEvent -= cardUISystem.CancelPreview;
         unitUISystem.CancelCardPreviewEvent += cardUISystem.CancelPreview;
     }
@@ -93,6 +96,8 @@ public class CardUICoordinator
         cardUISystem.CardEquippedEvent -= unitUISystem.EquipBulletCard;
 
         unitUISystem.UnEquipBulletCardEvent -= cardUISystem.UnEquipBulletCard;
+
+        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
 
         unitUISystem.CancelCardPreviewEvent -= cardUISystem.CancelPreview;
     }
@@ -135,5 +140,10 @@ public class CardUICoordinator
     public void PlayerTurnStarted(PlayerTurnStartSignal playerTurnStartSignal)
     {
         cardUISystem.PlayerTurnStarted();
+    }
+
+    public void UnEquipBulletCard(int idx)
+    {
+        signalHub.Publish(new DiscardBulletCardSignal(idx));
     }
 }

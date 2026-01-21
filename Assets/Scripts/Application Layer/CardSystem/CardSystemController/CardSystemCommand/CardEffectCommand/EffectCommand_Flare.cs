@@ -10,5 +10,7 @@ public class EffectCommand_Flare : CardEffectCommand
     public override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.DrawAgain(drawAmount + nestingCnt);
+
+        ResetCommandData();
     }
 }

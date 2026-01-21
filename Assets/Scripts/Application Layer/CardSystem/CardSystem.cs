@@ -28,6 +28,7 @@ public class CardSystem
         signalHub.Subscribe<TryCardUseSignal>(TryCardUse);
         signalHub.Subscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
         signalHub.Subscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
+        signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
     }
 
     private void UnSubscribeEvents()
@@ -36,6 +37,7 @@ public class CardSystem
         signalHub.UnSubscribe<TryCardUseSignal>(TryCardUse);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
+        signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
     }
 
     private void BindEvents()
@@ -153,5 +155,10 @@ public class CardSystem
             cardManager.CardUsed(result.usedCard);
 
         signalHub.Publish(new CardUsedSignal(result.bVerified, result.slotIdx));
+    }
+
+    private void DiscardBulletCard(DiscardBulletCardSignal discardBulletCardSignal)
+    {
+        cardSystemController.DiscardBulletCard(discardBulletCardSignal.slotIdx);
     }
 }
