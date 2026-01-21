@@ -19,6 +19,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action<Vector2> EnemyIsDeadEvent;
     public event Action PlayerTurnFinishedEvent;
     public event Action<float> PlayerTakeDamageEvent;
+    public event Action PlayerAttackedEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -84,11 +85,16 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         characterUnit.PlayerAttackFinishedEvent -= PlayerTurnFinished;
         characterUnit.PlayerAttackFinishedEvent += PlayerTurnFinished;
+
+        characterUnit.PlayerAttackEvent -= PlayerAttacked;
+        characterUnit.PlayerAttackEvent += PlayerAttacked;
     }
 
     private void ReleaseEvent_Character()
     {
         characterUnit.PlayerAttackFinishedEvent -= PlayerTurnFinished;
+
+        characterUnit.PlayerAttackEvent -= PlayerAttacked;
     }
 
     private void BindEvent_Enemy()
@@ -166,5 +172,10 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void AttackAgain()
     {
         throw new NotImplementedException();
+    }
+
+    private void PlayerAttacked()
+    {
+        PlayerAttackedEvent?.Invoke();
     }
 }

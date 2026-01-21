@@ -6,6 +6,7 @@ using CardSystemUISignal;
 
 public class CardSystemController : MonoBehaviour
 {
+    public event Action<CardDataInstance> CardUsedEvent;
     public event Action CardDrawStartEvent;
     public event Action CardDrawFinishedEvent;
     //public event Action CardActionBeginScopeEvent;
@@ -114,6 +115,7 @@ public class CardSystemController : MonoBehaviour
     {
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
+            CardUsedEvent?.Invoke(usedCard);
             OrginizeCardEffectCommand(usedCard);
             DispatchCardEffect_BeforeAttack();
         }
@@ -131,13 +133,6 @@ public class CardSystemController : MonoBehaviour
 
     public void PlayerAttackFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
     {
-        for (int i = 0; i < bulletCardSlot.Count; ++i)
-        {
-            bulletCardSlot[i].ResetCardData();
-        }
-
-        bulletCardSlot.Clear();
-
         PlayerTurnFinishedEvent?.Invoke();
     }
 
@@ -240,5 +235,16 @@ public class CardSystemController : MonoBehaviour
         var slotCard = bulletCardSlot[slotIdx];
         slotCard.ResetCardData();
         bulletCardSlot.RemoveAt(slotIdx);
+    }
+
+    public void ClearAllBulletCard()
+    {
+        for (int i = 0; i < bulletCardSlot.Count; ++i)
+        {
+            bulletCardSlot[i].ResetCardData();
+            CardUsedEvent?.Invoke(bulletCardSlot[i]);
+        }
+
+        bulletCardSlot.Clear();
     }
 }

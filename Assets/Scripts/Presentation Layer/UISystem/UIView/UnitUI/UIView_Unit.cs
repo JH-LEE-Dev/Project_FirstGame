@@ -86,7 +86,7 @@ public class UIView_Unit : UIView
 
     // For BulletSocketSystem
 
-    public Transform GetSocketPos(int _index)
+    public Transform GetSocketTransform(int _index)
     {
         if (bulletsocketSystem == null) return null;
 

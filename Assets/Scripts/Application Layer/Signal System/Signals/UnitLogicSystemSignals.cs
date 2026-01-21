@@ -22,4 +22,5 @@ namespace UnitLogicSystemSignals
             damage = _damage;
         }
     }
+    public struct PlayerAttackedSignal { }
 }

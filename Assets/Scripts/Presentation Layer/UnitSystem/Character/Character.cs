@@ -4,6 +4,8 @@ using UnityEngine.UIElements;
 
 public class Character : Unit, ICharacterData
 {
+    public event Action PlayerAttackEvent;
+
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;
 
@@ -200,6 +202,7 @@ public class Character : Unit, ICharacterData
 
             //combatComponent에서 실질적인 발사를 함.
             combatComponent.Fire(fireDir);
+            PlayerAttackEvent?.Invoke();
 
             //Sound.Play("Fire", transform.position);
         }
