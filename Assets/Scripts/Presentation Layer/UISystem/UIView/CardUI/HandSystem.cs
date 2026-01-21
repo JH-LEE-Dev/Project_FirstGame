@@ -197,14 +197,13 @@ public class HandSystem : MonoBehaviour
         {
             card.SetUIState(CardState.Equipped);
             card.Motion.SetSocketIndex(socketIndex);
-            card.Motion.AllKillTweens();
+            card.Motion.AllKillTweens(false);
             card.SetVisible(false);
 
             cardSystem.EquipBulletCard(socketIndex, card.CardData);
         });
     }
 
-    // 실제로 누른것은 슬롯에 있는 카드 모습일 것이기 때문에, 어떤 소켓번호에 있는 카드를 눌렀다고 정보를 받을것임.
     public void UnequipBulletToHand(int socketIndex)
     {
         if (socketIndex < 0) return;
