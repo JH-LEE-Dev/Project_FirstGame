@@ -87,7 +87,7 @@ public class UIView_CardSystem : UIView
         extinctionSystem?.Init(this);
     }
 
-    // For PoolingSystem
+    /////////////////////////////////// For PoolingSystem
     public MainCardInstance RentHandCard()
     {
         return poolingSystem?.RentHandCard();
@@ -96,10 +96,11 @@ public class UIView_CardSystem : UIView
     {
         poolingSystem?.ReturnHandCard(card);
     }
-    /////////////////
+    ///////////////////////////////////
 
 
-    // For HandSystem
+
+    /////////////////////////////////// For HandSystem
     public void TryUseCard(MainCardInstance _card)
     {
         //카드 사용 승인 대기 카드
@@ -155,8 +156,6 @@ public class UIView_CardSystem : UIView
     {
         handSystem?.AllCardReturnToPool(state);
     }
-    
-
 
     // 불릿 카드 사용했을때, 호출되는 함수
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
@@ -167,13 +166,33 @@ public class UIView_CardSystem : UIView
     // 불릿 카드 뺄 때, 호출되는 함수
     public void UnEquipBulletCard(int _index)
     {
-        HandSystem.UnequipBulletToHand(_index);
+        handSystem.UnequipBulletToHand(_index);
+    }
+    public void SetChooseMode(bool _bChooseMode) 
+    { 
+        handSystem.SetChooseMode(_bChooseMode); 
+        // 화면 암전
+    }
+    public bool GetChooseMode() { return handSystem.GetChooseMode(); }
+
+    // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
+    public Vector2 GetHandTargetEndPos(int currentDrawIdx)
+    {
+        if (null == handSystem)
+            return Vector2.zero;
+
+        int currHandCnt = handSystem.GetCurrentHandCardCount();
+        Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
+
+        return NextEndPos;
     }
 
 
+    ///////////////////////////////////
 
-    /////////////////
 
+
+    /////////////////////////////////// For GraveSystem
     public Vector3 GetGraveAnchoredPos()
     {
         if (graveSystem == null) return Vector3.zero;
@@ -204,20 +223,6 @@ public class UIView_CardSystem : UIView
             else
                 pool[i].gameObject.SetActive(false);
         }
-    }
-
-    // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
-    // 
-
-    public Vector2 GetHandTargetEndPos(int currentDrawIdx)
-    {
-        if (null == handSystem)
-            return Vector2.zero;
-
-        int currHandCnt = handSystem.GetCurrentHandCardCount();
-        Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
-
-        return NextEndPos;
     }
 
     public void CallPannel(CurrentPannel _setType)
