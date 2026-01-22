@@ -52,8 +52,14 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void ReleaseSlot(int index)
     {
-        PrepareNextSlot(index); // 해당 인덱스 리스트 청소
-        availableSlots.Enqueue(index); // 이제 다시 써도 된다고 큐에 삽입
+        PrepareThisSlot(index); // 해당 인덱스 리스트 청소
+
+        if (availableSlots.Contains(index)) // 이 인덱스는 이제 사용 가능.
+        {
+            Debug.LogWarning($"슬롯 {index}가 중복 반납되었습니다. 무시합니다.");
+            return;
+        }
+
         --currentUsingBatchCnt;
 
         if (currentUsingBatchCnt < 0)
@@ -64,7 +70,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         ActionDataBatch_CardSystem availableBatch;
         availableBatch.actionDataList = null;
-        availableBatch.idx = 0;
+        availableBatch.idx = -1;
 
         if (availableSlots.Count == 0)
         {
@@ -97,7 +103,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
             return;
+        }
 
         var drawList = cardListPool.Get();
 
@@ -125,7 +134,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
             return;
+        }
 
         var drawList = cardListPool.Get();
 
@@ -146,7 +158,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
             return;
+        }
 
         var toDeckList = cardListPool.Get();
 
@@ -167,7 +182,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
             return;
+        }
 
         var toHandList = cardListPool.Get();
 
@@ -188,7 +206,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다!");
             return;
+        }
 
         batch.actionDataList.Add(new ActionData_CardSystem
         {
@@ -201,7 +222,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다!");
             return;
+        }
 
         batch.actionDataList.Add(new ActionData_CardSystem
         {
@@ -214,7 +238,10 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
+        {
+            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다.");
             return;
+        }
 
         batch.actionDataList.Add(new ActionData_CardSystem
         {
@@ -225,31 +252,36 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public ActionDataBatch_CardSystem GetJobBatch()
     {
+        if(currentJobBatch.actionDataList == null)
+        {
+            Debug.Log("초기화되지 않은 UI명령이 배포됐습니다.");
+            return default;
+        }
+
+        var resultBatch = currentJobBatch;
+
+        currentJobBatch = default;
+
         bGeneratingJobBatch = false;
         ++currentUsingBatchCnt;
 
-        return currentJobBatch;
+        return resultBatch;
     }
 
     private ActionDataBatch_CardSystem InitializeActionDataBatch()
     {
-        ActionDataBatch_CardSystem batch;
-
-        if (bGeneratingJobBatch)
-            batch = currentJobBatch;
-        else
+        if (bGeneratingJobBatch == false)
         {
             currentJobBatch = GetAvailableBatch();
-            batch = currentJobBatch;
 
-            if (batch.actionDataList != null)
+            if (currentJobBatch.actionDataList != null)
                 bGeneratingJobBatch = true;
         }
 
-        return batch;
+        return currentJobBatch;
     }
 
-    private void PrepareNextSlot(int index)
+    private void PrepareThisSlot(int index)
     {
         List<ActionData_CardSystem> nextBatch = jobSlots[index];
 

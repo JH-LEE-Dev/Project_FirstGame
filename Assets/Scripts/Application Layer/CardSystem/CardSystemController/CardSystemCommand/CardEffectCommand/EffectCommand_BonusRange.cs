@@ -7,7 +7,7 @@ public class EffectCommand_BonusRange : CardEffectCommand<ICardStatusEffectComma
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyRangeModifier((bonusRange * valueModifier)*(1+nestingCnt));
+        cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier*nestingCnt);
 
         ResetCommandData();
     }
