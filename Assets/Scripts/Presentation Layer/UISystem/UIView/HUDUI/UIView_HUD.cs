@@ -124,27 +124,39 @@ public class UIView_HUD : UIView
 
     public void OnPlayerHit(float damage)
     {
-        HP_BarUpdate(damage);
+        HP_BarUpdateforDamaged(damage);
     }
 
-    private void HP_BarUpdate(float damage)
+    private void HP_BarUpdateforDamaged(float damage)
     {
         if (null == hpBar)
             return;
 
-        IPlayerData currPlayer = playerData;
+        float maxHp = playerData.GetMaxHealth();
+        float prevHp = playerData.GetPrevHealth();
+        float currHp = playerData.GetCurrentHealth();
+        float currShield = 0f;
 
-        float maxHp = currPlayer.GetMaxHealth();
-        float prevHp = currPlayer.GetPrevHealth();
-        float currHp = currPlayer.GetCurrentHealth();
+        float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
+        float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
-        float oneProgress = currHp / maxHp;
+        // 현재 쉴드가 없으면 직접적인 피해로 계산
+        if (0f >= currShield)
+            hpBar.OnHit(hpProgress);
+        else
+        {
+            Action latePlay = () =>
+            {
+                hpBar.OnHit(hpProgress);
+            };
 
-        if (null != hpBar)
-            hpBar.OnHit(oneProgress);
+            // 피해를 받고 쉴드가 남아있으면, 기존 체력 + 쉴드 적용 가중치를 적용
+            // 피해를 받고 쉴드가 0에 수렴하면 프로그레스를 0으로 만듦
+            hpBar.OnShieldHit(Mathf.Epsilon == currShield ? 0f : shieldProgress, latePlay);
+        }
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
