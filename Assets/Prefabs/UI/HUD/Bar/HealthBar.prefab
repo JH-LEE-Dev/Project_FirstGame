@@ -660,9 +660,9 @@ MonoBehaviour:
   ghostDuration: 0.5
   ghostEase: 6
   shieldSlider: {fileID: 7092082029757962794}
-  shieldDelay: 0.5
-  shieldDuration: 0.5
-  shieldEase: 1
+  shieldDelay: 0
+  shieldDuration: 0.25
+  shieldEase: 6
   shakeDuration: 0.5
   shakePower: 15
   shakeEase: 0

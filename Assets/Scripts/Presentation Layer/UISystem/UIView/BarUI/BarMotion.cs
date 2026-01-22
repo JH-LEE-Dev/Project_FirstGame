@@ -113,6 +113,29 @@ public class BarMotion : MonoBehaviour
         });
     }
 
+    public void DirectShieldSet(float _progress) => shieldSlider.value = _progress;
+
+    public void CalcMain(float _progressValue, Action callback = null)
+    {
+        if (null == mainSlider)
+            return;
+
+        CancelPrevMotion(mainSeq);
+
+        mainSeq = DOTween.Sequence();
+
+        mainSeq.AppendInterval(shieldDelay);
+        mainSeq.Append(mainSlider.DOValue(_progressValue, shieldDuration)
+            .SetEase(shieldEase)
+            .SetUpdate(false));
+
+        mainSeq.OnComplete(() =>
+        {
+            mainSlider.value = _progressValue;
+            callback?.Invoke();
+        });
+    }
+
     public Vector2 GetAnchoredPos() => mainRect.anchoredPosition;
 
     private void Awake()

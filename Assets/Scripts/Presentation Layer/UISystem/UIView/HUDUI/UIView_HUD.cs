@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class UIView_HUD : UIView
 {
@@ -119,7 +120,28 @@ public class UIView_HUD : UIView
 
     public void PlayerGetShield(float amount)
     {
+        if (null == hpBar)
+            return;
 
+        float maxHp = playerData.GetMaxHealth();
+        float currHp = playerData.GetCurrentHealth();
+        float currShield = playerData.GetCurrentShield();
+
+        float total = (currShield + currHp);
+
+        float shieldProgress = total / maxHp;
+
+        if (1f <= shieldProgress)
+        {
+            float hpRatio = currHp / total;
+
+            hpBar.DirectShieldSet(1f);
+            hpBar.CalcMain(hpRatio);
+        }
+        else
+        {
+            hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
+        }
     }
 
     public void CardUseTimeStarted()
@@ -143,18 +165,12 @@ public class UIView_HUD : UIView
         float currShield = playerData.GetCurrentShield();
         float prevShield = playerData.GetPrevShield();
 
-        float prevTotalProgress = Mathf.Clamp((prevShield + prevHp) / maxHp, 0f, 1f);
+        float prevTotalProgress = (prevShield + prevHp) / maxHp;
         float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
         float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
-        Debug.Log("이전 쉴드 비율: " + prevTotalProgress);
-        Debug.Log("현재 쉴드 비율: " + prevTotalProgress);
-
-        // 현재 쉴드가 없으면 직접적인 피해로 계산
-        if (0f >= currShield)
-            hpBar.OnHit(hpProgress);
-
-        else if (1f >= prevTotalProgress)
+        // 맞기전 실드 + 체력 가중치가 1보다 작으면
+        if (1f > prevTotalProgress && 0f < prevShield)
         {
             Action latePlay = () =>
             {
@@ -164,11 +180,26 @@ public class UIView_HUD : UIView
             // 피해를 받고 쉴드가 남아있으면, 기존 체력 + 쉴드 적용 가중치를 적용
             // 피해를 받고 쉴드가 0에 수렴하면 프로그레스를 0으로 만듦
             hpBar.OnShieldHit(Mathf.Epsilon >= currShield ? 0f : shieldProgress, latePlay);
+
+            Debug.Log("가중치 1미만");
         }
 
-        // HP Bar만 움직이면 됨, 그리고 쉴드는 HP다 끝나고 나면 0으로 바로 만들고
-        else if (1f <= prevTotalProgress)
-            //hpBar.TweenPlay(shieldProgress, hpProgress);
+        // 맞기전 실드 + 체력 가중치가 1보다 오버면
+        else if (1f <= prevTotalProgress && 0f < prevShield)
+        {
+            float total = (currShield + currHp);
+            float hpRatio = currHp / total;
+
+            hpBar.DirectShieldSet(1f);
+            hpBar.CalcMain(hpRatio);
+
+            Debug.Log("가중치 1이상");
+        }
+        else
+        {
+            hpBar.DirectShieldSet(0f);
+            hpBar.OnHit(hpProgress);
+        }
 
         if (null != hpText)
             hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
