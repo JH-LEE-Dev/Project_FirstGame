@@ -20,6 +20,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action PlayerTurnFinishedEvent;
     public event Action<float> PlayerTakeDamageEvent;
     public event Action PlayerAttackedEvent;
+    public event Action<float> PlayerGetShieldEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -157,6 +158,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void ApplyShieldModifier(float bonusShield)
     {
         playerUnit.statusEffectReceiver.ApplyShieldModifier(bonusShield);
+        PlayerGetShieldEvent?.Invoke(bonusShield);
     }
 
     public void ApplyAttackModifier(float bonusDamage)

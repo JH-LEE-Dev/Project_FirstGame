@@ -13,13 +13,22 @@ namespace UnitLogicSystemSignals
         }
     }
 
-    public struct PlayerTakeDamageSignal 
+    public struct PlayerTakeDamageSignal
     {
         public float damage;
 
         public PlayerTakeDamageSignal(float _damage)
         {
             damage = _damage;
+        }
+    }
+    public struct PlayerGetShieldSignal
+    {
+        public float amount;
+
+        public PlayerGetShieldSignal(float _amount)
+        {
+            amount = _amount;
         }
     }
     public struct PlayerAttackedSignal { }
