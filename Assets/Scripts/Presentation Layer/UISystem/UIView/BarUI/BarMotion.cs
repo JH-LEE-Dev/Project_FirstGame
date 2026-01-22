@@ -106,10 +106,14 @@ public class BarMotion : MonoBehaviour
             .SetEase(shieldEase)
             .SetUpdate(false));
 
+        shieldSeq.OnStart(() =>
+        {
+            callback?.Invoke();
+        });
+
         shieldSeq.OnComplete(() =>
         {
             shieldSlider.value = _progressValue;
-            callback?.Invoke();
         });
     }
 

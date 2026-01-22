@@ -169,7 +169,6 @@ public class UIView_HUD : UIView
         float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
         float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
-        // 맞기전 실드 + 체력 가중치가 1보다 작으면
         if (1f > prevTotalProgress && 0f < prevShield)
         {
             Action latePlay = () =>
@@ -177,14 +176,11 @@ public class UIView_HUD : UIView
                 hpBar.OnHit(hpProgress);
             };
 
-            // 피해를 받고 쉴드가 남아있으면, 기존 체력 + 쉴드 적용 가중치를 적용
-            // 피해를 받고 쉴드가 0에 수렴하면 프로그레스를 0으로 만듦
-            hpBar.OnShieldHit(Mathf.Epsilon >= currShield ? 0f : shieldProgress, latePlay);
+            bool brockenShield = Mathf.Epsilon >= currShield;
 
-            Debug.Log("가중치 1미만");
+            hpBar.OnShieldHit(brockenShield ? 0f : shieldProgress, latePlay);
         }
 
-        // 맞기전 실드 + 체력 가중치가 1보다 오버면
         else if (1f <= prevTotalProgress && 0f < prevShield)
         {
             float total = (currShield + currHp);
@@ -192,14 +188,15 @@ public class UIView_HUD : UIView
 
             hpBar.DirectShieldSet(1f);
             hpBar.CalcMain(hpRatio);
-
-            Debug.Log("가중치 1이상");
         }
+
         else
         {
             hpBar.DirectShieldSet(0f);
             hpBar.OnHit(hpProgress);
         }
+
+        // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
             hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
