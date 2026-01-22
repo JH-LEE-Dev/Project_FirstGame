@@ -156,7 +156,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     public void ApplyShieldModifier(float bonusShield)
     {
-        playerUnit.shieldEffectReceiver.ApplyShieldModifier(bonusShield);
+        playerUnit.statusEffectReceiver.ApplyShieldModifier(bonusShield);
     }
 
     public void ApplyAttackModifier(float bonusDamage)
@@ -181,6 +181,11 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     public void ApplyAttackCntModifier(int cnt)
     {
-        
+        characterUnit.ApplyAttackCntModifier(cnt);
+    }
+
+    public void HPDecrease(float amount)
+    {
+        playerUnit.TakeDamage(amount);
     }
 }

@@ -6,22 +6,25 @@ using CardSystemUISignal;
 
 public class CardSystemController : MonoBehaviour
 {
-    public event Action<CardDataInstance> CardUsedEvent;
+    public event Action<CardDataInstance> UsedCardRemovedFromHandEvent;
+    public event Action<CardDataInstance> UsedCardToGraveEvent;
+    public event Action<CardDataInstance> UsedCardToExtinctionEvent;
     public event Action CardDrawStartEvent;
     public event Action CardDrawFinishedEvent;
     //public event Action CardActionBeginScopeEvent;
     public event Action CardActionEndScopeEvent;
     public event Action PlayerTurnFinishedEvent;
-    public event Action<CardDataInstance> BulletCardAppliedEvent;
     public event Action ExtinctionToDeckEvent;
 
     public event Action<CardSystemCommand> SystemCommandDispatchEvent;
     public event Action<CardSystemCommand> SlotSystemCommandDispatchEvent;
     public event Action<CardSystemCommand> StatusCommandDispatchEvent;
+    public event Action<CardSystemCommand> ComplexCommandDispatchEvent;
 
     [SerializeField] private List<CardEffectCommand> cardStatusCommands = new List<CardEffectCommand>();
     [SerializeField] private List<CardEffectCommand> cardSystemCommands = new List<CardEffectCommand>();
     [SerializeField] private List<CardEffectCommand> slotSystemCommands = new List<CardEffectCommand>();
+    [SerializeField] private List<CardEffectCommand> complexSystemCommands = new List<CardEffectCommand>();
 
     [SerializeField] private List<CardSystemActionCommand> cardSystemActionCommands_BeforeTurn = new List<CardSystemActionCommand>();
     [SerializeField] private List<CardSystemActionCommand> cardSystemActionCommands_BeforeAttack = new List<CardSystemActionCommand>();
@@ -37,6 +40,7 @@ public class CardSystemController : MonoBehaviour
     {
         cardSlotManager = new CardSlotManager();
 
+        cardSlotManager.Initialize();
         BindEvents();
     }
 
@@ -56,6 +60,11 @@ public class CardSystemController : MonoBehaviour
         ReleaseEvents();
     }
 
+    public CardSlotManager GetCardSlotManager()
+    {
+        return cardSlotManager;
+    }
+
     public void StartCardDrawTurn()
     {
         CardDrawStartEvent?.Invoke();
@@ -63,6 +72,7 @@ public class CardSystemController : MonoBehaviour
         DispatchCardSystemActionCommand_BeforeTurn();
         CardDrawFinishedEvent?.Invoke();
         CardActionEndScopeEvent?.Invoke();
+        cardSlotManager.ClearAllPrevBulletCard();
     }
 
     private void DispatchCardSystemActionCommand_BeforeTurn()
@@ -75,6 +85,7 @@ public class CardSystemController : MonoBehaviour
 
     private void DispatchCardEffect_BeforeTurn()
     {
+        //OCP 위반.
         for (int i = 0; i < cardEffect_BeforeTurn.Count; ++i)
         {
             var command = cardEffect_BeforeTurn[i];
@@ -83,8 +94,10 @@ public class CardSystemController : MonoBehaviour
                 SystemCommandDispatchEvent?.Invoke(command);
             else if (command.GetCardEffectApplyType() == CardEffectApplyType.Status)
                 StatusCommandDispatchEvent?.Invoke(command);
-            else
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
                 SlotSystemCommandDispatchEvent?.Invoke(command);
+            else
+                ComplexCommandDispatchEvent?.Invoke(command);
         }
 
         cardEffect_BeforeTurn.Clear();
@@ -93,16 +106,19 @@ public class CardSystemController : MonoBehaviour
 
     private void DispatchCardEffect_BeforeAttack()
     {
-        for(int i = 0;i< cardEffect_BeforeAttack.Count;++i)
+        for (int i = 0; i < cardEffect_BeforeAttack.Count; ++i)
         {
             var command = cardEffect_BeforeAttack[i];
 
+            //OCP 위반.
             if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
                 SystemCommandDispatchEvent?.Invoke(command);
             else if (command.GetCardEffectApplyType() == CardEffectApplyType.Status)
                 StatusCommandDispatchEvent?.Invoke(command);
-            else
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
                 SlotSystemCommandDispatchEvent?.Invoke(command);
+            else
+                ComplexCommandDispatchEvent?.Invoke(command);
         }
 
         cardEffect_BeforeAttack.Clear();
@@ -115,12 +131,15 @@ public class CardSystemController : MonoBehaviour
         {
             var command = cardEffect_AfterAttack[i];
 
+            //OCP 위반.
             if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
                 SystemCommandDispatchEvent?.Invoke(command);
             else if (command.GetCardEffectApplyType() == CardEffectApplyType.Status)
                 StatusCommandDispatchEvent?.Invoke(command);
-            else
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
                 SlotSystemCommandDispatchEvent?.Invoke(command);
+            else
+                ComplexCommandDispatchEvent?.Invoke(command);
         }
 
         cardEffect_AfterAttack.Clear();
@@ -129,12 +148,15 @@ public class CardSystemController : MonoBehaviour
 
     private void CardUsed(CardDataInstance usedCard)
     {
-        CardUsedEvent?.Invoke(usedCard);
-
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
             OrginizeCardEffectCommand(usedCard);
             DispatchCardEffect_BeforeAttack();
+            UsedCardToGraveEvent?.Invoke(usedCard);
+        }
+        else
+        {
+            UsedCardRemovedFromHandEvent?.Invoke(usedCard);
         }
     }
 
@@ -145,7 +167,10 @@ public class CardSystemController : MonoBehaviour
 
         for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
-            OrginizeCardEffectCommand(bulletCardSlot[i]);
+            if (bulletCardSlot[i].Count == 0)
+                continue;
+
+            OrginizeCardEffectCommand(bulletCardSlot[i][0], bulletCardSlot[i].Count);
 
             //SlotEffect는 가장 먼저 실행되어야 하므로, Dispatch를 for loop 안에서 해줘서 
             //SlotEffect가 적용되게 해야 함, loop안에서 하지 않으려면, 명령 객체가
@@ -162,18 +187,20 @@ public class CardSystemController : MonoBehaviour
         PlayerTurnFinishedEvent?.Invoke();
     }
 
-    private void OrginizeCardEffectCommand(CardDataInstance usedCard)
+    private void OrginizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0)
     {
+        //OCP 위반.
         List<CardSystemEffectType> cardSystemEffectTypes = usedCard.GetCardData().cardSystemEffects;
         List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
         List<CardSlotSystemEffectType> cardSlotSystemEffectsTypes = usedCard.GetCardData().cardSlotSystemEffects;
+        List<ComplexSystemEffectType> complexSystemEffectsTypes = usedCard.GetCardData().complexSystemEffects;
 
         for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
         {
             CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(usedCard.nestingCnt, usedCard.valueModifier);
+                effectCommand.ApplyCardState(nestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -184,7 +211,7 @@ public class CardSystemController : MonoBehaviour
             CardEffectCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(usedCard.nestingCnt, usedCard.valueModifier);
+                effectCommand.ApplyCardState(nestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -192,10 +219,21 @@ public class CardSystemController : MonoBehaviour
 
         for (int i = 0; i < cardSlotSystemEffectsTypes.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
+            CardEffectCommand effectCommand = slotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(usedCard.nestingCnt, usedCard.valueModifier);
+                effectCommand.ApplyCardState(nestingCnt, usedCard.valueModifier);
+
+            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
+            InsertCommandToList(timing, effectCommand);
+        }
+
+        for (int i = 0; i < complexSystemEffectsTypes.Count; ++i)
+        {
+            CardEffectCommand effectCommand = complexSystemCommands[(int)complexSystemEffectsTypes[i]];
+
+            if (usedCard.GetCardData().cardType == CardType.Bullet)
+                effectCommand.ApplyCardState(nestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -264,9 +302,15 @@ public class CardSystemController : MonoBehaviour
     {
         var bulletCardSlot = cardSlotManager.GetCardSlot();
 
-        for(int i = 0;i<bulletCardSlot.Count;++i)
+        for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
-            BulletCardAppliedEvent?.Invoke(bulletCardSlot[i]);
+            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
+            {
+                if (bulletCardSlot[i][j].GetCardData().elementType == ElementType.Extinction)
+                    UsedCardToExtinctionEvent?.Invoke(bulletCardSlot[i][j]);
+                else
+                    UsedCardToGraveEvent?.Invoke(bulletCardSlot[i][j]);
+            }
         }
 
         cardSlotManager.ClearAllBulletCard();

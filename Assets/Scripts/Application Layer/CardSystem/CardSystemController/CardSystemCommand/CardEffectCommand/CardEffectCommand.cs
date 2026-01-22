@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CardEffectCommand : CardSystemCommand
+public abstract class CardEffectCommand : CardSystemCommand
 {
     [SerializeField] protected CardEffectApplyType effectApplyType;
 
@@ -22,4 +22,18 @@ public class CardEffectCommand : CardSystemCommand
     {
         nestingCnt = 0;
     }
+}
+
+public abstract class CardEffectCommand<THandler> : CardEffectCommand
+    where THandler : class, ICommandHandler
+{
+    public override void Execute(ICommandHandler handler)
+    {
+        if (handler is THandler target)
+        {
+            Execute(target);
+        }
+    }
+
+    protected abstract void Execute(THandler handler);
 }

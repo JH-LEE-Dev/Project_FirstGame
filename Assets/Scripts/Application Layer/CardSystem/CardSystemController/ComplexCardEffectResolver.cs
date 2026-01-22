@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 //이 Mediator의 존재 이유는, CardEffect를 실행하기 위해서 두 모듈이 모두 필요한 경우
@@ -9,20 +11,43 @@ using UnityEngine;
 //관리하는 CardSystemController의 고유 기능이라고 볼 수 있다. 즉, CardSystemController 모듈에 이 Mediator들이
 //속해있다고 보면 됨. 
 
-public class ComplexCardEffectResolver
+public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 {
     private ICardSystemActionCommandHandler cardSystemActionCommandHandler;
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
+    private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler; 
 
     public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
-        ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler)
+        ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
+        ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
+        slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
     }
     
-    public void Execute(CardEffectCommand effectCommand)
+    public void ExecuteCommand(CardSystemCommand cardSystemCommand)
     {
+        cardSystemCommand.Execute(this);
+    }
 
+    public void ApplyAttackCntModifier(int attckCnt)
+    {
+        cardStatusEffectCommandHandler.ApplyAttackCntModifier(attckCnt);
+    }
+
+    public bool DeckConditionCheck(int cardId)
+    {
+        return cardSystemActionCommandHandler.DeckConditionCheck(cardId);
+    }
+
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards()
+    {
+        return slotSystemActionCommandHandler.GetPrevUsedRotationBulletCard();
+    }
+
+    public void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
+    {
+        cardSystemActionCommandHandler.GraveToHand(graveToDeckCards);
     }
 }

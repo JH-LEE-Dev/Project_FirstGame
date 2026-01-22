@@ -1,15 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
 {
-    private List<CardDataInstance> bulletCardSlot = new List<CardDataInstance>(30);
+    private const int maxSlotCnt = 10;
+    private const int maxSlotCardCnt = SYSTEM_VAR.maxDeckPileCount;
+    private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
+    private List<List<CardDataInstance>> prevBulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private int bulletCardSlotCnt = 2;
 
     public void Initialize()
     {
-
+        for (int i = 0; i < maxSlotCnt; ++i)
+        {
+            prevBulletCardSlot.Add(new List<CardDataInstance>(maxSlotCardCnt));
+            bulletCardSlot.Add(new List<CardDataInstance>(maxSlotCardCnt));
+        }
     }
 
     public BulletCardUsedResult InsertCardToSlot(CardDataInstance usedCard)
@@ -20,20 +28,22 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
         for (int i = 0; i < bulletCardSlotCnt; ++i)
         {
-            if (i >= bulletCardSlot.Count)
+            if (bulletCardSlot[i].Count == 0)
             {
-                bulletCardSlot.Add(usedCard);
+                bulletCardSlot[i].Add(usedCard);
+                prevBulletCardSlot[i].Add(usedCard);
                 result.bVerified = true;
                 result.slotIdx = i;
 
                 return result;
             }
 
-            CardData currentCardData = bulletCardSlot[i].GetCardData();
+            CardData currentCardData = bulletCardSlot[i][0].GetCardData();
 
             if (currentCardData.id == usedCardData.id && usedCardData.usingType == UsingType.Nesting)
             {
-                ++bulletCardSlot[i].nestingCnt;
+                bulletCardSlot[i].Add(usedCard);
+                prevBulletCardSlot[i].Add(usedCard);
                 result.bVerified = true;
                 result.slotIdx = i;
 
@@ -51,28 +61,45 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public void DiscardBulletCard(int slotIdx)
     {
         var slotCard = bulletCardSlot[slotIdx];
-        slotCard.ResetCardData();
-        bulletCardSlot.RemoveAt(slotIdx);
+
+        for (int i = 0; i < bulletCardSlot[slotIdx].Count; ++i)
+        {
+            bulletCardSlot[slotIdx][i].ResetCardData();
+        }
+
+        bulletCardSlot[slotIdx].Clear();
+        prevBulletCardSlot[slotIdx].Clear();
     }
 
     public void ClearAllBulletCard()
     {
         for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
-            bulletCardSlot[i].ResetCardData();
-        }
+            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
+            {
+                bulletCardSlot[i][j].ResetCardData();
+            }
 
-        bulletCardSlot.Clear();
+            bulletCardSlot[i].Clear();
+        }
     }
 
-    public IReadOnlyList<CardDataInstance> GetCardSlot()
+    public void ClearAllPrevBulletCard()
+    {
+        for (int i = 0; i < prevBulletCardSlot.Count; ++i)
+        {
+            prevBulletCardSlot[i].Clear();
+        }
+    }
+
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCardSlot()
     {
         return bulletCardSlot;
     }
 
     public void SortCardSlot()
     {
-        var comparer = new CardEffectPriorityComparer();
+        var comparer = new CardListPriorityComparer();
         bulletCardSlot.Sort(comparer);
     }
 
@@ -80,9 +107,12 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     {
         for (int i = 0; i < bulletCardSlot.Count; ++i)
         {
-            if (bulletCardSlot[i].GetCardData().usingType == UsingType.Nesting)
+            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                bulletCardSlot[i].valueModifier *= valueModifier;
+                if (bulletCardSlot[i][j].GetCardData().usingType == UsingType.Nesting)
+                {
+                    bulletCardSlot[i][j].valueModifier *= valueModifier;
+                }
             }
         }
     }
@@ -90,5 +120,10 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public void ExecuteCommand(CardSystemCommand command)
     {
         command.Execute(this);
+    }
+
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedRotationBulletCard()
+    {
+        return prevBulletCardSlot;
     }
 }

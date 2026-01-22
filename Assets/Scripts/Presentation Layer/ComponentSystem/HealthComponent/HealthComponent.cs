@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HealthComponent : EntityComponent, IShieldEffectReceiver
+public class HealthComponent : EntityComponent, IStatusEffectReceiver
 {
     public event Action UnitIsDeadEvent;
 
@@ -58,8 +58,6 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
 
         if (currentShield > 0)
         {
-            Debug.Log(currentShield);
-
             if (currentShield < damage)
             {
                 damage -= currentShield;
@@ -78,7 +76,7 @@ public class HealthComponent : EntityComponent, IShieldEffectReceiver
         {
             UnitIsDeadEvent?.Invoke();
             currentHealth = 0;
-        }
+        } 
     }
 
     public float GetMaxHealth()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IShieldEffectReceiver
+public interface IStatusEffectReceiver
 {
     void ApplyShieldModifier(float bonusShield);
 }

@@ -88,8 +88,10 @@ public class Bullet : MonoBehaviour
             Sound.Play("Impact", transform.position);
             sr.gameObject.SetActive(false);
 
-            CheckExplosion();
+            float totalDamage = attack + attackModifier;
+            Debug.Log("Damage : " + totalDamage);
 
+            CheckExplosion();
             ResetModifier();
 
             return true;

@@ -43,7 +43,7 @@ public class GameInstaller : MonoBehaviour
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();    
 
-        cardSystem.Initialize(signalHub,cardManager, cardSystemController);
+        cardSystem.Initialize(signalHub,cardManager, cardSystemController,complexCardEffectResolver);
         unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
         unitLogicSystem.Initialize();
         cardSystemController.Initialize();
@@ -53,7 +53,7 @@ public class GameInstaller : MonoBehaviour
         unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager);
         cardManager.Initialize();
         uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager()); ;
 
         SetupGamePlayScene();
     }

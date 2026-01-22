@@ -103,7 +103,8 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         for (int i = 0; i < drawCards.Length; ++i)
         {
-            drawList.Add(drawCards[i]);
+            if (drawCards[i] != null)
+                drawList.Add(drawCards[i]);
         }
 
         if (bAdditional == false)
@@ -130,7 +131,8 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         for (int i = 0; i < toGraveCards.Length; ++i)
         {
-            drawList.Add(toGraveCards[i]);
+            if (toGraveCards[i] != null)
+                drawList.Add(toGraveCards[i]);
         }
 
         batch.actionDataList.Add(new ActionData_CardSystem
@@ -150,13 +152,35 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         for (int i = 0; i < toDeckCards.Length; ++i)
         {
-            toDeckList.Add(toDeckCards[i]);
+            if (toDeckCards[i] != null)
+                toDeckList.Add(toDeckCards[i]);
         }
 
         batch.actionDataList.Add(new ActionData_CardSystem
         {
             actionDataType = ActionType_CardSystem.GraveToDeck,
             cards = toDeckList
+        });
+    }
+
+    public void CreateJob_GraveToHand(ReadOnlySpan<CardDataInstance> toHandCards)
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
+            return;
+
+        var toHandList = cardListPool.Get();
+
+        for (int i = 0; i < toHandCards.Length; ++i)
+        {
+            if (toHandCards[i] != null)
+                toHandList.Add(toHandCards[i]);
+        }
+
+        batch.actionDataList.Add(new ActionData_CardSystem
+        {
+            actionDataType = ActionType_CardSystem.GraveToHand,
+            cards = toHandList
         });
     }
 
@@ -168,7 +192,20 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         batch.actionDataList.Add(new ActionData_CardSystem
         {
-            actionDataType = ActionType_CardSystem.ToExtinction,
+            actionDataType = ActionType_CardSystem.UsedCardToExtinction,
+            cards = null
+        });
+    }
+
+    public void CreateJob_UsedCardToGrave()
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionDataList == null)
+            return;
+
+        batch.actionDataList.Add(new ActionData_CardSystem
+        {
+            actionDataType = ActionType_CardSystem.UsedCardToGrave,
             cards = null
         });
     }

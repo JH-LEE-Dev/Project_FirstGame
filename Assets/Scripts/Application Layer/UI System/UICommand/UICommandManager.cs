@@ -37,8 +37,10 @@ public class UICommandManager : MonoBehaviour
         signalHub.Subscribe<CardAdditionalDrawSignal,CardDataInstance>(CardAdditionalDrawed);
         signalHub.Subscribe<HandToGraveSignal,CardDataInstance>(HandToGrave);
         signalHub.Subscribe<GraveToDeckSignal,CardDataInstance>(GraveToDeck);
+        signalHub.Subscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.Subscribe<ToExtinctionSignal>(ToExtinction);
+        signalHub.Subscribe<UsedCardToExtinctionSignal>(UsedCardToExtinction);
+        signalHub.Subscribe<UsedCardToGraveSignal>(UsedCardToGrave);
         signalHub.Subscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
     }
 
@@ -49,8 +51,10 @@ public class UICommandManager : MonoBehaviour
         signalHub.UnSubscribe<CardAdditionalDrawSignal, CardDataInstance>(CardAdditionalDrawed);
         signalHub.UnSubscribe<HandToGraveSignal, CardDataInstance>(HandToGrave);
         signalHub.UnSubscribe<GraveToDeckSignal, CardDataInstance>(GraveToDeck);
+        signalHub.UnSubscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.UnSubscribe<ToExtinctionSignal>(ToExtinction);
+        signalHub.UnSubscribe<UsedCardToExtinctionSignal>(UsedCardToExtinction);
+        signalHub.UnSubscribe<UsedCardToGraveSignal>(UsedCardToGrave);
         signalHub.UnSubscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
     }
 
@@ -81,8 +85,39 @@ public class UICommandManager : MonoBehaviour
         CreateCommand(ActionType_CardSystem.GraveToDeck, cards);
     }
 
+    private void GraveToHand(GraveToHandSignal graveToHandSignal, ReadOnlySpan<CardDataInstance> cards)
+    {
+        CreateCommand(ActionType_CardSystem.GraveToHand, cards);
+    }
+
+    private void DispatchCommand(ScopeSignal<CardActionScopeSignal> signal)
+    {
+        dispatcher.Dispatch_CardSystem(commandFactory_CardSystem.GetJobBatch());
+    }
+
+    public void ReleaseJobBatch(UICommandCompleteSignal uiCommandCompleteSignal)
+    {
+        commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
+    }
+
+    private void UsedCardToExtinction(UsedCardToExtinctionSignal usedCardToExtinctionSignal)
+    {
+        CreateCommand(ActionType_CardSystem.UsedCardToExtinction);
+    }
+
+    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal)
+    {
+        CreateCommand(ActionType_CardSystem.ExtinctionToDeck);
+    }
+
+    private void UsedCardToGrave(UsedCardToGraveSignal usedCardToGraveSignal)
+    {
+        CreateCommand(ActionType_CardSystem.UsedCardToGrave);
+    }
+
     public void CreateCommand(ActionType_CardSystem actionType, ReadOnlySpan<CardDataInstance> cards = default)
     {
+        //OCP À§¹Ý.
         switch (actionType)
         {
             case ActionType_CardSystem.PileDraw:
@@ -105,7 +140,7 @@ public class UICommandManager : MonoBehaviour
                     commandFactory_CardSystem.CreateJob_ToDeck(cards);
                     break;
                 }
-            case ActionType_CardSystem.ToExtinction:
+            case ActionType_CardSystem.UsedCardToExtinction:
                 {
                     commandFactory_CardSystem.CreateJob_ToExtinction();
                     break;
@@ -115,26 +150,16 @@ public class UICommandManager : MonoBehaviour
                     commandFactory_CardSystem.CreateJob_ExtinctionToDeck();
                     break;
                 }
+            case ActionType_CardSystem.GraveToHand:
+                {
+                    commandFactory_CardSystem.CreateJob_GraveToHand(cards);
+                    break;
+                }
+            case ActionType_CardSystem.UsedCardToGrave:
+                {
+                    commandFactory_CardSystem.CreateJob_UsedCardToGrave();
+                    break;
+                }
         }
-    }
-
-    private void DispatchCommand(ScopeSignal<CardActionScopeSignal> signal)
-    {
-        dispatcher.Dispatch_CardSystem(commandFactory_CardSystem.GetJobBatch());
-    }
-
-    public void ReleaseJobBatch(UICommandCompleteSignal uiCommandCompleteSignal)
-    {
-        commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
-    }
-
-    private void ToExtinction(ToExtinctionSignal toExtinctionSignal)
-    {
-        CreateCommand(ActionType_CardSystem.ToExtinction);
-    }
-
-    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal)
-    {
-        CreateCommand(ActionType_CardSystem.ExtinctionToDeck);
     }
 }

@@ -4,19 +4,19 @@ using UnityEngine.UIElements;
 
 public class Character : Unit, ICharacterData
 {
+    /// <summary>
+    /// 시스템 속성 존.----------------------------------
+    /// </summary>
+    public ICombatEffectReceiver combatEffectReceiver => combatComponent;
+
     public event Action PlayerAttackEvent;
+    public event Action PlayerAttackFinishedEvent;
 
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;
 
     //내부 의존성
     PVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
-
-    /// <summary>
-    /// 시스템 속성 존.----------------------------------
-    /// </summary>
-    public ICombatEffectReceiver combatEffectReceiver => combatComponent;
-    public event Action PlayerAttackFinishedEvent;
 
     private PMoveComponent moveComponent;
     private PCombatComponent combatComponent;
@@ -26,7 +26,7 @@ public class Character : Unit, ICharacterData
     private LineRenderer lineRenderer;
     [SerializeField] private float aimLength = 10f;
 
-
+    private int attackCnt = 1;
 
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
@@ -58,7 +58,7 @@ public class Character : Unit, ICharacterData
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
-        moveComponent.Initialize(ctx, orbitPathProvider,visualComponentCoordinator);
+        moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
         combatComponent.Initialize(ctx, visualComponentCoordinator);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
 
@@ -131,6 +131,10 @@ public class Character : Unit, ICharacterData
         bCanAction = false;
     }
 
+    public void ApplyAttackCntModifier(int bonusAttackCnt)
+    {
+        attackCnt += bonusAttackCnt;
+    }
 
     /// <summary>
     /// 구현 코드 존.--------------------------------------------
@@ -212,8 +216,17 @@ public class Character : Unit, ICharacterData
     //그리고 이 신호를 상위 모듈로 전파함.
     private void PlayerAttackFinished()
     {
-        bCanAction = false;
-        PlayerAttackFinishedEvent?.Invoke();
+        --attackCnt;
+
+        if (attackCnt == 0)
+        {
+            attackCnt = 1;
+            PlayerAttackFinishedEvent?.Invoke();
+        }
+        else
+        {
+            bCanAction = true;
+        }
     }
 
 
@@ -228,7 +241,7 @@ public class Character : Unit, ICharacterData
     // 상황에 따른 컷씬 동작 수행. (컷씬중에는 움직일 수 없게끔 장치를 해두었음.)
     public void PlayCutscene(CutsceneSignal _signal)
     {
-        switch(_signal)
+        switch (_signal)
         {
             // 카드 드로우 되었을 때 해주면 됨.
             case CutsceneSignal.TurnStart_Start:

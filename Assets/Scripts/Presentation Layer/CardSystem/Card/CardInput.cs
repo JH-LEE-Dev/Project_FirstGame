@@ -14,7 +14,7 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     }
     private void Update()
     {
-        Debug.Log(bIgnoreHover);
+        //Debug.Log(bIgnoreHover);
     }
     public void Bind(MainCardInstance card) => owner = card;
 

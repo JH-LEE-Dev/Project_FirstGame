@@ -18,4 +18,5 @@ public class CardData
     public List<CardSystemEffectType> cardSystemEffects;
     public List<CardStatusEffectType> cardStatusEffects;
     public List<CardSlotSystemEffectType> cardSlotSystemEffects;
+    public List<ComplexSystemEffectType> complexSystemEffects;
 }
