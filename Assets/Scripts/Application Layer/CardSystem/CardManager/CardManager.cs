@@ -221,6 +221,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
+            writeBuffer[i] = card;
             deckPile.Add(card);
         }
 
