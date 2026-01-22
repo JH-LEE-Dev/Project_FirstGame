@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class UICommandFactory_CardSystem : UICommandFactory
 {
@@ -59,6 +58,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
             Debug.LogWarning($"슬롯 {index}가 중복 반납되었습니다. 무시합니다.");
             return;
         }
+        availableSlots.Enqueue(index);
 
         --currentUsingBatchCnt;
 
@@ -86,7 +86,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
                 return availableBatch;
             }
 
-            Debug.Log("UI 연출 명령이 포화상태입니다.");
+            Debug.LogWarning("UI 연출 명령이 포화상태입니다.");
 
             return availableBatch;
         }
@@ -207,7 +207,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         var batch = InitializeActionDataBatch();
         if (batch.actionDataList == null)
         {
-            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다!");
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
             return;
         }
 
@@ -254,7 +254,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
     {
         if(currentJobBatch.actionDataList == null)
         {
-            Debug.Log("초기화되지 않은 UI명령이 배포됐습니다.");
+           //Debug.Log("초기화되지 않은 UI명령이 배포됐습니다.");
             return default;
         }
 
