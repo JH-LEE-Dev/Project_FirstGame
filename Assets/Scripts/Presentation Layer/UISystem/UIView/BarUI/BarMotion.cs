@@ -1,5 +1,6 @@
 using DG.Tweening;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class BarMotion : MonoBehaviour
 {
     [Header("Bar Settings")]
     [SerializeField] private bool activeGhost = false;
+    [SerializeField] private bool activeShield = false;
     [SerializeField] private bool activeShaking = false;
     [SerializeField] private bool activeJelly = false;
 
@@ -25,6 +27,12 @@ public class BarMotion : MonoBehaviour
     [ShowIf("activeGhost"), SerializeField] private float ghostDuration = 0.5f;
     [ShowIf("activeGhost"), SerializeField] private Ease ghostEase = Ease.Linear;
 
+    [Header("Shield Settings")]
+    [ShowIf("activeShield"), SerializeField] private Slider shieldSlider;
+    [ShowIf("activeShield"), SerializeField] private float shieldDelay = 0.5f;
+    [ShowIf("activeShield"), SerializeField] private float shieldDuration = 0.5f;
+    [ShowIf("activeShield"), SerializeField] private Ease shieldEase = Ease.Linear;
+
     [Header("Shake Settings")]
     [ShowIf("activeShaking"), SerializeField] private float shakeDuration = 0.5f;
     [ShowIf("activeShaking"), SerializeField] private float shakePower = 100f;
@@ -40,6 +48,7 @@ public class BarMotion : MonoBehaviour
 
     private Sequence mainSeq = null;
     private Sequence ghostSeq = null;
+    private Sequence shieldSeq = null;
 
     private RectTransform mainRect;
 
@@ -52,6 +61,9 @@ public class BarMotion : MonoBehaviour
 
         if (ghostSlider)
             ghostSlider.value = _progressValue;
+
+        if (shieldSlider)
+            shieldSlider.value = 0f;
 
         maxValue = _maxValue;
     }
@@ -70,6 +82,62 @@ public class BarMotion : MonoBehaviour
             OnFillGhostSlider(_progressValue);
         else
             OnNotGhostSlider(_progressValue);
+    }
+
+    public void OnShieldHit(float _progressValue, Action _callback = null)
+    {
+        if (!activeShield)
+            return;
+
+        CalcShield(_progressValue, _callback);
+    }
+
+    public void CalcShield(float _progressValue, Action callback = null)
+    {
+        if (null == shieldSlider)
+            return;
+
+        CancelPrevMotion(shieldSeq);
+
+        shieldSeq = DOTween.Sequence();
+
+        shieldSeq.AppendInterval(shieldDelay);
+        shieldSeq.Append(shieldSlider.DOValue(_progressValue, shieldDuration)
+            .SetEase(shieldEase)
+            .SetUpdate(false));
+
+        shieldSeq.OnStart(() =>
+        {
+            callback?.Invoke();
+        });
+
+        shieldSeq.OnComplete(() =>
+        {
+            shieldSlider.value = _progressValue;
+        });
+    }
+
+    public void DirectShieldSet(float _progress) => shieldSlider.value = _progress;
+
+    public void CalcMain(float _progressValue, Action callback = null)
+    {
+        if (null == mainSlider)
+            return;
+
+        CancelPrevMotion(mainSeq);
+
+        mainSeq = DOTween.Sequence();
+
+        mainSeq.AppendInterval(shieldDelay);
+        mainSeq.Append(mainSlider.DOValue(_progressValue, shieldDuration)
+            .SetEase(shieldEase)
+            .SetUpdate(false));
+
+        mainSeq.OnComplete(() =>
+        {
+            mainSlider.value = _progressValue;
+            callback?.Invoke();
+        });
     }
 
     public Vector2 GetAnchoredPos() => mainRect.anchoredPosition;
@@ -147,6 +215,7 @@ public class BarMotion : MonoBehaviour
         ShakeBar();
         JellyBar();
     }
+
 
     private void ShakeBar()
     {

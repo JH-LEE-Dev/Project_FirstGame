@@ -55,11 +55,11 @@ public class CardInstance : MonoBehaviour
         cardData = dataInstance;
         CardData data = cardData.GetCardData();
 
-        CardImageChange(data.id);
+        CardImageChange(data.id); //
         CardFrameChange(data.cardType);
         CardIconChange(data.elementType);
-        CardNameChange(data.id);
-        CardDescriptionChange(data.id);
+        CardNameChange(data.id); //
+        CardDescriptionChange(data.id); //
     }
 
     public void Clear()

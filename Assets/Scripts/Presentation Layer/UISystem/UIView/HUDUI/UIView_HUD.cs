@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class UIView_HUD : UIView
 {
@@ -119,7 +120,28 @@ public class UIView_HUD : UIView
 
     public void PlayerGetShield(float amount)
     {
+        if (null == hpBar)
+            return;
 
+        float maxHp = playerData.GetMaxHealth();
+        float currHp = playerData.GetCurrentHealth();
+        float currShield = playerData.GetCurrentShield();
+
+        float total = (currShield + currHp);
+
+        float shieldProgress = total / maxHp;
+
+        if (1f <= shieldProgress)
+        {
+            float hpRatio = currHp / total;
+
+            hpBar.DirectShieldSet(1f);
+            hpBar.CalcMain(hpRatio);
+        }
+        else
+        {
+            hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
+        }
     }
 
     public void CardUseTimeStarted()
@@ -129,27 +151,55 @@ public class UIView_HUD : UIView
 
     public void OnPlayerHit(float damage)
     {
-        HP_BarUpdate(damage);
+        HP_BarUpdateforDamaged(damage);
     }
 
-    private void HP_BarUpdate(float damage)
+    private void HP_BarUpdateforDamaged(float damage)
     {
         if (null == hpBar)
             return;
 
-        IPlayerData currPlayer = playerData;
+        float maxHp = playerData.GetMaxHealth();
+        float prevHp = playerData.GetPrevHealth();
+        float currHp = playerData.GetCurrentHealth();
+        float currShield = playerData.GetCurrentShield();
+        float prevShield = playerData.GetPrevShield();
 
-        float maxHp = currPlayer.GetMaxHealth();
-        float prevHp = currPlayer.GetPrevHealth();
-        float currHp = currPlayer.GetCurrentHealth();
+        float prevTotalProgress = (prevShield + prevHp) / maxHp;
+        float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
+        float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
-        float oneProgress = currHp / maxHp;
+        if (1f > prevTotalProgress && 0f < prevShield)
+        {
+            Action latePlay = () =>
+            {
+                hpBar.OnHit(hpProgress);
+            };
 
-        if (null != hpBar)
-            hpBar.OnHit(oneProgress);
+            bool brockenShield = Mathf.Epsilon >= currShield;
+
+            hpBar.OnShieldHit(brockenShield ? 0f : shieldProgress, latePlay);
+        }
+
+        else if (1f <= prevTotalProgress && 0f < prevShield)
+        {
+            float total = (currShield + currHp);
+            float hpRatio = currHp / total;
+
+            hpBar.DirectShieldSet(1f);
+            hpBar.CalcMain(hpRatio);
+        }
+
+        else
+        {
+            hpBar.DirectShieldSet(0f);
+            hpBar.OnHit(hpProgress);
+        }
+
+        // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, oneProgress, damage, _damagNum: damagePool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
