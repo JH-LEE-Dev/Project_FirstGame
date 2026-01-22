@@ -12,7 +12,7 @@ public class UIView_MainMenu : UIView
     [SerializeField] private GameObject uiPrefab;
 
     [Header("Buttons")]
-    [SerializeField] private Button startButton;
+    [SerializeField] private MenuButton startButton;
 
     protected override void Awake()
     {
@@ -21,7 +21,7 @@ public class UIView_MainMenu : UIView
         if (uiPrefab != null)
             Instantiate(uiPrefab, uiRoot);
 
-        startButton.onClick.AddListener(OnClickStart);
+        startButton.OnCompleteAction(OnClickStart);
     }
 
     public override void OnDestroy()
