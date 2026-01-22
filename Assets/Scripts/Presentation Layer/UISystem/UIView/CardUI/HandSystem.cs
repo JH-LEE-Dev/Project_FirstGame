@@ -33,6 +33,11 @@ public class HandSystem : MonoBehaviour
     [Header("ToGrave")]
     [SerializeField] private float discardInterval = 0.09f;
 
+    // 고르는 모드
+    private bool bChooseMode = false;
+    public void SetChooseMode(bool _bChooseMode) { bChooseMode = _bChooseMode; }
+    public bool GetChooseMode() {  return bChooseMode; }
+
 
 
     public void Init(UIView_CardSystem _cardSystem)
@@ -233,7 +238,6 @@ public class HandSystem : MonoBehaviour
     }
 
 
-    // 패 풀링으로부터 생성
     // 패 풀링한테 반납
     private void ReturnToPool(MainCardInstance _card)
     {
