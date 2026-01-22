@@ -13,7 +13,9 @@ public abstract class EnemyMoveStrategy : ScriptableObject
     //거의 Enemy 전용.
     public abstract void Move_Impulse(Vector2 direction, float power);
 
+    public abstract void KnockBack(Vector2 direction, float power);
 
     //가속하는 함수. 거의 Enemy전용.
     public abstract void Accelerate(Vector2 direction, float acceleration, float maxSpeed);
+
 }

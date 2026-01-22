@@ -117,6 +117,11 @@ public class UIView_HUD : UIView
         Target_BarUpdate(deadPosition);
     }
 
+    public void PlayerGetShield(float amount)
+    {
+
+    }
+
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";

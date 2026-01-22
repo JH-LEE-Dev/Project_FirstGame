@@ -6,4 +6,5 @@ public interface ICardSystemData
     IReadOnlyList<CardDataInstance> deckCards { get; }
     IReadOnlyList<CardDataInstance> handCards { get; }
     IReadOnlyList<CardDataInstance> graveCards { get; }
+    IReadOnlyList<CardDataInstance> extinctionCards { get; }
 }

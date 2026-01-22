@@ -19,7 +19,10 @@ namespace CardSystemSignals
     public struct CardAdditionalDrawSignal  { }
     public struct GraveToDeckSignal  { }
     public struct HandToGraveSignal  { }
-
+    public struct UsedCardToExtinctionSignal { }
+    public struct UsedCardToGraveSignal { }
+    public struct ExtinctionToDeckSignal { }
+    public struct GraveToHandSignal { }
     //Scope
     public struct CardActionScopeSignal  { }
 }

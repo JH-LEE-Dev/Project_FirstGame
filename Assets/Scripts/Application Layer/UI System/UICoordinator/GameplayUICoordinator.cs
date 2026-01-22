@@ -30,6 +30,7 @@ public class GameplayUICoordinator
         signalHub.Subscribe<PlayerSpawnedSignal>(PlayerSpawned);
         signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
+        signalHub.Subscribe<PlayerGetShieldSignal>(PlayerGetShield);
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
         signalHub.Subscribe<WaveEndSignal>(WaveEnded);
         signalHub.Subscribe<GameStartedSignal>(GameStarted);
@@ -44,6 +45,7 @@ public class GameplayUICoordinator
         signalHub.UnSubscribe<PlayerSpawnedSignal>(PlayerSpawned);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
+        signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
         signalHub.UnSubscribe<WaveEndSignal>(WaveEnded);
         signalHub.UnSubscribe<GameStartedSignal>(GameStarted);
@@ -104,5 +106,10 @@ public class GameplayUICoordinator
     private void EnemyIsDead(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
     {
         hudUISystem.EnemyIsDead(waveProgressUpdatedSignal.position);
+    }
+
+    private void PlayerGetShield(PlayerGetShieldSignal playerGetShieldSignal)
+    {
+        hudUISystem.PlayerGetShield(playerGetShieldSignal.amount);
     }
 }

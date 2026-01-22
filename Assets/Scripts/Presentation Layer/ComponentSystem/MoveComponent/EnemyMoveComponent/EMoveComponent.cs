@@ -77,4 +77,9 @@ public class EMoveComponent : MoveComponent
     {
         moveStrategy.Move_Impulse(moveDirection, impulsePower);
     }
+
+    public void ApplyKnockBack(Vector2 dir,float power)
+    {
+        moveStrategy.KnockBack(dir,power);
+    }
 }

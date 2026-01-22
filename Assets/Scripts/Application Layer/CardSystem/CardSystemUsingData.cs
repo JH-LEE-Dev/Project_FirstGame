@@ -1,4 +1,9 @@
 
+public static class SYSTEM_VAR
+{
+    public const int maxDeckPileCount = 30;
+}
+
 public enum CardType
 {
     Bullet,
@@ -13,43 +18,68 @@ public enum ElementType
 
 public enum UsingType
 {
-    Nesting // ÁßÃ¸
+    Nesting, // ÁßÃ¸
+    NotNesting,
 }
 
 //cardID¿Í È£È¯µÊ.
 public enum CardName
 {
     BonusDamage,
-    DrawAgain,
+    Shield,
+    BonusRange,
+    Amplify,
     MeteorShower,
     Flare,
-    Shield
+    Sacrifice,
+    SpaceShuttle,
 }
 
 public enum CardEffectApplyType
 {
     Status,
-    System
+    System,
+    SlotSystem,
+    ComplexSystem,
 }
 
 
 public enum CardStatusEffectType
 {
     BonusDamage,
-    Shield
+    Shield,
+    BonusRange,
+    FlareBonusDamage,
+    HPDecrease,
 }
 
 public enum CardSystemEffectType
 {
-    DrawAgain,
+    FlareAdditionalDraw,
+    SacrificeAdditionalDraw,
+}
+
+public enum CardSlotSystemEffectType
+{
+    Amplify,
+}
+
+public enum ComplexSystemEffectType
+{
     MeteorShower,
-    Flare,
-    AttackAgain
+    SpaceShuttle,
 }
 
 public enum CardSystemActionTimingType
 {
     BeforeAttack,
     AfterAttack,
-    NextTurn,
+    BeforeTurn,
+}
+
+public enum CardEffectPriority
+{
+    Multiplier,
+    Adder,
+    Normal,
 }

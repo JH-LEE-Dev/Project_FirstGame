@@ -136,4 +136,9 @@ public class Unit : MonoBehaviour, IDamageable
         rb.linearDamping = 0f;
         rb.angularDamping = 0f;
     }
+
+    public virtual void KnockBack(Vector2 dir, float power)
+    {
+        return;
+    }
 }

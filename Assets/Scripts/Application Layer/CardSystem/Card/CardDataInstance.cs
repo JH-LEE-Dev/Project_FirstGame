@@ -8,9 +8,12 @@ using UnityEngine.EventSystems;
 [Serializable]
 public class CardDataInstance
 {
+    //카드 인스턴스마다 불변인 데이터는 cardData로 캡슐화.
     private CardData cardData;
+
+    //카드 인스턴스마다 가변인 데이터는 CardDataInstance에 노출.
     public bool bUpgrade = false;
-    public int nestingCnt = 0;
+    public int valueModifier = 1;
 
     public void Initialize(CardData cardData)
     {
@@ -29,18 +32,8 @@ public class CardDataInstance
         return cardData;
     }
 
-    public void AddCardSystemEffect(CardSystemEffectType effectType)
-    {
-        cardData.cardSystemEffects.Add(effectType);
-    }
-
-    public void AddCardStatusEffect(CardStatusEffectType effectType)
-    {
-        cardData.cardStatusEffects.Add(effectType);
-    }
-
     public void ResetCardData()
     {
-        nestingCnt = 0;
+        valueModifier = 1;
     }
 }

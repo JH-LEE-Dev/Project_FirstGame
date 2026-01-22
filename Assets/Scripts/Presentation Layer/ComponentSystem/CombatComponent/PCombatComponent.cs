@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 public class PCombatComponent : CombatComponent, ICombatEffectReceiver
@@ -12,7 +13,6 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
 
     [SerializeField] private Bullet bulletPrefab;
     private Bullet bulletObject;
-
 
     /// <summary>
     /// 구현 속성 존. ---------------------------------------------
@@ -74,6 +74,11 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
     public void ApplyAttackModifier(float bonusDamage)
     {
         bulletObject.ApplyAttackModifier(bonusDamage);
+    }
+
+    public void ApplyRangeModifier(float bonusRange)
+    {
+        bulletObject.ApplyRangeModifier(bonusRange);
     }
 
     /// <summary>

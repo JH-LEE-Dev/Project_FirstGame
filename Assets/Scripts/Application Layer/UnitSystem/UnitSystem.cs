@@ -55,6 +55,9 @@ public class UnitSystem
 
         unitLogicSystem.PlayerAttackedEvent -= PlayerAttacked;
         unitLogicSystem.PlayerAttackedEvent += PlayerAttacked;
+
+        unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
+        unitLogicSystem.PlayerGetShieldEvent += PlayerGetShield;
     }
 
     private void ReleaseEvents()
@@ -78,6 +81,8 @@ public class UnitSystem
         unitLogicSystem.PlayerTakeDamageEvent -= PlayerTakeDamage;
 
         unitLogicSystem.PlayerAttackedEvent -= PlayerAttacked;
+
+        unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
     }
 
     private void SubscribeEvents()
@@ -139,6 +144,11 @@ public class UnitSystem
     private void PlayerAttacked()
     {
         signalHub.Publish(new PlayerAttackedSignal());  
+    }
+
+    private void PlayerGetShield(float amount)
+    {
+        signalHub.Publish(new PlayerGetShieldSignal(amount));
     }
 
     public void Release()
