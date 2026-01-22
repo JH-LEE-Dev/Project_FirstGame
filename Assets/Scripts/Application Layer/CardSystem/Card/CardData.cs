@@ -7,6 +7,7 @@ public class CardData
 {
     public int id;
 
+    public Sprite cardImage;
     public CardName cardName;
     public CardType cardType;
     public ElementType elementType;

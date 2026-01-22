@@ -1,19 +1,17 @@
 using DG.Tweening;
 using NaughtyAttributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 using Sequence = DG.Tweening.Sequence;
 
 public class TurnEndButton : MonoBehaviour
-    , IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    , IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
     [Header("Main Settings")]
-    [SerializeField] private RectTransform [] visualRects;
+    [SerializeField] private RectTransform visualRect;
 
     [Space, Header("Show Activate Options")]
     [SerializeField] private ShowOption option;
@@ -31,10 +29,10 @@ public class TurnEndButton : MonoBehaviour
     [ShowIf("onExit"), SerializeField] private float exitDuration = 1f;
     [ShowIf("onExit"), SerializeField] private Ease exitEase = Ease.Linear;
 
-    [Space, Header("Up Options")]
-    [ShowIf("onUp"), SerializeField] private float upDuration = 1f;
-    [ShowIf("onUp"), SerializeField] private Vector3 upStartScale = Vector3.one;
-    [ShowIf("onUp"), SerializeField] private Ease upEase = Ease.Linear;
+    [Space, Header("Down Options")]
+    [ShowIf("onDown"), SerializeField] private float downDuration = 1f;
+    [ShowIf("onDown"), SerializeField] private Vector3 downStartScale = Vector3.one;
+    [ShowIf("onDown"), SerializeField] private Ease downEase = Ease.Linear;
 
     private bool clicked = false;
 
@@ -42,16 +40,14 @@ public class TurnEndButton : MonoBehaviour
 
     private Sequence seq;
 
-    private List<Vector3> originScales = new();
+    private Vector3 originScale;
 
     private void Awake()
     {
-        int RectCount = visualRects.Count();
-
-        Debug.Log(RectCount);
-
-        for (int i = 0; i < RectCount; i++)
-            originScales.Add(visualRects[i].localScale);
+        if (visualRect)
+        {
+            originScale = visualRect.localScale;
+        }
     }
 
     private void OnDisable()
@@ -61,16 +57,12 @@ public class TurnEndButton : MonoBehaviour
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        int selectIdx = (int)RectSelect.Top;
-        if (selectIdx >= visualRects.Count())
-            return;
-
         CancelPrevMotion(seq);
         seq = DOTween.Sequence();
 
-        visualRects[selectIdx].localScale = originScales[selectIdx];
+        visualRect.localScale = originScale;
 
-        seq.Append(visualRects[selectIdx].DOScale(enterTargetScale, enterDuration)
+        seq.Append(visualRect.DOScale(enterTargetScale, enterDuration)
             .SetEase(enterEase));
 
         seq.SetUpdate(false);
@@ -81,14 +73,10 @@ public class TurnEndButton : MonoBehaviour
         if (clicked)
             return;
 
-        int selectIdx = (int)RectSelect.Top;
-        if (selectIdx >= visualRects.Count())
-            return;
-
         CancelPrevMotion(seq);
         seq = DOTween.Sequence();
 
-        seq.Append(visualRects[selectIdx].DOScale(originScales[selectIdx], exitDuration)
+        seq.Append(visualRect.DOScale(originScale, exitDuration)
             .SetEase(exitEase));
 
         seq.SetUpdate(false);
@@ -108,28 +96,33 @@ public class TurnEndButton : MonoBehaviour
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        int selectIdx = (int)RectSelect.Top;
-        if (selectIdx >= visualRects.Count())
-            return;
+        onCompleteAction?.Invoke();
+    }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
         CancelPrevMotion(seq);
         seq = DOTween.Sequence();
 
-        visualRects[selectIdx].eulerAngles = Vector3.zero;
-        visualRects[selectIdx].localScale = upStartScale;
+        visualRect.eulerAngles = Vector3.zero;
+        visualRect.localScale = downStartScale;
 
-        seq.Append(visualRects[selectIdx].DOScale(Vector3.one, upDuration)
-            .SetEase(upEase));
+        seq.Append(visualRect.DOScale(Vector3.one, downDuration)
+            .SetEase(downEase));
 
         seq.OnComplete(() =>
         {
-            visualRects[selectIdx].localScale = originScales[selectIdx];
+            visualRect.localScale = originScale;
             clicked = false;
-            onCompleteAction?.Invoke();
         });
 
         seq.SetUpdate(false);
 
         clicked = true;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        
     }
 }
