@@ -17,8 +17,6 @@ public class UIPixelSnap : MonoBehaviour
 
     void LateUpdate()
     {
-        Debug.Log($"scaleFactor = {GetComponentInParent<Canvas>().scaleFactor}");
-
         if (!rt) rt = GetComponent<RectTransform>();
         if (!canvas) canvas = GetComponentInParent<Canvas>();
         if (!rt || !canvas) return;
