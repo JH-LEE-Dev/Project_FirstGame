@@ -3,12 +3,17 @@ using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/MeteorShower")]
-public class EffectCommand_MeteorShower : CardEffectCommand
+public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
+    [SerializeField] private int attackCnt = 0;
+    [SerializeField] private int conditionCheckCardId = 0;
 
-    public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        cardStatusEffectCommandHandler.AttackAgain();
+        if(complexSystemActionCommandHandler.DeckConditionCheck(conditionCheckCardId))
+        {
+            complexSystemActionCommandHandler.ApplyAttackCntModifier(attackCnt);
+        }
 
         ResetCommandData();
     }

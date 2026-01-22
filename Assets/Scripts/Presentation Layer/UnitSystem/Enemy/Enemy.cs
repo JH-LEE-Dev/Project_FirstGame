@@ -196,4 +196,9 @@ public class Enemy : Unit, IEnemyData
     {
         throw new System.NotImplementedException();
     }
+
+    public override void KnockBack(Vector2 dir,float power)
+    {
+        moveComponent.ApplyKnockBack(dir,power);
+    }
 }

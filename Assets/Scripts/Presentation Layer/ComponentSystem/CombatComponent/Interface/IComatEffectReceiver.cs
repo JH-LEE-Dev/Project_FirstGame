@@ -4,4 +4,6 @@ using System.Collections.Generic;
 public interface ICombatEffectReceiver
 {
     void ApplyAttackModifier(float bonusDamage);
+
+    void ApplyRangeModifier(float bonusRange);
 }

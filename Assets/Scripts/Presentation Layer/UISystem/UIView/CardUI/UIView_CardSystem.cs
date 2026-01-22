@@ -24,7 +24,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private Transform uiRoot;
     [Space]
     [Header("Buttons")]
-    [SerializeField] private Button turnFinishedButton;
+    [SerializeField] private TurnEndButton turnFinishedButton;
     ////////////
 
     [Header("Systems")]
@@ -77,7 +77,7 @@ public class UIView_CardSystem : UIView
 
         SetAnchorToCanvas(uiRoot.transform);
 
-        turnFinishedButton.onClick.AddListener(CardUsingFinished);
+        turnFinishedButton.OnCompleteAction(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
         poolingSystem?.Init(this);
@@ -361,7 +361,7 @@ public class UIView_CardSystem : UIView
             {
                 case ActionType_CardSystem.PileDraw:
                 case ActionType_CardSystem.AdditionalDraw:
-
+                    Debug.Log("Draw");
                     DrawingCards(currentActionData.cards);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
@@ -378,6 +378,22 @@ public class UIView_CardSystem : UIView
                     AllCardReturnToGrave(CardState.InHand);
                     AllCardReturnToPool(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
+                    break;
+                case ActionType_CardSystem.UsedCardToExtinction:
+                    Debug.Log("UsedCardToExtinction");
+
+                    break;
+                case ActionType_CardSystem.UsedCardToGrave:
+                    Debug.Log("UsedCardToGrave");
+
+                    break;
+                case ActionType_CardSystem.ExtinctionToDeck:
+                    Debug.Log("ExtinctionToDeck");
+
+                    break;
+                case ActionType_CardSystem.GraveToHand:
+                    Debug.Log("GraveToHand");
+
                     break;
 
                 default: break;

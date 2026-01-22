@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b838149073c2dc348b6a99dc0f826083, type: 3}
-  m_Name: Draw Again Command
-  m_EditorClassIdentifier: Assembly-CSharp::DrawAgainStrategy
-  effectApplyType: 1
+  m_Script: {fileID: 11500000, guid: 15efa4d2b780eab4bac5f41c617b404e, type: 3}
+  m_Name: Sacrifice DecreaseHP Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_DecreaseHP
   cardSystemActionTimingType: 0
-  drawAmount: 2
+  effectApplyType: 0
+  nestingCnt: 0
+  valueModifier: 1
+  hpDecreaseAmount: 3

@@ -1,11 +1,13 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/AttackAgain")]
-public class EffectCommand_AttackAgain : CardEffectCommand
+public class EffectCommand_AttackAgain : CardEffectCommand<ICardStatusEffectCommandHandler>
 {
-    public override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    [SerializeField] private int attackCnt = 0;
+
+    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.AttackAgain();
+        cardStatusEffectCommandHandler.ApplyAttackCntModifier(attackCnt);
 
         ResetCommandData();
     }

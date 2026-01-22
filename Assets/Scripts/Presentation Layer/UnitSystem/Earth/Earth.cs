@@ -5,7 +5,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
 {
     public event Action<float> TakeDamageEvent;
 
-    public IShieldEffectReceiver shieldEffectReceiver => healthComponent;
+    public IStatusEffectReceiver statusEffectReceiver => healthComponent;
 
     protected HealthComponent healthComponent;
 
@@ -53,5 +53,10 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     public float GetPrevShield()
     {
         return healthComponent.GetPrevShield();
+    }
+
+    public void KnockBack(Vector2 dir, float power)
+    {
+        return;
     }
 }

@@ -67,3 +67,18 @@ public enum CutsceneSignal
     TurnEnd_Start,
     TurnEnd_End,
 }
+
+enum ShowOption
+{
+    OnEnter,
+    OnExit,
+    OnUp,
+    OnDown,
+};
+
+enum RectSelect
+{
+    Top,
+    Middle,
+    Bottom,
+};

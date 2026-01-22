@@ -5,7 +5,11 @@ public enum ActionType_CardSystem
     PileDraw,
     AdditionalDraw,
     GraveToDeck,
-    HandToGrave
+    HandToGrave,
+    UsedCardToExtinction,
+    UsedCardToGrave,
+    ExtinctionToDeck,
+    GraveToHand,
 }
 
 public struct ActionData_CardSystem
