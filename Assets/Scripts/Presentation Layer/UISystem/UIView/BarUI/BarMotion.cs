@@ -86,10 +86,10 @@ public class BarMotion : MonoBehaviour
 
     public void OnShieldHit(float _progressValue, Action _callback = null)
     {
-        CalcShiled(_progressValue, _callback);
+        CalcShield(_progressValue, _callback);
     }
 
-    public void CalcShiled(float _progressValue, Action callback = null)
+    public void CalcShield(float _progressValue, Action callback = null)
     {
         if (null == shieldSlider)
             return;
