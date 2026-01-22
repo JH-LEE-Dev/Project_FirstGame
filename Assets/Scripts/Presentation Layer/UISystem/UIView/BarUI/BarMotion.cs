@@ -86,6 +86,9 @@ public class BarMotion : MonoBehaviour
 
     public void OnShieldHit(float _progressValue, Action _callback = null)
     {
+        if (!activeShield)
+            return;
+
         CalcShield(_progressValue, _callback);
     }
 
