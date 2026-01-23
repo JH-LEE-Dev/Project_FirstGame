@@ -172,6 +172,7 @@ public class BulletSocketSystem : MonoBehaviour
 
     public void UnEquipBulletCardForShoot()
     {
+        // 이거 현재 임시임.
         for (int i = 0; i < sockets.Count; i++)
         {
             // 슬롯의 넘버 초기화

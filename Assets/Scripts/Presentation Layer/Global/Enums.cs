@@ -37,6 +37,14 @@ public enum CardState
     Hidden
 }
 
+public enum CardReturnType
+{
+    FlyToGrave,
+    Extinction,
+    EquippedAction,
+    Temp,
+}
+
 public enum CurrentPannel
 {
     Deck,
@@ -82,3 +90,4 @@ enum RectSelect
     Middle,
     Bottom,
 };
+

@@ -146,17 +146,6 @@ public class UIView_CardSystem : UIView
         handSystem?.CancelPreview();
     }
 
-    // state에 맞는 카드들이 묘지로 빨려들어가는 기능
-    public void AllCardReturnToGrave(CardState state)
-    {
-        handSystem?.AllCardReturnToGrave(state);
-    }
-
-    public void AllCardReturnToPool(CardState state)
-    {
-        handSystem?.AllCardReturnToPool(state);
-    }
-
     // 불릿 카드 사용했을때, 호출되는 함수
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
@@ -171,7 +160,7 @@ public class UIView_CardSystem : UIView
     public void SetChooseMode(bool _bChooseMode) 
     { 
         handSystem.SetChooseMode(_bChooseMode); 
-        // 화면 암전
+        // 화면 암전 구현 예정
     }
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
 
@@ -187,6 +176,21 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
+    // CardState : 현재 어디에있는지. (패, 프리뷰 등)
+    public void ReturnStateAllCard(CardState state, CardReturnType type = CardReturnType.Temp, float delay = 0f, float interval = 0.09f)
+    {
+        if (state == CardState.Equipped) 
+        {
+            /* UIView_Unit.UnEquipBulletCardForShoot */
+            ReturnStateAllCard(state, CardReturnType.Temp);
+        }
+        else handSystem?.ReturnStateAllCard(state, type, delay, interval);
+    }
+
+    public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
+    {
+        handSystem.ReturnCard(cardDataList, type, delay);
+    }
 
     ///////////////////////////////////
 
@@ -380,8 +384,8 @@ public class UIView_CardSystem : UIView
 
                 case ActionType_CardSystem.HandToGrave:
 
-                    AllCardReturnToGrave(CardState.InHand);
-                    AllCardReturnToPool(CardState.Equipped);
+                    ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
+                    ReturnStateAllCard(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case ActionType_CardSystem.UsedCardToExtinction:

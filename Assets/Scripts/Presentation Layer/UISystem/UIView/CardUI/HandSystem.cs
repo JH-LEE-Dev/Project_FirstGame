@@ -30,9 +30,6 @@ public class HandSystem : MonoBehaviour
     // 호버된 카드 인덱스
     private MainCardInstance hoveredCard = null;
 
-    [Header("ToGrave")]
-    [SerializeField] private float discardInterval = 0.09f;
-
     // 고르는 모드
     private bool bChooseMode = false;
     public void SetChooseMode(bool _bChooseMode) { bChooseMode = _bChooseMode; }
@@ -237,34 +234,6 @@ public class HandSystem : MonoBehaviour
         ReturnToPool(card);
     }
 
-
-    // 패 풀링한테 반납
-    private void ReturnToPool(MainCardInstance _card)
-    {
-        if (_card == null) return;
-
-        // 카드가 손패 리스트 안에 있으면 제거 (소모형만 제거하는 흐름)
-        int idx = cards.IndexOf(_card);
-        if (idx >= 0) cards.RemoveAt(idx);
-
-        // 장착 리스트에서도 제거
-        equippedBullets.Remove(_card);
-
-
-
-        // 전부 초기화 한다.
-        _card.SetUIState(CardState.Hidden);
-        _card.Motion.AllKillTweens();
-        _card.gameObject.SetActive(false);
-
-
-        // 풀링 반납
-        cardSystem.ReturnHandCard(_card);
-
-        // 호 재계산
-        computeArc();
-    }
-
     private bool IsLayoutExcluded(MainCardInstance c)
     {
         if (c == null) return true;
@@ -424,56 +393,142 @@ public class HandSystem : MonoBehaviour
         return Count;
     }
 
-    // 전부 묘지에 쏟아부음
-    public void AllCardReturnToGrave(CardState state)
+
+
+    ///////////////////////풀링 반납 하는 함수들 모음
+
+    // delay = 첫 전체 연출 딜레이, interval = 연속 연출 사이의 간격
+    public void ReturnStateAllCard(CardState state, CardReturnType type = CardReturnType.Temp, float delay = 0f, float interval = 0.09f)
     {
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
 
-        Vector3 GravePosition = cardSystem.GetGraveAnchoredPos();
-
-        List<MainCardInstance> toDiscard = new();
+        List<MainCardInstance> targets = new();
 
         for (int i = 0; i < cards.Count; i++)
         {
             var c = cards[i];
             if (c != null && c.cardState == state)
-                toDiscard.Add(c);
+                targets.Add(c);
         }
 
-        float delay = 0f;
-
-        foreach (var card in toDiscard)
+        foreach (var c in targets)
         {
-            DOVirtual.DelayedCall(delay, () =>
-            {
-                if (card == null) return;
-                if (card.cardState != state) return;
+            float useDelay = 
+                (type == CardReturnType.FlyToGrave || type == CardReturnType.Extinction)
+                ? 
+                delay : 0f;
 
-                // 손패 레이아웃에서 즉시 제외
-                card.SetUIState(CardState.Other);
-                card.Motion.SetSocketIndex(-1);
-                computeArc();
+            ReturnCard(c, type, useDelay);
 
-                card.Motion.FlyToGrave(GravePosition, () =>
-                {
-                    ReturnToPool(card);
-                });
-
-            }).SetUpdate(true);
-
-            delay += discardInterval;
+            if (type == CardReturnType.FlyToGrave || type == CardReturnType.Extinction)
+                delay += interval;
         }
     }
 
-    public void AllCardReturnToPool(CardState state)
+    // List에 있는것들 연출.
+    public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
     {
-        for (int i = 0; i < cards.Count; i++)
+        if (cardDataList == null || cardDataList.Count == 0) return;
+
+        var targetSet = new HashSet<CardDataInstance>(cardDataList);
+
+        for (int i = cards.Count - 1; i >= 0; i--)
         {
-            var c = cards[i];
-            if (c != null && c.cardState == state)
-                ReturnToPool(c);
+            var card = cards[i];
+            if (card == null) { cards.RemoveAt(i); continue; }
+
+            if (!targetSet.Contains(card.CardData)) continue;
+
+            ReturnCard(card, type, delay, true);
         }
+
         computeArc();
     }
+
+    // 연출 후, ReturnToPool
+    private void ReturnCard(MainCardInstance card, CardReturnType type = CardReturnType.Temp, float delay = 0f, bool computeArcOptimization = false)
+    {
+        if (card == null) return;
+
+        if (previewCard == card) previewCard = null;
+        if (hoveredCard == card) hoveredCard = null;
+
+        // 임시, 나중에 연출 추가되면 어떻게 될지 모름.
+        card.SetUIState(CardState.Other);
+
+        // 소켓 저장 인덱스 초기화
+        card.Motion.SetSocketIndex(-1);
+
+        if (computeArcOptimization == false) computeArc();
+
+        switch (type)
+        {
+            case CardReturnType.Temp:
+                {
+                    ReturnToPool(card);
+                    break;
+                }
+
+            case CardReturnType.FlyToGrave:
+                {
+                    Vector3 gravePos = cardSystem.GetGraveAnchoredPos();
+
+                    DOVirtual.DelayedCall(delay, () =>
+                    {
+                        if (card == null) return;
+                        if (card.cardState == CardState.Hidden) return;
+
+                        card.Motion.FlyToGrave(gravePos, () =>
+                        {
+                            ReturnToPool(card);
+                        });
+
+                    }).SetUpdate(true);
+
+                    break;
+                }
+
+            case CardReturnType.Extinction:
+                {
+                    // TODO: 소멸 연출(셰이더) 끝나면 ReturnToPool 호출
+
+                    DOVirtual.DelayedCall(delay, () =>
+                    {
+                        if (card == null) return;
+                        ReturnToPool(card);
+                    }).SetUpdate(true);
+
+                    break;
+                }
+
+            case CardReturnType.EquippedAction:
+                {
+                    break;
+                }
+        }
+    }
+
+
+    // 사용 연출이 전부 끝난 뒤에 호출되는 함수. (단순 풀링 반납)
+    private void ReturnToPool(MainCardInstance _card)
+    {
+        if (_card == null) return;
+
+        // 카드가 손패 리스트 안에 있으면 제거
+        int idx = cards.IndexOf(_card);
+        if (idx >= 0) cards.RemoveAt(idx);
+
+        // 장착 리스트에서도 제거
+        equippedBullets.Remove(_card);
+
+        // 전부 초기화 한다.
+        _card.SetUIState(CardState.Hidden);
+        _card.Motion.AllKillTweens();
+        _card.gameObject.SetActive(false);
+
+        // 풀링 반납
+        cardSystem.ReturnHandCard(_card);
+    }
+
 }
