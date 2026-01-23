@@ -182,7 +182,7 @@ public class UIView_CardSystem : UIView
         if (state == CardState.Equipped) 
         {
             /* UIView_Unit.UnEquipBulletCardForShoot */
-            ReturnStateAllCard(state, CardReturnType.Temp);
+            handSystem?.ReturnStateAllCard(state, CardReturnType.Temp);
         }
         else handSystem?.ReturnStateAllCard(state, type, delay, interval);
     }
