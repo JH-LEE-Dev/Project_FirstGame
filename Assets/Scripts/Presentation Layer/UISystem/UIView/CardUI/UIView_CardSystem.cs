@@ -179,13 +179,14 @@ public class UIView_CardSystem : UIView
     // CardState : 현재 어디에있는지. (패, 프리뷰 등)
     public void ReturnStateAllCard(CardState state, CardReturnType type = CardReturnType.Temp, float delay = 0f, float interval = 0.09f)
     {
-        if (state == CardState.Equipped) 
+        if (state == CardState.Equipped)
         {
             /* UIView_Unit.UnEquipBulletCardForShoot */
             handSystem?.ReturnStateAllCard(state, CardReturnType.Temp);
         }
         else handSystem?.ReturnStateAllCard(state, type, delay, interval);
     }
+
 
     public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
     {
@@ -388,10 +389,12 @@ public class UIView_CardSystem : UIView
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case ActionType_CardSystem.UsedCardToExtinction:
+                    ReturnCard(currentActionData.cards, CardReturnType.Extinction);
                     //Debug.Log("UsedCardToExtinction");
 
                     break;
                 case ActionType_CardSystem.UsedCardToGrave:
+                    ReturnCard(currentActionData.cards, CardReturnType.FlyToGrave);
                     //Debug.Log("UsedCardToGrave");
 
                     break;
