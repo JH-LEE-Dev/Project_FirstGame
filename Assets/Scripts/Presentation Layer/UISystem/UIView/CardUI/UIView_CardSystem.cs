@@ -370,7 +370,6 @@ public class UIView_CardSystem : UIView
             {
                 case ActionType_CardSystem.PileDraw:
                 case ActionType_CardSystem.AdditionalDraw:
-                    Debug.Log("Draw");
                     DrawingCards(currentActionData.cards);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
@@ -389,19 +388,19 @@ public class UIView_CardSystem : UIView
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case ActionType_CardSystem.UsedCardToExtinction:
-                    Debug.Log("UsedCardToExtinction");
+                    //Debug.Log("UsedCardToExtinction");
 
                     break;
                 case ActionType_CardSystem.UsedCardToGrave:
-                    Debug.Log("UsedCardToGrave");
+                    //Debug.Log("UsedCardToGrave");
 
                     break;
                 case ActionType_CardSystem.ExtinctionToDeck:
-                    Debug.Log("ExtinctionToDeck");
+                   //Debug.Log("ExtinctionToDeck");
 
                     break;
                 case ActionType_CardSystem.GraveToHand:
-                    Debug.Log("GraveToHand");
+                    //Debug.Log("GraveToHand");
 
                     break;
 

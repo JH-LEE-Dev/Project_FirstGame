@@ -152,6 +152,7 @@ public class CardSystemController : MonoBehaviour
         {
             OrginizeCardEffectCommand(usedCard);
             DispatchCardEffect_BeforeAttack();
+            UsedCardRemovedFromHandEvent?.Invoke(usedCard);
             UsedCardToGraveEvent?.Invoke(usedCard);
         }
         else

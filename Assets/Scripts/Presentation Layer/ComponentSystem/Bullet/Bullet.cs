@@ -150,7 +150,7 @@ public class Bullet : MonoBehaviour
     {
         Vector2 dir = enemyPos - (Vector2)transform.position;
 
-        enemy.KnockBack(dir.normalized, explosionRangeCollider.radius);
+        enemy.KnockBack(dir.normalized,knockBackPower);
     }
 
     public void Fire(Vector2 dir)

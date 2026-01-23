@@ -751,17 +751,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594e2a05529e5324cb47bd169cf10723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnEndButton
-  visualRects:
-  - {fileID: 2191701682000028825}
+  visualRect: {fileID: 2191701682000028825}
   option: 0
   enterDuration: 0.4
   enterTargetScale: {x: 1.125, y: 1.125, z: 1}
   enterEase: 21
   exitDuration: 0.4
   exitEase: 18
-  upDuration: 0.4
-  upStartScale: {x: 1.5, y: 0.4, z: 1}
-  upEase: 18
+  downDuration: 1
+  downStartScale: {x: 1, y: 1, z: 1}
+  downEase: 1
 --- !u!1 &4613748508501721533
 GameObject:
   m_ObjectHideFlags: 0
