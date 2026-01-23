@@ -8,8 +8,8 @@ public class CardMotion : MonoBehaviour
     private RectTransform rt;
 
     [Header("MainMoving")]
-    [SerializeField] private float followFreq = 18f;
-    [SerializeField, Range(0f, 1.2f)] private float followDamp = 0.85f;
+    [SerializeField] private float followFreq = 22f;
+    [SerializeField, Range(0f, 1.2f)] private float followDamp = 0.66f;
     [SerializeField] private float rotateLerp = 18f;
     [SerializeField] private float snapDist = 0.05f;
 
@@ -24,10 +24,10 @@ public class CardMotion : MonoBehaviour
     private Vector3 originScale;
 
     [Header("Preview")]
-    [SerializeField] private float previewScale = 2f;
-    [SerializeField] private float previewMoveDuration = 0.3f;
-    [SerializeField] private float previewScaleDuration = 0.3f;
-    [SerializeField] private float previewEndScaleDur = 0.6f;
+    private float previewScale = 2f;
+    private float previewMoveDuration = 0.3f;
+    private float previewScaleDuration = 0.3f;
+    private float previewEndScaleDur = 0.3f;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
     private Tween previewRotateTween;
@@ -59,6 +59,13 @@ public class CardMotion : MonoBehaviour
     private Tween BulletSocketScaleTween;
 
 
+    [Header("SelectMode Motion")]
+    const float SelectDur = 0.4f;
+    Ease SelectEaseScale = Ease.OutCubic;
+    private Tween SelectTween;
+    private Vector3 SelectScale;
+
+
     public int socketIndex { get; private set; }
 
     public void AllKillTweens(bool bRestoreScale = true)
@@ -80,6 +87,8 @@ public class CardMotion : MonoBehaviour
         BulletSocketRotateTween?.Kill();
         BulletSocketScaleTween?.Kill();
 
+        SelectTween?.Kill();
+
         if (bRestoreScale) transform.localScale = originScale;
     }
 
@@ -89,6 +98,7 @@ public class CardMotion : MonoBehaviour
         owner = card;
         rt = GetComponent<RectTransform>();
         originScale = transform.localScale;
+        SelectScale = originScale * 1.3f;
         targetPos = rt.anchoredPosition;
 
         socketIndex = -1;
@@ -97,8 +107,7 @@ public class CardMotion : MonoBehaviour
 
     private void Update()
     {
-        // 핸드에서의 움직임
-        InHand(Time.unscaledDeltaTime);
+        ToTargetPos(Time.unscaledDeltaTime);
     }
 
     public void SetSocketIndex(int index)
@@ -113,10 +122,10 @@ public class CardMotion : MonoBehaviour
     }
 
 
-    public void InHand(float dt)
+    public void ToTargetPos(float dt)
     {
         if (owner.cardInstanceType != CardInstanceType.Hand) return;
-        if (owner.cardState != CardState.InHand) return;
+        if ((owner.cardState == CardState.InHand || owner.cardState == CardState.Selecting) == false) return;
 
         Vector2 pos = rt.anchoredPosition;
 
@@ -189,6 +198,49 @@ public class CardMotion : MonoBehaviour
         hoverTween = transform.DOScale(originScale, hoverDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
+    }
+
+    public void SelectHoverOn()
+    {
+        if (owner.cardState != CardState.InHand) return;
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(SelectScale * hoverScale, hoverDuration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    public void SelectHoverOff()
+    {
+        if (owner.cardState != CardState.InHand) return;
+
+        hoverTween?.Kill();
+        hoverTween = transform.DOScale(SelectScale, hoverDuration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true);
+    }
+
+    // SelectMode
+    public void StartSelectMode()
+    {
+        // 다른 연출들 정리
+        AllKillTweens(false);
+
+        SelectTween?.Kill();
+        SelectTween = transform.DOScale(SelectScale, SelectDur)
+            .SetEase(SelectEaseScale)
+            .SetUpdate(true);
+    }
+    public void EndSelectMode()
+    {
+        // 다른 연출들 정리
+        AllKillTweens(false);
+
+        SelectTween?.Kill();
+        SelectTween = transform.DOScale(originScale, SelectDur)
+            .SetEase(SelectEaseScale)
+            .SetUpdate(true);
+
     }
 
     // Preview

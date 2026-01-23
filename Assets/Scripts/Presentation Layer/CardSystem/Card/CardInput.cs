@@ -25,10 +25,23 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (CardInstanceType.Hand == owner.cardInstanceType)
         {
             if (bIgnoreHover) return;
-            // 호 벌리기
-            owner.CardSystem.OnCardHoverEnter(owner);
-            // 크게 만들기
-            owner.Motion?.HoverOn();
+
+            bool isSelectMode = owner.CardSystem.HandSystem.GetChooseMode();
+
+            if (isSelectMode == false)
+            {
+                // 호 벌리기
+                owner.CardSystem.OnCardHoverEnter(owner);
+                // 크게 만들기
+                owner.Motion?.HoverOn();
+            }
+            else
+            {
+                // 호 벌리기
+                owner.CardSystem.OnCardHoverEnter(owner);
+                // 크게 만들기
+                owner.Motion?.SelectHoverOn();
+            }
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
@@ -50,10 +63,22 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         {
             if (bIgnoreHover) return;
 
-            // 호 닫기
-            owner.CardSystem.OnCardHoverExit(owner);
-            // 작게 만들기
-            owner.Motion?.HoverOff();
+            bool isSelectMode = owner.CardSystem.HandSystem.GetChooseMode();
+
+            if (isSelectMode == false)
+            {
+                // 호 닫기
+                owner.CardSystem.OnCardHoverExit(owner);
+                // 작게 만들기
+                owner.Motion?.HoverOff();
+            }
+            else
+            {
+                // 호 닫기
+                owner.CardSystem.OnCardHoverExit(owner);
+                // 크게 만들기
+                owner.Motion?.SelectHoverOff();
+            }
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
@@ -74,15 +99,20 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         {
             if (bIgnoreHover) return;
 
-            // 사용 가능한 놈들 : 프리뷰 or 패에 있는 카드만 사용 가능.
-            if ((CardState.InHand == owner.cardState ||
-                CardState.Preview == owner.cardState) == false) return;
+            bool isSelectMode = owner.CardSystem.HandSystem.GetChooseMode();
 
-            if (owner.CardSystem.GetChooseMode() == false)
+            if (isSelectMode == false)
+            {
+                // 사용 가능한 놈들 : 프리뷰 or 패에 있는 카드만 사용 가능.
+                if ((CardState.InHand == owner.cardState ||
+                    CardState.Preview == owner.cardState) == false) return;
+
                 OnPointerClickNormalMode(eventData);
-            else if (owner.CardSystem.GetChooseMode() == true)
+            }
+            else
+            {
                 OnPointerClickChooseMode(eventData);
-
+            }
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
@@ -114,6 +144,6 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     }
     private void OnPointerClickChooseMode(PointerEventData eventData)
     {
-
+        owner.CardSystem.HandSystem.ToggleSelect(owner);
     }
 }
