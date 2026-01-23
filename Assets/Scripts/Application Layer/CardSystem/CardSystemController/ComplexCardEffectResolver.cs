@@ -16,14 +16,17 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     private ICardSystemActionCommandHandler cardSystemActionCommandHandler;
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler; 
+    private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler; 
 
     public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
-        ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler)
+        ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
+        ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
         slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
+        cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
     }
     
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
@@ -49,5 +52,25 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
     {
         cardSystemActionCommandHandler.GraveToHand(graveToDeckCards);
+    }
+
+    public IReadOnlyList<CardDataInstance> GetHandPile()
+    {
+        return cardSystemActionCommandHandler.GetHandPile();
+    }
+
+    public void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile)
+    {
+        cardSystemControlActionCommandHandler.UseCardnExtinguishAll(cardPile);
+    }
+
+    public void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile)
+    {
+        cardSystemActionCommandHandler.CardsToExtinction(cardPile);
+    }
+
+    public void ApplyAttackModifier(int attack)
+    {
+       cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
     }
 }

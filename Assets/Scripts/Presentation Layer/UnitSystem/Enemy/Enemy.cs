@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Enemy : Unit, IEnemyData
@@ -13,6 +14,7 @@ public class Enemy : Unit, IEnemyData
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;
+    private int weaknessTurn = 0;
 
     /// <summary>
     /// 구현 속성 존. ------------------------------------
@@ -99,7 +101,18 @@ public class Enemy : Unit, IEnemyData
     public void OnMove()
     {
         if (bDead == false)
+        {
             moveComponent.ApplyImpulse();
+        }
+    }
+
+    public void ResetState()
+    {
+        if (weaknessTurn > 0)
+            weaknessTurn -= 1;
+
+        if (weaknessTurn == 0)
+            healthComponent.SetWeakness(false);
     }
 
     protected override void HandleDead()
@@ -111,7 +124,12 @@ public class Enemy : Unit, IEnemyData
         vfxDeadImpact.Play(true);
     }
 
-
+    public override void ApplyWeakness(int turnCnt)
+    {
+        weaknessTurn = turnCnt;
+        if (weaknessTurn > 0)
+            healthComponent.SetWeakness(true);
+    }
 
 
     /// <summary>
@@ -197,8 +215,8 @@ public class Enemy : Unit, IEnemyData
         throw new System.NotImplementedException();
     }
 
-    public override void KnockBack(Vector2 dir,float power)
+    public override void KnockBack(Vector2 dir, float power)
     {
-        moveComponent.ApplyKnockBack(dir,power);
+        moveComponent.ApplyKnockBack(dir, power);
     }
 }

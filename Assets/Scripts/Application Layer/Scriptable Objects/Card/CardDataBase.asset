@@ -14,90 +14,197 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDataBase
   cardData:
   - id: 0
+    cardImage: {fileID: 0}
     cardName: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 00000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
   - id: 1
+    cardImage: {fileID: 0}
     cardName: 1
     cardType: 1
     elementType: 0
     usingType: 0
     priority: 2
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 01000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
   - id: 2
+    cardImage: {fileID: 0}
     cardName: 2
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 02000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
   - id: 3
+    cardImage: {fileID: 0}
     cardName: 3
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 0
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 00000000
     complexSystemEffects: 
   - id: 4
+    cardImage: {fileID: 0}
     cardName: 4
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 2
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 00000000
   - id: 5
+    cardImage: {fileID: 0}
     cardName: 5
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 1
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 00000000
     cardStatusEffects: 03000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
   - id: 6
+    cardImage: {fileID: 0}
     cardName: 6
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 01000000
     cardStatusEffects: 04000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
   - id: 7
+    cardImage: {fileID: 0}
     cardName: 7
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 2
+    cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 01000000
+  - id: 8
+    cardImage: {fileID: 0}
+    cardName: 8
+    cardType: 0
+    elementType: 1
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 02000000
+  - id: 9
+    cardImage: {fileID: 0}
+    cardName: 9
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 01000000
+    complexSystemEffects: 
+  - id: 10
+    cardImage: {fileID: 0}
+    cardName: 10
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    priority: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 05000000
+    cardSlotSystemEffects: 
+    complexSystemEffects: 
+  - id: 11
+    cardImage: {fileID: 0}
+    cardName: 11
+    cardType: 0
+    elementType: 0
+    usingType: 1
+    priority: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 06000000
+    cardSlotSystemEffects: 
+    complexSystemEffects: 
+  - id: 12
+    cardImage: {fileID: 0}
+    cardName: 12
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 02000000
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 
+  - id: 13
+    cardImage: {fileID: 0}
+    cardName: 13
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 0800000007000000
+    cardSlotSystemEffects: 
+    complexSystemEffects: 
+  - id: 14
+    cardImage: {fileID: 0}
+    cardName: 14
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    priority: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 09000000
+    cardSlotSystemEffects: 
+    complexSystemEffects: 

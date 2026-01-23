@@ -33,6 +33,13 @@ public enum CardName
     Flare,
     Sacrifice,
     SpaceShuttle,
+    FinalOrbit,
+    SecureTheZone,
+    CriticalHit,
+    RiftDetection,
+    Pluto,
+    Overcompensation,
+    Distortion,
 }
 
 public enum CardEffectApplyType
@@ -51,23 +58,31 @@ public enum CardStatusEffectType
     BonusRange,
     FlareBonusDamage,
     HPDecrease,
+    CriticalChance,
+    RiftDetection,
+    OvercompensationHPIncrease,
+    OvercompensationShield,
+    Distortion,
 }
 
 public enum CardSystemEffectType
 {
     FlareAdditionalDraw,
     SacrificeAdditionalDraw,
+    Pluto,
 }
 
 public enum CardSlotSystemEffectType
 {
     Amplify,
+    SecureTheZone,
 }
 
 public enum ComplexSystemEffectType
 {
     MeteorShower,
     SpaceShuttle,
+    FinalOrbit,
 }
 
 public enum CardSystemActionTimingType
@@ -75,6 +90,14 @@ public enum CardSystemActionTimingType
     BeforeAttack,
     AfterAttack,
     BeforeTurn,
+    Instant,
+}
+
+public enum CardSystemActionType
+{
+    CardPileDraw,
+    CardToGrave,
+    CardToExtinction,
 }
 
 public enum CardEffectPriority

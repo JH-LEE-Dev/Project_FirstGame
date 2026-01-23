@@ -12,6 +12,8 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
     private float prevHealth;
     private float prevShield;
 
+    bool bWeakness = false;
+
     protected override void Awake()
     {
 
@@ -51,8 +53,19 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
         currentHealth = _health;
     }
 
+    public void SetWeakness(bool boolean)
+    {
+        bWeakness = boolean;
+    }
+
     public void TakeDamange(float damage)
     {
+        if(bWeakness)
+        {
+            damage += 1;
+            Debug.Log("이 적은 현재 약화 상태입니다.");
+        }
+
         prevHealth = currentHealth;
         prevShield = currentShield; 
 
@@ -106,5 +119,10 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
     public void ApplyShieldModifier(float bonusShield)
     {
         currentShield += bonusShield;
+    }
+
+    public void IncreaseHP(float amount)
+    {
+        currentHealth += amount;
     }
 }

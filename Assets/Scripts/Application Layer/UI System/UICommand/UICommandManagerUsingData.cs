@@ -6,8 +6,8 @@ public enum ActionType_CardSystem
     AdditionalDraw,
     GraveToDeck,
     HandToGrave,
-    UsedCardToExtinction,
-    UsedCardToGrave,
+    CardToExtinction,
+    CardsToGrave,
     ExtinctionToDeck,
     GraveToHand,
 }

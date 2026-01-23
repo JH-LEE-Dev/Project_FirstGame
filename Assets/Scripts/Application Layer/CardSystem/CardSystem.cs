@@ -13,7 +13,7 @@ public class CardSystem
     private ComplexCardEffectResolver complexCardEffectResolver;
 
     public void Initialize(SignalHub _signalHub, CardManager _cardManager,
-        CardSystemController _cardSystemController,ComplexCardEffectResolver _complexCardEffectResolver)
+        CardSystemController _cardSystemController, ComplexCardEffectResolver _complexCardEffectResolver)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
@@ -95,17 +95,32 @@ public class CardSystem
         cardSystemController.UsedCardRemovedFromHandEvent -= cardManager.CardRemoveFromHand;
         cardSystemController.UsedCardRemovedFromHandEvent += cardManager.CardRemoveFromHand;
 
-        cardSystemController.UsedCardToExtinctionEvent -= cardManager.ToExtinction;
-        cardSystemController.UsedCardToExtinctionEvent += cardManager.ToExtinction;
+        cardSystemController.UsedCardToExtinctionEvent -= cardManager.ExtinguishCards;
+        cardSystemController.UsedCardToExtinctionEvent += cardManager.ExtinguishCards;
 
-        cardSystemController.UsedCardToGraveEvent -= cardManager.ToGrave;
-        cardSystemController.UsedCardToGraveEvent += cardManager.ToGrave;
+        cardSystemController.CardsToExtinctionEvent -= cardManager.CardsToExtinction;
+        cardSystemController.CardsToExtinctionEvent += cardManager.CardsToExtinction;
+
+        cardSystemController.CardsRemoveFronHandsEvent -= cardManager.CardRemoveFromHand;
+        cardSystemController.CardsRemoveFronHandsEvent += cardManager.CardRemoveFromHand;
+
+        cardSystemController.UsedCardToGraveEvent -= cardManager.CardToGrave;
+        cardSystemController.UsedCardToGraveEvent += cardManager.CardToGrave;
 
         cardSystemController.ExtinctionToDeckEvent -= cardManager.ExtinctionToDeck;
         cardSystemController.ExtinctionToDeckEvent += cardManager.ExtinctionToDeck;
 
         cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
         cardSystemController.ComplexCommandDispatchEvent += complexCardEffectResolver.ExecuteCommand;
+
+        cardSystemController.EquippedCardsToExtinctionEvent -= EquippedCardToExtinction;
+        cardSystemController.EquippedCardsToExtinctionEvent += EquippedCardToExtinction;
+
+        cardSystemController.EquippedCardsToGraveEvent -= EquippedCardToGrave;
+        cardSystemController.EquippedCardsToGraveEvent += EquippedCardToGrave;
+
+        cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
+        cardSystemController.CardSlotCntChangedEvent += CardSlotCntChanged;
     }
 
     private void ReleaseEvents()
@@ -138,13 +153,23 @@ public class CardSystem
 
         cardSystemController.UsedCardRemovedFromHandEvent -= cardManager.CardRemoveFromHand;
 
-        cardSystemController.UsedCardToExtinctionEvent -= cardManager.ToExtinction;
+        cardSystemController.UsedCardToExtinctionEvent -= cardManager.ExtinguishCards;
 
-        cardSystemController.UsedCardToGraveEvent -= cardManager.ToGrave;
+        cardSystemController.UsedCardToGraveEvent -= cardManager.CardToGrave;
 
         cardSystemController.ExtinctionToDeckEvent -= cardManager.ExtinctionToDeck;
 
         cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
+
+        cardSystemController.CardsToExtinctionEvent -= cardManager.CardsToExtinction;
+
+        cardSystemController.CardsRemoveFronHandsEvent -= cardManager.CardRemoveFromHand;
+
+        cardSystemController.EquippedCardsToExtinctionEvent -= EquippedCardToExtinction;
+
+        cardSystemController.EquippedCardsToGraveEvent -= EquippedCardToGrave;
+
+        cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
     }
 
     public void Release()
@@ -173,19 +198,19 @@ public class CardSystem
         signalHub.Publish(new HandToGraveSignal(), cards);
     }
 
-    private void UsedCardToExtinction()
+    private void UsedCardToExtinction(ReadOnlySpan<CardDataInstance> cardPile)
     {
-        signalHub.Publish(new UsedCardToExtinctionSignal());
+        signalHub.Publish(new UsedCardToExtinctionSignal(), cardPile);
     }
 
-    private void UsedCardToGrave()
+    private void UsedCardToGrave(ReadOnlySpan<CardDataInstance> cardPile)
     {
-        signalHub.Publish(new UsedCardToGraveSignal());
+        signalHub.Publish(new UsedCardToGraveSignal(), cardPile);
     }
 
-    private void ExtinctionToDeck()
+    private void ExtinctionToDeck(ReadOnlySpan<CardDataInstance> cardPile)
     {
-        signalHub.Publish(new ExtinctionToDeckSignal());
+        signalHub.Publish(new ExtinctionToDeckSignal(), cardPile);
     }
 
     private void CardDrawStarted()
@@ -237,6 +262,21 @@ public class CardSystem
 
     private void GraveToHand(ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new GraveToHandSignal(),cards);
+        signalHub.Publish(new GraveToHandSignal(), cards);
+    }
+
+    private void EquippedCardToExtinction(ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        //signalHub.Publish(new EquippedCardToExtinctionSignal(), cards);
+    }
+
+    private void EquippedCardToGrave(ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        //signalHub.Publish(new EquippedCardToGraveSignal(), cards);
+    }
+
+    private void CardSlotCntChanged(int cnt)
+    {
+        signalHub.Publish(new CardSlotCntChangedSignal(cnt));
     }
 }

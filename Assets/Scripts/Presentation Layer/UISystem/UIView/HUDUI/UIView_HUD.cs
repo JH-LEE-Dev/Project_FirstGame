@@ -144,6 +144,10 @@ public class UIView_HUD : UIView
         }
     }
 
+    public void PlayerGetHP(float amount)
+    {
+
+    }
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";

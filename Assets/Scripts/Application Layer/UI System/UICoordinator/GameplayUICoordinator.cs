@@ -4,112 +4,146 @@ using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using WaveSystemSignals;
 using CardSystemUISignal;
+using System;
+using UnityEngine;
 
 public class GameplayUICoordinator
 {
-    private SignalHub signalHub;
+    public event Action<int> UnEquipBulletCardEvent;
+    public event Action CancelCardPreviewEvent;
+    public event Action<bool, int, Transform> CardUsedEvent;
+
     private UIView_HUD hudUISystem;
     private UIView_Unit unitUISystem;
     private UIView_Gameplay gameplayUISystem;
 
-    public void Initialize(SignalHub _signalHub,UIView_HUD _hudUISystem, UIView_Unit _unitUISystem,UIView_Gameplay _gameplayUISystem)
+    public void Initialize(UIView_HUD _hudUISystem, UIView_Unit _unitUISystem,UIView_Gameplay _gameplayUISystem)
     {
-        signalHub = _signalHub;
         hudUISystem = _hudUISystem;
         unitUISystem = _unitUISystem;
         gameplayUISystem = _gameplayUISystem;
 
-        SubscribeEvents();
+        BindEvents();
     }
 
-    private void SubscribeEvents()
+    private void BindEvents()
     {
-        signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
-        signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.Subscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
-        signalHub.Subscribe<PlayerSpawnedSignal>(PlayerSpawned);
-        signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
-        signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
-        signalHub.Subscribe<PlayerGetShieldSignal>(PlayerGetShield);
-        signalHub.Subscribe<WaveStartSignal>(WaveStarted);
-        signalHub.Subscribe<WaveEndSignal>(WaveEnded);
-        signalHub.Subscribe<GameStartedSignal>(GameStarted);
-        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
+        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
+        unitUISystem.UnEquipBulletCardEvent += UnEquipBulletCard;
+
+        unitUISystem.CancelCardPreviewEvent -= CancelCardPreview;
+        unitUISystem.CancelCardPreviewEvent += CancelCardPreview;
     }
 
-    private void UnSubscribeEvents()
+    private void ReleaseEvents()
     {
-        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
-        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
-        signalHub.UnSubscribe<PlayerSpawnedSignal>(PlayerSpawned);
-        signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
-        signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
-        signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
-        signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
-        signalHub.UnSubscribe<WaveEndSignal>(WaveEnded);
-        signalHub.UnSubscribe<GameStartedSignal>(GameStarted);
-        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
+        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
+
+        unitUISystem.CancelCardPreviewEvent -= CancelCardPreview;
     }
 
     public void Release()
     {
-        UnSubscribeEvents();
+        ReleaseEvents();
     }
 
-    public void PlayerTurnStarted(PlayerTurnStartSignal playerTurnStartSignal)
+    public void PlayerTurnStarted()
     {
         hudUISystem.PlayerTurnStarted();
     }
 
-    public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
+    public void EnemyTurnStarted()
     {
         hudUISystem.EnemyTurnStarted();
         gameplayUISystem.EnemyTurnStarted();
     }
 
-    public void CardUseTimeStarted(CardDrawFinishedSignal cardDrawFinishedSignal)
+    public void PlayerAttacked()
+    {
+        unitUISystem.UnEquipBulletCardForShoot();
+    }
+
+    public void CardUseTimeStarted()
     {
         hudUISystem.CardUseTimeStarted();
     }
 
-    public void PlayerSpawned(PlayerSpawnedSignal playerSpawnedSignal)
+    public void PlayerSpawned(IPlayerData playerData)
     {
-        hudUISystem.PlayerSpawned(playerSpawnedSignal.playerData);
+        hudUISystem.PlayerSpawned(playerData);
     }
 
-    public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
+    public void CardUsingFinished()
     {
         gameplayUISystem.CardUsingFinished();
     }
 
-    public void OnPlayerHit(PlayerTakeDamageSignal playerTakeDamageSignal)
+    public void OnPlayerHit(float damage)
     {
-        hudUISystem.OnPlayerHit(playerTakeDamageSignal.damage);
+        hudUISystem.OnPlayerHit(damage);
     }
 
-    private void WaveStarted(WaveStartSignal waveStartSignal)
+    public void WaveStarted(int waveIdx)
     {
-        hudUISystem.WaveStarted(waveStartSignal.waveIdx);
+        hudUISystem.WaveStarted(waveIdx);
     }
 
-    private void GameStarted(GameStartedSignal gameStartedSignal)
+    public void GameStarted()
     {
         hudUISystem.GameStarted();
     }
+    public void CharacterSpawned(ICharacterData characterData)
+    {
+        unitUISystem.Initialize(characterData);
+    }
 
-    private void WaveEnded(WaveEndSignal waveEndSignal)
+    public void WaveEnded()
     {
         hudUISystem.WaveEnded();
     }
 
-    private void EnemyIsDead(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
+    public void EnemyIsDead(Vector2 position)
     {
-        hudUISystem.EnemyIsDead(waveProgressUpdatedSignal.position);
+        hudUISystem.EnemyIsDead(position);
     }
 
-    private void PlayerGetShield(PlayerGetShieldSignal playerGetShieldSignal)
+    public void PlayerGetShield(float amount)
     {
-        hudUISystem.PlayerGetShield(playerGetShieldSignal.amount);
+        hudUISystem.PlayerGetShield(amount);
+    }
+
+    public void PlayerGetHP(float amount)
+    {
+        hudUISystem.PlayerGetHP(amount);
+    }
+
+    public void CardSlotCntChanged(int cnt)
+    {
+        unitUISystem.SetBulletSocketCount(cnt);
+    }
+
+    public void EquipBulletCard(int slotIdx,CardDataInstance equippedCard)
+    {
+        unitUISystem.EquipBulletCard(slotIdx, equippedCard);
+    }
+
+    private void UnEquipBulletCard(int slotIdx)
+    {
+        UnEquipBulletCardEvent?.Invoke(slotIdx);
+    }
+
+    private void CancelCardPreview()
+    {
+        CancelCardPreviewEvent?.Invoke();
+    }
+
+    public void CardUsed(bool bVerified,int slotIdx)
+    {
+        Transform slotTransform = null;
+
+        if (bVerified == true)
+            slotTransform = unitUISystem.GetSocketTransform(slotIdx);
+
+        CardUsedEvent?.Invoke(bVerified, slotIdx, slotTransform);
     }
 }

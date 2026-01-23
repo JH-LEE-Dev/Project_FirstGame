@@ -31,3 +31,11 @@ public struct CardListPriorityComparer : IComparer<List<CardDataInstance>>
         return xPriority.CompareTo(yPriority);
     }
 }
+
+public struct CardIdComparer : IComparer<CardDataInstance>
+{
+    public int Compare(CardDataInstance x, CardDataInstance y)
+    {
+        return x.GetCardData().id.CompareTo(y.GetCardData().id);
+    }
+}

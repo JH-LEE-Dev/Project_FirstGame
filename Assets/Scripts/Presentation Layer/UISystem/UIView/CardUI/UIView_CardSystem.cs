@@ -364,38 +364,38 @@ public class UIView_CardSystem : UIView
 
             switch(currenType)
             {
-                case ActionType_CardSystem.PileDraw:
-                case ActionType_CardSystem.AdditionalDraw:
+                case ActionType_CardSystem.PileDraw: // 턴이 시작될 때 5장 드로우 명령.
+                case ActionType_CardSystem.AdditionalDraw: // 효과에 의한 추가 드로우 명령.
                     DrawingCards(currentActionData.cards);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case ActionType_CardSystem.GraveToDeck:
+                case ActionType_CardSystem.GraveToDeck: // 묘지에서 덱으로 가는 명령.
                     graveSystem?.CardMoveToDeckEffect(currentActionDataList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case ActionType_CardSystem.HandToGrave:
+                case ActionType_CardSystem.HandToGrave: // 턴이 끝나고 패에서 묘지로 가는 명령.
 
                     AllCardReturnToGrave(CardState.InHand);
                     AllCardReturnToPool(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
-                case ActionType_CardSystem.UsedCardToExtinction:
+                case ActionType_CardSystem.CardToExtinction: //소멸 카드가 사용되었을 때의 명령.
                     //Debug.Log("UsedCardToExtinction");
 
                     break;
-                case ActionType_CardSystem.UsedCardToGrave:
+                case ActionType_CardSystem.CardsToGrave: // 카드를 사용했을 때 묘지로 가는 명령.
                     //Debug.Log("UsedCardToGrave");
 
                     break;
-                case ActionType_CardSystem.ExtinctionToDeck:
+                case ActionType_CardSystem.ExtinctionToDeck: // Wave가 끝나고 소멸에서 덱으로 복귀하는 명령.
                    //Debug.Log("ExtinctionToDeck");
 
                     break;
-                case ActionType_CardSystem.GraveToHand:
+                case ActionType_CardSystem.GraveToHand: // 묘지에서 패로 복귀하는 명령.
                     //Debug.Log("GraveToHand");
 
                     break;
