@@ -9,12 +9,35 @@ public class HandSystem : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private RectTransform handRoot;
+    [SerializeField] private RectTransform cardSelectHandRoot;
+    [SerializeField] private SelectEndButton selectEndButton;
 
     [Header("Arc Settings")]
-    [SerializeField] private float radius = 2000f;
-    [SerializeField] private float minArcAngle = 0f;
-    [SerializeField] private float maxArcAngle = 20f;
-    [SerializeField] private float hoverGapWeight = 0.3f;
+    private float radius;
+    private float minArcAngle;
+    private float maxArcAngle;
+    private float hoverGapWeight;
+
+    private float baseRadius = 2000f;
+    private float baseMinArcAngle = 0f;
+    private float baseMaxArcAngle = 20f;
+    private float baseHoverGapWeight = 0.3f;
+
+    private float selectModeRadius = 4000f;
+    private float selectModeMinArcAngle = 0f;
+    private float selectModeMaxArcAngle = 20f;
+    private float selectModeHoverGapWeight = 0.15f;
+
+    [Header("Select Layout")]
+    [SerializeField] private Vector2 selectCenter = Vector2.zero;
+    private float selectSpacing = 250f;         
+    private float selectMaxWidth = 1200f;
+    // 고르는 모드
+    private bool bCardSelectMode = false;
+    public bool GetChooseMode() { return bCardSelectMode; }
+    private int selectMaxCount = 0;
+    private bool selectForcing = false;
+
 
     [Header("Preview")]
     [SerializeField] private RectTransform previewRoot;
@@ -30,16 +53,16 @@ public class HandSystem : MonoBehaviour
     // 호버된 카드 인덱스
     private MainCardInstance hoveredCard = null;
 
-    // 고르는 모드
-    private bool bChooseMode = false;
-    public void SetChooseMode(bool _bChooseMode) { bChooseMode = _bChooseMode; }
-    public bool GetChooseMode() {  return bChooseMode; }
-
-
-
     public void Init(UIView_CardSystem _cardSystem)
     {
         cardSystem = _cardSystem;
+
+        radius = baseRadius;
+        minArcAngle = baseMinArcAngle;
+        maxArcAngle = baseMaxArcAngle;
+        hoverGapWeight = baseHoverGapWeight;
+
+        selectEndButton.Init(this);
     }
 
     // 좌클릭 해서 들어온 카드
@@ -234,16 +257,82 @@ public class HandSystem : MonoBehaviour
         ReturnToPool(card);
     }
 
-    private bool IsLayoutExcluded(MainCardInstance c)
-    {
-        if (c == null) return true;
 
-        return c.cardState == CardState.Preview
-            || c.cardState == CardState.Equipped
-            || c.cardState == CardState.Hidden
-            || c.cardState == CardState.Other;
+    public void ToggleSelect(MainCardInstance card)
+    {
+        if (!bCardSelectMode) return;
+        if (card == null) return;
+        if (card.cardState != CardState.InHand && card.cardState != CardState.Selecting) return;
+
+        // 이미 선택 상태면 해제
+        if (card.cardState == CardState.Selecting)
+        {
+            card.SetUIState(CardState.InHand);
+            computeArc();
+            ComputeSelectedPositions();
+            RefreshSelectEndButton();
+            return;
+        }
+
+        // InHand에서 Selecting 시도하여 최대 개수를 체크한다.
+        int selectedCount = 0;
+        foreach (var c in cards)
+            if (c != null && c.cardState == CardState.Selecting)
+                selectedCount++;
+
+        if (selectedCount >= selectMaxCount)
+        {
+            // 거부 모션
+            card.Motion.PlayReject();
+            return;
+        }
+
+        // 선택 처리
+        card.SetUIState(CardState.Selecting);
+        computeArc();
+        ComputeSelectedPositions();
+        RefreshSelectEndButton();
     }
 
+    private void ComputeSelectedPositions()
+    {
+        // Selecting 카드들을 cards 리스트 순서로 모음
+        List<MainCardInstance> selected = new();
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            var c = cards[i];
+            if (c != null && c.cardState == CardState.Selecting)
+                selected.Add(c);
+        }
+
+        int n = selected.Count;
+        if (n <= 0) return;
+
+        // 추후 수정.
+        Vector2 basePos = selectCenter;
+
+        if (n == 1)
+        {
+            selected[0].Motion.SetTarget(basePos, 0f);
+            selected[0].transform.SetAsLastSibling();
+            return;
+        }
+
+        float spacing = selectSpacing;
+        float needWidth = spacing * (n - 1);
+        if (needWidth > selectMaxWidth)
+            spacing = selectMaxWidth / (n - 1);
+
+        float startX = -spacing * (n - 1) * 0.5f;
+
+        for (int i = 0; i < n; i++)
+        {
+            Vector2 pos = basePos + new Vector2(startX + spacing * i, 0f);
+            selected[i].Motion.SetTarget(pos, 0f);
+            selected[i].transform.SetAsLastSibling();
+        }
+    }
 
     // 호를 구성해서, 카드들에게 좌표랑 각도를 던져준다.
     private void computeArc()
@@ -263,8 +352,8 @@ public class HandSystem : MonoBehaviour
         // 패가 0장 이하라면, 연산을 할 필요가 없다.
         if (layoutCount <= 0) return;
 
-
-        Vector2 basePos = handRoot.anchoredPosition;
+        RectTransform root = bCardSelectMode ? cardSelectHandRoot : handRoot;
+        Vector2 basePos = root.anchoredPosition;
 
         // 프리뷰 중일땐, effectiveHover가 null임. 즉 hoveredCard를 없던일로 한다.
         bool hasPreview = (previewCard != null);
@@ -341,7 +430,16 @@ public class HandSystem : MonoBehaviour
 
         SortZ_RightIsTop();
     }
+    private bool IsLayoutExcluded(MainCardInstance c)
+    {
+        if (c == null) return true;
 
+        return c.cardState == CardState.Preview
+            || c.cardState == CardState.Equipped
+            || c.cardState == CardState.Hidden
+            || c.cardState == CardState.Other
+            || c.cardState == CardState.Selecting;
+    }
     private void SortZ_RightIsTop()
     {
         // 오른쪽 카드가 위: cards 리스트 순서대로 SetAsLastSibling
@@ -354,6 +452,105 @@ public class HandSystem : MonoBehaviour
                 cards[i].transform.SetAsLastSibling();
         }
     }
+
+    public void StartCardSelectMode(int selectCount, bool bSelectforcing)
+    {
+        if (bCardSelectMode) return;
+
+        if (previewCard != null) CancelPreview();
+        hoveredCard = null;
+
+        bCardSelectMode = true;
+
+        radius = selectModeRadius;
+        minArcAngle = selectModeMinArcAngle;
+        maxArcAngle = selectModeMaxArcAngle;
+        hoverGapWeight = selectModeHoverGapWeight;
+
+
+        // 요구사항 저장 및 반영
+        selectMaxCount = Mathf.Max(0, selectCount);
+        selectForcing = bSelectforcing;
+
+        selectEndButton.SelectEndButtonActive(true);
+        RefreshSelectEndButton();
+
+
+        foreach (var card in cards)
+        {
+            if (card != null && card.cardState == CardState.InHand)
+                card.Motion.StartSelectMode();
+        }
+
+        computeArc();
+        ComputeSelectedPositions();
+    }
+
+    public void EndCardSelectMode()
+    {
+        if (!bCardSelectMode) return;
+
+        if (selectForcing)
+        {
+            int selectedCount = 0;
+            foreach (var c in cards)
+                if (c != null && c.cardState == CardState.Selecting)
+                    selectedCount++;
+
+            if (selectedCount != selectMaxCount)
+                return;
+        }
+
+        bCardSelectMode = false;
+
+        radius = baseRadius;
+        minArcAngle = baseMinArcAngle;
+        maxArcAngle = baseMaxArcAngle;
+        hoverGapWeight = baseHoverGapWeight;
+
+        if (previewCard != null) CancelPreview();
+        hoveredCard = null;
+
+        List<MainCardInstance> selected = GetSelectedCards();
+        cardSystem.EndCardSelectMode(selected);
+
+        // 비활성
+        selectEndButton.SelectEndButtonActive(false);
+        selectEndButton.SetCanClick(false);
+
+        foreach (var card in cards)
+        {
+            if (card.cardState == CardState.InHand)
+                card.Motion.EndSelectMode();
+        }
+
+        computeArc();
+        ComputeSelectedPositions();
+    }
+
+    private void RefreshSelectEndButton()
+    {
+        int selectedCount = 0;
+        foreach (var c in cards)
+            if (c != null && c.cardState == CardState.Selecting)
+                selectedCount++;
+
+        bool canClick = selectForcing ? (selectedCount == selectMaxCount) : (selectedCount <= selectMaxCount);
+        selectEndButton.SetCanClick(canClick);
+    }
+
+    private List<MainCardInstance> GetSelectedCards()
+    {
+        List<MainCardInstance> selected = new();
+        foreach (var c in cards)
+        {
+            if (c != null && c.cardState == CardState.Selecting)
+                selected.Add(c);
+        }
+        return selected;
+    }
+
+    /////////////////////// For Draw
 
     public int GetCurrentHandCardCount() => cards.Count;
 
@@ -395,7 +592,7 @@ public class HandSystem : MonoBehaviour
 
 
 
-    ///////////////////////풀링 반납 하는 함수들 모음
+    /////////////////////// For Pooling
 
     // delay = 첫 전체 연출 딜레이, interval = 연속 연출 사이의 간격
     public void ReturnStateAllCard(CardState state, CardReturnType type = CardReturnType.Temp, float delay = 0f, float interval = 0.09f)

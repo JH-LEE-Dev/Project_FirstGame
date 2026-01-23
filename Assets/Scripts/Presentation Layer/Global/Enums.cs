@@ -34,6 +34,7 @@ public enum CardState
     Preview,
     Equipped,
     Other,
+    Selecting,
     Hidden
 }
 

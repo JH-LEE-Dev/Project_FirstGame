@@ -1,4 +1,5 @@
 using DG.Tweening;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -22,6 +23,7 @@ public class UIView_CardSystem : UIView
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
+    [SerializeField] private DimOverlay dimOverlay;
     [Space]
     [Header("Buttons")]
     [SerializeField] private TurnEndButton turnFinishedButton;
@@ -157,11 +159,28 @@ public class UIView_CardSystem : UIView
     {
         handSystem.UnequipBulletToHand(_index);
     }
-    public void SetChooseMode(bool _bChooseMode) 
-    { 
-        handSystem.SetChooseMode(_bChooseMode); 
-        // 화면 암전 구현 예정
+
+    [Button]
+    public void SelectModeON()
+    {
+        StartCardSelectMode(3, true);
     }
+
+
+    public void StartCardSelectMode(int _selectCount, bool _bSelectforcing) 
+    {
+        // _selectCount은 선택 개수
+        // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
+        handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
+        dimOverlay.SetDimOverlayActive(true);
+    }
+    public void EndCardSelectMode(List<MainCardInstance> _cards)
+    {
+        dimOverlay.SetDimOverlayActive(false);
+
+        // 리스트를 가지고 무엇을 할 것인가에 대한 구현을 이후에 하면 됨.
+    }
+
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
 
     // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
