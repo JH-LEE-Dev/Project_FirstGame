@@ -412,13 +412,11 @@ public class UIView_CardSystem : UIView
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
                 case ActionType_CardSystem.CardToExtinction: //소멸 카드가 사용되었을 때의 명령.
-                case ActionType_CardSystem.UsedCardToExtinction:
                     ReturnCard(currentActionData.cards, CardReturnType.Extinction);
                     //Debug.Log("UsedCardToExtinction");
 
                     break;
                 case ActionType_CardSystem.CardsToGrave: // 카드를 사용했을 때 묘지로 가는 명령.
-                case ActionType_CardSystem.UsedCardToGrave:
                     ReturnCard(currentActionData.cards, CardReturnType.FlyToGrave);
                     //Debug.Log("UsedCardToGrave");
 
