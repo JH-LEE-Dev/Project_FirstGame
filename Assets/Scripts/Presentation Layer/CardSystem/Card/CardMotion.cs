@@ -8,8 +8,8 @@ public class CardMotion : MonoBehaviour
     private RectTransform rt;
 
     [Header("MainMoving")]
-    [SerializeField] private float followFreq = 18f;
-    [SerializeField, Range(0f, 1.2f)] private float followDamp = 0.85f;
+    [SerializeField] private float followFreq = 22f;
+    [SerializeField, Range(0f, 1.2f)] private float followDamp = 0.66f;
     [SerializeField] private float rotateLerp = 18f;
     [SerializeField] private float snapDist = 0.05f;
 
@@ -24,10 +24,10 @@ public class CardMotion : MonoBehaviour
     private Vector3 originScale;
 
     [Header("Preview")]
-    [SerializeField] private float previewScale = 2f;
-    [SerializeField] private float previewMoveDuration = 0.3f;
-    [SerializeField] private float previewScaleDuration = 0.3f;
-    [SerializeField] private float previewEndScaleDur = 0.6f;
+    private float previewScale = 2f;
+    private float previewMoveDuration = 0.3f;
+    private float previewScaleDuration = 0.3f;
+    private float previewEndScaleDur = 0.3f;
     private Tween previewMoveTween;
     private Tween previewScaleTween;
     private Tween previewRotateTween;

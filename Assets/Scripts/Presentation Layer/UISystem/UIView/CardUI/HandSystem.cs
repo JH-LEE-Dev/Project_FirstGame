@@ -1,6 +1,8 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 
 public class HandSystem : MonoBehaviour
@@ -11,12 +13,14 @@ public class HandSystem : MonoBehaviour
     [SerializeField] private RectTransform handRoot;
     [SerializeField] private RectTransform cardSelectHandRoot;
     [SerializeField] private SelectEndButton selectEndButton;
+    [SerializeField] private TextMeshProUGUI selectText;
+
 
     [Header("Arc Settings")]
-    private float radius;
-    private float minArcAngle;
-    private float maxArcAngle;
-    private float hoverGapWeight;
+    [SerializeField] private float radius;
+    [SerializeField] private float minArcAngle;
+    [SerializeField] private float maxArcAngle;
+    [SerializeField] private float hoverGapWeight;
 
     private float baseRadius = 2000f;
     private float baseMinArcAngle = 0f;
@@ -25,7 +29,7 @@ public class HandSystem : MonoBehaviour
 
     private float selectModeRadius = 4000f;
     private float selectModeMinArcAngle = 0f;
-    private float selectModeMaxArcAngle = 20f;
+    private float selectModeMaxArcAngle = 15f;
     private float selectModeHoverGapWeight = 0.15f;
 
     [Header("Select Layout")]
@@ -63,6 +67,7 @@ public class HandSystem : MonoBehaviour
         hoverGapWeight = baseHoverGapWeight;
 
         selectEndButton.Init(this);
+        SettingSelectText(false);
     }
 
     // 좌클릭 해서 들어온 카드
@@ -472,8 +477,11 @@ public class HandSystem : MonoBehaviour
         selectMaxCount = Mathf.Max(0, selectCount);
         selectForcing = bSelectforcing;
 
+
+        // 버튼 및 텍스트 활성
         selectEndButton.SelectEndButtonActive(true);
         RefreshSelectEndButton();
+        SettingSelectText(bCardSelectMode);
 
 
         foreach (var card in cards)
@@ -503,6 +511,7 @@ public class HandSystem : MonoBehaviour
 
         bCardSelectMode = false;
 
+
         radius = baseRadius;
         minArcAngle = baseMinArcAngle;
         maxArcAngle = baseMaxArcAngle;
@@ -514,9 +523,10 @@ public class HandSystem : MonoBehaviour
         List<MainCardInstance> selected = GetSelectedCards();
         cardSystem.EndCardSelectMode(selected);
 
-        // 비활성
+        // 버튼 및 텍스트 비활성
         selectEndButton.SelectEndButtonActive(false);
         selectEndButton.SetCanClick(false);
+        SettingSelectText(bCardSelectMode);
 
         foreach (var card in cards)
         {
@@ -537,6 +547,24 @@ public class HandSystem : MonoBehaviour
 
         bool canClick = selectForcing ? (selectedCount == selectMaxCount) : (selectedCount <= selectMaxCount);
         selectEndButton.SetCanClick(canClick);
+    }
+
+    private void SettingSelectText(bool bActive)
+    {
+        if (!selectText) return;
+
+        selectText.gameObject.SetActive(bActive);
+        if (!bActive) return;
+
+        int n = selectMaxCount;
+
+        if (selectForcing)
+            selectText.SetText($"카드 {n}장을 선택하세요!");
+        else
+            selectText.SetText($"카드를 최대 {n}장까지 선택할 수 있어요!");
+
+        var wave = selectText.GetComponent<UIText_SelectTextWave>();
+        wave?.Rebuild();
     }
 
     private List<MainCardInstance> GetSelectedCards()

@@ -163,7 +163,7 @@ public class UIView_CardSystem : UIView
     [Button]
     public void SelectModeON()
     {
-        StartCardSelectMode(3, true);
+        StartCardSelectMode(3, false);
     }
 
 
@@ -179,6 +179,10 @@ public class UIView_CardSystem : UIView
         dimOverlay.SetDimOverlayActive(false);
 
         // 리스트를 가지고 무엇을 할 것인가에 대한 구현을 이후에 하면 됨.
+        foreach (var c in _cards)
+        {
+            c.SetUIState(CardState.InHand);
+        }
     }
 
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
