@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
 {
+    public event Action<int> CardSlotCntChangedEvent;
+
+    private const int defaultSlotCnt = 2;
     private const int maxSlotCnt = 10;
     private const int maxSlotCardCnt = SYSTEM_VAR.maxDeckPileCount;
     private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
@@ -125,5 +128,19 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedRotationBulletCard()
     {
         return prevBulletCardSlot;
+    }
+
+    public void ApplySlotCntModifier(int cnt)
+    {
+        bulletCardSlotCnt += cnt;
+
+        CardSlotCntChangedEvent?.Invoke(bulletCardSlotCnt);
+    }
+
+    public void ResetSlotCntModifier()
+    {
+        bulletCardSlotCnt = defaultSlotCnt;
+
+        CardSlotCntChangedEvent?.Invoke(bulletCardSlotCnt);
     }
 }

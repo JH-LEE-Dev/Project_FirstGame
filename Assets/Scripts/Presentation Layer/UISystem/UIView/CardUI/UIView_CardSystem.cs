@@ -1,4 +1,5 @@
 using DG.Tweening;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -22,6 +23,7 @@ public class UIView_CardSystem : UIView
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
+    [SerializeField] private DimOverlay dimOverlay;
     [Space]
     [Header("Buttons")]
     [SerializeField] private TurnEndButton turnFinishedButton;
@@ -146,17 +148,6 @@ public class UIView_CardSystem : UIView
         handSystem?.CancelPreview();
     }
 
-    // state에 맞는 카드들이 묘지로 빨려들어가는 기능
-    public void AllCardReturnToGrave(CardState state)
-    {
-        handSystem?.AllCardReturnToGrave(state);
-    }
-
-    public void AllCardReturnToPool(CardState state)
-    {
-        handSystem?.AllCardReturnToPool(state);
-    }
-
     // 불릿 카드 사용했을때, 호출되는 함수
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
@@ -168,11 +159,32 @@ public class UIView_CardSystem : UIView
     {
         handSystem.UnequipBulletToHand(_index);
     }
-    public void SetChooseMode(bool _bChooseMode) 
-    { 
-        handSystem.SetChooseMode(_bChooseMode); 
-        // 화면 암전
+
+    [Button]
+    public void SelectModeON()
+    {
+        StartCardSelectMode(3, false);
     }
+
+
+    public void StartCardSelectMode(int _selectCount, bool _bSelectforcing) 
+    {
+        // _selectCount은 선택 개수
+        // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
+        handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
+        dimOverlay.SetDimOverlayActive(true);
+    }
+    public void EndCardSelectMode(List<MainCardInstance> _cards)
+    {
+        dimOverlay.SetDimOverlayActive(false);
+
+        // 리스트를 가지고 무엇을 할 것인가에 대한 구현을 이후에 하면 됨.
+        foreach (var c in _cards)
+        {
+            c.SetUIState(CardState.InHand);
+        }
+    }
+
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
 
     // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
@@ -187,6 +199,22 @@ public class UIView_CardSystem : UIView
         return NextEndPos;
     }
 
+    // CardState : 현재 어디에있는지. (패, 프리뷰 등)
+    public void ReturnStateAllCard(CardState state, CardReturnType type = CardReturnType.Temp, float delay = 0f, float interval = 0.09f)
+    {
+        if (state == CardState.Equipped)
+        {
+            /* UIView_Unit.UnEquipBulletCardForShoot */
+            handSystem?.ReturnStateAllCard(state, CardReturnType.Temp);
+        }
+        else handSystem?.ReturnStateAllCard(state, type, delay, interval);
+    }
+
+
+    public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
+    {
+        handSystem.ReturnCard(cardDataList, type, delay);
+    }
 
     ///////////////////////////////////
 
@@ -364,38 +392,40 @@ public class UIView_CardSystem : UIView
 
             switch(currenType)
             {
-                case ActionType_CardSystem.PileDraw:
-                case ActionType_CardSystem.AdditionalDraw:
+                case ActionType_CardSystem.PileDraw: // 턴이 시작될 때 5장 드로우 명령.
+                case ActionType_CardSystem.AdditionalDraw: // 효과에 의한 추가 드로우 명령.
                     DrawingCards(currentActionData.cards);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case ActionType_CardSystem.GraveToDeck:
+                case ActionType_CardSystem.GraveToDeck: // 묘지에서 덱으로 가는 명령.
                     graveSystem?.CardMoveToDeckEffect(currentActionDataList[i].cards.Count);
 
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
 
-                case ActionType_CardSystem.HandToGrave:
+                case ActionType_CardSystem.HandToGrave: // 턴이 끝나고 패에서 묘지로 가는 명령.
 
-                    AllCardReturnToGrave(CardState.InHand);
-                    AllCardReturnToPool(CardState.Equipped);
+                    ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
+                    ReturnStateAllCard(CardState.Equipped);
                     await Awaitable.WaitForSecondsAsync(turnWaitSecond);
                     break;
-                case ActionType_CardSystem.UsedCardToExtinction:
+                case ActionType_CardSystem.CardToExtinction: //소멸 카드가 사용되었을 때의 명령.
+                    ReturnCard(currentActionData.cards, CardReturnType.Extinction);
                     //Debug.Log("UsedCardToExtinction");
 
                     break;
-                case ActionType_CardSystem.UsedCardToGrave:
+                case ActionType_CardSystem.CardsToGrave: // 카드를 사용했을 때 묘지로 가는 명령.
+                    ReturnCard(currentActionData.cards, CardReturnType.FlyToGrave);
                     //Debug.Log("UsedCardToGrave");
 
                     break;
-                case ActionType_CardSystem.ExtinctionToDeck:
+                case ActionType_CardSystem.ExtinctionToDeck: // Wave가 끝나고 소멸에서 덱으로 복귀하는 명령.
                    //Debug.Log("ExtinctionToDeck");
 
                     break;
-                case ActionType_CardSystem.GraveToHand:
+                case ActionType_CardSystem.GraveToHand: // 묘지에서 패로 복귀하는 명령.
                     //Debug.Log("GraveToHand");
 
                     break;

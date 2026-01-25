@@ -123,6 +123,10 @@ public class UIView_HUD : UIView
         HP_BarShieldCalc();
     }
 
+    public void PlayerGetHP(float amount)
+    {
+
+    }
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";

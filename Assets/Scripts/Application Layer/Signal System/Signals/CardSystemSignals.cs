@@ -23,6 +23,15 @@ namespace CardSystemSignals
     public struct UsedCardToGraveSignal { }
     public struct ExtinctionToDeckSignal { }
     public struct GraveToHandSignal { }
+    public struct CardSlotCntChangedSignal 
+    {
+        public int cnt;
+
+        public CardSlotCntChangedSignal(int _cnt)
+        {
+            cnt = _cnt;
+        }
+    }
     //Scope
     public struct CardActionScopeSignal  { }
 }

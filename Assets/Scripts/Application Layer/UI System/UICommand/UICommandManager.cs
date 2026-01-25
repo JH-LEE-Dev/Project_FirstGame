@@ -39,9 +39,9 @@ public class UICommandManager : MonoBehaviour
         signalHub.Subscribe<GraveToDeckSignal,CardDataInstance>(GraveToDeck);
         signalHub.Subscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.Subscribe<UsedCardToExtinctionSignal>(UsedCardToExtinction);
-        signalHub.Subscribe<UsedCardToGraveSignal>(UsedCardToGrave);
-        signalHub.Subscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
+        signalHub.Subscribe<UsedCardToExtinctionSignal, CardDataInstance>(UsedCardToExtinction);
+        signalHub.Subscribe<UsedCardToGraveSignal, CardDataInstance>(UsedCardToGrave);
+        signalHub.Subscribe<ExtinctionToDeckSignal, CardDataInstance>(ExtinctionToDeck);
     }
 
     private void UnSubscribeEvents()
@@ -53,9 +53,9 @@ public class UICommandManager : MonoBehaviour
         signalHub.UnSubscribe<GraveToDeckSignal, CardDataInstance>(GraveToDeck);
         signalHub.UnSubscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.UnSubscribe<UsedCardToExtinctionSignal>(UsedCardToExtinction);
-        signalHub.UnSubscribe<UsedCardToGraveSignal>(UsedCardToGrave);
-        signalHub.UnSubscribe<ExtinctionToDeckSignal>(ExtinctionToDeck);
+        signalHub.UnSubscribe<UsedCardToExtinctionSignal, CardDataInstance>(UsedCardToExtinction);
+        signalHub.UnSubscribe<UsedCardToGraveSignal, CardDataInstance>(UsedCardToGrave);
+        signalHub.UnSubscribe<ExtinctionToDeckSignal, CardDataInstance>(ExtinctionToDeck);
     }
 
 
@@ -100,19 +100,19 @@ public class UICommandManager : MonoBehaviour
         commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
     }
 
-    private void UsedCardToExtinction(UsedCardToExtinctionSignal usedCardToExtinctionSignal)
+    private void UsedCardToExtinction(UsedCardToExtinctionSignal usedCardToExtinctionSignal, ReadOnlySpan<CardDataInstance> cards)
     {
-        CreateCommand(ActionType_CardSystem.UsedCardToExtinction);
+        CreateCommand(ActionType_CardSystem.CardToExtinction);
     }
 
-    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal)
+    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal, ReadOnlySpan<CardDataInstance> cards)
     {
         CreateCommand(ActionType_CardSystem.ExtinctionToDeck);
     }
 
-    private void UsedCardToGrave(UsedCardToGraveSignal usedCardToGraveSignal)
+    private void UsedCardToGrave(UsedCardToGraveSignal usedCardToGraveSignal, ReadOnlySpan<CardDataInstance> cards)
     {
-        CreateCommand(ActionType_CardSystem.UsedCardToGrave);
+        CreateCommand(ActionType_CardSystem.CardsToGrave);
     }
 
     public void CreateCommand(ActionType_CardSystem actionType, ReadOnlySpan<CardDataInstance> cards = default)
@@ -132,22 +132,22 @@ public class UICommandManager : MonoBehaviour
                 }
             case ActionType_CardSystem.HandToGrave:
                 {
-                    commandFactory_CardSystem.CreateJob_ToGrave(cards);
+                    commandFactory_CardSystem.CreateJob_HandToGrave(cards);
                     break;
                 }
             case ActionType_CardSystem.GraveToDeck:
                 {
-                    commandFactory_CardSystem.CreateJob_ToDeck(cards);
+                    commandFactory_CardSystem.CreateJob_GraveToDeck(cards);
                     break;
                 }
-            case ActionType_CardSystem.UsedCardToExtinction:
+            case ActionType_CardSystem.CardToExtinction:
                 {
-                    commandFactory_CardSystem.CreateJob_ToExtinction();
+                    commandFactory_CardSystem.CreateJob_CardsToExtinction(cards);
                     break;
                 }
             case ActionType_CardSystem.ExtinctionToDeck:
                 {
-                    commandFactory_CardSystem.CreateJob_ExtinctionToDeck();
+                    commandFactory_CardSystem.CreateJob_ExtinctionToDeck(cards);
                     break;
                 }
             case ActionType_CardSystem.GraveToHand:
@@ -155,9 +155,9 @@ public class UICommandManager : MonoBehaviour
                     commandFactory_CardSystem.CreateJob_GraveToHand(cards);
                     break;
                 }
-            case ActionType_CardSystem.UsedCardToGrave:
+            case ActionType_CardSystem.CardsToGrave:
                 {
-                    commandFactory_CardSystem.CreateJob_UsedCardToGrave();
+                    commandFactory_CardSystem.CreateJob_CardsToGrave(cards);
                     break;
                 }
         }

@@ -141,4 +141,9 @@ public class Unit : MonoBehaviour, IDamageable
     {
         return;
     }
+
+    public virtual void ApplyWeakness(int turnCnt)
+    {
+        throw new NotImplementedException();
+    }
 }

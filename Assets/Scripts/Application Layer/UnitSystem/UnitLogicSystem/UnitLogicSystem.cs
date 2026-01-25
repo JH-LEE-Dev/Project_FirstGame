@@ -21,6 +21,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action<float> PlayerTakeDamageEvent;
     public event Action PlayerAttackedEvent;
     public event Action<float> PlayerGetShieldEvent;
+    public event Action<float> PlayerGetHPEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -136,6 +137,11 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
     {
         characterUnit.ResetbCanAction();
+
+        for(int i = 0; i < enemyUnits.Count;++i)
+        {
+            enemyUnits[i].ResetState();
+        }
     }
 
     public void CardDrawed(CardDrawStartSignal cardDrawStartSignal)
@@ -189,5 +195,21 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void HPDecrease(float amount)
     {
         playerUnit.TakeDamage(amount);
+    }
+
+    public void ApplyCriticalChanceModifier(int chance)
+    {
+        characterUnit.combatEffectReceiver.ApplyCriticalChanceModifier(chance);
+    }
+
+    public void ApplyWeaknessModifier(int turnCnt)
+    {
+        characterUnit.combatEffectReceiver.ApplyWeaknessModifier(turnCnt);
+    }
+
+    public void HPIncrease(float amount)
+    {
+        playerUnit.statusEffectReceiver.IncreaseHP(amount);
+        PlayerGetHPEvent?.Invoke(amount);
     }
 }

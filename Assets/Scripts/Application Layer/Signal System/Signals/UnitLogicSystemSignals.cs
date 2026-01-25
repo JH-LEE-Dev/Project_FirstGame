@@ -31,5 +31,14 @@ namespace UnitLogicSystemSignals
             amount = _amount;
         }
     }
+    public struct PlayerGetHPSignal
+    {
+        public float amount;
+
+        public PlayerGetHPSignal(float _amount)
+        {
+            amount = _amount;
+        }
+    }
     public struct PlayerAttackedSignal { }
 }

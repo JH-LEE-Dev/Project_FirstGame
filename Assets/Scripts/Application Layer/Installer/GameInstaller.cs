@@ -24,7 +24,7 @@ public class GameInstaller : MonoBehaviour
 
     [SerializeField] private WaveDatabase waveDatabase;
 
-    public void Initialize(IBootStrapProvider _bootStrapProvider,InputManager _inputManager)
+    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
     {
         inputManager = _inputManager;
 
@@ -41,19 +41,19 @@ public class GameInstaller : MonoBehaviour
         uiInstaller = GetComponentInChildren<GameplayUIInstaller>();
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
-        complexCardEffectResolver = new ComplexCardEffectResolver();    
+        complexCardEffectResolver = new ComplexCardEffectResolver();
 
-        cardSystem.Initialize(signalHub,cardManager, cardSystemController,complexCardEffectResolver);
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController, complexCardEffectResolver);
         unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
         unitLogicSystem.Initialize();
         cardSystemController.Initialize();
-        waveManager.Initialize(signalHub,waveDatabase);
+        waveManager.Initialize(signalHub, waveDatabase);
         gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
-        unitSpawner.Initiallize(inputManager,gameServiceLocator,environmentManager);
+        unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
         cardManager.Initialize();
-        uiInstaller.Initialize(bootStrapProvider,signalHub, inputManager,cardManager,waveManager);
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager()); ;
+        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
 
         SetupGamePlayScene();
     }
@@ -71,8 +71,8 @@ public class GameInstaller : MonoBehaviour
 
     public void Release()
     {
-        cardSystem.Release();   
-        unitSystem.Release(); 
+        cardSystem.Release();
+        unitSystem.Release();
         unitSpawner.Release();
         unitLogicSystem.Release();
         gameController.Release();

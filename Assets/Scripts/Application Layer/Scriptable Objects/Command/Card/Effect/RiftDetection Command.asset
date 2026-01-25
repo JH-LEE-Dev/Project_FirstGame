@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5cab25dd7e736e4a89949281f8e9cd8, type: 3}
+  m_Name: RiftDetection Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_RiftDetection
+  cardSystemActionTimingType: 1
+  effectApplyType: 0
+  nestingCnt: 1
+  upgradeNestingCnt: 0
+  valueModifier: 1
+  weaknessTurn: 1
+  bonusAttack: 5

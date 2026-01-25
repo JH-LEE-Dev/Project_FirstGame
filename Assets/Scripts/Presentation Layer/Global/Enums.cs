@@ -34,7 +34,16 @@ public enum CardState
     Preview,
     Equipped,
     Other,
+    Selecting,
     Hidden
+}
+
+public enum CardReturnType
+{
+    FlyToGrave,
+    Extinction,
+    EquippedAction,
+    Temp,
 }
 
 public enum CurrentPannel
@@ -82,3 +91,4 @@ enum RectSelect
     Middle,
     Bottom,
 };
+

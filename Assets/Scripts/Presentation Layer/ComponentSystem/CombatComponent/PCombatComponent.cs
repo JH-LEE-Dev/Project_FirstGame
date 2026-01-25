@@ -81,6 +81,11 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
         bulletObject.ApplyRangeModifier(bonusRange);
     }
 
+    public void ApplyCriticalChanceModifier(int  bonusCriticalChance)
+    {
+        bulletObject.ApplyCriticalChangeModifier(bonusCriticalChance);
+    }
+
     /// <summary>
     /// 구현 코드 존. ----------------------------------------------------
     /// </summary>
@@ -98,5 +103,10 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
     protected override void Start()
     {
 
+    }
+
+    public void ApplyWeaknessModifier(int turnCnt)
+    {
+        
     }
 }

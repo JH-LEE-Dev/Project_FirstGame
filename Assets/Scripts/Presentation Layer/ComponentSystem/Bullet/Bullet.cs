@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] float knockBackPower = 1f;
     [SerializeField] float range = 1f;
     [SerializeField] float attack = 1f;
+    [SerializeField] int criticalChance = 10;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask outOfRangeMask;
 
@@ -30,6 +31,8 @@ public class Bullet : MonoBehaviour
 
     private float attackModifier = 0;
     private float rangeModifier = 0;
+    private int criticalChanceModifier = 0;
+    private int weaknessModifier = 0;
 
     private void Awake()
     {
@@ -61,7 +64,7 @@ public class Bullet : MonoBehaviour
         Vector2 delta = currentPosition - prevPosition;
         float distance = delta.magnitude;
 
-        if (CheckCollision_Enemy(delta,distance) == true)
+        if (CheckCollision_Enemy(delta, distance) == true)
             return;
 
         if (CheckCollision_OutofRange(delta, distance) == true)
@@ -71,7 +74,7 @@ public class Bullet : MonoBehaviour
         prevPosition = currentPosition;
     }
 
-    private bool CheckCollision_Enemy(Vector2 delta,float distance)
+    private bool CheckCollision_Enemy(Vector2 delta, float distance)
     {
         RaycastHit2D hit = Physics2D.CircleCast(
             prevPosition,
@@ -88,9 +91,6 @@ public class Bullet : MonoBehaviour
             Sound.Play("Impact", transform.position);
             sr.gameObject.SetActive(false);
 
-            float totalDamage = attack + attackModifier;
-            Debug.Log("Damage : " + totalDamage);
-
             CheckExplosion();
             ResetModifier();
 
@@ -102,7 +102,7 @@ public class Bullet : MonoBehaviour
 
     private void CheckExplosion()
     {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, 
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position,
             explosionRangeCollider.radius, targetMask);
 
         foreach (var enemy in hitEnemies)
@@ -111,7 +111,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private bool CheckCollision_OutofRange(Vector2 delta,float distance)
+    private bool CheckCollision_OutofRange(Vector2 delta, float distance)
     {
         RaycastHit2D hit = Physics2D.Raycast(
             prevPosition,
@@ -139,18 +139,29 @@ public class Bullet : MonoBehaviour
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
+        int critical = UnityEngine.Random.Range(0, 100);
+
+        float totalDamage = attack;
+
+        if (critical < criticalChance + criticalChanceModifier)
+        {
+            Debug.Log("Critical!!!");
+            totalDamage = attack * 2;
+        }
+
         if (hit != null)
         {
-            hit.TakeDamage(attack + attackModifier);
+            hit.TakeDamage(totalDamage + attackModifier);
+            hit.ApplyWeakness(weaknessModifier);
             ApplyKnockBack(hit, other.transform.position);
         }
     }
 
-    private void ApplyKnockBack(IDamageable enemy,Vector2 enemyPos)
+    private void ApplyKnockBack(IDamageable enemy, Vector2 enemyPos)
     {
         Vector2 dir = enemyPos - (Vector2)transform.position;
 
-        enemy.KnockBack(dir.normalized,knockBackPower);
+        enemy.KnockBack(dir.normalized, knockBackPower);
     }
 
     public void Fire(Vector2 dir)
@@ -179,6 +190,17 @@ public class Bullet : MonoBehaviour
 
         rangeModifier += bonusRange;
     }
+
+    public void ApplyCriticalChangeModifier(int bonusChance)
+    {
+        criticalChanceModifier += bonusChance;
+    }
+
+    public void ApplyWeaknessModifier(int turnCnt)
+    {
+        weaknessModifier = turnCnt;
+    }
+
     public void BulletEffectIsFinished()
     {
         BulletEffectIsFinishedEvent?.Invoke();
@@ -190,6 +212,8 @@ public class Bullet : MonoBehaviour
     {
         attackModifier = 0;
         rangeModifier = 0;
+        criticalChanceModifier = 0;
+        weaknessModifier = 0;
 
         explosionRangeCollider.radius = range;
     }

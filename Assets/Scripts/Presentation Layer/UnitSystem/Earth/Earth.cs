@@ -59,4 +59,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     {
         return;
     }
+
+    public void ApplyWeakness(int turnCnt)
+    {
+        throw new NotImplementedException();
+    }
 }

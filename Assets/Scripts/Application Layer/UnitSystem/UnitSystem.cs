@@ -58,6 +58,9 @@ public class UnitSystem
 
         unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
         unitLogicSystem.PlayerGetShieldEvent += PlayerGetShield;
+
+        unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
+        unitLogicSystem.PlayerGetHPEvent += PlayerGetHP;
     }
 
     private void ReleaseEvents()
@@ -83,6 +86,8 @@ public class UnitSystem
         unitLogicSystem.PlayerAttackedEvent -= PlayerAttacked;
 
         unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
+
+        unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
     }
 
     private void SubscribeEvents()
@@ -149,6 +154,11 @@ public class UnitSystem
     private void PlayerGetShield(float amount)
     {
         signalHub.Publish(new PlayerGetShieldSignal(amount));
+    }
+
+    private void PlayerGetHP(float amount)
+    {
+        signalHub.Publish(new PlayerGetHPSignal(amount));
     }
 
     public void Release()
