@@ -163,7 +163,7 @@ public class UIView_CardSystem : UIView
     [Button]
     public void SelectModeON()
     {
-        StartCardSelectMode(3, false);
+        StartCardSelectMode(3, true);
     }
 
 

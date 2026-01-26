@@ -479,7 +479,7 @@ public class HandSystem : MonoBehaviour
 
 
         // 버튼 및 텍스트 활성
-        selectEndButton.SelectEndButtonActive(true);
+        selectEndButton.SetActiveVisible(true);
         RefreshSelectEndButton();
         SettingSelectText(bCardSelectMode);
 
@@ -524,7 +524,7 @@ public class HandSystem : MonoBehaviour
         cardSystem.EndCardSelectMode(selected);
 
         // 버튼 및 텍스트 비활성
-        selectEndButton.SelectEndButtonActive(false);
+        selectEndButton.SetActiveVisible(false);
         selectEndButton.SetCanClick(false);
         SettingSelectText(bCardSelectMode);
 
@@ -729,6 +729,7 @@ public class HandSystem : MonoBehaviour
 
             case CardReturnType.EquippedAction:
                 {
+                    Debug.Log("Wrong call (EquippedAction)");
                     break;
                 }
         }
