@@ -4,8 +4,6 @@ using GameControlSignals;
 using System;
 using UnitLogicSystemSignals;
 using CardSystemUISignal;
-using System.Diagnostics;
-using UnityEngine;
 
 public class CardSystem
 {
