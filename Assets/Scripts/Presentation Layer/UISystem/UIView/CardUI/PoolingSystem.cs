@@ -62,7 +62,11 @@ public class PoolingSystem : MonoBehaviour
         {
             GameObject go = Instantiate(cardUIPrefab, cardSystem?.PannelContent.transform);
             go.transform.localScale = new Vector3(5f, 5f, 1f);
+
             MainCardInstance card = go.GetComponent<MainCardInstance>();
+            if (null == card) continue;
+
+            card.TurnOffGlowFilter();
             card.gameObject.SetActive(false);
             card.Initialize(cardSystem, CardInstanceType.Other);
 

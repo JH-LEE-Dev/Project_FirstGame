@@ -1143,6 +1143,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2552050044179500779, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
+      propertyPath: hpText
+      value: 
+      objectReference: {fileID: 4057923928133818456}
+    - target: {fileID: 2552050044179500779, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
+      propertyPath: shieldText
+      value: 
+      objectReference: {fileID: 1071143153562484843}
     - target: {fileID: 2888176781317092192, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
       propertyPath: m_Name
       value: HealthBar
@@ -1168,6 +1176,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
+--- !u!114 &1071143153562484843 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5122145483233960742, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
+  m_PrefabInstance: {fileID: 5316766713833268045}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &2492851807881466662 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7732839623601172587, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
@@ -1179,6 +1198,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bbccf5e39b6ee419df6a447b12c2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarMotion
+--- !u!114 &4057923928133818456 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8185388496565730069, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
+  m_PrefabInstance: {fileID: 5316766713833268045}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &5476941621113003394 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 417412318454431439, guid: 14a43be6c170be04c9fd9925a846dc5b, type: 3}
