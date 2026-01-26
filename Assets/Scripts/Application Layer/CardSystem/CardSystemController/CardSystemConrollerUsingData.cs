@@ -55,10 +55,11 @@ public struct CardSystemEventData
 /// </summary>
 public enum CardEffectApplyType
 {
-    Status,
+    StatusSystem,
     System,
     SlotSystem,
     ComplexSystem,
+    SelectionSystem,
 }
 
 
@@ -95,6 +96,11 @@ public enum ComplexSystemEffectType
     SpaceShuttle,
     FinalOrbit,
     Recompense,
+}
+
+public enum CardSelectionSystemEffectType
+{
+    QuantumEntanglement,
 }
 
 public enum CardSystemActionTimingType

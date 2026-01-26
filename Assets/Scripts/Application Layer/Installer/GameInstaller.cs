@@ -21,6 +21,7 @@ public class GameInstaller : MonoBehaviour
     private UnitSystem unitSystem;
     private CardSystem cardSystem;
     private ComplexCardEffectResolver complexCardEffectResolver;
+    private CardSelectionManager cardSelectionManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -42,6 +43,7 @@ public class GameInstaller : MonoBehaviour
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
+        cardSelectionManager= new CardSelectionManager();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -53,7 +55,7 @@ public class GameInstaller : MonoBehaviour
 
         cardManager.Initialize();
         cardSystemController.Initialize();
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController, complexCardEffectResolver);
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver);
 
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
 

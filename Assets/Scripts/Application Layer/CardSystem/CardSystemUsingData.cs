@@ -41,4 +41,5 @@ public enum CardName
     Overcompensation,
     Distortion,
     Recompense,
+    QuantumEntanglement,
 }

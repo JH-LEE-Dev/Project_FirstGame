@@ -35,6 +35,14 @@ namespace CardSystemSignals
     }
     //Scope
     public struct CardActionScopeSignal  { }
+    public struct CardSelectionModeStartSignal
+    {
+        public CardSelectionModeData data;
+        public CardSelectionModeStartSignal(CardSelectionModeData _data)
+        {
+            data = _data;
+        }
+    }
 }
 
 namespace CardEffectSystemSignal

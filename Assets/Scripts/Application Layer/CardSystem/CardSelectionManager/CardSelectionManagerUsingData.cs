@@ -1,0 +1,19 @@
+
+public enum CardSelectionMode
+{
+    Duplicate,
+    ToExtinction,
+    ToGrave,
+}
+
+public struct CardSelectionModeData
+{
+    public CardSelectionMode selectionMode;
+    public int amount;
+
+    public CardSelectionModeData(CardSelectionMode _selectionMode, int _amount)
+    {
+        selectionMode = _selectionMode;
+        amount = _amount;
+    }
+}

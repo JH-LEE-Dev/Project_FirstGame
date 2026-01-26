@@ -79,7 +79,7 @@ public class CardUICoordinator
 
     public void RecieveUIJob(CardUIActionBatch actionDataBatch)
     {
-        cardUISystem.RecieveUIAction(actionDataBatch);
+        cardUISystem.ReceiveUIAction(actionDataBatch);
     }
 
     public void EnemyTurnStarted()
@@ -105,5 +105,10 @@ public class CardUICoordinator
     public void CancelPreview()
     {
         cardUISystem.CancelPreview();
+    }
+
+    public void CardSelectionModeStarted(CardSelectionModeData data)
+    {
+        cardUISystem.StartCardSelectMode(data.amount, true);
     }
 }

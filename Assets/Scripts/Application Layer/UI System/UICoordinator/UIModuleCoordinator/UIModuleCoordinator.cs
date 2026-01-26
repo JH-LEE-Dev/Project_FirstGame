@@ -54,6 +54,7 @@ public class UIModuleCoordinator
         signalHub.Subscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<CardUsedSignal>(CardUsed);
+        signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
     }
 
     private void UnSubscribeEvents()
@@ -81,6 +82,7 @@ public class UIModuleCoordinator
         signalHub.UnSubscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
+        signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
     }
 
     public void BindEvents()
@@ -235,5 +237,10 @@ public class UIModuleCoordinator
     public void PlayerGetHP(PlayerGetHPSignal playerGetHPSignal)
     {
         gameplayUICoordinator.PlayerGetHP(playerGetHPSignal.amount);
+    }
+
+    public void CardSelectionModeStarted(CardSelectionModeStartSignal cardSelectionModeStartSignal)
+    {
+        cardUICoordinator.CardSelectionModeStarted(cardSelectionModeStartSignal.data);
     }
 }
