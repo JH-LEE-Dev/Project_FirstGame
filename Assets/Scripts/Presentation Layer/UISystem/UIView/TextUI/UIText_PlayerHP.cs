@@ -21,7 +21,6 @@ public class UIText_PlayerHP : MonoBehaviour
     private UIView_HUD hudSystem = null;
 
     [Header("Shield Settings")]
-    [SerializeField] private RectTransform shieldMotionRect = null;
     [SerializeField] private float spawnShieldDuration = 0.25f;
     [SerializeField] private float spawnShieldX = 30f;
     [SerializeField] private Ease spawnShieldEase = Ease.OutExpo;
@@ -186,7 +185,6 @@ public class UIText_PlayerHP : MonoBehaviour
 
         script.PlayMotion(dangerDamage, callback);
     }
-
 
     private void OnColorChange(float _progress, bool _shield)
     {

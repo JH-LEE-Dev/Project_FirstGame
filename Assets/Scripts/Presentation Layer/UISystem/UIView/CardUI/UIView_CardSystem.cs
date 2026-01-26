@@ -32,6 +32,9 @@ public class UIView_CardSystem : UIView
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
 
+    [SerializeField] private PathSystem pathSystem;
+    public PathSystem PathSystem => pathSystem;
+
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
     [SerializeField] private DeckSystem deckSystem;
@@ -87,6 +90,7 @@ public class UIView_CardSystem : UIView
         deckSystem?.Init(this);
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
+        //pathSystem?.Init(this);
     }
 
     /////////////////////////////////// For PoolingSystem
@@ -285,11 +289,17 @@ public class UIView_CardSystem : UIView
         cardPannel.gameObject.SetActive(false);
     }
 
-    public void CallOneCardDrawed(int currIdx, int _lastIdx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    public void CallOneCardDrawedBlock(int currIdx, int _lastIdx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
     {
         if (currIdx == _lastIdx)
             WorkingBlock = false;
 
+        handSystem?.ProcessDraw(_endPos, _data);
+        poolingSystem?.StarEffects?.Release(_performer);
+    }
+
+    public void CallOneCardDrawed(Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    {
         handSystem?.ProcessDraw(_endPos, _data);
         poolingSystem?.StarEffects?.Release(_performer);
     }
@@ -307,6 +317,34 @@ public class UIView_CardSystem : UIView
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
     public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
+
+    public void SpawnCardStarAtoB(int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
+    {
+        GameObject star = GetStarPerformerFromPool(_startWorldPos);
+        VFX_CardStar vfx = star?.GetComponent<VFX_CardStar>();
+        if (null == vfx)
+            return;
+
+        Action StartEvent = () =>
+        {
+
+        };
+
+        Action CompleteEvent = () =>
+        {
+            CallOneCardDrawed(_targetWorldPos, _data, star);
+        };
+
+        Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f);
+
+        vfx.CardDataInstance = _data;
+        // _idx는 현재 몇번 째 스폰인지 ( for 문에서 여러 개를 소환 할 때 i를 박아 놓으면 알아서 처리 됨, 단일 객체의 경우 0으로 하면 됨 )
+        // 0.15 > 스폰 딜레이 ( 내부에서 idx 랑 곱해서 알아서 결정 됨 )
+        // 0.35 > duration
+        // path는 경로 시스템에서 시작점과 끝점이 있으면 베지어 곡선으로 알아서 만듦
+        // 나머지는 위에서 액션 바인딩
+        vfx.PlayCardSpawnEvent(_idx, 0.15f, 0.35f, Ease.OutQuad, path, StartEvent, CompleteEvent);
+    }
 
     public Vector3 GetDeckWorldPos()
     {
@@ -334,6 +372,16 @@ public class UIView_CardSystem : UIView
 
         if (null != getObj)
             getObj.transform.position = target.position;
+
+        return getObj;
+    }
+
+    public GameObject GetStarPerformerFromPool(Vector3 target)
+    {
+        GameObject getObj = poolingSystem?.StarEffects.Get();
+
+        if (null != getObj)
+            getObj.transform.position = target;
 
         return getObj;
     }
