@@ -52,6 +52,17 @@ public class VFX_CardStar : MonoBehaviour
         ExecuteMotionSeuence(_current, _spawnDelay, _drawDuration, _drawEase, points, deckStartedEvent, deckCompoleteEvent);
     }
 
+    public void PlayingEventforGraveToHands(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
+    {
+        Action deckCompoleteEvent = () =>
+        {
+            UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
+            cardSystem?.CallOneCardDrawed(_current, _last, transform.position, cardDataInstance, gameObject);
+        };
+
+        ExecuteMotionSeuence(_current, _spawnDelay, _drawDuration, _drawEase, points, null, deckCompoleteEvent);
+    }
+
     public void PlayingEventforWormHole(int _idx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
         Action deckStartedEvent = () =>

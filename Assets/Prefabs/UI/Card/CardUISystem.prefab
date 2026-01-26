@@ -1157,6 +1157,10 @@ MonoBehaviour:
   cardSelectHandRoot: {fileID: 8448368674325354138}
   selectEndButton: {fileID: 3647904276752380436}
   selectText: {fileID: 1508404853825365660}
+  radius: 0
+  minArcAngle: 0
+  maxArcAngle: 0
+  hoverGapWeight: 0
   selectCenter: {x: 0, y: 0}
   previewRoot: {fileID: 6432989706803050518}
   cards: []
@@ -1800,7 +1804,7 @@ PrefabInstance:
     - target: {fileID: 5184474827845888027, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Icon
       value: 
-      objectReference: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+      objectReference: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 5270766083236416482, guid: c951083fd26865445939431699493136, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2063,6 +2067,14 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2947034998803058176, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
+      propertyPath: toDeckPathPoint
+      value: 
+      objectReference: {fileID: 4449196599285715787}
+    - target: {fileID: 2947034998803058176, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
+      propertyPath: toHandsPathPoint
+      value: 
+      objectReference: {fileID: 4641550321115196910}
     - target: {fileID: 3931876552057000365, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.69
@@ -2199,6 +2211,16 @@ PrefabInstance:
 --- !u!224 &2506048222436119368 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8780729490022300530, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
+  m_PrefabInstance: {fileID: 6565174473037621306}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &4449196599285715787 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7395640516585700209, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
+  m_PrefabInstance: {fileID: 6565174473037621306}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &4641550321115196910 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1978828505285477844, guid: 2e2d5440ee4d6af468411b10c12e8a39, type: 3}
   m_PrefabInstance: {fileID: 6565174473037621306}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8356947880062379578 stripped

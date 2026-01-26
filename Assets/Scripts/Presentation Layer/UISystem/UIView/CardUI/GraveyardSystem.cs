@@ -1,10 +1,10 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 using UnityEngine.UI;
-
+using UnityEngine.UIElements;
+using static UnityEngine.Analytics.IAnalytic;
 using Image = UnityEngine.UI.Image;
 
 public class GraveyardSystem : MonoBehaviour
@@ -21,7 +21,8 @@ public class GraveyardSystem : MonoBehaviour
     private Sequence viualSeq = null;
 
     [Header("Effect Location Settings")]
-    [SerializeField] private List<RectTransform> drawPathPoints = new();
+    [SerializeField] private RectTransform toDeckPathPoint;
+    [SerializeField] private RectTransform toHandsPathPoint;
 
     [Header("toDeck Effect Settings")]
     [SerializeField] private float toDeckDelay = 0.02f;
@@ -54,6 +55,15 @@ public class GraveyardSystem : MonoBehaviour
     [SerializeField] private Vector2 visualPunchPos = Vector2.zero;
     [SerializeField] private Vector3 visualPunchScale = Vector3.zero;
     [SerializeField] private Ease visualEventEase = Ease.OutExpo;
+
+    [Header("DrawToHands Settings")]
+    [SerializeField] private float drawDelay = 0.15f;
+    [SerializeField] private float drawDuration = 1f;
+    [SerializeField] private float drawFirstPointDist = 2f;
+    [Space]
+    [SerializeField] private bool DrawMidPointRandom = false;
+    [SerializeField] private float drawMidPointPower = 2f;
+    [SerializeField] private Ease drawEase = Ease.OutQuad;
 
     private Vector3 originScale = Vector3.one;
     private Quaternion originQuat = Quaternion.identity;
@@ -182,7 +192,7 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
         currentMoveCnt = spawningCount;
 
-        RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
+        RectTransform midPoint = toDeckPathPoint;
         for (int i = 0; i < spawningCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
@@ -279,6 +289,45 @@ public class GraveyardSystem : MonoBehaviour
         activeSeq.Append(topRect.DOScale(originScale * 1.2f, 0.1f)
             .SetUpdate(false)
             .SetEase(Ease.OutCubic));
+    }
+
+    public void CardDrawToHands(List<CardDataInstance> dataList)
+    {
+        if (null == cardSystem)
+            return;
+
+        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
+        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
+
+        RectTransform midPoint = toHandsPathPoint;
+
+        int currentDrawCount = dataList.Count;
+        for (int i = 0; i < currentDrawCount; i++)
+        {
+            GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
+            RectTransform rect = performer?.GetComponent<RectTransform>();
+            VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
+            if (null == script || null == rect)
+                continue;
+
+            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
+            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetHandTargetEndPos(i), rect);
+
+            // mid
+            if (DrawMidPointRandom)
+            {
+                midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
+                midPointPos.y += Random.Range(-0.25f, 0.25f) * drawMidPointPower;
+            }
+
+            // first
+            Vector3 firstPointPos = midPointPos;
+            firstPointPos.x += drawFirstPointDist;
+
+            Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
+            script.CardDataInstance = dataList[i];
+            script.PlayingEventforGraveToHands(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
+        }
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)

@@ -426,7 +426,8 @@ public class UIView_CardSystem : UIView
 
                     break;
                 case ActionType_CardSystem.GraveToHand: // 묘지에서 패로 복귀하는 명령.
-                    //Debug.Log("GraveToHand");
+                    graveSystem?.CardDrawToHands(currentActionData.cards);
+                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
 
                     break;
 
