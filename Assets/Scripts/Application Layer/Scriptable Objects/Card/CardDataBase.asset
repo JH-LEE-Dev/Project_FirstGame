@@ -26,6 +26,7 @@ MonoBehaviour:
     cardStatusEffects: 00000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 1
     cardImage: {fileID: 0}
     cardName: 1
@@ -39,6 +40,7 @@ MonoBehaviour:
     cardStatusEffects: 01000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 2
     cardImage: {fileID: 0}
     cardName: 2
@@ -52,6 +54,7 @@ MonoBehaviour:
     cardStatusEffects: 02000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 3
     cardImage: {fileID: 0}
     cardName: 3
@@ -65,6 +68,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 00000000
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 4
     cardImage: {fileID: 0}
     cardName: 4
@@ -78,6 +82,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 00000000
+    selectionSystemEffects: 
   - id: 5
     cardImage: {fileID: 0}
     cardName: 5
@@ -91,6 +96,7 @@ MonoBehaviour:
     cardStatusEffects: 03000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 6
     cardImage: {fileID: 0}
     cardName: 6
@@ -104,6 +110,7 @@ MonoBehaviour:
     cardStatusEffects: 04000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 7
     cardImage: {fileID: 0}
     cardName: 7
@@ -117,6 +124,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 01000000
+    selectionSystemEffects: 
   - id: 8
     cardImage: {fileID: 0}
     cardName: 8
@@ -130,6 +138,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 02000000
+    selectionSystemEffects: 
   - id: 9
     cardImage: {fileID: 0}
     cardName: 9
@@ -143,6 +152,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 01000000
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 10
     cardImage: {fileID: 0}
     cardName: 10
@@ -156,6 +166,7 @@ MonoBehaviour:
     cardStatusEffects: 05000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 11
     cardImage: {fileID: 0}
     cardName: 11
@@ -169,6 +180,7 @@ MonoBehaviour:
     cardStatusEffects: 06000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 12
     cardImage: {fileID: 0}
     cardName: 12
@@ -182,6 +194,7 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 13
     cardImage: {fileID: 0}
     cardName: 13
@@ -195,6 +208,7 @@ MonoBehaviour:
     cardStatusEffects: 0800000007000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
   - id: 14
     cardImage: {fileID: 0}
     cardName: 14
@@ -208,3 +222,32 @@ MonoBehaviour:
     cardStatusEffects: 09000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
+    selectionSystemEffects: 
+  - id: 15
+    cardImage: {fileID: 0}
+    cardName: 15
+    cardType: 1
+    elementType: 0
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 03000000
+    selectionSystemEffects: 
+  - id: 16
+    cardImage: {fileID: 0}
+    cardName: 16
+    cardType: 1
+    elementType: 0
+    usingType: 1
+    priority: 2
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 
+    selectionSystemEffects: 00000000

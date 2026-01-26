@@ -7,6 +7,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<ICardSelectio
 
     protected override void Execute(ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler)
     {
+        Debug.Log("1");
         cardSelectionSystemActionCommandHandler.StartCardSelectionMode(CardSelectionMode.Duplicate, duplicateAmount);
 
         ResetCommandData();
