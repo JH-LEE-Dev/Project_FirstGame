@@ -1,18 +1,20 @@
+using System;
 using DamageNumbersPro;
 using DG.Tweening;
 using NaughtyAttributes;
-using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-
 using Sequence = DG.Tweening.Sequence;
 
 public class UIText_PlayerHP : MonoBehaviour
 {
     [Header("Main Settings")]
-    [SerializeField] private TextMeshProUGUI mainText;
+    [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private TextMeshProUGUI shieldText;
     [SerializeField] private float motionDuration = 1f;
     [SerializeField] private Ease motionEase = Ease.Linear;
+
     [SerializeField] private bool colorChange = false;
     [SerializeField] private bool shaking = false;
     [SerializeField] private bool damageNumber = false;
@@ -22,7 +24,9 @@ public class UIText_PlayerHP : MonoBehaviour
     [ShowIf("colorChange"), SerializeField] private bool overrideColor = false;
     [ShowIf("colorChange"), SerializeField] private Color startColor = Color.softRed;
     [ShowIf("colorChange"), SerializeField] private Color finalColor = Color.white;
-    
+    [Space]
+    [ShowIf("colorChange"), SerializeField] private Color shieldStartColor = Color.softRed;
+    [ShowIf("colorChange"), SerializeField] private Color shieldFinalColor = Color.white;
 
     [Header("Override FinalColor Settings")]
     [ShowIf("overrideColor"), SerializeField] private Color warningColor = Color.yellow;
@@ -54,30 +58,138 @@ public class UIText_PlayerHP : MonoBehaviour
     {
         hudSystem = _hudSystem;
 
-        if (mainText == null || (typeof(T) != typeof(int) && typeof(T) != typeof(float)))
+        if (hpText == null || (typeof(T) != typeof(int) && typeof(T) != typeof(float)))
             return;
 
         float convertedValue = Convert.ToSingle(_value);
-        mainText.text = Mathf.RoundToInt(convertedValue).ToString();
+        hpText.text = Mathf.RoundToInt(convertedValue).ToString();
+
+        shieldText?.gameObject.SetActive(false);
     }
 
-    public void OnHit(float _prev, float _current, float _progress, float _damage, GameObject _damagNum = null)
+    public void CalcShield(float _prev, float _current, Action completed = null)
     {
-        if (null == mainText)
+        if (null == shieldText)
+            return;
+
+        if (0f >= _prev)
+            shieldText.gameObject.SetActive(true);
+
+        DOVirtual.Float(_prev, _current, motionDuration, (value) =>
+        {
+            if (0f < value)
+                shieldText.text = "+";
+            else
+            {
+                shieldText.text = "";
+                shieldText.gameObject.SetActive(false);
+            }
+
+            shieldText.text += Mathf.RoundToInt(value).ToString();
+        })
+            .SetEase(motionEase)
+            .SetUpdate(false)
+            .OnComplete(() =>
+            {
+                completed?.Invoke();
+            });
+    }
+
+    private void CalcHP(float _prev, float _current)
+    {
+        DOVirtual.Float(_prev, _current, motionDuration, (value) =>
+        {
+            hpText.text = Mathf.RoundToInt(value).ToString();
+        }).SetEase(motionEase).SetUpdate(false);
+    }
+
+    public void OnHit(float _prevHp, float _currHp, float _hpProgress, float _damage, 
+        float _prevShield, float _currShield, GameObject _damagNum = null)
+    {
+        if (null == hpText || null == shieldText)
             return;
 
         if (!damageNumber)
-            OnDefaultHit(_prev, _current, _progress);
+            OnDefaultHit(_prevHp, _currHp, _hpProgress, _damage, _prevShield, _currShield);
         else
-            OnDamageNumberHit(_prev, _current, _damage, _progress, _damagNum);
+            OnDamageNumberHit(_prevHp, _currHp, _damage, _hpProgress, _prevShield, _currShield, _damagNum);
+    }
+
+    private void OnDefaultHit(float _prevHp, float _currHp, float _progressHp, float _damage, 
+        float _prevShield, float _currShield)
+    {
+        bool shield = 0f < _prevShield;
+
+        if (shield)
+        {
+            Action remainDamage = () =>
+            {
+                if (0f < _damage - _prevShield)
+                {
+                    CalcHP(_prevHp, _currHp);
+                    OnColorChange(_progressHp, false);
+                }
+            };
+
+            CalcShield(_prevShield, _currShield, remainDamage);
+        }
+        else
+            CalcHP(_prevHp, _currHp);
+
+        OnColorChange(_progressHp, shield);
+        OnShake();
+    }
+
+    private void OnDamageNumberHit(float _prev, float _current, float _damage, float _progress, 
+        float _prevShield, float _currShield, GameObject _damagNum)
+    {
+        UIText_DamageNumPlayer script = _damagNum?.GetComponent<UIText_DamageNumPlayer>();
+        if (null == script || null == visualRect)
+            return;
+
+        string damageString = "-" + Mathf.RoundToInt(_damage).ToString();
+        script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint);
+
+        Action callback = () =>
+        {
+            OnDefaultHit(_prev, _current, _progress, _damage, _prevShield, _currShield);
+            hudSystem?.ReturnDamageText(_damagNum);
+        };
+
+        bool dangerDamage = 0.5f <= (_damage / _prev);
+
+        script.PlayMotion(dangerDamage, callback);
     }
 
 
-    private void OnColorChange(float _progress)
+    private void OnColorChange(float _progress, bool _shield)
     {
         if (!colorChange)
             return;
 
+        colorSeq = CancelPrevMotion(colorSeq);
+
+        if (_shield)
+            ShieldTextColorChanging();
+
+        else
+            HPTextColorChanging(_progress);
+    }
+
+    private void ShieldTextColorChanging()
+    {
+        colorSeq.AppendCallback(() =>
+        {
+            shieldText.color = shieldStartColor;
+        });
+
+        colorSeq.Append(shieldText.DOColor(shieldFinalColor, motionDuration)
+            .SetEase(motionEase)
+            .SetUpdate(false));
+    }
+
+    private void HPTextColorChanging(float _progress)
+    {
         Color targetColor = finalColor;
 
         if (overrideColor)
@@ -88,14 +200,12 @@ public class UIText_PlayerHP : MonoBehaviour
                 targetColor = warningColor;
         }
 
-        colorSeq = CancelPrevMotion(colorSeq);
-
         colorSeq.AppendCallback(() =>
         {
-            mainText.color = startColor;
+            hpText.color = startColor;
         });
 
-        colorSeq.Append(mainText.DOColor(targetColor, motionDuration)
+        colorSeq.Append(hpText.DOColor(targetColor, motionDuration)
             .SetEase(motionEase)
             .SetUpdate(false));
     }
@@ -117,67 +227,11 @@ public class UIText_PlayerHP : MonoBehaviour
             .SetUpdate(false));
     }
 
-    private void OnDefaultHit(float _prev, float _current, float _progress)
-    {
-        DOVirtual.Float(_prev, _current, motionDuration, (value) =>
-        {
-            mainText.text = Mathf.RoundToInt(value).ToString();
-        }).SetEase(motionEase).SetUpdate(false);
-
-        OnColorChange(_progress);
-        OnShake();
-    }
-
-    private void OnDamageNumberHit(float _prev, float _current, float _damage, float _progress, GameObject _damagNum)
-    {
-        UIText_DamageNumPlayer script = _damagNum?.GetComponent<UIText_DamageNumPlayer>();
-        if (null == script || null == visualRect)
-            return;
-
-        string damageString = "-" + Mathf.RoundToInt(_damage).ToString();
-        script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint);
-
-        Action callback = () =>
-        {
-            OnDefaultHit(_prev, _current, _progress);
-            hudSystem?.ReturnDamageText(_damagNum);
-        };
-
-        bool dangerDamage = 0.5f <= (_damage / _prev);
-
-        script.PlayMotion(dangerDamage, callback);
-    }
-
     private Sequence CancelPrevMotion(Sequence target)
     {
         if (target.IsActive())
             target.Kill();
 
         return DOTween.Sequence();
-    }
-
-    [Button]
-    private void PlayMotionTest()
-    {
-        float prev = 50f;
-        float next = 35f;
-        float damage = prev - next;
-
-        OnHit(prev, next, 1f, damage, hudSystem?.GetDamageObj());
-    }
-
-    [Button]
-    private void ResetData()
-    {
-        if (null != visualRect)
-        {
-            visualRect.anchoredPosition = originalAnchoredPos;
-        }
-
-        if (null != mainText)
-        {
-            mainText.color = finalColor;
-            mainText.text = Mathf.RoundToInt(50f).ToString();
-        }
     }
 }

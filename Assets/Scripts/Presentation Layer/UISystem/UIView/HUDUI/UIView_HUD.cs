@@ -120,28 +120,8 @@ public class UIView_HUD : UIView
 
     public void PlayerGetShield(float amount)
     {
-        if (null == hpBar)
-            return;
-
-        float maxHp = playerData.GetMaxHealth();
-        float currHp = playerData.GetCurrentHealth();
-        float currShield = playerData.GetCurrentShield();
-
-        float total = (currShield + currHp);
-
-        float shieldProgress = total / maxHp;
-
-        if (1f <= shieldProgress)
-        {
-            float hpRatio = currHp / total;
-
-            hpBar.DirectShieldSet(1f);
-            hpBar.CalcMain(hpRatio);
-        }
-        else
-        {
-            hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
-        }
+        HP_BarShieldCalc();
+        ShieldTextUpdate(amount);
     }
 
     public void PlayerGetHP(float amount)
@@ -173,25 +153,26 @@ public class UIView_HUD : UIView
         float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
         float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
-        if (1f > prevTotalProgress && 0f < prevShield)
+        if (0f < prevShield)
         {
-            Action latePlay = () =>
+            if (1f > shieldProgress)
             {
-                hpBar.OnHit(hpProgress);
-            };
+                Action latePlay = () =>
+                {
+                    hpBar.OnHit(hpProgress);
+                };
 
-            bool brockenShield = Mathf.Epsilon >= currShield;
+                hpBar.OnShieldHit(0f, latePlay);
+            }
 
-            hpBar.OnShieldHit(brockenShield ? 0f : shieldProgress, latePlay);
-        }
+            else if (1f <= shieldProgress)
+            {
+                float total = (currShield + currHp);
+                float hpRatio = currHp / total;
 
-        else if (1f <= prevTotalProgress && 0f < prevShield)
-        {
-            float total = (currShield + currHp);
-            float hpRatio = currHp / total;
-
-            hpBar.DirectShieldSet(1f);
-            hpBar.CalcMain(hpRatio);
+                hpBar.DirectShieldSet(1f);
+                hpBar.CalcMain(hpRatio);
+            }
         }
 
         else
@@ -203,7 +184,7 @@ public class UIView_HUD : UIView
         // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: damagePool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
@@ -240,6 +221,40 @@ public class UIView_HUD : UIView
         };
 
         script.Play(targetBar.GetAnchoredPos(), callback);
+    }
+
+    private void HP_BarShieldCalc()
+    {
+        if (null == hpBar)
+            return;
+
+        float maxHp = playerData.GetMaxHealth();
+        float currHp = playerData.GetCurrentHealth();
+        float currShield = playerData.GetCurrentShield();
+
+        float total = (currShield + currHp);
+
+        float shieldProgress = total / maxHp;
+
+        if (1f < shieldProgress)
+        {
+            float hpRatio = currHp / total;
+
+            hpBar.DirectShieldSet(1f);
+            hpBar.CalcMain(hpRatio);
+        }
+        else
+        {
+            hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
+        }
+    }
+
+    private void ShieldTextUpdate(float _amount)
+    {
+        float currentShield = playerData.GetCurrentShield();
+        float prevShield = currentShield - _amount;
+
+        hpText?.CalcShield(prevShield, currentShield);
     }
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)

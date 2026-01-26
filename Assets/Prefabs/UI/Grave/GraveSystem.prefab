@@ -272,6 +272,7 @@ RectTransform:
   - {fileID: 876926525995538997}
   - {fileID: 2791329265426629269}
   - {fileID: 3010811183479493866}
+  - {fileID: 1978828505285477844}
   - {fileID: 7395640516585700209}
   - {fileID: 3011640856140875369}
   m_Father: {fileID: 0}
@@ -295,8 +296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GraveyardSystem
   visualRect: {fileID: 2791329265426629269}
   graveCount: {fileID: 8013831031066628085}
-  drawPathPoints:
-  - {fileID: 7395640516585700209}
+  toDeckPathPoint: {fileID: 0}
+  toHandsPathPoint: {fileID: 0}
   toDeckDelay: 0.07
   toDeckDuration: 0.7
   toDeckFirstPointDist: 200
@@ -316,6 +317,12 @@ MonoBehaviour:
   visualPunchPos: {x: 3.5, y: 1.5}
   visualPunchScale: {x: -0.05, y: -0.05, z: 0}
   visualEventEase: 18
+  drawDelay: 0.15
+  drawDuration: 1
+  drawFirstPointDist: 2
+  DrawMidPointRandom: 0
+  drawMidPointPower: 2
+  drawEase: 6
 --- !u!1 &7431671688047830151
 GameObject:
   m_ObjectHideFlags: 0
@@ -5189,6 +5196,41 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 371.6, y: -6}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &7914590997979063310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1978828505285477844}
+  m_Layer: 5
+  m_Name: DrawMidPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1978828505285477844
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7914590997979063310}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.46296, y: 0.46296, z: 0.8333334}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8780729490022300530}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 442.6667, y: 235.33334}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1849431295995405088
