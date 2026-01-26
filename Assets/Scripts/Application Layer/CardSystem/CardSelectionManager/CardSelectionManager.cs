@@ -16,6 +16,7 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
 
     public void ExecuteCommand(CardSystemCommand command)
     {
+        Debug.Log("1");
         command.Execute(this);
     }
 }
