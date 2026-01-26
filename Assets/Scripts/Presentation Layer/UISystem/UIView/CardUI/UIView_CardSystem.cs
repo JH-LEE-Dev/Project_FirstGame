@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using DG.Tweening;
 
 public class UIView_CardSystem : UIView
 {
