@@ -4,6 +4,8 @@ using GameControlSignals;
 using System;
 using UnitLogicSystemSignals;
 using CardSystemUISignal;
+using System.Diagnostics;
+using UnityEngine;
 
 public class CardSystem
 {
@@ -11,13 +13,16 @@ public class CardSystem
     private CardManager cardManager;
     private CardSystemController cardSystemController;
     private ComplexCardEffectResolver complexCardEffectResolver;
+    private CardSelectionManager cardSelectionManager;
 
     public void Initialize(SignalHub _signalHub, CardManager _cardManager,
-        CardSystemController _cardSystemController, ComplexCardEffectResolver _complexCardEffectResolver)
+        CardSystemController _cardSystemController,CardSelectionManager _cardSelectionManager,
+        ComplexCardEffectResolver _complexCardEffectResolver)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
         cardSystemController = _cardSystemController;
+        cardSelectionManager = _cardSelectionManager;
         complexCardEffectResolver = _complexCardEffectResolver;
 
         SubscribeEvents();
@@ -26,12 +31,10 @@ public class CardSystem
 
     private void SubscribeEvents()
     {
-        //원래는 CardSystem이 StartCardDrawTurn 정의하여 cardManager Forwarding해야 함. (cardManager 이벤트의 디커플링)
-        //하지만 편의성을 위해서 임시적으로 함수를 다이렉트 연결.
-        signalHub.Subscribe<PlayerAttackFinishedSignal>(cardSystemController.PlayerAttackFinished);
+        signalHub.Subscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
         signalHub.Subscribe<TryCardUseSignal>(TryCardUse);
         signalHub.Subscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
-        signalHub.Subscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
+        signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
@@ -39,10 +42,10 @@ public class CardSystem
 
     private void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<PlayerAttackFinishedSignal>(cardSystemController.PlayerAttackFinished);
+        signalHub.UnSubscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
         signalHub.UnSubscribe<TryCardUseSignal>(TryCardUse);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
-        signalHub.UnSubscribe<CardUsingFinishedSignal>(cardSystemController.CardUsingFinished);
+        signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
@@ -65,17 +68,20 @@ public class CardSystem
         cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
         cardSystemController.StatusCommandDispatchEvent += CardStatusEffectDispatch;
 
+        cardSystemController.SelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
+        cardSystemController.SelectionSystemCommandDispatchEvent += cardSelectionManager.ExecuteCommand;
+
         cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
         cardSystemController.CardActionEndScopeEvent += CardActionEndScope;
-
-        cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
-        cardSystemController.PlayerTurnFinishedEvent += cardManager.PlayerTurnFinished;
 
         cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
         cardSystemController.ComplexCommandDispatchEvent += complexCardEffectResolver.ExecuteCommand;
 
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
         cardSystemController.CardSlotCntChangedEvent += CardSlotCntChanged;
+
+        cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
+        cardSelectionManager.CardSelectionStartEvent += CardSelectionModeStart;
     }
 
     private void ReleaseEvents()
@@ -90,19 +96,31 @@ public class CardSystem
 
         cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
 
-        cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
+        cardSystemController.SelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
 
-        cardSystemController.PlayerTurnFinishedEvent -= cardManager.PlayerTurnFinished;
+        cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
 
         cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
 
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
+
+        cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
     }
 
     public void Release()
     {
         UnSubscribeEvents();
         ReleaseEvents();
+    }
+
+    private void PlayerTurnFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
+    {
+        cardManager.PlayerTurnFinished();
+    }
+
+    private void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
+    {
+        cardSystemController.CardUsingFinished();
     }
 
     private void PublishCardSystemEvent(CardSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
@@ -160,5 +178,10 @@ public class CardSystem
     private void CardSlotCntChanged(int cnt)
     {
         signalHub.Publish(new CardSlotCntChangedSignal(cnt));
+    }
+
+    private void CardSelectionModeStart(CardSelectionModeData data)
+    {
+        signalHub.Publish(new CardSelectionModeStartSignal(data));
     }
 }

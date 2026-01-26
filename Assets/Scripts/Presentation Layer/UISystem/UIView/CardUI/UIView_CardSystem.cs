@@ -12,6 +12,7 @@ public class UIView_CardSystem : UIView
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
     public event Action<int, CardDataInstance> CardEquippedEvent;
+    public event Action<List<CardDataInstance>> CardSelectionEndEvent;
 
     public delegate float UIActionHandler(CardUIActionData cardUIActionData);
     private UIActionHandler[] uiActionHandlers;
@@ -202,6 +203,7 @@ public class UIView_CardSystem : UIView
         handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
         dimOverlay.SetDimOverlayActive(true);
     }
+
     public void EndCardSelectMode(List<MainCardInstance> _cards)
     {
         dimOverlay.SetDimOverlayActive(false);
@@ -449,7 +451,7 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public async void RecieveUIAction(CardUIActionBatch _actionBatch)
+    public async void ReceiveUIAction(CardUIActionBatch _actionBatch)
     {
         var currentActionDataList = _actionBatch.actionList;
 
