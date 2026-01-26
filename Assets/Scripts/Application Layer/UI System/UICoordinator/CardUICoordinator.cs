@@ -1,8 +1,4 @@
-using CardSystemSignals;
-using GameControlSignals;
-using UICommandSystemSignals;
 using UnityEngine;
-using CardSystemUISignal;
 using System;
 
 public class CardUICoordinator
@@ -77,9 +73,9 @@ public class CardUICoordinator
         cardUISystem.CardUsingApproved(bVerified, slotIdx, transform);
     }
 
-    public void RecieveUIJob(ActionDataBatch_CardSystem actionDataBatch)
+    public void RecieveUIJob(CardUIActionBatch actionDataBatch)
     {
-        cardUISystem.RecieveUIJob(actionDataBatch);
+        cardUISystem.ReceiveUIAction(actionDataBatch);
     }
 
     public void EnemyTurnStarted()
@@ -105,5 +101,10 @@ public class CardUICoordinator
     public void CancelPreview()
     {
         cardUISystem.CancelPreview();
+    }
+
+    public void CardSelectionModeStarted(CardSelectionModeData data)
+    {
+        cardUISystem.StartCardSelectMode(data.amount, true);
     }
 }

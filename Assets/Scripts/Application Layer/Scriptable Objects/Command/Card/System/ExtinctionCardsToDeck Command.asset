@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f08e0139e1d04984b9593b875722145a, type: 3}
-  m_Name: CardToExtinction Command
-  m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_CardToExtinction
+  m_Script: {fileID: 11500000, guid: 6f493c7bd850b6f47ace0d9ac7d6616b, type: 3}
+  m_Name: ExtinctionCardsToDeck Command
+  m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_ExtinctionCardsToDeck
   cardSystemActionTimingType: 3
-  toExtinctionCards: []

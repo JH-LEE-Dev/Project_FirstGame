@@ -80,4 +80,7 @@ MonoBehaviour:
   - _go: {fileID: 0}
     globalId:
       globalObjectIdString: GlobalObjectId_V1-2-f0a72fc589402e946893f43d0c6d12e7-4575678030717598020-1577785712265351415
-  bookmarkedScenePaths: []
+  bookmarkedScenePaths:
+  - Assets/Scenes/TempScene.unity
+  - Assets/Scenes/VFXScene/VFXScene.unity
+  - Assets/Scenes/MainMenuScene.unity

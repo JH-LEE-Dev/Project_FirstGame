@@ -15,14 +15,15 @@ namespace CardSystemSignals
     }
     public struct CardDrawStartSignal  { }
 
-    public struct CardPileDrawSignal  { }
-    public struct CardAdditionalDrawSignal  { }
-    public struct GraveToDeckSignal  { }
-    public struct HandToGraveSignal  { }
-    public struct UsedCardToExtinctionSignal { }
-    public struct UsedCardToGraveSignal { }
-    public struct ExtinctionToDeckSignal { }
-    public struct GraveToHandSignal { }
+    public struct CardSystemEventSignal 
+    {
+        public CardSystemEventData data;
+
+        public CardSystemEventSignal(CardSystemEventData data)
+        {
+            this.data = data;
+        }
+    }
     public struct CardSlotCntChangedSignal 
     {
         public int cnt;
@@ -34,6 +35,14 @@ namespace CardSystemSignals
     }
     //Scope
     public struct CardActionScopeSignal  { }
+    public struct CardSelectionModeStartSignal
+    {
+        public CardSelectionModeData data;
+        public CardSelectionModeStartSignal(CardSelectionModeData _data)
+        {
+            data = _data;
+        }
+    }
 }
 
 namespace CardEffectSystemSignal

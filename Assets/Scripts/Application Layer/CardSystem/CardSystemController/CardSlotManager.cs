@@ -13,6 +13,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private List<List<CardDataInstance>> prevBulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private int bulletCardSlotCnt = 2;
+    private int prevUsedBulletCardCnt = 0;
 
     public void Initialize()
     {
@@ -37,6 +38,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
                 prevBulletCardSlot[i].Add(usedCard);
                 result.bVerified = true;
                 result.slotIdx = i;
+                ++prevUsedBulletCardCnt;
 
                 return result;
             }
@@ -49,6 +51,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
                 prevBulletCardSlot[i].Add(usedCard);
                 result.bVerified = true;
                 result.slotIdx = i;
+                ++prevUsedBulletCardCnt;
 
                 return result;
             }
@@ -70,8 +73,15 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             bulletCardSlot[slotIdx][i].ResetCardData();
         }
 
+        prevUsedBulletCardCnt -= bulletCardSlot[slotIdx].Count;
+
         bulletCardSlot[slotIdx].Clear();
         prevBulletCardSlot[slotIdx].Clear();
+    }
+
+    public int GetPrevUsedBulletCardCnt()
+    {
+        return prevUsedBulletCardCnt;
     }
 
     public void ClearAllBulletCard()
@@ -89,6 +99,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
     public void ClearAllPrevBulletCard()
     {
+        prevUsedBulletCardCnt = 0;
         for (int i = 0; i < prevBulletCardSlot.Count; ++i)
         {
             prevBulletCardSlot[i].Clear();

@@ -13,9 +13,9 @@ public class UICommandDispatcher
         signalHub = _signalHub;
     }
 
-    public void Dispatch_CardSystem(in ActionDataBatch_CardSystem _jobBatch)
+    public void Dispatch_CardSystem(in CardUIActionBatch _jobBatch)
     {
-        if (_jobBatch.actionDataList != null)
+        if (_jobBatch.actionList != null)
             signalHub.Publish(new CardSystem_JobDispatchSignal(_jobBatch));
     }
 

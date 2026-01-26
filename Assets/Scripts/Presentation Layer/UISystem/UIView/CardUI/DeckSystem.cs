@@ -23,9 +23,6 @@ public class DeckSystem : MonoBehaviour,
     private UIView_CardSystem cardSystem = null;
     private ParticleSystem impactParticle = null;
 
-    [Header("Effect Location Settings")]
-    [SerializeField] private List<RectTransform> drawPathPoints = new();
-
     [Header("Wealthy Settings")]
     [SerializeField] private float wealthySpeed = 1f;
     [SerializeField] private float wealthyHeight = 2f;
@@ -34,10 +31,7 @@ public class DeckSystem : MonoBehaviour,
     [Header("Draw Effect Settings")]
     [SerializeField] private float drawDelay = 0.15f;
     [SerializeField] private float drawDuration = 1f;
-    [SerializeField] private float drawFirstPointDist = 2f;
-    [Space]
-    [SerializeField] private bool bMidPointRandom = false;
-    [SerializeField] private float drawMidPointPower = 2f;
+    [SerializeField] private float drawDragPower = 250f;
     [SerializeField] private Ease drawEase = Ease.OutQuad;
 
     [Header("Enter Event Settings")]
@@ -131,35 +125,19 @@ public class DeckSystem : MonoBehaviour,
         // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
 
-        RectTransform midPoint = drawPathPoints[Random.Range(0, drawPathPoints.Count - 1)];
-
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
-            RectTransform rect = performer?.GetComponent<RectTransform>();
             VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
-            if (null == script || null == rect)
+            if (null == script)
                 continue;
 
-            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
-            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetHandTargetEndPos(i), rect);
+            Vector3[] pathPoints = cardSystem.PathSystem?.GetDragPath(performer,
+                transform.position, cardSystem.GetHandTargetEndPos(i), drawDragPower, DragDir.UP);
 
-            // mid
-            if (bMidPointRandom)
-            {
-                midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
-                midPointPos.y += Random.Range(-0.25f, 0.25f) * drawMidPointPower;
-            }
-
-            // first
-            Vector3 firstPointPos = midPointPos;
-            firstPointPos.x += drawFirstPointDist;
-
-            Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos  };
             script.CardDataInstance = dataList[i];
             script.PlayingEventforDeck(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
-            //Debug.Log("Idx: " + i + "Last: " + (currentDrawCount - 1) + " " + (i == (currentDrawCount - 1)));
         }
     }
 

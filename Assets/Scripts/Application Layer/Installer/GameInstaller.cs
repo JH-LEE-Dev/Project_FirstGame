@@ -21,6 +21,7 @@ public class GameInstaller : MonoBehaviour
     private UnitSystem unitSystem;
     private CardSystem cardSystem;
     private ComplexCardEffectResolver complexCardEffectResolver;
+    private CardSelectionManager cardSelectionManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -42,18 +43,23 @@ public class GameInstaller : MonoBehaviour
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
+        cardSelectionManager= new CardSelectionManager();
 
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController, complexCardEffectResolver);
-        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
-        unitLogicSystem.Initialize();
-        cardSystemController.Initialize();
-        waveManager.Initialize(signalHub, waveDatabase);
-        gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
+        gameServiceLocator.Initialize(cameraController);
+
+        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
+        waveManager.Initialize(signalHub, waveDatabase);
         unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
+        unitLogicSystem.Initialize();
+
         cardManager.Initialize();
-        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
+        cardSystemController.Initialize();
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver);
+
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
+
+        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
 
         SetupGamePlayScene();
     }

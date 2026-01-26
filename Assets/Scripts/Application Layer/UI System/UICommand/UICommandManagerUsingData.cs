@@ -1,25 +1,28 @@
 using System.Collections.Generic;
 
-public enum ActionType_CardSystem
+public enum CardUIActionType
 {
     PileDraw,
     AdditionalDraw,
-    GraveToDeck,
-    HandToGrave,
-    CardToExtinction,
+    HandCardsToGrave,
+    GraveCardsToDeck,
+    GraveCardsToHand,
+    CardsToExtinction,
     CardsToGrave,
-    ExtinctionToDeck,
-    GraveToHand,
+    ExtinctionCardsToDeck,
+    MAX,
 }
 
-public struct ActionData_CardSystem
+
+public struct CardUIActionData
 {
-    public ActionType_CardSystem actionDataType;
+    public CardUIActionType uiActionType;
+    public CardSystemContextType cardSystemContextType;
     public List<CardDataInstance> cards;
 }
 
-public struct ActionDataBatch_CardSystem
+public struct CardUIActionBatch
 {
-    public List<ActionData_CardSystem> actionDataList;
+    public List<CardUIActionData> actionList;
     public int idx;
 }
