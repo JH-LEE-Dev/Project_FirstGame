@@ -20,6 +20,12 @@ public class UIText_PlayerHP : MonoBehaviour
     [SerializeField] private bool damageNumber = false;
     private UIView_HUD hudSystem = null;
 
+    [Header("Shield Settings")]
+    [SerializeField] private RectTransform shieldMotionRect = null;
+    [SerializeField] private float spawnShieldDuration = 0.25f;
+    [SerializeField] private float spawnShieldX = 30f;
+    [SerializeField] private Ease spawnShieldEase = Ease.OutExpo;
+
     [Header("Color Change Settings")]
     [ShowIf("colorChange"), SerializeField] private bool overrideColor = false;
     [ShowIf("colorChange"), SerializeField] private Color startColor = Color.softRed;
@@ -48,10 +54,20 @@ public class UIText_PlayerHP : MonoBehaviour
 
     private Vector2 originalAnchoredPos = Vector2.zero;
 
+    private Vector2 originShieldAbchoredPos = Vector2.zero;
+    private Vector2 spawnShieldAbchoredPos = Vector2.zero;
+
     private void Awake()
     {
         if(null != visualRect)
             originalAnchoredPos = visualRect.anchoredPosition;
+
+        if (null != shieldText)
+        {
+            originShieldAbchoredPos = shieldText.rectTransform.anchoredPosition;
+            spawnShieldAbchoredPos = originShieldAbchoredPos;
+            spawnShieldAbchoredPos.x += spawnShieldX;
+        }
     }
     
     public void Init<T>(T _value, UIView_HUD _hudSystem) where T : struct
@@ -73,7 +89,17 @@ public class UIText_PlayerHP : MonoBehaviour
             return;
 
         if (0f >= _prev)
+        {
             shieldText.gameObject.SetActive(true);
+            shieldText.rectTransform.anchoredPosition = spawnShieldAbchoredPos;
+            shieldText.alpha = 0f;
+
+            shieldText.rectTransform.DOAnchorPos(originShieldAbchoredPos, spawnShieldDuration)
+                .SetEase(spawnShieldEase);
+
+            shieldText.DOFade(1f, spawnShieldDuration)
+                .SetEase(spawnShieldEase);
+        }
 
         DOVirtual.Float(_prev, _current, motionDuration, (value) =>
         {
