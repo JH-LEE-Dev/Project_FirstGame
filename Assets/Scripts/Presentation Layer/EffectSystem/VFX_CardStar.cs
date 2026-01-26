@@ -35,6 +35,12 @@ public class VFX_CardStar : MonoBehaviour
         }
     }
 
+    public void PlayCardSpawnEvent(int _currIdx, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points, 
+        Action _startEvent = null, Action _completeEvent = null)
+    {
+        ExecuteMotionSeuence(_currIdx, _spawnDelay, _drawDuration, _drawEase, points, _startEvent, _completeEvent);
+    }
+
     public void PlayingEventforDeck(int _current, int _last, float _spawnDelay, float _drawDuration, Ease _drawEase, Vector3[] points)
     {
         Action deckStartedEvent = () =>
@@ -46,7 +52,7 @@ public class VFX_CardStar : MonoBehaviour
         Action deckCompoleteEvent = () =>
         {
             UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
-            cardSystem?.CallOneCardDrawed(_current, _last, transform.position, cardDataInstance, gameObject);
+            cardSystem?.CallOneCardDrawedBlock(_current, _last, transform.position, cardDataInstance, gameObject);
         };
 
         ExecuteMotionSeuence(_current, _spawnDelay, _drawDuration, _drawEase, points, deckStartedEvent, deckCompoleteEvent);
@@ -57,7 +63,7 @@ public class VFX_CardStar : MonoBehaviour
         Action deckCompoleteEvent = () =>
         {
             UIView_CardSystem cardSystem = poolingSystem?.CardSystem;
-            cardSystem?.CallOneCardDrawed(_current, _last, transform.position, cardDataInstance, gameObject);
+            cardSystem?.CallOneCardDrawedBlock(_current, _last, transform.position, cardDataInstance, gameObject);
         };
 
         ExecuteMotionSeuence(_current, _spawnDelay, _drawDuration, _drawEase, points, null, deckCompoleteEvent);

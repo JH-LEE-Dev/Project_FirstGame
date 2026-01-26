@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using VFolders.Libs;
 using static UnityEngine.Analytics.IAnalytic;
 using Image = UnityEngine.UI.Image;
 
@@ -21,16 +22,12 @@ public class GraveyardSystem : MonoBehaviour
     private Sequence viualSeq = null;
 
     [Header("Effect Location Settings")]
-    [SerializeField] private RectTransform toDeckPathPoint;
     [SerializeField] private RectTransform toHandsPathPoint;
 
     [Header("toDeck Effect Settings")]
     [SerializeField] private float toDeckDelay = 0.02f;
     [SerializeField] private float toDeckDuration = 1f;
-    [SerializeField] private float toDeckFirstPointDist = 2f;
-    [Space]
-    [SerializeField] private bool bMidPointRandom = false;
-    [SerializeField] private float toDeckMidPointPower = 2f;
+    [SerializeField] private float toDeckDragPower = 150f;
     [SerializeField] private Ease toDeckEase = Ease.OutQuad;
 
     [Header("Enter Event Settings")]
@@ -59,10 +56,7 @@ public class GraveyardSystem : MonoBehaviour
     [Header("DrawToHands Settings")]
     [SerializeField] private float drawDelay = 0.15f;
     [SerializeField] private float drawDuration = 1f;
-    [SerializeField] private float drawFirstPointDist = 2f;
-    [Space]
-    [SerializeField] private bool DrawMidPointRandom = false;
-    [SerializeField] private float drawMidPointPower = 2f;
+    [SerializeField] private float drawDragPower = 250f;
     [SerializeField] private Ease drawEase = Ease.OutQuad;
 
     private Vector3 originScale = Vector3.one;
@@ -192,27 +186,16 @@ public class GraveyardSystem : MonoBehaviour
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
         currentMoveCnt = spawningCount;
 
-        RectTransform midPoint = toDeckPathPoint;
+        Vector3 targetPoint = cardSystem.DeckSystem.transform.position;
+
         for (int i = 0; i < spawningCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
-            RectTransform rect = performer?.GetComponent<RectTransform>();
             VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
-            if (null == script || null == rect)
+            if (null == script)
                 continue;
 
-            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
-            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetDeckWorldPos(), rect);
-
-            // mid
-            if (bMidPointRandom)
-                midPointPos.y += Random.Range(-1f, 1f) * toDeckMidPointPower;
-
-            // first
-            Vector3 firstPointPos = midPointPos;
-            firstPointPos.x -= toDeckFirstPointDist;
-
-            Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
+            Vector3[] pathPoints = cardSystem.PathSystem?.GetDragPath(performer, transform.position, targetPoint, toDeckDragPower);
             script.PlayingEventforWormHole(i, toDeckDelay, toDeckDuration, toDeckEase, pathPoints);
         }
     }
@@ -299,32 +282,17 @@ public class GraveyardSystem : MonoBehaviour
         // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
 
-        RectTransform midPoint = toHandsPathPoint;
-
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
         {
             GameObject performer = cardSystem.GetStarPerformerFromPool(this.transform);
-            RectTransform rect = performer?.GetComponent<RectTransform>();
             VFX_CardStar script = performer?.GetComponent<VFX_CardStar>();
-            if (null == script || null == rect)
+            if (null == script)
                 continue;
 
-            Vector3 midPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(midPoint.position, rect);
-            Vector3 endPointPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(cardSystem.GetHandTargetEndPos(i), rect);
+            Vector3[] pathPoints = cardSystem.PathSystem?.GetDragPath(performer, 
+                transform.position, cardSystem.GetHandTargetEndPos(i), drawDragPower, DragDir.UP);
 
-            // mid
-            if (DrawMidPointRandom)
-            {
-                midPointPos.x += Random.Range(-1f, 1f) * drawMidPointPower;
-                midPointPos.y += Random.Range(-0.25f, 0.25f) * drawMidPointPower;
-            }
-
-            // first
-            Vector3 firstPointPos = midPointPos;
-            firstPointPos.x += drawFirstPointDist;
-
-            Vector3[] pathPoints = { endPointPos, firstPointPos, midPointPos };
             script.CardDataInstance = dataList[i];
             script.PlayingEventforGraveToHands(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
         }
