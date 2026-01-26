@@ -43,17 +43,21 @@ public class GameInstaller : MonoBehaviour
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
 
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController, complexCardEffectResolver);
-        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
-        unitLogicSystem.Initialize();
-        cardSystemController.Initialize();
-        waveManager.Initialize(signalHub, waveDatabase);
-        gameServiceLocator.Initialize(cameraController);
         gameController.Initialize(signalHub);
+        gameServiceLocator.Initialize(cameraController);
+
+        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
+        waveManager.Initialize(signalHub, waveDatabase);
         unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
+        unitLogicSystem.Initialize();
+
         cardManager.Initialize();
-        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
+        cardSystemController.Initialize();
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController, complexCardEffectResolver);
+
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
+
+        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
 
         SetupGamePlayScene();
     }

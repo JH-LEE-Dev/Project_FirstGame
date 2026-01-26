@@ -3,5 +3,5 @@ using System.Collections.Generic;
 
 public interface ICardSystemControlActionCommandHandler
 {
-    void UseCardnExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards);
+    void UseCardsAndExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards);
 }

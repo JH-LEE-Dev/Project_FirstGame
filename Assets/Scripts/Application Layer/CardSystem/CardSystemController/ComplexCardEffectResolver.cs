@@ -61,7 +61,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile)
     {
-        cardSystemControlActionCommandHandler.UseCardnExtinguishAll(cardPile);
+        cardSystemControlActionCommandHandler.UseCardsAndExtinguishAll(cardPile);
     }
 
     public void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile)

@@ -2,31 +2,17 @@ using CardSystemUISignal;
 using System;
 using System.Collections.Generic;
 using UnitLogicSystemSignals;
-using Unity.AppUI.Core;
 using UnityEngine;
 
 public class CardSystemController : MonoBehaviour, ICardSystemControlActionCommandHandler
 {
-    //CardManager로 가는 Event, Delegate 전부 명령 패턴으로 변경할 것.
-    //현재 Equipped Bullet Card에 대해서만 명령 패턴으로 전달됨.
     public event Action<int> CardSlotCntChangedEvent;
-    public event Action<CardDataInstance> UsedCardRemovedFromHandEvent;
-    public event Action<CardDataInstance> UsedCardToGraveEvent;
-    public event Action<CardDataInstance> UsedCardToExtinctionEvent;
     public event Action CardDrawStartEvent;
     public event Action CardDrawFinishedEvent;
+    public event Action PlayerTurnFinishedEvent;
+
     //public event Action CardActionBeginScopeEvent;
     public event Action CardActionEndScopeEvent;
-    public event Action PlayerTurnFinishedEvent;
-    public event Action ExtinctionToDeckEvent;
-    public delegate void CardsToExtinctionDelegate(ReadOnlySpan<CardDataInstance> cards);
-    public delegate void CardsRemoveFronHandsDelegate(ReadOnlySpan<CardDataInstance> cards);
-    public delegate void EquippedCardsToGraveDelegate(ReadOnlySpan<CardDataInstance> cards);
-    public delegate void EquippedCardsToExtinctionDelegate(ReadOnlySpan<CardDataInstance> cards);
-    public event CardsToExtinctionDelegate CardsToExtinctionEvent;
-    public event CardsRemoveFronHandsDelegate CardsRemoveFronHandsEvent;
-    public event EquippedCardsToGraveDelegate EquippedCardsToGraveEvent;
-    public event EquippedCardsToExtinctionDelegate EquippedCardsToExtinctionEvent;
 
     public event Action<CardSystemCommand> SystemCommandDispatchEvent;
     public event Action<CardSystemCommand> SlotSystemCommandDispatchEvent;
@@ -90,9 +76,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardSlotManager.ResetSlotCntModifier();
 
         CardDrawStartEvent?.Invoke();
+
         DispatchCardEffect_BeforeTurn();
+
         DispatchCardSystemActionCommand_BeforeTurn();
+
         CardDrawFinishedEvent?.Invoke();
+
         CardActionEndScopeEvent?.Invoke();
 
         cardSlotManager.ClearAllPrevBulletCard();
@@ -167,16 +157,28 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
 
         cardEffect_AfterAttack.Clear();
-        //CardActionEndScopeEvent?.Invoke();
     }
 
-    private void DispatchCardSystemActionCommand_Instant(CardSystemActionCommand command)
+    private void DispatchCardSystemActionCommand_Instant(CardSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        SystemCommandDispatchEvent?.Invoke(command);
+        CardSystemActionCommand cardSystemActionCommand = cardSystemActionCommands[(int)type];
+
+        if (cardSystemActionCommand == null)
+        {
+            Debug.LogWarning("CardSystemController::SetupCardSystemActionCommand -> Command is null!");
+            return;
+        }
+
+        cardSystemActionCommand.InitializeCommand(cards);
+
+        SystemCommandDispatchEvent?.Invoke(cardSystemActionCommand);
     }
 
     private void CardUsed(CardDataInstance usedCard)
     {
+        using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
             if (usedCard.bUpgrade)
@@ -186,17 +188,27 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
             DispatchCardEffect_BeforeAttack();
 
-            UsedCardRemovedFromHandEvent?.Invoke(usedCard);
+            writeBuffer[0] = usedCard;
+            DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, writeBuffer.Slice(0, 1));
 
             if (usedCard.GetCardData().elementType == ElementType.Rotation)
-                UsedCardToGraveEvent?.Invoke(usedCard);
+            {
+                writeBuffer[0] = usedCard;
+                DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToGrave, writeBuffer.Slice(0, 1));
+            }
             else
-                UsedCardToExtinctionEvent?.Invoke(usedCard);
+            {
+                writeBuffer[0] = usedCard;
+                DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToExtinction, writeBuffer.Slice(0, 1));
+            }
         }
         else
         {
-            UsedCardRemovedFromHandEvent?.Invoke(usedCard);
+            writeBuffer[0] = usedCard;
+            DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, writeBuffer.Slice(0, 1));
         }
+
+        rentalBuffer.Dispose();
     }
 
     public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
@@ -247,7 +259,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -258,7 +270,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             CardEffectCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -269,7 +281,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             CardEffectCommand effectCommand = slotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -280,7 +292,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             CardEffectCommand effectCommand = complexSystemCommands[(int)complexSystemEffectsTypes[i]];
 
             if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.ApplyCardState(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -355,18 +367,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer_ToExtinction = rentalBuffer_Extinction.Span;
 
-        CardSystemActionCommand cardSystemActionCommand = cardSystemActionCommands[(int)CardSystemActionType.CardToGrave];
-        ActionCommand_CardToGrave toGraveCommand = cardSystemActionCommand as ActionCommand_CardToGrave;
-
-        cardSystemActionCommand = cardSystemActionCommands[(int)CardSystemActionType.CardToExtinction];
-        ActionCommand_CardToExtinction toExtinctionCommand = cardSystemActionCommand as ActionCommand_CardToExtinction;
-
-        if (toGraveCommand == null || toExtinctionCommand == null)
-        {
-            Debug.LogWarning("CardSystemController::ClearAllBulletCard -> Command is null!");
-            return;
-        }
-
         int toGraveCnt = 0;
         int toExtinctionCnt = 0;
 
@@ -374,46 +374,39 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                if (bulletCardSlot[i][j].GetCardData().elementType == ElementType.Extinction)
+                if (bulletCardSlot[i][j].GetCardData().elementType != ElementType.Extinction)
                 {
                     ++toGraveCnt;
-                    toExtinctionCommand.toExtinctionCards.Add(bulletCardSlot[i][j]);
                     writeBuffer_ToGrave[i] = bulletCardSlot[i][j];
                 }
                 else
                 {
                     ++toExtinctionCnt;
-                    toGraveCommand.toGraveCards.Add(bulletCardSlot[i][j]);
                     writeBuffer_ToExtinction[i] = bulletCardSlot[i][j];
                 }
             }
         }
 
-        DispatchCardSystemActionCommand_Instant(toExtinctionCommand);
-        DispatchCardSystemActionCommand_Instant(toGraveCommand);
-
-        //이건 CardUI가 받을 게 아니고, 슬롯을 가진 UnitUI만 알면 됨.
-        //CardUI는 그냥 어떤 식으로든 해당 카드가 묘지나 소멸로 갔다는 것만 알면 됨.
-        //CardUI는 그냥 CardsToGrave,CardsToExtinction으로 받기 때문에 안보이게만 하면 됨.
-        EquippedCardsToExtinctionEvent?.Invoke(writeBuffer_ToExtinction.Slice(0,toExtinctionCnt));
-        EquippedCardsToGraveEvent?.Invoke(writeBuffer_ToGrave.Slice(0,toGraveCnt));
+        if (toExtinctionCnt != 0)
+            DispatchCardSystemActionCommand_Instant(CardSystemActionType.SlotCardsToExtinction, writeBuffer_ToExtinction.Slice(0, toExtinctionCnt));
+        if (toGraveCnt != 0)
+            DispatchCardSystemActionCommand_Instant(CardSystemActionType.SlotCardsToGrave, writeBuffer_ToGrave.Slice(0, toGraveCnt));
 
         rentalBuffer_ToGrave.Dispose();
         rentalBuffer_Extinction.Dispose();
 
         cardSlotManager.ClearAllBulletCard();
-
         CardActionEndScopeEvent?.Invoke();
     }
 
     public void GameStarted()
     {
-        ExtinctionToDeckEvent?.Invoke();
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.ExtinctionCardsToDeck);
         CardActionEndScopeEvent?.Invoke();
     }
 
     //무한 루프 방어 코드 필요. - 도메인 로직이 이를 방어하지만 아키텍쳐에서 방어되지는 않음.
-    public void UseCardnExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards)
+    public void UseCardsAndExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards)
     {
         if (usingCards == null || usingCards[0] == null)
             return;
@@ -460,8 +453,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             }
         }
 
-        CardsRemoveFronHandsEvent?.Invoke(usingCards);
-        CardsToExtinctionEvent?.Invoke(usingCards);
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, usingCards);
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToExtinction, usingCards);
 
         OrginizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
 

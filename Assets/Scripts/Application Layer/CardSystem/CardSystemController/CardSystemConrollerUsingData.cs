@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Structs-----------------------------------------
+/// </summary>
 public struct CardUsedResult
 {
     public bool bVerified;
@@ -38,4 +42,95 @@ public struct CardIdComparer : IComparer<CardDataInstance>
     {
         return x.GetCardData().id.CompareTo(y.GetCardData().id);
     }
+}
+
+public struct CardSystemEventData
+{
+    public CardSystemEventType eventType;
+    public CardSystemContextType contextType;
+}
+
+/// <summary>
+/// Enums ----------------------------------------------
+/// </summary>
+public enum CardEffectApplyType
+{
+    Status,
+    System,
+    SlotSystem,
+    ComplexSystem,
+}
+
+
+public enum CardStatusEffectType
+{
+    BonusDamage,
+    Shield,
+    BonusRange,
+    FlareBonusDamage,
+    HPDecrease,
+    CriticalChance,
+    RiftDetection,
+    OvercompensationHPIncrease,
+    OvercompensationShield,
+    Distortion,
+}
+
+public enum CardSystemEffectType
+{
+    FlareAdditionalDraw,
+    SacrificeAdditionalDraw,
+    Pluto,
+}
+
+public enum CardSlotSystemEffectType
+{
+    Amplify,
+    SecureTheZone,
+}
+
+public enum ComplexSystemEffectType
+{
+    MeteorShower,
+    SpaceShuttle,
+    FinalOrbit,
+}
+
+public enum CardSystemActionTimingType
+{
+    BeforeAttack,
+    AfterAttack,
+    BeforeTurn,
+    Instant,
+}
+
+public enum CardSystemActionType
+{
+    CardPileDraw,
+    UsedCardsRemoveFromHand,
+    UsedCardsToGrave,
+    UsedCardsToExtinction,
+    ExtinctionCardsToDeck,
+    SlotCardsToExtinction,
+    SlotCardsToGrave,
+}
+
+public enum CardEffectPriority
+{
+    Multiplier,
+    Adder,
+    Normal,
+}
+
+public enum CardSystemContextType
+{
+    CardPileDraw,
+    UsedCardsRemoveFromHand,
+    UsedCardsToGrave,
+    UsedCardsToExtinction,
+    ExtinctionCardsToDeck,
+    SlotCardsToExtinction,
+    SlotCardsToGrave,
+    GraveCardsToHand,
+    MAX
 }

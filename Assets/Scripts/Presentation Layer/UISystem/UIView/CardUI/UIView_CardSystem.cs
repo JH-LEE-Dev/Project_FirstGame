@@ -1,17 +1,19 @@
-using DG.Tweening;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class UIView_CardSystem : UIView
 {
     public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
-    public event Action<int,CardDataInstance> CardEquippedEvent;
+    public event Action<int, CardDataInstance> CardEquippedEvent;
+
+    public delegate float UIActionHandler(CardUIActionData cardUIActionData);
+    private UIActionHandler[] uiActionHandlers;
 
     //사용 승인을 받은 카드
     private MainCardInstance verificationWaitCard;
@@ -59,6 +61,27 @@ public class UIView_CardSystem : UIView
     public override void OnDestroy()
     {
         UICommandCompleteEvent = null;
+    }
+
+    public override void Initialize(UIViewContext ctx)
+    {
+        base.Initialize(ctx);
+
+        BindUIActionHandlers();
+    }
+
+    private void BindUIActionHandlers()
+    {
+        uiActionHandlers = new UIActionHandler[(int)CardUIActionType.MAX];
+
+        uiActionHandlers[(int)CardUIActionType.PileDraw] = (uiActionData) => CardPileDraw(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.GraveCardsToDeck] = (uiActionData) => GraveCardsToDeck(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.ExtinctionCardsToDeck] = (uiActionData) => ExtinctionCardsToDeck(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.CardsToExtinction] = (uiActionData) => CardsToExtinction(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.GraveCardsToHand] = (uiActionData) => GraveCardsToHand(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.CardsToGrave] = (uiActionData) => CardsToGrave(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.AdditionalDraw] = (uiActionData) => CardAdditionalDraw(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.HandCardsToGrave] = (uiActionData) => HandCardsToGrave(uiActionData);
     }
 
     public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
@@ -111,7 +134,7 @@ public class UIView_CardSystem : UIView
         TryCardUseEvent?.Invoke(_card.CardData);
     }
 
-    public void CardUsingApproved(bool boolean,int slotIdx, Transform slotTransform) // true이면 verificationWaitCard -> 사용 승인.
+    public void CardUsingApproved(bool boolean, int slotIdx, Transform slotTransform) // true이면 verificationWaitCard -> 사용 승인.
     {
         if (boolean)
         {
@@ -151,7 +174,7 @@ public class UIView_CardSystem : UIView
     // 불릿 카드 사용했을때, 호출되는 함수
     public void EquipBulletCard(int _index, CardDataInstance _data = null)
     {
-        CardEquippedEvent?.Invoke(_index,_data);
+        CardEquippedEvent?.Invoke(_index, _data);
     }
 
     // 불릿 카드 뺄 때, 호출되는 함수
@@ -167,7 +190,7 @@ public class UIView_CardSystem : UIView
     }
 
 
-    public void StartCardSelectMode(int _selectCount, bool _bSelectforcing) 
+    public void StartCardSelectMode(int _selectCount, bool _bSelectforcing)
     {
         // _selectCount은 선택 개수
         // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
@@ -242,7 +265,7 @@ public class UIView_CardSystem : UIView
 
         for (int i = 0; i < poolCount; ++i)
         {
-            if(i < inCount)
+            if (i < inCount)
             {
                 pool[i].ApplyData(_inCards[i]);
                 pool[i].transform.SetParent(pannelContent.transform);
@@ -261,10 +284,10 @@ public class UIView_CardSystem : UIView
         cardPannel.CurrPannelType = _setType;
         cardPannel.gameObject.SetActive(true);
 
-        switch(_setType)
+        switch (_setType)
         {
-            case CurrentPannel.Deck: 
-                ActivatePannel(deckCards); 
+            case CurrentPannel.Deck:
+                ActivatePannel(deckCards);
                 break;
 
             case CurrentPannel.Grave:
@@ -322,7 +345,7 @@ public class UIView_CardSystem : UIView
             return Vector2.zero;
 
         RectTransform Rt = deckSystem.GetComponent<RectTransform>();
-        if(null == Rt)
+        if (null == Rt)
             return Vector2.zero;
 
         return Rt.anchoredPosition;
@@ -377,67 +400,116 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(true);
     }
 
-    public async void RecieveUIJob(ActionDataBatch_CardSystem _jobBatch)
+    public async void RecieveUIAction(CardUIActionBatch _actionBatch)
     {
-        var currentActionDataList = _jobBatch.actionDataList;
-
-        float turnWaitSecond = 0.5f;
+        var currentActionDataList = _actionBatch.actionList;
 
         int size = currentActionDataList.Count;
         for (int i = 0; i < size; ++i)
         {
-            ActionData_CardSystem currentActionData = currentActionDataList[i];
+            CardUIActionData currentActionData = currentActionDataList[i];
 
-            ActionType_CardSystem currenType = currentActionData.actionDataType;
+            CardUIActionType currentType = currentActionData.uiActionType;
 
-            switch(currenType)
-            {
-                case ActionType_CardSystem.PileDraw: // 턴이 시작될 때 5장 드로우 명령.
-                case ActionType_CardSystem.AdditionalDraw: // 효과에 의한 추가 드로우 명령.
-                    DrawingCards(currentActionData.cards);
+            float turnWaitTime = uiActionHandlers[(int)currentType].Invoke(currentActionData);
 
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-                    break;
-
-                case ActionType_CardSystem.GraveToDeck: // 묘지에서 덱으로 가는 명령.
-                    graveSystem?.CardMoveToDeckEffect(currentActionDataList[i].cards.Count);
-
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-                    break;
-
-                case ActionType_CardSystem.HandToGrave: // 턴이 끝나고 패에서 묘지로 가는 명령.
-
-                    ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
-                    ReturnStateAllCard(CardState.Equipped);
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-                    break;
-                case ActionType_CardSystem.CardToExtinction: //소멸 카드가 사용되었을 때의 명령.
-                    ReturnCard(currentActionData.cards, CardReturnType.Extinction);
-                    //Debug.Log("UsedCardToExtinction");
-
-                    break;
-                case ActionType_CardSystem.CardsToGrave: // 카드를 사용했을 때 묘지로 가는 명령.
-                    ReturnCard(currentActionData.cards, CardReturnType.FlyToGrave);
-                    //Debug.Log("UsedCardToGrave");
-
-                    break;
-                case ActionType_CardSystem.ExtinctionToDeck: // Wave가 끝나고 소멸에서 덱으로 복귀하는 명령.
-                   //Debug.Log("ExtinctionToDeck");
-
-                    break;
-                case ActionType_CardSystem.GraveToHand: // 묘지에서 패로 복귀하는 명령.
-                    graveSystem?.CardDrawToHands(currentActionData.cards);
-                    await Awaitable.WaitForSecondsAsync(turnWaitSecond);
-
-                    break;
-
-                default: break;
-            }
+            await Awaitable.WaitForSecondsAsync(turnWaitTime);
         }
 
         UpdateCardsCounts();
 
-        UICommandCompleteEvent?.Invoke(_jobBatch.idx);
+        UICommandCompleteEvent?.Invoke(_actionBatch.idx);
+    }
+
+    private float CardPileDraw(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        DrawingCards(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+    private float CardAdditionalDraw(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        DrawingCards(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+
+    private float GraveCardsToDeck(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        graveSystem?.CardMoveToDeckEffect(uiActionData.cards.Count);
+
+        return turnWaitTime;
+    }
+
+    private float HandCardsToGrave(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
+        ReturnStateAllCard(CardState.Equipped);
+
+        return turnWaitTime;
+    }
+
+    private float CardsToExtinction(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
+            Debug.Log("사용된 카드가 소멸로 감.");
+        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
+            Debug.Log("슬롯에 있던 카드가 소멸로 감.");
+
+        ReturnCard(uiActionData.cards, CardReturnType.Extinction);
+
+        return turnWaitTime;
+    }
+
+    private float CardsToGrave(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
+            Debug.Log("사용된 카드가 묘지로 감.");
+        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
+            Debug.Log("슬롯에 있던 카드가 묘지로 감.");
+
+        ReturnCard(uiActionData.cards, CardReturnType.FlyToGrave);
+
+        return turnWaitTime;
+    }
+
+    private float ExtinctionCardsToDeck(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+
+        return turnWaitTime;
+    }
+
+    private float GraveCardsToHand(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        graveSystem?.CardDrawToHands(uiActionData.cards);
+
+        return turnWaitTime;
     }
 
     private void UpdateCardsCounts()

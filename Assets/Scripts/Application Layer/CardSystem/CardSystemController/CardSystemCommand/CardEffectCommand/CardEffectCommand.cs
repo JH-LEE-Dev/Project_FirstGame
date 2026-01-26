@@ -8,8 +8,9 @@ public abstract class CardEffectCommand : CardSystemCommand
     public int upgradeNestingCnt = 0;
     public int valueModifier = 1;
 
-    public void ApplyCardState(int _nestingCnt,int _upgradeNestingCnt,int _valueModifier)
+    public virtual void InitializeCommand(int _nestingCnt,int _upgradeNestingCnt,int _valueModifier,CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
+        cardSystemContextType = _cardSystemContextType;
         nestingCnt = _nestingCnt;
         upgradeNestingCnt = _upgradeNestingCnt;
         valueModifier = _valueModifier;
@@ -23,6 +24,9 @@ public abstract class CardEffectCommand : CardSystemCommand
     public void ResetCommandData()
     {
         nestingCnt = 0;
+        upgradeNestingCnt = 0;
+        valueModifier = 1;
+        cardSystemContextType = CardSystemContextType.MAX;
     }
 }
 

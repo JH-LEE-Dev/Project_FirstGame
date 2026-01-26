@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using static CardManager;
 
 public ref struct RentalScope<T>
 {
@@ -14,4 +15,17 @@ public ref struct RentalScope<T>
     }
 
     public void Dispose() => ArrayPool<T>.Shared.Return(_array, true);
+}
+
+public enum CardSystemEventType
+{
+    CardPileDrawEvent,
+    CardAdditionalDrawEvent,
+    GraveToDeckEvent,
+    HandToGraveEvent,
+    GraveToHandEvent,
+    CardToExtinctionEvent,
+    CardToGraveEvent,
+    ExtinctionToDeckEvent,
+    MAX,
 }

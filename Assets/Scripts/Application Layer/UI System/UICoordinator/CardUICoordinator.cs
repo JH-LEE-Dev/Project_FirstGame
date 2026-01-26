@@ -77,9 +77,9 @@ public class CardUICoordinator
         cardUISystem.CardUsingApproved(bVerified, slotIdx, transform);
     }
 
-    public void RecieveUIJob(ActionDataBatch_CardSystem actionDataBatch)
+    public void RecieveUIJob(CardUIActionBatch actionDataBatch)
     {
-        cardUISystem.RecieveUIJob(actionDataBatch);
+        cardUISystem.RecieveUIAction(actionDataBatch);
     }
 
     public void EnemyTurnStarted()
