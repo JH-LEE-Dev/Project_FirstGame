@@ -68,6 +68,8 @@ public class CardInstance : MonoBehaviour
         ResetVisual();
     }
 
+    public void TurnOffGlowFilter() => glowFilter?.gameObject.SetActive(false);
+
     private void ResetVisual()
     {
         if (cardFrame) cardFrame.color = Color.white;
