@@ -33,29 +33,15 @@ public class UICommandManager : MonoBehaviour
     private void SubscribeEvents()
     {
         signalHub.Subscribe<UICommandCompleteSignal>(ReleaseJobBatch);
-        signalHub.Subscribe<CardPileDrawSignal,CardDataInstance>(CardPileDrawed);
-        signalHub.Subscribe<CardAdditionalDrawSignal,CardDataInstance>(CardAdditionalDrawed);
-        signalHub.Subscribe<HandToGraveSignal,CardDataInstance>(HandToGrave);
-        signalHub.Subscribe<GraveToDeckSignal,CardDataInstance>(GraveToDeck);
-        signalHub.Subscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.Subscribe<UsedCardToExtinctionSignal, CardDataInstance>(UsedCardToExtinction);
-        signalHub.Subscribe<UsedCardToGraveSignal, CardDataInstance>(UsedCardToGrave);
-        signalHub.Subscribe<ExtinctionToDeckSignal, CardDataInstance>(ExtinctionToDeck);
+        signalHub.Subscribe<CardSystemEventSignal, CardDataInstance>(ReceiveCardSystemEventSignal);
     }
 
     private void UnSubscribeEvents()
     {
         signalHub.UnSubscribe<UICommandCompleteSignal>(ReleaseJobBatch);
-        signalHub.UnSubscribe<CardPileDrawSignal, CardDataInstance>(CardPileDrawed);
-        signalHub.UnSubscribe<CardAdditionalDrawSignal, CardDataInstance>(CardAdditionalDrawed);
-        signalHub.UnSubscribe<HandToGraveSignal, CardDataInstance>(HandToGrave);
-        signalHub.UnSubscribe<GraveToDeckSignal, CardDataInstance>(GraveToDeck);
-        signalHub.UnSubscribe<GraveToHandSignal, CardDataInstance>(GraveToHand);
         signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.UnSubscribe<UsedCardToExtinctionSignal, CardDataInstance>(UsedCardToExtinction);
-        signalHub.UnSubscribe<UsedCardToGraveSignal, CardDataInstance>(UsedCardToGrave);
-        signalHub.UnSubscribe<ExtinctionToDeckSignal, CardDataInstance>(ExtinctionToDeck);
+        signalHub.UnSubscribe<CardSystemEventSignal, CardDataInstance>(ReceiveCardSystemEventSignal);
     }
 
 
@@ -65,29 +51,9 @@ public class UICommandManager : MonoBehaviour
             dispatcher.Release();
     }
 
-    private void CardPileDrawed(CardPileDrawSignal cardPileDrawSignal, ReadOnlySpan<CardDataInstance> cards)
+    private void ReceiveCardSystemEventSignal(CardSystemEventSignal cardSystemEventSignal,ReadOnlySpan<CardDataInstance> cards = default)
     {
-        CreateCommand(ActionType_CardSystem.PileDraw, cards);
-    }
-
-    private void CardAdditionalDrawed(CardAdditionalDrawSignal cardAdditionalDrawSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.AdditionalDraw, cards);
-    }
-
-    private void HandToGrave(HandToGraveSignal handToGraveSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.HandToGrave, cards);
-    }
-
-    private void GraveToDeck(GraveToDeckSignal graveToDeckSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.GraveToDeck, cards);
-    }
-
-    private void GraveToHand(GraveToHandSignal graveToHandSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.GraveToHand, cards);
+        commandFactory_CardSystem.CreateCommand(cardSystemEventSignal.data, cards);
     }
 
     private void DispatchCommand(ScopeSignal<CardActionScopeSignal> signal)
@@ -98,68 +64,5 @@ public class UICommandManager : MonoBehaviour
     public void ReleaseJobBatch(UICommandCompleteSignal uiCommandCompleteSignal)
     {
         commandFactory_CardSystem.ReleaseSlot(uiCommandCompleteSignal.commandIdx);
-    }
-
-    private void UsedCardToExtinction(UsedCardToExtinctionSignal usedCardToExtinctionSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.CardToExtinction);
-    }
-
-    private void ExtinctionToDeck(ExtinctionToDeckSignal extinctionToDeckSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.ExtinctionToDeck);
-    }
-
-    private void UsedCardToGrave(UsedCardToGraveSignal usedCardToGraveSignal, ReadOnlySpan<CardDataInstance> cards)
-    {
-        CreateCommand(ActionType_CardSystem.CardsToGrave);
-    }
-
-    public void CreateCommand(ActionType_CardSystem actionType, ReadOnlySpan<CardDataInstance> cards = default)
-    {
-        //OCP À§¹Ý.
-        switch (actionType)
-        {
-            case ActionType_CardSystem.PileDraw:
-                {
-                    commandFactory_CardSystem.CreateJob_Draw(cards, false);
-                    break;
-                }
-            case ActionType_CardSystem.AdditionalDraw:
-                {
-                    commandFactory_CardSystem.CreateJob_Draw(cards, true);
-                    break;
-                }
-            case ActionType_CardSystem.HandToGrave:
-                {
-                    commandFactory_CardSystem.CreateJob_HandToGrave(cards);
-                    break;
-                }
-            case ActionType_CardSystem.GraveToDeck:
-                {
-                    commandFactory_CardSystem.CreateJob_GraveToDeck(cards);
-                    break;
-                }
-            case ActionType_CardSystem.CardToExtinction:
-                {
-                    commandFactory_CardSystem.CreateJob_CardsToExtinction(cards);
-                    break;
-                }
-            case ActionType_CardSystem.ExtinctionToDeck:
-                {
-                    commandFactory_CardSystem.CreateJob_ExtinctionToDeck(cards);
-                    break;
-                }
-            case ActionType_CardSystem.GraveToHand:
-                {
-                    commandFactory_CardSystem.CreateJob_GraveToHand(cards);
-                    break;
-                }
-            case ActionType_CardSystem.CardsToGrave:
-                {
-                    commandFactory_CardSystem.CreateJob_CardsToGrave(cards);
-                    break;
-                }
-        }
     }
 }

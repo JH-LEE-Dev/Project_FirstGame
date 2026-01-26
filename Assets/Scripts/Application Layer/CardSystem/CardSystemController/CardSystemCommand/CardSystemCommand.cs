@@ -1,9 +1,13 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
 public abstract class CardSystemCommand : ScriptableObject, ICardSystemActionCommand, ICardStatusEffectCommand
 {
+    protected CardSystemContextType cardSystemContextType = CardSystemContextType.MAX;
+
     [SerializeField] protected CardSystemActionTimingType cardSystemActionTimingType;
+
     public bool IsActive { get; private set; }
 
     public abstract void Execute(ICommandHandler handler);
@@ -15,6 +19,11 @@ public abstract class CardSystemCommand : ScriptableObject, ICardSystemActionCom
     public CardSystemActionTimingType GetCardActionTimingType()
     {
         return cardSystemActionTimingType;
+    }
+
+    public CardSystemContextType GetCardSystemContext()
+    {
+        return cardSystemContextType;
     }
 }
 

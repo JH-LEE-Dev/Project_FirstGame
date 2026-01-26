@@ -9,7 +9,7 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardSystemActionC
 
     protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
-        cardSystemActionCommandHandler.DrawAgain(drawAmount + nestingCnt);
+        cardSystemActionCommandHandler.DrawAgain(drawAmount *nestingCnt);
 
         ResetCommandData();
     }

@@ -5,6 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/SpaceShuttle")]
 public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
+    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    {
+        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+
+        cardSystemContextType = CardSystemContextType.GraveCardsToHand;
+    }
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {

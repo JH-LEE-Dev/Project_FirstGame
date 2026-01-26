@@ -4,9 +4,9 @@ namespace UICommandSystemSignals
 {
     public struct CardSystem_JobDispatchSignal 
     {
-        public ActionDataBatch_CardSystem actionDataBatch;
+        public CardUIActionBatch actionDataBatch;
 
-        public CardSystem_JobDispatchSignal(ActionDataBatch_CardSystem _actionDataBatch)
+        public CardSystem_JobDispatchSignal(CardUIActionBatch _actionDataBatch)
         {
             actionDataBatch = _actionDataBatch;
         }

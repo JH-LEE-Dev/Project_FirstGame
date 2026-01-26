@@ -7,4 +7,5 @@ public interface ICardSlotSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedRotationBulletCard();
 
     void ApplySlotCntModifier(int cnt);
+    int GetPrevUsedBulletCardCnt();
 }
