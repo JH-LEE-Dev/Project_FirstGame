@@ -1,8 +1,4 @@
-using CardSystemSignals;
-using GameControlSignals;
-using UICommandSystemSignals;
 using UnityEngine;
-using CardSystemUISignal;
 using System;
 
 public class CardUICoordinator
