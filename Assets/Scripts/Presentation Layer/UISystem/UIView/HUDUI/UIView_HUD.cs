@@ -121,6 +121,7 @@ public class UIView_HUD : UIView
     public void PlayerGetShield(float amount)
     {
         HP_BarShieldCalc();
+        ShieldTextUpdate(amount);
     }
 
     public void PlayerGetHP(float amount)
@@ -183,7 +184,7 @@ public class UIView_HUD : UIView
         // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, hpProgress, damage, _damagNum: damagePool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: damagePool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
@@ -246,6 +247,14 @@ public class UIView_HUD : UIView
         {
             hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
         }
+    }
+
+    private void ShieldTextUpdate(float _amount)
+    {
+        float currentShield = playerData.GetCurrentShield();
+        float prevShield = currentShield - _amount;
+
+        hpText?.CalcShield(prevShield, currentShield);
     }
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)
