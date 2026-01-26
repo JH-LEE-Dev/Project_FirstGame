@@ -458,7 +458,6 @@ public class UIView_CardSystem : UIView
         float turnWaitTime = 0.5f;
 
         ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
-        ReturnStateAllCard(CardState.Equipped);
 
         return turnWaitTime;
     }
@@ -471,7 +470,10 @@ public class UIView_CardSystem : UIView
         if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
             Debug.Log("사용된 카드가 소멸로 감.");
         else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
+        {
             Debug.Log("슬롯에 있던 카드가 소멸로 감.");
+            ReturnStateAllCard(CardState.Equipped);
+        }
 
         ReturnCard(uiActionData.cards, CardReturnType.Extinction);
 
@@ -486,7 +488,10 @@ public class UIView_CardSystem : UIView
         if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
             Debug.Log("사용된 카드가 묘지로 감.");
         else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
+        {
             Debug.Log("슬롯에 있던 카드가 묘지로 감.");
+            ReturnStateAllCard(CardState.Equipped);
+        }
 
         ReturnCard(uiActionData.cards, CardReturnType.FlyToGrave);
 

@@ -15,8 +15,8 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 {
     private ICardSystemActionCommandHandler cardSystemActionCommandHandler;
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
-    private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler; 
-    private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler; 
+    private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
+    private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
 
     public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
@@ -28,7 +28,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
         cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
     }
-    
+
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
     {
         cardSystemCommand.Execute(this);
@@ -71,6 +71,21 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void ApplyAttackModifier(int attack)
     {
-       cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
+        cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
+    }
+
+    public int GetPrevUsedBulletCardCnt()
+    {
+        return slotSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
+    }
+
+    public void InsertFollowUpEffectCommand(CardEffectCommand command)
+    {
+        cardSystemControlActionCommandHandler.InsertFollowUpEffectCommand(command);
+    }
+
+    public void AdditionalDraw(int amount)
+    {
+        cardSystemActionCommandHandler.DrawAgain(amount);
     }
 }

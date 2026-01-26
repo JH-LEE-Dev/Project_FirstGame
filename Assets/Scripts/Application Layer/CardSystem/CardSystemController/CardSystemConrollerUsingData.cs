@@ -94,6 +94,7 @@ public enum ComplexSystemEffectType
     MeteorShower,
     SpaceShuttle,
     FinalOrbit,
+    Recompense,
 }
 
 public enum CardSystemActionTimingType

@@ -40,4 +40,5 @@ public enum CardName
     Pluto,
     Overcompensation,
     Distortion,
+    Recompense,
 }

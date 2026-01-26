@@ -15,4 +15,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile);
     void ApplyAttackModifier(int attack);
+    int GetPrevUsedBulletCardCnt();
+    void InsertFollowUpEffectCommand(CardEffectCommand command);
+    void AdditionalDraw(int amount);
 }

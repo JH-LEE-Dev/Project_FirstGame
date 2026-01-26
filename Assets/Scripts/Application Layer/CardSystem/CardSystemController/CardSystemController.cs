@@ -182,9 +182,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
             if (usedCard.bUpgrade)
-                OrginizeCardEffectCommand(usedCard, 0, 1);
+                OrganizeCardEffectCommand(usedCard, 0, 1);
             else
-                OrginizeCardEffectCommand(usedCard);
+                OrganizeCardEffectCommand(usedCard);
 
             DispatchCardEffect_BeforeAttack();
 
@@ -229,7 +229,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                     ++upgradeNestingCnt;
             }
 
-            OrginizeCardEffectCommand(bulletCardSlot[i][0], bulletCardSlot[i].Count, upgradeNestingCnt);
+            OrganizeCardEffectCommand(bulletCardSlot[i][0], bulletCardSlot[i].Count, upgradeNestingCnt);
 
             //SlotEffect는 가장 먼저 실행되어야 하므로, Dispatch를 for loop 안에서 해줘서 
             //SlotEffect가 적용되게 해야 함, loop안에서 하지 않으려면, 명령 객체가
@@ -246,7 +246,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         PlayerTurnFinishedEvent?.Invoke();
     }
 
-    private void OrginizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
+    private void OrganizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
     {
         //OCP 위반.
         List<CardSystemEffectType> cardSystemEffectTypes = usedCard.GetCardData().cardSystemEffects;
@@ -297,6 +297,12 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
         }
+    }
+
+    private void OrganizeCardFollowUpEffectCommand(CardEffectCommand command, int nestingCnt = 0, int upgradeNestingCnt = 0)
+    {
+        CardSystemActionTimingType timing = command.GetCardActionTimingType();
+        InsertCommandToList(timing, command);
     }
 
     private void InsertCommandToList(CardSystemActionTimingType timingType, CardEffectCommand command)
@@ -443,7 +449,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 {
 
                     currentCard = usedCardPile[i];
-                    OrginizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
+                    OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
 
                     if (usedCardPile[i].bUpgrade)
                         currentUpgradeNestingCnt = 1;
@@ -456,8 +462,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, usingCards);
         DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToExtinction, usingCards);
 
-        OrginizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
+        OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
 
         usedCardPile.Clear();
+    }
+
+    public void InsertFollowUpEffectCommand(CardEffectCommand command)
+    {
+        OrganizeCardFollowUpEffectCommand(command);
     }
 }
