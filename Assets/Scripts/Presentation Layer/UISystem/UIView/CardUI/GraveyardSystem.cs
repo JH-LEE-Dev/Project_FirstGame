@@ -167,10 +167,7 @@ public class GraveyardSystem : MonoBehaviour
         activeSeq.Join(topRect.DOPunchRotation(upEventPunchPower, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase)
-            .OnComplete(() =>
-            {
-                bClickedEvent = false;
-            }));
+            .OnComplete(UpEventCompleteEvent));
 
         cardSystem?.CallPannel(CurrentPannel.Grave);
     }
@@ -221,11 +218,7 @@ public class GraveyardSystem : MonoBehaviour
 
         viualSeq.Append(visualRect.DOPunchAnchorPos(randomPos, toDeckDelay)
             .SetUpdate(update)
-            .SetEase(visualEventEase)
-            .OnComplete(() =>
-            {
-
-            }));
+            .SetEase(visualEventEase));
 
         viualSeq.Join(visualRect.DOPunchScale(visualPunchScale, toDeckDelay)
             .SetUpdate(update)
@@ -279,7 +272,6 @@ public class GraveyardSystem : MonoBehaviour
         if (null == cardSystem)
             return;
 
-        // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
         cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
 
         int currentDrawCount = dataList.Count;
@@ -296,6 +288,11 @@ public class GraveyardSystem : MonoBehaviour
             script.CardDataInstance = dataList[i];
             script.PlayingEventforGraveToHands(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
         }
+    }
+
+    private void UpEventCompleteEvent()
+    {
+        bClickedEvent = false;
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)

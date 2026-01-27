@@ -35,8 +35,10 @@ public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardSyste
             writeBuffer_ToGrave[i] = cards[i];
         }
 
-        cardSystemActionCommandHandler.CardsToGrave(writeBuffer_ToGrave.Slice(0, graveCnt));
-        cardSystemActionCommandHandler.CardsToGrave(writeBuffer_Duplicate.Slice(0, duplicatedCnt));
+        if (graveCnt != 0)
+            cardSystemActionCommandHandler.CardsToGrave(writeBuffer_ToGrave.Slice(0, graveCnt));
+        if (duplicatedCnt != 0)
+            cardSystemActionCommandHandler.CardsToGrave(writeBuffer_Duplicate.Slice(0, duplicatedCnt));
 
         rentalBuffer_ToGrave.Dispose();
         rentalBuffer_Duplicate.Dispose();

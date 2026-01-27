@@ -82,11 +82,7 @@ public class MenuButton : MonoBehaviour
         seq.Join(mainText.DOColor(enterColor, enterDuration)
             .SetEase(enterEase));
 
-        seq.OnComplete(() =>
-        {
-            mainText.color = enterColor;
-            visualRect.localScale = originScale;
-        });
+        seq.OnComplete(ResetTextAndLocalScale);
 
         seq.SetUpdate(false);
     }
@@ -105,11 +101,7 @@ public class MenuButton : MonoBehaviour
         seq.Join(mainText.DOColor(originColor, exitDuration)
             .SetEase(exitEase));
 
-        seq.OnComplete(() =>
-        {
-            mainText.color = originColor;
-            visualRect.localScale = originScale;
-        });
+        seq.OnComplete(ResetTextAndLocalScale);
 
         seq.SetUpdate(false);
     }
@@ -147,11 +139,19 @@ public class MenuButton : MonoBehaviour
         seq.Append(visualRect.DOScale(originScale, downDuration)
             .SetEase(downEase));
 
-        seq.OnComplete(() =>
-        {
-            visualRect.localScale = originScale;
-        });
+        seq.OnComplete(PointerDownCompleteEvent);
 
         seq.SetUpdate(false);
+    }
+
+    private void ResetTextAndLocalScale()
+    {
+        mainText.color = enterColor;
+        visualRect.localScale = originScale;
+    }
+
+    private void PointerDownCompleteEvent()
+    {
+        visualRect.localScale = originScale;
     }
 }

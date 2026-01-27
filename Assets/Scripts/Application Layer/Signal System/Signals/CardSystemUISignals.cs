@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 namespace CardSystemUISignal
 {
@@ -29,5 +30,17 @@ namespace CardSystemUISignal
             commandIdx = idx;
         }
     }
+    public struct UICardSelectionEndSignal
+    {
+        public CardSelectionModeData data;
+        public List<CardDataInstance> cards;
+
+        public UICardSelectionEndSignal(CardSelectionModeData _data,List<CardDataInstance> _cards)
+        {
+            data = _data;
+            cards = _cards;
+        }
+    }
+
 }
 

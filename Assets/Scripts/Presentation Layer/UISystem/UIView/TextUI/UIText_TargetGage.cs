@@ -6,7 +6,7 @@ public class UIText_TargetGage : MonoBehaviour
     [Header("Main Settings")]
     [SerializeField] private TMP_Text mainText;
     
-    public void DataUpdate(float currentKillCnt, int maxCnt)
+    public void DataUpdate(int currentKillCnt, int maxCnt)
     {
         if (null == mainText)
             return;

@@ -1,9 +1,9 @@
 using System;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CardPannelExitButton : ButtonInstance
+public class CardPannelSelectButton : ButtonInstance
 {
     public Action onClickedEvent;
 
@@ -11,17 +11,17 @@ public class CardPannelExitButton : ButtonInstance
     {
         base.Awake();
 
-        SetState(VisualState.VisibleEnabled);
+        SetState(VisualState.Hidden);
     }
 
     protected override void OnHoverEnter(PointerEventData eventData)
     {
-        
+
     }
 
     protected override void OnHoverExit(PointerEventData eventData)
     {
-        
+
     }
 
     protected override void OnClick(PointerEventData eventData)

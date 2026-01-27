@@ -110,11 +110,7 @@ public class TurnEndButton : MonoBehaviour
         seq.Append(visualRect.DOScale(Vector3.one, downDuration)
             .SetEase(downEase));
 
-        seq.OnComplete(() =>
-        {
-            visualRect.localScale = originScale;
-            clicked = false;
-        });
+        seq.OnComplete(PointerDownCompleteEvent);
 
         seq.SetUpdate(false);
 
@@ -124,5 +120,11 @@ public class TurnEndButton : MonoBehaviour
     public void OnPointerUp(PointerEventData eventData)
     {
         
+    }
+
+    private void PointerDownCompleteEvent()
+    {
+        visualRect.localScale = originScale;
+        clicked = false;
     }
 }

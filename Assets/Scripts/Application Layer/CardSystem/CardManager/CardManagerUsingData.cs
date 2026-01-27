@@ -27,5 +27,7 @@ public enum CardSystemEventType
     CardToExtinctionEvent,
     CardToGraveEvent,
     ExtinctionToDeckEvent,
+    CardsToHandEvent,
+    CardsToDeckEvent,
     MAX,
 }

@@ -224,10 +224,7 @@ public class DeckSystem : MonoBehaviour,
         activeSeq.Join(topRect.DORotate(Vector3.zero, upEventDuration)
             .SetUpdate(false)
             .SetEase(upEventEase)
-            .OnComplete(() =>
-            {
-                bClickedEvent = false;
-            }));
+            .OnComplete(UpEventCompleteEvent));
 
         cardSystem?.CallPannel(CurrentPannel.Deck);
     }
@@ -247,10 +244,7 @@ public class DeckSystem : MonoBehaviour,
         cardbackSeq.Append(cardBackRect.DOLocalRotate(Vector3.zero, drawDelay)
             .SetUpdate(false)
             .SetEase(drawedCardBackEase)
-            .OnComplete(() =>
-            {
-                cardBackRect.localEulerAngles = Vector3.zero;
-            }));
+            .OnComplete(CardBackDrawedEffectCompleteEvent));
 
         cardbackSeq.Join(cardBackRect.DOScale(cardbackOriginScale, drawDelay)
             .SetUpdate(false)
@@ -296,5 +290,15 @@ public class DeckSystem : MonoBehaviour,
     {
         if (null != _activeSeq && _activeSeq.IsActive())
             _activeSeq.Kill();
+    }
+
+    private void CardBackDrawedEffectCompleteEvent()
+    {
+        cardBackRect.localEulerAngles = Vector3.zero;
+    }
+
+    private void UpEventCompleteEvent()
+    {
+        bClickedEvent = false;
     }
 }
