@@ -16,18 +16,17 @@ public class GameplayUIInstaller : MonoBehaviour
     //내부 의존성
     private GameplayUIManager uiManager;
     private UICommandManager uiCommandManager;
-    private UIModuleCoordinator uiModuleCoordinator;
+    private GameplayUIModuleCoordinator gameplayUIModuleCoordinator;
     private CardUICoordinator cardUICoordinator;
     private GameplayUICoordinator gameplayUICoordinator;
 
-    [Header("Gameplay Scene Objects")]
+    [Header("UI Canvas/CanvasRoot Objects")]
     [SerializeField] private CanvasRoot canvasRootPrefab;
     [SerializeField] private Canvas canvasPrefab;
 
     //Gameplay Scene
     private CanvasRoot canvasRoot;
     private Canvas canvas;
-
 
     public void Initialize(IBootStrapProvider _bootStrapProvider, SignalHub _signalHub,
         InputManager _inputManager, ICardSystemData _cardSystemData, IWaveSystemData _waveSystemData)
@@ -40,7 +39,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
         uiManager = GetComponent<GameplayUIManager>();
         uiCommandManager = GetComponent<UICommandManager>();
-        uiModuleCoordinator = new UIModuleCoordinator();
+        gameplayUIModuleCoordinator = new GameplayUIModuleCoordinator();
         cardUICoordinator = new CardUICoordinator();
         gameplayUICoordinator = new GameplayUICoordinator();
 
@@ -52,7 +51,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
     public void Release()
     {
-        uiModuleCoordinator.Release();
+        gameplayUIModuleCoordinator.Release();
         cardUICoordinator.Release();
         gameplayUICoordinator.Release();
         uiCommandManager.Release();
@@ -115,7 +114,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
         cardUICoordinator.Initialize(cardSystemObject);
         gameplayUICoordinator.Initialize(hudObject, unitUIObject, gameplayObject);
-        uiModuleCoordinator.Initialize(signalHub,cardUICoordinator, gameplayUICoordinator);
+        gameplayUIModuleCoordinator.Initialize(signalHub, cardUICoordinator, gameplayUICoordinator);
 
         SetAnchorToCanvas(hudObject.transform);
         SetAnchorToCanvas(cardSystemObject.transform);
@@ -142,7 +141,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
     private void BindEvent()
     {
-
+       
     }
 
     private void ReleaseEvent()

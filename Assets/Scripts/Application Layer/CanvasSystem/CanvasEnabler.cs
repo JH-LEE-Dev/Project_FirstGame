@@ -7,13 +7,16 @@ public class CanvasEnabler : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private int unitforSorting = 5;
 
-    public void Initialize()
+    public void Initialize(string sortingLayer = null)
     {
         if (canvas == null)
             canvas = GetComponent<Canvas>();
 
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
+
+        if (sortingLayer != null)
+            canvas.sortingLayerName = sortingLayer;
     }
 
     public IEnumerator InitializeChildrenCanvas()

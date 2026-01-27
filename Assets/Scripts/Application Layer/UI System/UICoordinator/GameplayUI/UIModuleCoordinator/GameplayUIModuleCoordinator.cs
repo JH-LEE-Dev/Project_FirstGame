@@ -7,7 +7,7 @@ using UnitSpawnSystemSignals;
 using WaveSystemSignals;
 using System.Collections.Generic;
 
-public class UIModuleCoordinator
+public class GameplayUIModuleCoordinator
 {
     private CardUICoordinator cardUICoordinator;
     private GameplayUICoordinator gameplayUICoordinator;
@@ -35,7 +35,7 @@ public class UIModuleCoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.Subscribe<CardDrawFinishedSignal>(CardDrawFinished);
-        signalHub.Subscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
+        signalHub.Subscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
 
         //For GameplayUICoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -63,7 +63,7 @@ public class UIModuleCoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardDrawFinishedSignal>(CardDrawFinished);
-        signalHub.UnSubscribe<CardSystem_JobDispatchSignal>(RecieveUIJob);
+        signalHub.UnSubscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
 
         //For GameplayUICoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -160,7 +160,7 @@ public class UIModuleCoordinator
         gameplayUICoordinator.PlayerTurnStarted();
     }
 
-    public void RecieveUIJob(CardSystem_JobDispatchSignal cardSystem_JobDispatchSignal)
+    public void RecieveUIJob(CardSystem_ActionDispatchSignal cardSystem_JobDispatchSignal)
     {
         cardUICoordinator.RecieveUIJob(cardSystem_JobDispatchSignal.actionDataBatch);
     }

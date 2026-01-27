@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Hand Enhancement Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_HandEnhancement
   cardSystemActionTimingType: 0
-  effectApplyType: 0
+  effectApplyType: 3
   nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1
-  upgradeAmount: 1
+  upgradeAmount: 2

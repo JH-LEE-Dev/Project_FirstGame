@@ -10,6 +10,7 @@ public class InputReader
     public event Action ESCButtonPressedEvent;
     public event Action<Vector2> LeftClickEvent;
     public event Action<Vector2> RightClickEvent;
+    public event Action ShopButtonPressedEvent;
 
     private InputActionSystem actions;
 
@@ -26,6 +27,7 @@ public class InputReader
             actions.Combat.ESC.performed += OnESCButtonPressed;
             actions.Combat.LeftClick.performed += OnLeftButtonPressed;
             actions.Combat.RightClick.performed += OnRightButtonPressed;
+            actions.Combat.ShopButton.performed += OnShopButtonPressed;
         }
 
         actions.Combat.Enable();
@@ -41,6 +43,7 @@ public class InputReader
         actions.Combat.ESC.performed -= OnESCButtonPressed; 
         actions.Combat.LeftClick.performed -= OnLeftButtonPressed;
         actions.Combat.RightClick.performed -= OnRightButtonPressed;
+        actions.Combat.ShopButton.performed -= OnShopButtonPressed;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -87,5 +90,10 @@ public class InputReader
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
 
         RightClickEvent?.Invoke(mouseScreenPos);
+    }
+
+    private void OnShopButtonPressed(InputAction.CallbackContext context)
+    {
+        ShopButtonPressedEvent?.Invoke();
     }
 }

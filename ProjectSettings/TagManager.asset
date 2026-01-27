@@ -59,5 +59,8 @@ TagManager:
   - name: HUD
     uniqueID: 2618506313
     locked: 0
+  - name: ShopUI
+    uniqueID: 2345854761
+    locked: 0
   m_RenderingLayers:
   - Default

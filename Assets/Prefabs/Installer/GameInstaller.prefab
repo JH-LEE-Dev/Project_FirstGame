@@ -193,6 +193,8 @@ GameObject:
   - component: {fileID: 5212957816586645379}
   - component: {fileID: 6668742716584127980}
   - component: {fileID: 2669582842453573755}
+  - component: {fileID: 1915532515696185621}
+  - component: {fileID: 790922903393253596}
   m_Layer: 0
   m_Name: UIInstaller
   m_TagString: Untagged
@@ -264,6 +266,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
+--- !u!114 &1915532515696185621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebac1758623cca47bf81a3cc76591a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopUIInstaller
+  canvasRootPrefab:
+    screenLayerRoot: {fileID: 0}
+    popupLayerRoot: {fileID: 1339472337866355040, guid: b7f162c7f70b0de4dbb83fbae2452110, type: 3}
+    overlayLayerRoot: {fileID: 142306225260424533, guid: f00c5b9343bb05c4f8fa0bd61efc4fe7, type: 3}
+    tooltipLayerRoot: {fileID: 0}
+    worldLayerRoot: {fileID: 0}
+  canvasPrefab: {fileID: 1108041376251214764, guid: d9c42526021c66b45a4046d9fdeca5a6, type: 3}
+--- !u!114 &790922903393253596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6adcaabe4f7243544b8d26ba1db1ac61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopUIManager
+  viewPrefabs:
+  - {fileID: 4781159696933469916, guid: 18e03ad1f7aea1543a1a76f963478917, type: 3}
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0

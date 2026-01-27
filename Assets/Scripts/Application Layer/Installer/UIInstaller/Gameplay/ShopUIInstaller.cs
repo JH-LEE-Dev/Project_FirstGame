@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
-public class MainMenuUIInstaller : MonoBehaviour
+public class ShopUIInstaller : MonoBehaviour
 {
     //외부 의존성
     private InputManager inputManager;
+    private SignalHub signalHub;
     private IBootStrapProvider bootStrapProvider;
 
     //내부 의존성
-    private MainMenuUIManager uiManager;
+    private ShopUIManager uiManager;
+    private ShopUICoordinator shopUICoordinator;
+    private ShopUIModuleCoordinator shopUIModuleCoordinator;
 
     [Header("UI Canvas/CanvasRoot Objects")]
     [SerializeField] private CanvasRoot canvasRootPrefab;
@@ -21,13 +24,22 @@ public class MainMenuUIInstaller : MonoBehaviour
     private CanvasRoot canvasRoot;
     private Canvas canvas;
 
-    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
+    public const string LAYER_SHOPUI = "ShopUI";
+
+    bool bShopOpened = false;
+
+    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager,SignalHub _signalHub)
     {
+        signalHub =_signalHub;
         bootStrapProvider = _bootStrapProvider;
         inputManager = _inputManager;
-        uiManager = GetComponent<MainMenuUIManager>();
+        uiManager = GetComponent<ShopUIManager>();
+        shopUICoordinator = new ShopUICoordinator();
+        shopUIModuleCoordinator = new ShopUIModuleCoordinator();    
 
         uiManager.Initialize(inputManager);
+
+        SetupShopUI();
     }
 
     public void Release()
@@ -35,7 +47,7 @@ public class MainMenuUIInstaller : MonoBehaviour
         ReleaseEvent();
     }
 
-    public void MainMenuLevelStarted()
+    public void SetupShopUI()
     {
         SetupCanvas();
 
@@ -52,7 +64,7 @@ public class MainMenuUIInstaller : MonoBehaviour
         tempRoot.popupLayerRoot = popupLayerRoot;
         uiManager.SceneChanged(tempRoot);
 
-        OpenUIView();
+        SetupUIObjects();
         SetupCanvasChilds();
     }
 
@@ -63,7 +75,7 @@ public class MainMenuUIInstaller : MonoBehaviour
 
         if (canvasEnabler != null)
         {
-            canvasEnabler.Initialize();
+            canvasEnabler.Initialize(LAYER_SHOPUI);
             StartCoroutine(canvasEnabler.InitializeChildrenCanvas());
         }
     }
@@ -78,22 +90,26 @@ public class MainMenuUIInstaller : MonoBehaviour
         }
     }
 
-    private void OpenUIView()
+    private void SetupUIObjects()
     {
-        UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
+        UIView_Shop shopUIView = uiManager.Open<UIView_Shop>();
+        uiManager.Close<UIView_Shop>();
+
+        shopUICoordinator.Initialize(shopUIView);
+        shopUIModuleCoordinator.Initialize(signalHub,shopUICoordinator);
 
         BindEvent();
     }
 
     private void BindEvent()
     {
-        UIView_MainMenu mainMenuUIView = uiManager.GetView<UIView_MainMenu>();
+        inputManager.inputReader.ShopButtonPressedEvent -= OpenShop;
+        inputManager.inputReader.ShopButtonPressedEvent += OpenShop;
+    }
 
-        if (mainMenuUIView != null)
-        {
-            mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
-            mainMenuUIView.PlayButtonClickedEvent += bootStrapProvider.GoToGameplayScene;
-        }
+    public void ReleaseEvent()
+    {
+        inputManager.inputReader.ShopButtonPressedEvent -= OpenShop;
     }
 
     private void SetAnchorToCanvas(Transform transform)
@@ -107,10 +123,17 @@ public class MainMenuUIInstaller : MonoBehaviour
         rt.offsetMax = Vector2.zero;   // Right, Top
     }
 
-    public void ReleaseEvent()
+    private void OpenShop()
     {
-        UIView_MainMenu mainMenuUIView = uiManager.Open<UIView_MainMenu>();
-
-        mainMenuUIView.PlayButtonClickedEvent -= bootStrapProvider.GoToGameplayScene;
+        if (bShopOpened)
+        {
+            bShopOpened = false;
+            uiManager.Close<UIView_Shop>();
+        }
+        else
+        {
+            bShopOpened = true;
+            UIView_Shop shopUI = uiManager.Open<UIView_Shop>();
+        }
     }
 }
