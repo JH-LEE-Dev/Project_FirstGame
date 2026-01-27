@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/AdditionalDraw")]
 public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardSystemActionCommandHandler>
