@@ -353,7 +353,11 @@ public class UIView_CardSystem : UIView
         if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToHand)
         {
             Debug.Log("복사된 카드가 패로 감");
-            // 복사된 카드가 패로 들어옴.
+            // 복사된 카드가 패로 들어옴. 임시.
+            foreach (var card in uiActionData.cards)
+            {
+                MakeCardInHand(card);
+            }
         }
 
         return turnWaitTime;
@@ -383,6 +387,9 @@ public class UIView_CardSystem : UIView
     /// <summary>
     /// UI 구현 함수들 ------------------------------------------------------------------------------
     /// </summary>
+
+
+
     /////////////////////////////////// For PoolingSystem
     public MainCardInstance RentHandCard()
     {
@@ -446,10 +453,14 @@ public class UIView_CardSystem : UIView
         handSystem.UnequipBulletToHand(_index);
     }
 
-    [Button]
-    public void SelectModeON()
+    // 옵션 등으로 강제로 카드를 추가하는 함수
+    public void MakeCardInHand(CardDataInstance _cardData)
     {
-        StartCardSelectMode(default, 3, true);
+        int cnt = handSystem.GetCurrentHandCardCount();
+
+        Vector2 handPos = handSystem.PredictRightmostPosForCount(cnt);
+
+        handSystem.ProcessDraw(handPos, _cardData);
     }
 
     public void StartCardSelectMode(CardSelectionModeData _data, int _selectCount, bool _bSelectforcing)

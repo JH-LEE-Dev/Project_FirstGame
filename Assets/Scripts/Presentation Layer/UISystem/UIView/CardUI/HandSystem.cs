@@ -636,6 +636,8 @@ public class HandSystem : MonoBehaviour
 
     public int GetCurrentHandCardCount()
     {
+        if (cards == null) return -1;
+
         int count = 0;
         foreach (var c in cards)
         {
@@ -665,21 +667,6 @@ public class HandSystem : MonoBehaviour
         Vector2 localOffset = new Vector2(Mathf.Sin(rad) * radius, (Mathf.Cos(rad) - 1f) * radius);
         return handRoot.TransformPoint(localOffset);
     }
-
-    public int CurrentHandCount()
-    {
-        if (cards == null) return -1;
-
-        int Count = 0;
-
-        foreach(var card in cards)
-        {
-            if (card.cardState == CardState.InHand)
-                Count++;
-        }
-        return Count;
-    }
-
 
 
     /////////////////////// For Pooling
