@@ -65,6 +65,9 @@ public class CardMotion : MonoBehaviour
     private Tween SelectTween;
     private Vector3 SelectScale;
 
+    [Header("Using Motion")]
+    private Tween consumeScaleTween;
+
 
     public int socketIndex { get; private set; }
 
@@ -88,6 +91,8 @@ public class CardMotion : MonoBehaviour
         BulletSocketScaleTween?.Kill();
 
         SelectTween?.Kill();
+
+        consumeScaleTween?.Kill();
 
         if (bRestoreScale) transform.localScale = originScale;
     }
@@ -372,4 +377,20 @@ public class CardMotion : MonoBehaviour
                     owner.Input.SetIgnoreHover(false);
                 });
     }
+
+    public void PlayConsumeShrink(float duration = 0.6f, float endScaleMul = 0.03f)
+    {
+        AllKillTweens(false);
+
+        consumeScaleTween?.Kill();
+
+        Vector3 baseScale = transform.localScale;
+        Vector3 endScale = baseScale * endScaleMul;
+
+        consumeScaleTween = transform.DOScale(endScale, Mathf.Max(0.01f, duration))
+            .SetEase(Ease.InCubic)
+            .SetUpdate(true)
+            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+    }
+
 }

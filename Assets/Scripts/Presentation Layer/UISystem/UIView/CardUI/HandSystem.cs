@@ -258,13 +258,30 @@ public class HandSystem : MonoBehaviour
 
     private void ConsumeMagic(MainCardInstance card)
     {
+        float scaleOffset = card.transform.localScale.x * 30f;
+        cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
 
+        card.SetUIState(CardState.Other);
 
+        hoveredCard = null;
+        if (previewCard == card) previewCard = null;
 
+        computeArc();
+        ComputeSelectedPositions();
 
+        card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.05f);
+        card.Motion.PlayConsumeShrink(0.2f, 0.03f);
 
-        // 지금은 즉시 반환
-        ReturnToPool(card);
+        DOVirtual.DelayedCall(0.6f, () =>
+        {
+            if (card == null) return;
+
+            ReturnToPool(card);
+
+            computeArc();
+            ComputeSelectedPositions();
+
+        }).SetUpdate(true);
     }
 
 
@@ -587,7 +604,16 @@ public class HandSystem : MonoBehaviour
 
     /////////////////////// For Draw
 
-    public int GetCurrentHandCardCount() => cards.Count;
+    public int GetCurrentHandCardCount()
+    {
+        int count = 0;
+        foreach (var c in cards)
+        {
+            if (c.cardState == CardState.InHand)
+                count++;
+        }
+        return count;
+    }
 
     // 드로우될 카드 위치
     public Vector2 PredictRightmostPosForCount(int nextCount)
@@ -621,7 +647,6 @@ public class HandSystem : MonoBehaviour
             if (card.cardState == CardState.InHand)
                 Count++;
         }
-
         return Count;
     }
 
@@ -758,6 +783,7 @@ public class HandSystem : MonoBehaviour
         // 전부 초기화 한다.
         _card.SetUIState(CardState.Hidden);
         _card.Motion.AllKillTweens();
+        _card.VisualFloat.ResetOverlayAlpha();
         _card.gameObject.SetActive(false);
 
         // 풀링 반납
