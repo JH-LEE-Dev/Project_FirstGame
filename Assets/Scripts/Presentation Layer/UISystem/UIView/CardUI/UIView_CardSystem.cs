@@ -541,7 +541,7 @@ public class UIView_CardSystem : UIView
             return Vector2.zero;
 
         int currHandCnt = handSystem.GetCurrentHandCardCount();
-        Debug.Log(currHandCnt);
+
         Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
 
         return NextEndPos;

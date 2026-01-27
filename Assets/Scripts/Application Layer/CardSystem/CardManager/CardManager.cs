@@ -72,7 +72,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(1);
+        CardData cardData = cardDataBase.GetCardData(16);
         if (cardData == null)
             return;
 
@@ -332,7 +332,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public CardDataInstance CreateCard(int id)
     {
-        CardData cardData = cardDataBase.GetCardData(13);
+        CardData cardData = cardDataBase.GetCardData(id);
         if (cardData == null)
             return null;
 
