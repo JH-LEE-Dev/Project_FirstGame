@@ -35,6 +35,8 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
     private Sequence seq;
 
+    private Action playMotionCompleteEvent;
+
     private void Awake()
     {
         originScale = visualRect.localScale;
@@ -72,23 +74,17 @@ public class UIText_DamageNumPlayer : MonoBehaviour
         if (null != seq && seq.IsActive())
             seq.Kill();
 
+        playMotionCompleteEvent = _callback;
+
         seq = DOTween.Sequence();
 
         seq.AppendInterval(waitSecond);
-
-        seq.AppendCallback(() =>
-        {
-            
-        });
 
         FirstMotion(_danger);
         FinaltMotion();
 
         seq.SetUpdate(false);
-        seq.OnComplete(()=>
-        {
-            _callback.Invoke();
-        });
+        seq.OnComplete(PlayMotionCompleteEvent);
     }
 
     private void FirstMotion(bool _danger)
@@ -122,16 +118,24 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
         seq.Append(visualRect.DOAnchorPos(targetPos, finalDuration)
             .SetEase(finalEase)
-            .OnStart(()=>
-            {
-                if (null != rigid)
-                    rigid.simulated = false;
-            }));
+            .OnStart(FinalMotionStartEvent));
 
         seq.Join(visualRect.DOScale(0f, finalDuration)
             .SetEase(finalEase));
 
         seq.Join(mainText.DOFade(0f, finalDuration)
             .SetEase(finalEase));
+    }
+
+    private void PlayMotionCompleteEvent()
+    {
+        playMotionCompleteEvent?.Invoke();
+        playMotionCompleteEvent = null;
+    }
+
+    private void FinalMotionStartEvent()
+    {
+        if (null != rigid)
+            rigid.simulated = false;
     }
 }

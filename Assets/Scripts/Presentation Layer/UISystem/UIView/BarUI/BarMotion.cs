@@ -50,19 +50,37 @@ public class BarMotion : MonoBehaviour
     private Sequence ghostSeq = null;
     private Sequence shieldSeq = null;
 
-    private RectTransform mainRect;
+    private Tween shakeTween = null;
+    private Tween jellyTween = null;
 
+    private RectTransform mainRect;
     private int maxValue = 0;
+
+    private Action onShieldCallback;
+    private Action onMainCallback;
+    private float targetShieldValue;
+    private float targetMainValue;
+
+    private void Awake()
+    {
+        if (null != visualRect)
+        {
+            originAnchoredPos = visualRect.anchoredPosition;
+            originlocalScale = visualRect.localScale;
+        }
+
+        mainRect = GetComponent<RectTransform>();
+    }
 
     public void Init(float _progressValue, int _maxValue = 0)
     {
-        if (mainSlider)
+        if (mainSlider) 
             mainSlider.value = _progressValue;
 
-        if (ghostSlider)
+        if (ghostSlider) 
             ghostSlider.value = _progressValue;
 
-        if (shieldSlider)
+        if (shieldSlider) 
             shieldSlider.value = 0f;
 
         maxValue = _maxValue;
@@ -72,7 +90,7 @@ public class BarMotion : MonoBehaviour
     {
         if (activeGhost)
             OnHitGhostSlider(_progressValue);
-        else 
+        else
             OnNotGhostSlider(_progressValue);
     }
 
@@ -86,7 +104,7 @@ public class BarMotion : MonoBehaviour
 
     public void OnShieldHit(float _progressValue, Action _callback = null)
     {
-        if (!activeShield)
+        if (!activeShield) 
             return;
 
         CalcShield(_progressValue, _callback);
@@ -94,76 +112,76 @@ public class BarMotion : MonoBehaviour
 
     public void CalcShield(float _progressValue, Action callback = null)
     {
-        if (null == shieldSlider)
+        if (null == shieldSlider) 
             return;
 
-        CancelPrevMotion(shieldSeq);
+        CancelPrevSequence(ref shieldSeq);
+
+        onShieldCallback = callback;
+        targetShieldValue = _progressValue;
 
         shieldSeq = DOTween.Sequence();
-
         shieldSeq.AppendInterval(shieldDelay);
         shieldSeq.Append(shieldSlider.DOValue(_progressValue, shieldDuration)
             .SetEase(shieldEase)
             .SetUpdate(false));
 
-        shieldSeq.OnStart(() =>
-        {
-            callback?.Invoke();
-        });
+        shieldSeq.OnStart(OnShieldStart);
+        shieldSeq.OnComplete(OnShieldComplete);
+    }
 
-        shieldSeq.OnComplete(() =>
-        {
-            shieldSlider.value = _progressValue;
-        });
+    private void OnShieldStart()
+    {
+        onShieldCallback?.Invoke();
+    }
+
+    private void OnShieldComplete()
+    {
+        if (shieldSlider != null)
+            shieldSlider.value = targetShieldValue;
     }
 
     public void DirectShieldSet(float _progress) => shieldSlider.value = _progress;
 
     public void CalcMain(float _progressValue, Action callback = null)
     {
-        if (null == mainSlider)
+        if (null == mainSlider) 
             return;
 
-        CancelPrevMotion(mainSeq);
+        CancelPrevSequence(ref mainSeq);
+
+        onMainCallback = callback;
+        targetMainValue = _progressValue;
 
         mainSeq = DOTween.Sequence();
-
         mainSeq.AppendInterval(shieldDelay);
         mainSeq.Append(mainSlider.DOValue(_progressValue, shieldDuration)
             .SetEase(shieldEase)
             .SetUpdate(false));
 
-        mainSeq.OnComplete(() =>
-        {
-            mainSlider.value = _progressValue;
-            callback?.Invoke();
-        });
+        mainSeq.OnComplete(OnMainComplete);
+    }
+
+    private void OnMainComplete()
+    {
+        if (mainSlider != null)
+            mainSlider.value = targetMainValue;
+
+        onMainCallback?.Invoke();
+        onMainCallback = null;
     }
 
     public Vector2 GetAnchoredPos() => mainRect.anchoredPosition;
 
-    private void Awake()
-    {
-        if(null != visualRect)
-        {
-            originAnchoredPos = visualRect.anchoredPosition;
-            originlocalScale = visualRect.localScale;
-        }
-
-        mainRect = GetComponent<RectTransform>(); 
-    }
-
     private void OnNotGhostSlider(float _progressValue)
     {
-        if (null == mainSlider)
+        if (null == mainSlider) 
             return;
 
-        CancelPrevMotion(mainSeq);
+        CancelPrevSequence(ref mainSeq);
 
         mainSeq = DOTween.Sequence();
-
         mainSeq.AppendInterval(mainDelay);
-
         mainSeq.Append(mainSlider.DOValue(_progressValue, mainDuration)
             .SetEase(mainEase)
             .SetUpdate(false));
@@ -174,16 +192,15 @@ public class BarMotion : MonoBehaviour
 
     private void OnHitGhostSlider(float _progressValue)
     {
-        if (null == mainSlider || null == ghostSlider)
+        if (null == mainSlider || null == ghostSlider) 
             return;
 
-        CancelPrevMotion(mainSeq);
-        CancelPrevMotion(ghostSeq);
+        CancelPrevSequence(ref mainSeq);
+        CancelPrevSequence(ref ghostSeq);
 
         mainSlider.value = _progressValue;
 
         ghostSeq = DOTween.Sequence();
-
         ghostSeq.AppendInterval(ghostDelay);
         ghostSeq.Append(ghostSlider.DOValue(_progressValue, ghostDuration)
             .SetEase(ghostEase)
@@ -195,17 +212,17 @@ public class BarMotion : MonoBehaviour
 
     private void OnFillGhostSlider(float _progressValue)
     {
-        if (null == mainSlider || null == ghostSlider)
+        if (null == mainSlider || null == ghostSlider) 
             return;
 
-        CancelPrevMotion(mainSeq);
+        CancelPrevSequence(ref mainSeq);
         mainSeq = DOTween.Sequence();
         mainSeq.AppendInterval(mainDelay);
         mainSeq.Append(mainSlider.DOValue(_progressValue, mainDuration)
             .SetEase(mainEase)
             .SetUpdate(false));
 
-        CancelPrevMotion(ghostSeq);
+        CancelPrevSequence(ref ghostSeq);
         ghostSeq = DOTween.Sequence();
         ghostSeq.AppendInterval(ghostDelay);
         ghostSeq.Append(ghostSlider.DOValue(_progressValue, ghostDuration)
@@ -216,72 +233,48 @@ public class BarMotion : MonoBehaviour
         JellyBar();
     }
 
-
     private void ShakeBar()
     {
-        if (!activeShaking || null == visualRect)
+        if (!activeShaking || null == visualRect) 
             return;
+
+        if (shakeTween != null && shakeTween.IsActive()) shakeTween.Kill();
 
         visualRect.anchoredPosition = originAnchoredPos;
 
-        visualRect.DOKill();
-
-        visualRect.DOShakeAnchorPos(shakeDuration, shakePower)
+        shakeTween = visualRect.DOShakeAnchorPos(shakeDuration, shakePower)
             .SetEase(shakeEase)
             .SetUpdate(false)
-            .OnComplete(() =>
-            {
-                visualRect.anchoredPosition = originAnchoredPos;
-            });
+            .OnComplete(OnShakeComplete);
+    }
+
+    private void OnShakeComplete()
+    {
+        visualRect.anchoredPosition = originAnchoredPos;
     }
 
     private void JellyBar()
     {
-        if (false == activeJelly || null == visualRect)
+        if (!activeJelly || null == visualRect) 
             return;
 
-        visualRect.DOKill();
+        if (jellyTween != null && jellyTween.IsActive()) jellyTween.Kill();
 
-        visualRect.DOShakeScale(jellyDuration, jellyPower)
+        jellyTween = visualRect.DOShakeScale(jellyDuration, jellyPower)
             .SetEase(jellyEase)
             .SetUpdate(false)
-            .OnComplete(() =>
-            {
-                visualRect.localScale = originlocalScale;
-            });
+            .OnComplete(OnJellyComplete);
     }
 
-    private void CancelPrevMotion(Sequence target)
+    private void OnJellyComplete()
     {
-        if (null != target && target.IsActive())
+        visualRect.localScale = originlocalScale;
+    }
+    private void CancelPrevSequence(ref Sequence target)
+    {
+        if (target != null && target.IsActive())
             target.Kill();
-    }
 
-    [Button]
-    private void PlaHitTest()
-    {
-        OnHit(0.5f);
-    }
-
-    [Button]
-    private void ResetSliderData()
-    {
-        if(null != mainSlider)
-        {
-            mainSlider.value = 1f;
-            CancelPrevMotion(mainSeq);
-        }
-
-        if(null != ghostSlider)
-        {
-            ghostSlider.value = 1f;
-            CancelPrevMotion(ghostSeq);
-        }
-    }
-
-    [ShowIf("activeJelly"), Button]
-    private void PlayJellyMotionTest()
-    {
-        JellyBar();
+        target = null;
     }
 }

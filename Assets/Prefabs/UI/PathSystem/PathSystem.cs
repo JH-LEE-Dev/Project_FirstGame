@@ -11,6 +11,8 @@ public enum DragDir
 
 public class PathSystem : MonoBehaviour
 {
+    private Vector3[] path = new Vector3[3];
+
     public Vector3[] GetDragPath(GameObject performer, Vector3 _start, Vector3 _target, float _dragPower, DragDir _dir = DragDir.RANDOM)
     {
         if (null == performer)
@@ -45,7 +47,9 @@ public class PathSystem : MonoBehaviour
             pos75 += perpendicular * Random.Range(-1f, 1f) * _dragPower;
         }
 
-        Vector3[] path = { targetPos, pos25, pos75 };
+        path[0] = targetPos;
+        path[1] = pos25;
+        path[2] = pos75;
 
         return path;
     }

@@ -18,6 +18,8 @@ public class VFX_TargetBarStar : MonoBehaviour
     private ParticleSystem[] particles;
     private Sequence seq;
 
+    private Vector3[] path = new Vector3[3];
+
     private void Awake()
     {
         mainRect = GetComponent<RectTransform>();
@@ -84,7 +86,9 @@ public class VFX_TargetBarStar : MonoBehaviour
         pos25 += perpendicular * randomPower;
         pos75 += perpendicular * randomPower;
 
-        Vector3[] path = { finalPos, pos25, pos75 };
+        path[0] = finalPos;
+        path[1] = pos25;
+        path[2] = pos75;
 
         seq.Append(mainRect.DOLocalPath(path, totalDuration, PathType.CubicBezier, PathMode.TopDown2D, 10, Color.red)
             .SetEase(ease));
