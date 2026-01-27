@@ -36,6 +36,7 @@ public class CardSystem
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
+        signalHub.Subscribe<UICardSelectionEndSignal>(CardSelectionEnd);
     }
 
     private void UnSubscribeEvents()
@@ -47,6 +48,7 @@ public class CardSystem
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
+        signalHub.UnSubscribe<UICardSelectionEndSignal>(CardSelectionEnd);
     }
 
     private void BindEvents()
@@ -80,6 +82,9 @@ public class CardSystem
 
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
         cardSelectionManager.CardSelectionStartEvent += CardSelectionModeStart;
+
+        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.InsertCardSystemActionCommand;
+        cardSelectionManager.RequestCardSystemActionEvent += cardSystemController.InsertCardSystemActionCommand;
     }
 
     private void ReleaseEvents()
@@ -103,6 +108,8 @@ public class CardSystem
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
 
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
+
+        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.InsertCardSystemActionCommand;
     }
 
     public void Release()
@@ -171,6 +178,11 @@ public class CardSystem
     private void WaveStarted(WaveStartSignal waveStartSignal)
     {
         cardSystemController.GameStarted();
+    }
+
+    private void CardSelectionEnd(UICardSelectionEndSignal uICardSelectionEndSignal)
+    {
+        cardSelectionManager.CardSelectionEnd(uICardSelectionEndSignal.data, uICardSelectionEndSignal.cards);
     }
 
     private void CardSlotCntChanged(int cnt)

@@ -8,18 +8,35 @@ using DG.Tweening;
 
 public class UIView_CardSystem : UIView
 {
-    //이벤트
+    /// <summary>
+    /// 시스템 속성 -------------------------------------------------------
+    /// </summary>
+    //외부 방송 이벤트
     public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
     public event Action<int, CardDataInstance> CardEquippedEvent;
-    public event Action<List<CardDataInstance>> CardSelectionEndEvent;
+    public event Action<List<CardDataInstance>, CardSelectionModeData> CardSelectionEndEvent;
 
 
     //UI Job Action Binding
     public delegate float UIActionHandler(CardUIActionData cardUIActionData);
     private UIActionHandler[] uiActionHandlers;
 
+    //For CardSelectionMode
+    CardSelectionModeData cardSelectionModeData;
+
+    //-------------------------------------End Line--------------------------
+
+
+
+
+
+
+
+    /// <summary>
+    /// 구현 속성 ---------------------------------------------------------
+    /// </summary>
 
     //사용 승인을 받은 카드
     private MainCardInstance verificationWaitCard;
@@ -70,6 +87,11 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
+    //-------------------------------------End Line-----------------------------------
+
+
+
+
 
     /// <summary>
     /// 시스템 함수들 ----------------------------------------------------------------
@@ -104,6 +126,8 @@ public class UIView_CardSystem : UIView
         uiActionHandlers[(int)CardUIActionType.CardsToGrave] = (uiActionData) => CardsToGrave(uiActionData);
         uiActionHandlers[(int)CardUIActionType.AdditionalDraw] = (uiActionData) => CardAdditionalDraw(uiActionData);
         uiActionHandlers[(int)CardUIActionType.HandCardsToGrave] = (uiActionData) => HandCardsToGrave(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.CardsToHand] = (uiActionData) => CardsToHand(uiActionData);
+        uiActionHandlers[(int)CardUIActionType.CardsToDeck] = (uiActionData) => CardsToDeck(uiActionData);
     }
 
     public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
@@ -302,7 +326,6 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0.5f;
 
-
         return turnWaitTime;
     }
 
@@ -312,6 +335,34 @@ public class UIView_CardSystem : UIView
         float turnWaitTime = 0.5f;
 
         graveSystem?.CardDrawToHands(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+    private float CardsToHand(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToHand)
+        {
+            Debug.Log("복사된 카드가 패로 감");
+            // 복사된 카드가 패로 들어옴.
+        }
+
+        return turnWaitTime;
+    }
+
+    private float CardsToDeck(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToDeck)
+        {
+            Debug.Log("복사된 카드가 덱으로 감");
+            //복사된 카드가 덱으로 들어옴.
+        }
 
         return turnWaitTime;
     }
@@ -385,22 +436,29 @@ public class UIView_CardSystem : UIView
     [Button]
     public void SelectModeON()
     {
-        StartCardSelectMode(3, true);
+        StartCardSelectMode(default, 3, true);
     }
 
-
-    public void StartCardSelectMode(int _selectCount, bool _bSelectforcing)
+    public void StartCardSelectMode(CardSelectionModeData _data, int _selectCount, bool _bSelectforcing)
     {
+        cardSelectionModeData = _data;
+
         // _selectCount은 선택 개수
         // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
         handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
         dimOverlay.SetDimOverlayActive(true);
     }
+
     public void EndCardSelectMode(List<CardDataInstance> _cards)
     {
         dimOverlay.SetDimOverlayActive(false);
 
-        ReturnCard(_cards, CardReturnType.FlyToGrave);
+        if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToHand)
+            ReturnCard(_cards, CardReturnType.FlyToGrave);
+        else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToDeck)
+            ReturnCard(_cards, CardReturnType.FlyToGrave);
+
+        CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
 
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }

@@ -10,6 +10,8 @@ public enum CardUIActionType
     CardsToExtinction,
     CardsToGrave,
     ExtinctionCardsToDeck,
+    CardsToHand,
+    CardsToDeck,
     MAX,
 }
 

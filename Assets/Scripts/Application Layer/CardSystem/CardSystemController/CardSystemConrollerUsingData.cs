@@ -120,6 +120,9 @@ public enum CardSystemActionType
     ExtinctionCardsToDeck,
     SlotCardsToExtinction,
     SlotCardsToGrave,
+    DuplicateCardCardsToDeck,
+    DuplicateCardCardsToHand,
+    MAX
 }
 
 public enum CardEffectPriority
@@ -139,5 +142,7 @@ public enum CardSystemContextType
     SlotCardsToExtinction,
     SlotCardsToGrave,
     GraveCardsToHand,
+    DuplicateCardCardsToDeck,
+    DuplicateCardCardsToHand,
     MAX
 }

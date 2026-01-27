@@ -65,6 +65,8 @@ public class UICommandFactory_CardSystem : UICommandFactory
         creatorMap[(int)CardSystemEventType.ExtinctionToDeckEvent] = (context, cards) => CreateJob_ExtinctionToDeck(context, cards);
         creatorMap[(int)CardSystemEventType.GraveToHandEvent] = (context, cards) => CreateJob_GraveToHand(context, cards);
         creatorMap[(int)CardSystemEventType.CardToGraveEvent] = (context, cards) => CreateJob_CardsToGrave(context, cards);
+        creatorMap[(int)CardSystemEventType.CardsToHandEvent] = (context, cards) => CreateJob_CardsToHand(context, cards);
+        creatorMap[(int)CardSystemEventType.CardsToDeckEvent] = (context, cards) => CreateJob_CardsToDeck(context, cards);
     }
 
     public void ReleaseSlot(int index)
@@ -274,6 +276,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_CardsToGrave(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
+        Debug.Log("1");
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
         {
@@ -317,6 +320,56 @@ public class UICommandFactory_CardSystem : UICommandFactory
         batch.actionList.Add(new CardUIActionData
         {
             uiActionType = CardUIActionType.ExtinctionCardsToDeck,
+            cardSystemContextType = _cardSystemContextType,
+            cards = cardList
+        });
+    }
+
+    public void CreateJob_CardsToHand(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionList == null)
+        {
+            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다.");
+            return;
+        }
+
+        var cardList = cardListPool.Get();
+
+        for (int i = 0; i < cardPile.Length; ++i)
+        {
+            if (cardPile[i] != null)
+                cardList.Add(cardPile[i]);
+        }
+
+        batch.actionList.Add(new CardUIActionData
+        {
+            uiActionType = CardUIActionType.CardsToHand,
+            cardSystemContextType = _cardSystemContextType,
+            cards = cardList
+        });
+    }
+
+    public void CreateJob_CardsToDeck(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionList == null)
+        {
+            Debug.LogError("UI 명령 풀이 가득 차서 연출이 누락되었습니다.");
+            return;
+        }
+
+        var cardList = cardListPool.Get();
+
+        for (int i = 0; i < cardPile.Length; ++i)
+        {
+            if (cardPile[i] != null)
+                cardList.Add(cardPile[i]);
+        }
+
+        batch.actionList.Add(new CardUIActionData
+        {
+            uiActionType = CardUIActionType.CardsToDeck,
             cardSystemContextType = _cardSystemContextType,
             cards = cardList
         });
