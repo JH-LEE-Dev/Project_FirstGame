@@ -18,16 +18,19 @@ public class MainCardInstance : CardInstance
 
     // ÄÄÆ÷³ÍÆ®
     public CardMotion Motion { get; private set; }
+    public CardOtherMotion OtherMotion { get; private set; }
     public CardVisualFloat VisualFloat { get; private set; }
     public CardInput Input { get; private set; }
 
     private void Awake()
     {
         Motion = GetComponent<CardMotion>();
+        OtherMotion = GetComponent<CardOtherMotion>();
         Input = GetComponent<CardInput>();
         VisualFloat = GetComponentInChildren<CardVisualFloat>(true);
 
         if (Motion) Motion.Bind(this);
+        if (OtherMotion) OtherMotion.Bind(this);
         if (Input) Input.Bind(this);
         if (VisualFloat) VisualFloat.Bind(this);
     }

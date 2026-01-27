@@ -560,6 +560,7 @@ GameObject:
   - component: {fileID: 7782737598329683519}
   - component: {fileID: 3896604757948162179}
   - component: {fileID: 7831457537719056636}
+  - component: {fileID: 5679353787704681293}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -645,6 +646,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4448941dbc844784b8af01a96d6923d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardInput
+--- !u!114 &5679353787704681293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b27e15cc1a54d4d8392ee287663ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardOtherMotion
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0

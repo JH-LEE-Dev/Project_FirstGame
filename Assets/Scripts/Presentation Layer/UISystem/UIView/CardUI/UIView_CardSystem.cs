@@ -604,7 +604,7 @@ public class UIView_CardSystem : UIView
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
     public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
 
-    public void SpawnCardStarAtoB(int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
+    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
     {
         GameObject star = GetStarPerformerFromPool(_startWorldPos);
         VFX_CardStar vfx = star?.GetComponent<VFX_CardStar>();
@@ -614,17 +614,35 @@ public class UIView_CardSystem : UIView
         Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f);
 
         vfx.CardDataInstance = _data;
-        vfx.PlayCardSpawnEvent(_idx, 0.15f, 0.35f, Ease.OutQuad, path, SpawnCardStarAtoBStartEvent, SpawnCardStarAtoBCompleteEvent);
+
+        float delay = 0.15f;
+        float duration = 0.35f;
+        Ease ease = Ease.OutQuad;
+
+        if (bCardSpawn)
+            vfx.PlayCardSpawnEvent(_idx, delay, duration, ease, path, SpawnCardStarEvent, SpawnCardCompleteEvent);
+        else
+            vfx.PlayCardSpawnEvent(_idx, delay, duration, ease, path, NotCardSpawnStarEvent, NotCardSpawnCompleteEvent);
     }
 
-    private void SpawnCardStarAtoBStartEvent(VFX_CardStar vfx)
+    private void SpawnCardStarEvent(VFX_CardStar vfx)
     {
 
     }
 
-    private void SpawnCardStarAtoBCompleteEvent(VFX_CardStar vfx)
+    private void SpawnCardCompleteEvent(VFX_CardStar vfx)
     {
         CallOneCardDrawed(vfx.TargetPos, vfx.CardDataInstance, vfx.gameObject);
+    }
+
+    private void NotCardSpawnStarEvent(VFX_CardStar vfx)
+    {
+
+    }
+
+    private void NotCardSpawnCompleteEvent(VFX_CardStar vfx)
+    {
+        
     }
 
     public Vector3 GetDeckWorldPos()
