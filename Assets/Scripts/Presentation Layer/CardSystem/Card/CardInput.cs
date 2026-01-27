@@ -45,11 +45,16 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
-            // 상우 존.
+            if (null == owner.CardSystem.CardPannel)
+                return;
 
-            // 호버 ON 상황 연출 넣을거면 넣기. 따로 너만의 Component 추가해서 모션추가해도됨
+            bool isSelectMode = owner.CardSystem.CardPannel.PannelSelectMode;
 
-
+            if (isSelectMode)
+            {
+                // 모션 생각 중.
+                Debug.Log("지금 셀렉트 모드로 패널에서 Hover On");
+            }
         }
     }
 
@@ -82,11 +87,16 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
-            // 상우 존.
+            if (null == owner.CardSystem.CardPannel)
+                return;
 
-            // 호버 OFF인 상황 연출 넣을거면 넣기. 따로 너만의 Component 추가해서 모션추가해도됨
+            bool isSelectMode = owner.CardSystem.CardPannel.PannelSelectMode;
 
-
+            if (isSelectMode)
+            {
+                // 모션 생각 중.
+                Debug.Log("지금 셀렉트 모드로 패널에서 Hover Off");
+            }
         }
     }
 
@@ -116,16 +126,19 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
         else if (CardInstanceType.Other == owner.cardInstanceType)
         {
-            // 상우 존.
+            if (null == owner.CardSystem.CardPannel)
+                return;
 
-            // 클릭했을 때의 상황임.
+            bool isSelectMode = owner.CardSystem.CardPannel.PannelSelectMode;
 
-            // owner.CardSystem == UIView_CardSystem임.
+            if (isSelectMode)
+            {
+                // 모션 생각 중.
+                OnPointerClickChooseModeforPannel();
+                Debug.Log("지금 셀렉트 모드로 패널에서 Clicked");
+            }
         }
     }
-
-
-
 
     ///////////////    ///////////////    ///////////////
     private void OnPointerClickNormalMode(PointerEventData eventData)
@@ -142,8 +155,14 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             return;
         }
     }
+
     private void OnPointerClickChooseMode(PointerEventData eventData)
     {
         owner.CardSystem.HandSystem.ToggleSelect(owner);
+    }
+
+    private void OnPointerClickChooseModeforPannel()
+    {
+        owner.CardSystem.CardPannel.ToggleSelect(owner);
     }
 }

@@ -82,6 +82,7 @@ public class UIView_CardSystem : UIView
     [SerializeField] private CardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
+    public CardPannel CardPannel { get { return cardPannel; } }
 
     // 드로우 중 작업 중지
     private bool bWorkingBlock = false;
@@ -156,6 +157,7 @@ public class UIView_CardSystem : UIView
         deckSystem?.Init(this);
         graveSystem?.Init(this);
         extinctionSystem?.Init(this);
+        cardPannel?.Init(this);
         //pathSystem?.Init(this);
     }
     public override void OnDestroy()
@@ -461,6 +463,17 @@ public class UIView_CardSystem : UIView
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
 
+    public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
+    {
+        CallPannel(_pannelType, true);
+        cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
+    }
+
+    public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
+    {
+
+    }
+
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
 
     // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
@@ -529,13 +542,14 @@ public class UIView_CardSystem : UIView
         }
     }
 
-    public void CallPannel(CurrentPannel _setType)
+    public void CallPannel(CurrentPannel _setType, bool bSelectMode = false)
     {
         if (null == cardPannel)
             return;
 
         cardPannel.CurrPannelType = _setType;
         cardPannel.gameObject.SetActive(true);
+        cardPannel.SetupSelectMode(bSelectMode);
 
         switch (_setType)
         {
@@ -667,5 +681,11 @@ public class UIView_CardSystem : UIView
 
         bWorkingBlock = true;
         deckSystem.CardDrawEffect(_datas);
+    }
+
+    [Button]
+    private void TestCall_PannelSelectMode()
+    {
+        StartCardSelectModefromPannel(CurrentPannel.Grave, 3, true);
     }
 }
