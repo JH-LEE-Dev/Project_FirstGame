@@ -121,10 +121,10 @@ public class PoolingSystem : MonoBehaviour
 
     private void UseEffectRelease(VFX_CardUseEffect e) => UseCardEffects.Release(e);
 
-    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    public void PlayMagicCardEffect(Vector3 worldPos, float scaleMul, System.Action onComplete = null)
     {
         var e = UseCardEffects.Get();
-        e.Play(worldPos, initialLocalScale, onComplete);
+        e.Play(worldPos, scaleMul, onComplete);
     }
 
 

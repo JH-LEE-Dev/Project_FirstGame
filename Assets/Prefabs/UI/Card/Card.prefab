@@ -215,8 +215,6 @@ MonoBehaviour:
   previewFloatPosAmp: 0.5
   previewFloatRotAmp: 0.15
   previewFloatFreq: 0.2
-  drawColor: {r: 1, g: 1, b: 0.07, a: 1}
-  colorDuration: 0.5
   drawOverlay: {fileID: 575462182875157013}
   drawStartScale: 0.1
   drawOvershootScale: 1.05
@@ -855,7 +853,7 @@ GameObject:
   - component: {fileID: 546164685280212342}
   - component: {fileID: 575462182875157013}
   m_Layer: 0
-  m_Name: EffectOverray
+  m_Name: EffectOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -875,10 +873,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 102396723257274795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -36, y: 96}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &546164685280212342
 CanvasRenderer:

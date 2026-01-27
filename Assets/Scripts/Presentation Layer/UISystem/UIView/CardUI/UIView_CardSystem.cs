@@ -402,9 +402,9 @@ public class UIView_CardSystem : UIView
         poolingSystem?.ReturnHandCard(card);
     }
 
-    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    public void PlayMagicCardEffect(Vector3 worldPos, float scaleMul, System.Action onComplete = null)
     {
-        poolingSystem?.PlayMagicCardEffect(worldPos, initialLocalScale, onComplete);
+        poolingSystem?.PlayMagicCardEffect(worldPos, scaleMul, onComplete);
     }
 
     ///////////////////////////////////

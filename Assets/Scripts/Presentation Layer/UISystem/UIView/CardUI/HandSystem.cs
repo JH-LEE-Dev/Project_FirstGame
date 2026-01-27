@@ -266,7 +266,7 @@ public class HandSystem : MonoBehaviour
             return;
         }
 
-        float scaleOffset = card.transform.localScale.x * 30f;
+        float scaleOffset = card.transform.localScale.x * 20f;
         cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
 
         card.SetUIState(CardState.Other);
