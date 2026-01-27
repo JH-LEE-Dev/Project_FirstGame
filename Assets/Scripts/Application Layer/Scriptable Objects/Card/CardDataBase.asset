@@ -266,8 +266,8 @@ MonoBehaviour:
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
-    complexSystemEffects: 
-    selectionSystemEffects: 00000000
+    complexSystemEffects: 05000000
+    selectionSystemEffects: 
   - id: 17
     cardImage: {fileID: 0}
     cardName: 17
@@ -282,4 +282,34 @@ MonoBehaviour:
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 04000000
+    selectionSystemEffects: 
+  - id: 18
+    cardImage: {fileID: 0}
+    cardName: 18
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 06000000
+    selectionSystemEffects: 
+  - id: 19
+    cardImage: {fileID: 0}
+    cardName: 19
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 07000000
     selectionSystemEffects: 

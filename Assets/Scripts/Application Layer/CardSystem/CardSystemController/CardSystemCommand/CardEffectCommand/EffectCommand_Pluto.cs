@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Pluto")]
 public class EffectCommand_Pluto : CardEffectCommand<ICardSystemActionCommandHandler>
@@ -12,7 +14,18 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardSystemActionCommandHan
 
     protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
-        cardSystemActionCommandHandler.RandomExtinctionCardToDeck();
+        IReadOnlyList<CardDataInstance> extinctionPile = cardSystemActionCommandHandler.GetExtinctionPile();
+
+        using var rentalBuffer = new RentalScope<CardDataInstance>(1);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        int randomIdx = UnityEngine.Random.Range(0, extinctionPile.Count - 1);
+
+        writeBuffer[0] = extinctionPile[randomIdx];
+
+        cardSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer);
+
+        rentalBuffer.Dispose();
 
         ResetCommandData();
     }

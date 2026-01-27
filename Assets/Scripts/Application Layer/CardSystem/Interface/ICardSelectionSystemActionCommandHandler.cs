@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface ICardSelectionSystemActionCommandHandler : ICommandHandler
 {
-    void StartCardSelectionMode(CardSelectionMode _cardSelectionMode, int amount);
+    void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount);
 }

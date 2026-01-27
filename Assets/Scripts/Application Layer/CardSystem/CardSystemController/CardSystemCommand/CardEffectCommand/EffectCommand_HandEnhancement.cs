@@ -8,13 +8,23 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
+        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+
         if (nestingCnt != 0)
-            complexSystemActionCommandHandler.StartCardSelectionMode(CardSelectionMode.UpgradeToHand, upgradeAmount * nestingCnt * valueModifier);
+        {
+            if(complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand, upgradeAmount * nestingCnt * valueModifier);
+            else
+            {
+                for (int i = 0; i < handPile.Count; ++i)
+                {
+                    handPile[i].bUpgrade = true;
+                }
+            }
+        }
 
         if (upgradeNestingCnt != 0)
         {
-            IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
-
             for (int i = 0; i < handPile.Count; ++i)
             {
                 handPile[i].bUpgrade = true;

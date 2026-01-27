@@ -52,9 +52,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedRotationBulletCard();
     }
 
-    public void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
+    public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards)
     {
-        cardSystemActionCommandHandler.GraveToHand(graveToDeckCards);
+        cardSystemActionCommandHandler.GraveCardsToHand(cards);
     }
 
     public IReadOnlyList<CardDataInstance> GetHandPile()
@@ -82,11 +82,6 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
     }
 
-    public void InsertFollowUpEffectCommand(CardEffectCommand command)
-    {
-        cardSystemControlActionCommandHandler.InsertFollowUpEffectCommand(command);
-    }
-
     public void AdditionalDraw(int amount)
     {
         cardSystemActionCommandHandler.DrawAgain(amount);
@@ -97,8 +92,33 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(CardSelectionMode cardSelectionMode, int amount)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType,CardSelectionMode cardSelectionMode, int amount)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(cardSelectionMode, amount);
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType,cardSelectionMode, amount);
+    }
+
+    public IReadOnlyList<CardDataInstance> GetDeckPile()
+    {
+        return cardSystemActionCommandHandler.GetDeckPile();
+    }
+
+    public IReadOnlyList<CardDataInstance> GetGravePile()
+    {
+        return cardSystemActionCommandHandler.GetGravePile();
+    }
+
+    public IReadOnlyList<CardDataInstance> GetExtinctionPile()
+    {
+        return cardSystemActionCommandHandler.GetExtinctionPile();
+    }
+
+    public void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        cardSystemActionCommandHandler.GraveCardsToDeck(cards);
+    }
+
+    public void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
+    {
+        cardSystemControlActionCommandHandler.RequestCardSystemActionCommand(cardSystemActionType, _cards);
     }
 }

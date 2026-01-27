@@ -18,7 +18,7 @@ public class GameplayUIManager : UIManager
     protected override void DataInjection(UIView view)
     {
         if (view is UIView_CardSystem cardUI)
-            cardUI.DataInjection(cardSystemData.deckCards, cardSystemData.handCards, cardSystemData.graveCards);
+            cardUI.DataInjection(cardSystemData.deckCards, cardSystemData.handCards, cardSystemData.graveCards,cardSystemData.extinctionCards);
 
         if (view is UIView_HUD hudUI)
             hudUI.DataInjection(waveSystemData);

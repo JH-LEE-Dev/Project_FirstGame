@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a4c0d2982664884997047cd19c295a1, type: 3}
-  m_Name: DuplicateCardsToDeck Command
-  m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_DuplicateCardsToDeck
+  m_Script: {fileID: 11500000, guid: 6f493c7bd850b6f47ace0d9ac7d6616b, type: 3}
+  m_Name: AllExtinctionCardsToDeck Command
+  m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_ExtinctionCardsToDeck
   cardSystemActionTimingType: 3

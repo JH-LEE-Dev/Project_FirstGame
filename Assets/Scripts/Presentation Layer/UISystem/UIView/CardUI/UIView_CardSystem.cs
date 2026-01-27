@@ -46,6 +46,7 @@ public class UIView_CardSystem : UIView
     IReadOnlyList<CardDataInstance> deckCards;
     IReadOnlyList<CardDataInstance> handCards;
     IReadOnlyList<CardDataInstance> graveCards;
+    IReadOnlyList<CardDataInstance> extinctionCards;
 
 
     [Header("UI References")]
@@ -132,11 +133,12 @@ public class UIView_CardSystem : UIView
     }
 
     public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
-        IReadOnlyList<CardDataInstance> _graveCards)
+        IReadOnlyList<CardDataInstance> _graveCards,IReadOnlyList<CardDataInstance> _extinctionCards)
     {
         deckCards = _deckCards;
         handCards = _handCards;
         graveCards = _graveCards;
+        extinctionCards = _extinctionCards;
 
         deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
         graveSystem?.SetupCount(CountUIType.VisibleWhenZero, graveCards.Count);
@@ -445,21 +447,36 @@ public class UIView_CardSystem : UIView
     {
         cardSelectionModeData = _data;
 
-        // _selectCount은 선택 개수
-        // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
-        handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
-        dimOverlay.SetDimOverlayActive(true);
+        if(_data.selectCardPileType == SelectCardPileType.Hand)
+        {
+            // _selectCount은 선택 개수
+            // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
+            handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
+            dimOverlay.SetDimOverlayActive(true);
+        }
+        else if(_data.selectCardPileType == SelectCardPileType.Grave)
+        {
+            StartCardSelectModefromPannel(CurrentPannel.Grave,_selectCount,_bSelectforcing);
+        }
+        else if (_data.selectCardPileType == SelectCardPileType.Extinction)
+        {
+            StartCardSelectModefromPannel(CurrentPannel.Extinction, _selectCount, _bSelectforcing);
+        }
+        else if (_data.selectCardPileType == SelectCardPileType.Deck)
+        {
+            StartCardSelectModefromPannel(CurrentPannel.Deck, _selectCount, _bSelectforcing);
+        }
     }
 
     public void EndCardSelectMode(List<CardDataInstance> _cards)
     {
         dimOverlay.SetDimOverlayActive(false);
 
-        if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToHand)
+        if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToHand)
             ReturnCard(_cards, CardReturnType.FlyToGrave);
-        else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToDeck)
+        else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToDeck)
             ReturnCard(_cards, CardReturnType.FlyToGrave);
-        else if(cardSelectionModeData.selectionMode == CardSelectionMode.UpgradeToHand)
+        else if(cardSelectionModeData.selectionMode == CardSelectionMode.UpgradeCardsToHand)
             ReturnCard(_cards, CardReturnType.FlyToGrave);
 
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
@@ -473,7 +490,7 @@ public class UIView_CardSystem : UIView
 
     public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
     {
-
+        CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
 
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }

@@ -314,12 +314,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
-    private void OrganizeCardFollowUpEffectCommand(CardEffectCommand command, int nestingCnt = 0, int upgradeNestingCnt = 0)
-    {
-        CardSystemActionTimingType timing = command.GetCardActionTimingType();
-        InsertCommandToList(timing, command);
-    }
-
     private void InsertCommandToList(CardSystemActionTimingType timingType, CardEffectCommand command)
     {
         if (timingType == CardSystemActionTimingType.BeforeAttack)
@@ -422,7 +416,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void GameStarted()
     {
-        DispatchCardSystemActionCommand_Instant(CardSystemActionType.ExtinctionCardsToDeck);
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.AllExtinctionCardsToDeck);
         CardActionEndScopeEvent?.Invoke();
     }
 
@@ -482,12 +476,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         usedCardPile.Clear();
     }
 
-    public void InsertFollowUpEffectCommand(CardEffectCommand command)
-    {
-        OrganizeCardFollowUpEffectCommand(command);
-    }
-
-    public void InsertCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
+    public void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
     {
         DispatchCardSystemActionCommand_Instant(cardSystemActionType, _cards);
 

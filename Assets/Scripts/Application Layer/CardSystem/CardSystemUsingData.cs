@@ -43,4 +43,6 @@ public enum CardName
     Recompense,
     QuantumEntanglement,
     HandEnhancement,
+    HalleysComet,
+    Scan,
 }

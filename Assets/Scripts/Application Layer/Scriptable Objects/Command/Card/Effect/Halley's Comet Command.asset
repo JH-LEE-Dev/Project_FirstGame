@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9f40c1ba9b0bcc49925291c2f8d3aa8, type: 3}
-  m_Name: MeteorShower
-  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_MeteorShower
-  cardSystemActionTimingType: 1
-  effectApplyType: 3
+  m_Script: {fileID: 11500000, guid: 9cb467290d72cee41b0a0e53f230dd5a, type: 3}
+  m_Name: Halley's Comet Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_HalleysComet
+  cardSystemActionTimingType: 0
+  effectApplyType: 4
   nestingCnt: 0
+  upgradeNestingCnt: 0
   valueModifier: 1
-  attackCnt: 1
-  conditionCheckCardId: 4

@@ -9,15 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5cab25dd7e736e4a89949281f8e9cd8, type: 3}
-  m_Name: RiftDetection Command
-  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_RiftDetection
+  m_Script: {fileID: 11500000, guid: e9f40c1ba9b0bcc49925291c2f8d3aa8, type: 3}
+  m_Name: MeteorShower Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_MeteorShower
   cardSystemActionTimingType: 1
-  effectApplyType: 0
+  effectApplyType: 3
   nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
-  weaknessTurn: 1
-  bonusAttack: 5
-  upgradedWeaknessTurn: 0
-  upgradedBonusAttack: 0
+  attackCnt: 1
+  conditionCheckCardId: 4
