@@ -281,6 +281,8 @@ public class HandSystem : MonoBehaviour
             Vector2 BasePos = card.transform.position;
             Vector2 GravePos = cardSystem.GetGravePos();
 
+            cardSystem.SpawnStarAtoB(false, 0, BasePos, GravePos);
+
             computeArc();
             ComputeSelectedPositions();
 
