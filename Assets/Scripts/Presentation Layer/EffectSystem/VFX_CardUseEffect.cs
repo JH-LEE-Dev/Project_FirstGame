@@ -10,6 +10,7 @@ public class VFX_CardUseEffect : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float totalDuration = 0.6f;
 
+    private Vector3 baseLocalScale;
     private Coroutine routine;
     private Action<VFX_CardUseEffect> releaseToPool;
     private Action onComplete;
@@ -20,7 +21,7 @@ public class VFX_CardUseEffect : MonoBehaviour
     private float spreadPower = 3.5f;
     private float spreadDur = 0.2f;
     private float collectDur = 0.3f;
-    private float glowIntensity = 5f;
+    private float glowIntensity = 4.5f;
     private Color glowColor = new Color(1f, 1f, 0.5f, 1f);
 
     private const string P_WidthX = "WidthX";
@@ -35,6 +36,7 @@ public class VFX_CardUseEffect : MonoBehaviour
     private void Awake()
     {
         if (!vfx) vfx = GetComponentInChildren<VisualEffect>(true);
+        baseLocalScale = transform.localScale;
     }
 
 
@@ -45,12 +47,12 @@ public class VFX_CardUseEffect : MonoBehaviour
     }
 
     // 이펙트 재생. 끝나면 onComplete 호출 후 풀로 반환.
-    public void Play(Vector3 worldPos, float initialLocalScale, Action onCompleteCallback = null)
+    public void Play(Vector3 worldPos, float scaleMul, Action onCompleteCallback = null)
     {
         onComplete = onCompleteCallback;
 
         transform.position = worldPos;
-        transform.localScale *= initialLocalScale;
+        transform.localScale = baseLocalScale * scaleMul;
 
         gameObject.SetActive(true);
 

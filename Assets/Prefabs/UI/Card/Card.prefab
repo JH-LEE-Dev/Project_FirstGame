@@ -160,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 102396723257274795}
   - component: {fileID: 3180783046002641786}
+  - component: {fileID: 7953573730935724777}
   - component: {fileID: 705134568441123837}
   m_Layer: 0
   m_Name: Visual
@@ -194,7 +195,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 64, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3180783046002641786
 MonoBehaviour:
@@ -214,13 +215,31 @@ MonoBehaviour:
   previewFloatPosAmp: 0.5
   previewFloatRotAmp: 0.15
   previewFloatFreq: 0.2
-  drawColor: {r: 1, g: 1, b: 0.07, a: 1}
-  colorDuration: 0.5
   drawOverlay: {fileID: 575462182875157013}
   drawStartScale: 0.1
   drawOvershootScale: 1.05
   drawTotalDuration: 0.4
   canvasGroup: {fileID: 705134568441123837}
+--- !u!114 &7953573730935724777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3094462483522216968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b27e15cc1a54d4d8392ee287663ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardOtherMotion
+  hoverDuration: 0.35
+  hoverStartRot: {x: 0, y: 0, z: 7}
+  hoverStartScale: {x: 1, y: 1, z: 0}
+  hoverEase: 18
+  clickDuration: 0.35
+  clickStartScale: {x: 0.85, y: 0.85, z: 0}
+  clickFinishScale: {x: 1.1, y: 1.1, z: 0}
+  clickEase: 30
 --- !u!225 &705134568441123837
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -557,10 +576,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5270766083236416482}
+  - component: {fileID: 7743953642715122592}
   - component: {fileID: 7782737598329683519}
   - component: {fileID: 3896604757948162179}
   - component: {fileID: 7831457537719056636}
-  - component: {fileID: 5679353787704681293}
+  - component: {fileID: 44922428512588595}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -586,8 +606,38 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 64, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7743953642715122592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &7782737598329683519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,18 +696,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4448941dbc844784b8af01a96d6923d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardInput
---- !u!114 &5679353787704681293
-MonoBehaviour:
+--- !u!222 &44922428512588595
+CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5863989176703220490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68b27e15cc1a54d4d8392ee287663ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardOtherMotion
+  m_CullTransparentMesh: 1
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,7 +853,7 @@ GameObject:
   - component: {fileID: 546164685280212342}
   - component: {fileID: 575462182875157013}
   m_Layer: 0
-  m_Name: EffectOverray
+  m_Name: EffectOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -827,10 +873,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 102396723257274795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -36, y: 96}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &546164685280212342
 CanvasRenderer:

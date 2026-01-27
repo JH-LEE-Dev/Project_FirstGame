@@ -209,6 +209,9 @@ public class UIView_CardSystem : UIView
         var currentActionDataList = _actionBatch.actionList;
 
         int size = currentActionDataList.Count;
+
+        UpdateCardsCounts();
+
         for (int i = 0; i < size; ++i)
         {
             CardUIActionData currentActionData = currentActionDataList[i];
@@ -219,8 +222,6 @@ public class UIView_CardSystem : UIView
 
             await Awaitable.WaitForSecondsAsync(turnWaitTime);
         }
-
-        UpdateCardsCounts();
 
         UICommandCompleteEvent?.Invoke(_actionBatch.idx);
     }
@@ -353,7 +354,11 @@ public class UIView_CardSystem : UIView
         if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToHand)
         {
             Debug.Log("복사된 카드가 패로 감");
-            // 복사된 카드가 패로 들어옴.
+            // 복사된 카드가 패로 들어옴. 임시.
+            foreach (var card in uiActionData.cards)
+            {
+                MakeCardInHand(card);
+            }
         }
 
         return turnWaitTime;
@@ -383,6 +388,9 @@ public class UIView_CardSystem : UIView
     /// <summary>
     /// UI 구현 함수들 ------------------------------------------------------------------------------
     /// </summary>
+
+
+
     /////////////////////////////////// For PoolingSystem
     public MainCardInstance RentHandCard()
     {
@@ -394,9 +402,9 @@ public class UIView_CardSystem : UIView
         poolingSystem?.ReturnHandCard(card);
     }
 
-    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    public void PlayMagicCardEffect(Vector3 worldPos, float scaleMul, System.Action onComplete = null)
     {
-        poolingSystem?.PlayMagicCardEffect(worldPos, initialLocalScale, onComplete);
+        poolingSystem?.PlayMagicCardEffect(worldPos, scaleMul, onComplete);
     }
 
     ///////////////////////////////////
@@ -446,10 +454,14 @@ public class UIView_CardSystem : UIView
         handSystem.UnequipBulletToHand(_index);
     }
 
-    [Button]
-    public void SelectModeON()
+    // 옵션 등으로 강제로 카드를 추가하는 함수
+    public void MakeCardInHand(CardDataInstance _cardData)
     {
-        StartCardSelectMode(default, 3, true);
+        int cnt = handSystem.GetCurrentHandCardCount();
+
+        Vector2 handPos = handSystem.PredictRightmostPosForCount(cnt);
+
+        handSystem.ProcessDraw(handPos, _cardData);
     }
 
     public void StartCardSelectMode(CardSelectionModeData _data, int _selectCount, bool _bSelectforcing)
@@ -493,6 +505,24 @@ public class UIView_CardSystem : UIView
 
     public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
     {
+        if (CurrentPannel.Grave == _pannelType)
+        {
+            if (0 >= graveCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > graveCards.Count)
+                return;
+        }
+
+        else if (CurrentPannel.Deck == _pannelType && 0 >= deckCards.Count)
+        {
+            if (0 >= deckCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > deckCards.Count)
+                return;
+        }
+
         CallPannel(_pannelType, true);
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }

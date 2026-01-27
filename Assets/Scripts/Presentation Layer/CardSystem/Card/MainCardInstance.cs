@@ -25,7 +25,7 @@ public class MainCardInstance : CardInstance
     private void Awake()
     {
         Motion = GetComponent<CardMotion>();
-        OtherMotion = GetComponent<CardOtherMotion>();
+        OtherMotion = GetComponentInChildren<CardOtherMotion>();
         Input = GetComponent<CardInput>();
         VisualFloat = GetComponentInChildren<CardVisualFloat>(true);
 

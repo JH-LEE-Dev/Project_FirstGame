@@ -258,7 +258,15 @@ public class HandSystem : MonoBehaviour
 
     private void ConsumeMagic(MainCardInstance card)
     {
-        float scaleOffset = card.transform.localScale.x * 30f;
+        if (card.CardData.GetCardData().elementType == ElementType.Extinction)
+        {
+            ReturnToPool(card);
+            computeArc();
+            ComputeSelectedPositions();
+            return;
+        }
+
+        float scaleOffset = card.transform.localScale.x * 20f;
         cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
 
         card.SetUIState(CardState.Other);
@@ -492,6 +500,23 @@ public class HandSystem : MonoBehaviour
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
 
+        int n = Mathf.Max(0, selectCount);
+        List<CardDataInstance> available = new();
+
+        foreach (var c in cards)
+        {
+            if (c != null && c.cardState == CardState.InHand)
+                available.Add(c.CardData);
+        }
+        // 0장 요구 혹은, 0장일 때
+        if (available.Count == 0 || n == 0) return;
+
+        if (bSelectforcing && available.Count <= n)
+        {
+            cardSystem.EndCardSelectMode(available);
+            return;
+        }
+
         bCardSelectMode = true;
 
         radius = selectModeRadius;
@@ -611,6 +636,8 @@ public class HandSystem : MonoBehaviour
 
     public int GetCurrentHandCardCount()
     {
+        if (cards == null) return -1;
+
         int count = 0;
         foreach (var c in cards)
         {
@@ -640,21 +667,6 @@ public class HandSystem : MonoBehaviour
         Vector2 localOffset = new Vector2(Mathf.Sin(rad) * radius, (Mathf.Cos(rad) - 1f) * radius);
         return handRoot.TransformPoint(localOffset);
     }
-
-    public int CurrentHandCount()
-    {
-        if (cards == null) return -1;
-
-        int Count = 0;
-
-        foreach(var card in cards)
-        {
-            if (card.cardState == CardState.InHand)
-                Count++;
-        }
-        return Count;
-    }
-
 
 
     /////////////////////// For Pooling
