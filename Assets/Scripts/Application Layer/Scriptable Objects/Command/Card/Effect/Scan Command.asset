@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Scan Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Scan
   cardSystemActionTimingType: 0
-  effectApplyType: 4
-  nestingCnt: 1
+  effectApplyType: 3
+  nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1
   selectCnt: 1

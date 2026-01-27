@@ -18,3 +18,4 @@ MonoBehaviour:
   upgradeNestingCnt: 0
   valueModifier: 1
   bonusChance: 20
+  upgradedBonusChance: 40

@@ -18,3 +18,4 @@ MonoBehaviour:
   upgradeNestingCnt: 0
   valueModifier: 1
   bonusSlotCnt: 1
+  upgradedBonusSlotCnt: 2

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Halley's Comet Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_HalleysComet
   cardSystemActionTimingType: 0
-  effectApplyType: 4
+  effectApplyType: 3
   nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1

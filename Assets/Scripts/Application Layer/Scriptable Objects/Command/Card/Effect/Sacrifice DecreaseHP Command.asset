@@ -15,5 +15,7 @@ MonoBehaviour:
   cardSystemActionTimingType: 0
   effectApplyType: 0
   nestingCnt: 0
+  upgradeNestingCnt: 0
   valueModifier: 1
   hpDecreaseAmount: 3
+  upgradedHPDecreaseAmount: 5

@@ -19,5 +19,5 @@ MonoBehaviour:
   valueModifier: 1
   weaknessTurn: 1
   bonusAttack: 5
-  upgradedWeaknessTurn: 0
-  upgradedBonusAttack: 0
+  upgradedWeaknessTurn: 2
+  upgradedBonusAttack: 7
