@@ -1,13 +1,56 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/QuantumEntanglement")]
-public class EffectCommand_QuantumEntanglement : CardEffectCommand<ICardSelectionSystemActionCommandHandler>
+public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     [SerializeField] int duplicateAmount = 1;
+    [SerializeField] int upgradedDuplicateAmount = 1;
 
-    protected override void Execute(ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(CardSelectionMode.DuplicateToHand, duplicateAmount);
+        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+
+        if (nestingCnt != 0)
+        {
+            if(handPile.Count > duplicateAmount * nestingCnt * valueModifier)
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier);
+            else
+            {
+                using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
+                Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+                for (int i = 0; i < handPile.Count; ++i)
+                {
+                    writeBuffer[i] = handPile[i];
+                }
+
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardSystemActionType.DuplicateCardsToHand,writeBuffer);
+
+                rentalBuffer.Dispose();
+            }
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier);
+            else
+            {
+                using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
+                Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+                for (int i = 0; i < handPile.Count; ++i)
+                {
+                    writeBuffer[i] = handPile[i];
+                }
+
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardSystemActionType.DuplicateCardsToHand, writeBuffer);
+
+                rentalBuffer.Dispose();
+            }
+        }
 
         ResetCommandData();
     }

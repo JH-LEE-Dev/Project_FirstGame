@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: QuantumEntanglement Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_QuantumEntanglement
   cardSystemActionTimingType: 0
-  effectApplyType: 4
+  effectApplyType: 3
   nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1
   duplicateAmount: 1
+  upgradedDuplicateAmount: 2

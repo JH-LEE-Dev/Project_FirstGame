@@ -17,16 +17,19 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
     private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
+    private ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler;
 
     public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
         ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
-        ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler)
+        ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler,
+        ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
         slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
         cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
+        cardSelectionSystemActionCommandHandler = _cardSelectionSystemActionCommandHandler;
     }
 
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
@@ -49,9 +52,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedRotationBulletCard();
     }
 
-    public void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
+    public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards)
     {
-        cardSystemActionCommandHandler.GraveToHand(graveToDeckCards);
+        cardSystemActionCommandHandler.GraveCardsToHand(cards);
     }
 
     public IReadOnlyList<CardDataInstance> GetHandPile()
@@ -79,13 +82,43 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
     }
 
-    public void InsertFollowUpEffectCommand(CardEffectCommand command)
-    {
-        cardSystemControlActionCommandHandler.InsertFollowUpEffectCommand(command);
-    }
-
     public void AdditionalDraw(int amount)
     {
         cardSystemActionCommandHandler.DrawAgain(amount);
+    }
+
+    public int GetPrevUsedCardCnt()
+    {
+        return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
+    }
+
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType,CardSelectionMode cardSelectionMode, int amount)
+    {
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType,cardSelectionMode, amount);
+    }
+
+    public IReadOnlyList<CardDataInstance> GetDeckPile()
+    {
+        return cardSystemActionCommandHandler.GetDeckPile();
+    }
+
+    public IReadOnlyList<CardDataInstance> GetGravePile()
+    {
+        return cardSystemActionCommandHandler.GetGravePile();
+    }
+
+    public IReadOnlyList<CardDataInstance> GetExtinctionPile()
+    {
+        return cardSystemActionCommandHandler.GetExtinctionPile();
+    }
+
+    public void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        cardSystemActionCommandHandler.GraveCardsToDeck(cards);
+    }
+
+    public void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
+    {
+        cardSystemControlActionCommandHandler.RequestCardSystemActionCommand(cardSystemActionType, _cards);
     }
 }

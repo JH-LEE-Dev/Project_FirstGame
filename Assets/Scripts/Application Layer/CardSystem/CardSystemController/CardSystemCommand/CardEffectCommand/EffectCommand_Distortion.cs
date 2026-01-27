@@ -7,11 +7,25 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
     [SerializeField] private int bonusCrit = 0;
     [SerializeField] private float bonusDamage = 0;
 
+    [SerializeField] private float upgradedBonusRange = 0;
+    [SerializeField] private int upgradedBonusCrit = 0;
+    [SerializeField] private float upgradedBonusDamage = 0;
+
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange);
-        cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit);
-        cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage);
+        if (nestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * nestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit * nestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * nestingCnt * valueModifier);
+        }
+
+        if(upgradeNestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange * upgradeNestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusCrit * upgradeNestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusDamage * upgradeNestingCnt * valueModifier);
+        }
 
         ResetCommandData();
     }

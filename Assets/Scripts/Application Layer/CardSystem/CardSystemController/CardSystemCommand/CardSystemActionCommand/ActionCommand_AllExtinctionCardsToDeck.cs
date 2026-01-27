@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/ExtinctionCardsToDeck")]
-public class ActionCommand_ExtinctionCardsToDeck : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardSystemAction/AllExtinctionCardsToDeck")]
+public class ActionCommand_AllExtinctionCardsToDeck : CardSystemActionCommand<ICardSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -14,6 +14,6 @@ public class ActionCommand_ExtinctionCardsToDeck : CardSystemActionCommand<ICard
 
     protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
-        cardSystemActionCommandHandler.ExtinctionToDeck();
+        cardSystemActionCommandHandler.AllExtinctionCardsToDeck();
     }
 }

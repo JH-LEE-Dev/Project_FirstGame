@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_RiftDetection
   cardSystemActionTimingType: 1
   effectApplyType: 0
-  nestingCnt: 1
+  nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1
   weaknessTurn: 1
   bonusAttack: 5
+  upgradedWeaknessTurn: 2
+  upgradedBonusAttack: 7

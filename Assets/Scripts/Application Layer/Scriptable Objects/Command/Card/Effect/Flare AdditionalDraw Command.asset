@@ -15,5 +15,7 @@ MonoBehaviour:
   cardSystemActionTimingType: 2
   effectApplyType: 1
   nestingCnt: 0
+  upgradeNestingCnt: 0
   valueModifier: 1
   drawAmount: 1
+  upgradedDrawAmount: 2

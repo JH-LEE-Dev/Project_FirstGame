@@ -13,7 +13,7 @@ public class MainMenuUIInstaller : MonoBehaviour
     //내부 의존성
     private MainMenuUIManager uiManager;
 
-    [Header("Gameplay Scene Objects")]
+    [Header("UI Canvas/CanvasRoot Objects")]
     [SerializeField] private CanvasRoot canvasRootPrefab;
     [SerializeField] private Canvas canvasPrefab;
 

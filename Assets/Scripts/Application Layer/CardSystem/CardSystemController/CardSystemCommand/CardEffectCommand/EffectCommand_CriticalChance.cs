@@ -4,10 +4,15 @@ using UnityEngine;
 public class EffectCommand_CriticalChance : CardEffectCommand<ICardStatusEffectCommandHandler>
 {
     [SerializeField] private int bonusChance = 0;
+    [SerializeField] private int upgradedBonusChance = 0;
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier * nestingCnt);
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier * nestingCnt);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusChance * valueModifier * upgradeNestingCnt);
 
         ResetCommandData();
     }

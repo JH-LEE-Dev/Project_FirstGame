@@ -15,5 +15,7 @@ MonoBehaviour:
   cardSystemActionTimingType: 1
   effectApplyType: 0
   nestingCnt: 0
+  upgradeNestingCnt: 0
   valueModifier: 1
   bonusDamage: 4
+  upgradedBonusDamage: 6

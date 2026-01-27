@@ -83,8 +83,8 @@ public class CardSystem
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
         cardSelectionManager.CardSelectionStartEvent += CardSelectionModeStart;
 
-        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.InsertCardSystemActionCommand;
-        cardSelectionManager.RequestCardSystemActionEvent += cardSystemController.InsertCardSystemActionCommand;
+        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.RequestCardSystemActionCommand;
+        cardSelectionManager.RequestCardSystemActionEvent += cardSystemController.RequestCardSystemActionCommand;
     }
 
     private void ReleaseEvents()
@@ -109,7 +109,7 @@ public class CardSystem
 
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
 
-        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.InsertCardSystemActionCommand;
+        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.RequestCardSystemActionCommand;
     }
 
     public void Release()

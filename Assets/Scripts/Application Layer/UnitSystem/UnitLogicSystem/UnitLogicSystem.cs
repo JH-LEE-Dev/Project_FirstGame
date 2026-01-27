@@ -110,9 +110,12 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     private void ReleaseEvent_Enemy()
     {
-        for (int i = 0; i < enemyUnits.Count; ++i)
+        if (enemyUnits != null)
         {
-            enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
+            for (int i = 0; i < enemyUnits.Count; ++i)
+            {
+                enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
+            }
         }
     }
 
@@ -138,7 +141,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         characterUnit.ResetbCanAction();
 
-        for(int i = 0; i < enemyUnits.Count;++i)
+        for (int i = 0; i < enemyUnits.Count; ++i)
         {
             enemyUnits[i].ResetState();
         }

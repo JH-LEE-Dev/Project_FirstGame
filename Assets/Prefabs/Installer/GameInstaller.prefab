@@ -193,6 +193,8 @@ GameObject:
   - component: {fileID: 5212957816586645379}
   - component: {fileID: 6668742716584127980}
   - component: {fileID: 2669582842453573755}
+  - component: {fileID: 1915532515696185621}
+  - component: {fileID: 790922903393253596}
   m_Layer: 0
   m_Name: UIInstaller
   m_TagString: Untagged
@@ -264,6 +266,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff1ba83324a8e241a60638fea0c402b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UICommandManager
+--- !u!114 &1915532515696185621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebac1758623cca47bf81a3cc76591a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopUIInstaller
+  canvasRootPrefab:
+    screenLayerRoot: {fileID: 0}
+    popupLayerRoot: {fileID: 1339472337866355040, guid: b7f162c7f70b0de4dbb83fbae2452110, type: 3}
+    overlayLayerRoot: {fileID: 142306225260424533, guid: f00c5b9343bb05c4f8fa0bd61efc4fe7, type: 3}
+    tooltipLayerRoot: {fileID: 0}
+    worldLayerRoot: {fileID: 0}
+  canvasPrefab: {fileID: 1108041376251214764, guid: d9c42526021c66b45a4046d9fdeca5a6, type: 3}
+--- !u!114 &790922903393253596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304812929871981835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6adcaabe4f7243544b8d26ba1db1ac61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopUIManager
+  viewPrefabs:
+  - {fileID: 4781159696933469916, guid: 18e03ad1f7aea1543a1a76f963478917, type: 3}
 --- !u!1 &1747592285890968809
 GameObject:
   m_ObjectHideFlags: 0
@@ -5559,8 +5594,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec142422fe00f354baf3f7dffaf268dc, type: 2}
   - {fileID: 11400000, guid: 23d70140d9cfd294f996e75ef106d83b, type: 2}
   - {fileID: 11400000, guid: 9f8b35d08e7b01744baa7b6f14205e40, type: 2}
-  cardSelectionSystemCommands:
+  - {fileID: 11400000, guid: b0c8438c98e332d4aa0cf6b2b9daad60, type: 2}
   - {fileID: 11400000, guid: 1fd75fb5769a83b4fb73ce85131c85d1, type: 2}
+  - {fileID: 11400000, guid: 4425f55f6ed8ec34da1c4399f0459093, type: 2}
+  - {fileID: 11400000, guid: fdbebd4c178216949bf704bfdcdd14d0, type: 2}
+  cardSelectionSystemCommands: []
   cardSystemActionCommands:
   - {fileID: 11400000, guid: c226817e29eec994a88b90e277dca034, type: 2}
   - {fileID: 11400000, guid: 4f2608f8b22e2fb4e8fa8c8b5d8f9bb6, type: 2}
@@ -5571,6 +5609,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e7bdf111e201bbe45bed0491df9691f2, type: 2}
   - {fileID: 11400000, guid: 1d68f70658f22314ab9c573d10705e67, type: 2}
   - {fileID: 11400000, guid: ad53631c9d6767a4a9e889a1055b2ce3, type: 2}
+  - {fileID: 11400000, guid: 20b1588303c208d4483ca69df4d59dff, type: 2}
+  - {fileID: 11400000, guid: 3a7b1c38d74517c4593779d0ea0c28c5, type: 2}
 --- !u!1 &3851426605135345241
 GameObject:
   m_ObjectHideFlags: 0

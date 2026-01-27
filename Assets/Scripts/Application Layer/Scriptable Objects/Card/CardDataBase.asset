@@ -20,6 +20,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 0
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -34,6 +35,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 0
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -48,6 +50,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 0
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -62,6 +65,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 0
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -76,6 +80,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -90,6 +95,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 00000000
@@ -104,6 +110,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 01000000
@@ -118,6 +125,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 2
+    bUpgradable: 0
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -132,6 +140,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -146,6 +155,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -160,6 +170,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 0
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -174,6 +185,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -188,6 +200,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 2
+    bUpgradable: 0
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 02000000
@@ -202,6 +215,7 @@ MonoBehaviour:
     elementType: 1
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -216,6 +230,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 0
     priority: 1
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -230,6 +245,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
@@ -244,10 +260,56 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 2
+    bUpgradable: 1
     cardDescription: 
     bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
-    complexSystemEffects: 
-    selectionSystemEffects: 00000000
+    complexSystemEffects: 05000000
+    selectionSystemEffects: 
+  - id: 17
+    cardImage: {fileID: 0}
+    cardName: 17
+    cardType: 1
+    elementType: 0
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 04000000
+    selectionSystemEffects: 
+  - id: 18
+    cardImage: {fileID: 0}
+    cardName: 18
+    cardType: 1
+    elementType: 0
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 06000000
+    selectionSystemEffects: 
+  - id: 19
+    cardImage: {fileID: 0}
+    cardName: 19
+    cardType: 1
+    elementType: 1
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardDescription: 
+    bFlash: 0
+    cardSystemEffects: 
+    cardStatusEffects: 
+    cardSlotSystemEffects: 
+    complexSystemEffects: 07000000
+    selectionSystemEffects: 

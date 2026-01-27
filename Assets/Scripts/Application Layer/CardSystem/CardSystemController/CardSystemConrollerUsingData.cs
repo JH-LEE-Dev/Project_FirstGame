@@ -96,11 +96,15 @@ public enum ComplexSystemEffectType
     SpaceShuttle,
     FinalOrbit,
     Recompense,
+    HandEnhancement,
+    QuantumEntanglement,
+    HalleysComet,
+    Scan,
 }
 
 public enum CardSelectionSystemEffectType
 {
-    QuantumEntanglement,
+
 }
 
 public enum CardSystemActionTimingType
@@ -117,11 +121,13 @@ public enum CardSystemActionType
     UsedCardsRemoveFromHand,
     UsedCardsToGrave,
     UsedCardsToExtinction,
-    ExtinctionCardsToDeck,
+    AllExtinctionCardsToDeck,
     SlotCardsToExtinction,
     SlotCardsToGrave,
-    DuplicateCardCardsToDeck,
-    DuplicateCardCardsToHand,
+    DuplicateCardsToDeck,
+    DuplicateCardsToHand,
+    GraveCardsToDeck,
+    GraveCardsToHand,
     MAX
 }
 
@@ -144,5 +150,6 @@ public enum CardSystemContextType
     GraveCardsToHand,
     DuplicateCardCardsToDeck,
     DuplicateCardCardsToHand,
+    GraveCardsToDeck,
     MAX
 }
