@@ -20,6 +20,12 @@ public class VFX_TargetBarStar : MonoBehaviour
 
     private Vector3[] path = new Vector3[3];
 
+    private Action<VFX_TargetBarStar> callbackEvent;
+
+    public float savedCurrentProgress { get; private set; }
+    public int savedCurrentKillCnt { get; private set; }
+    public int savedEnemyMaxCnt { get; private set; }
+
     private void Awake()
     {
         mainRect = GetComponent<RectTransform>();
@@ -58,7 +64,14 @@ public class VFX_TargetBarStar : MonoBehaviour
         return false;
     }
 
-    public void Play(Vector2 finalAnchoredPos, Action callback = null)
+    public void SetupSavedData(float _currentProgress, int _currentKillCnt, int _enemyMaxCnt)
+    {
+        savedCurrentProgress = _currentProgress;
+        savedCurrentKillCnt = _currentKillCnt;
+        savedEnemyMaxCnt = _enemyMaxCnt;
+    }
+
+    public void Play(Vector2 finalAnchoredPos, Action<VFX_TargetBarStar> callback = null)
     {
         if (null == mainRect)
             return;
@@ -66,10 +79,12 @@ public class VFX_TargetBarStar : MonoBehaviour
         GoToTarget(finalAnchoredPos, callback);
     }
 
-    private void GoToTarget(Vector2 finalPos, Action callback)
+    private void GoToTarget(Vector2 finalPos, Action<VFX_TargetBarStar> callback)
     {
         if (null != seq && seq.IsActive())
             seq.Kill();
+
+        callbackEvent = callback;
 
         seq = DOTween.Sequence();
 
@@ -94,23 +109,8 @@ public class VFX_TargetBarStar : MonoBehaviour
             .SetEase(ease));
 
         seq.SetUpdate(false);
-
-        seq.OnStart(() =>
-        {
-            foreach (ParticleSystem vfx in particles)
-                vfx?.Play(true);
-
-            Rotate_Infinity();
-            visualRect.gameObject.SetActive(true);
-        });
-
-        seq.OnComplete(() =>
-        {
-            foreach (ParticleSystem vfx in particles)
-                vfx?.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-
-            callback?.Invoke();
-        });
+        seq.OnStart(GoToTargetStartEvent);
+        seq.OnComplete(GoToTargetCompleteEvent);
     }
 
     private void Rotate_Infinity()
@@ -123,5 +123,23 @@ public class VFX_TargetBarStar : MonoBehaviour
         visualRect.DORotate(new Vector3(0f, 0f, 360f), 3f, RotateMode.FastBeyond360)
             .SetUpdate(false)
             .SetLoops(-1);
+    }
+
+    private void GoToTargetStartEvent()
+    {
+        foreach (ParticleSystem vfx in particles)
+            vfx?.Play(true);
+
+        Rotate_Infinity();
+        visualRect.gameObject.SetActive(true);
+    }
+
+    private void GoToTargetCompleteEvent()
+    {
+        foreach (ParticleSystem vfx in particles)
+            vfx?.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+        callbackEvent?.Invoke(this);
+        callbackEvent = null;
     }
 }

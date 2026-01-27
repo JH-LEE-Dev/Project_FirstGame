@@ -54,7 +54,6 @@ public class UIText_PlayerHP : MonoBehaviour
     private Vector2 originShieldAbchoredPos = Vector2.zero;
     private Vector2 spawnShieldAbchoredPos = Vector2.zero;
 
-    // [최적화] 람다 캡처 방지를 위한 임시 변수들
     private Action onShieldCompletedEvent;
     private float tempPrevHp;
     private float tempCurrHp;
@@ -109,7 +108,6 @@ public class UIText_PlayerHP : MonoBehaviour
 
         if (shieldTween != null && shieldTween.IsActive()) shieldTween.Kill();
 
-        // 람다 대신 메서드(UpdateShieldText) 호출
         shieldTween = DOVirtual.Float(_prev, _current, motionDuration, UpdateShieldText)
             .SetEase(motionEase)
             .SetUpdate(false)
@@ -154,7 +152,6 @@ public class UIText_PlayerHP : MonoBehaviour
         if (null == hpText || null == shieldText) 
             return;
 
-        // 멤버 변수에 저장 (콜백에서 쓰기 위해)
         tempPrevHp = _prevHp;
         tempCurrHp = _currHp;
         tempProgressHp = _hpProgress;
@@ -205,7 +202,6 @@ public class UIText_PlayerHP : MonoBehaviour
 
         bool dangerDamage = (tempDamage / tempPrevHp) >= 0.5f;
 
-        // 콜백으로 메서드 전달
         script.PlayMotion(dangerDamage, OnDamageNumberComplete);
     }
 
