@@ -209,18 +209,24 @@ public class UIView_HUD : UIView
 
         int maxEnemyCnt = waveSystemData.GetMaxWaveProgress();
         int currentEnemyCnt = waveSystemData.GetCurrentWaveProgress();
-        float currentKillCnt = maxEnemyCnt - currentEnemyCnt;
+        int currentKillCnt = maxEnemyCnt - currentEnemyCnt;
 
-        float currentProgress = currentKillCnt / maxEnemyCnt;
+        float currentProgress = (float)currentKillCnt / maxEnemyCnt;
 
-        Action callback = () =>
-        {
-            targetBar.OnFill(currentProgress);
-            targetGageText?.DataUpdate(currentKillCnt, maxEnemyCnt);
-            StartCoroutine(ReleaseEffect(script));
-        };
+        script.SetupSavedData(currentProgress, currentKillCnt, maxEnemyCnt);
+        script.Play(targetBar.GetAnchoredPos(), TargetBarCallbackEvent);
+    }
 
-        script.Play(targetBar.GetAnchoredPos(), callback);
+    private void TargetBarCallbackEvent(VFX_TargetBarStar vfx)
+    {
+        if (null == vfx)
+            return;
+
+        targetBar.OnFill(vfx.savedCurrentProgress);
+        Debug.Log(vfx.savedCurrentProgress);
+
+        targetGageText?.DataUpdate(vfx.savedCurrentKillCnt, vfx.savedEnemyMaxCnt);
+        StartCoroutine(ReleaseEffect(vfx));
     }
 
     private void HP_BarShieldCalc()
@@ -259,8 +265,10 @@ public class UIView_HUD : UIView
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)
     {
+        WaitForSeconds wait = new WaitForSeconds(0.2f);
+
         while (target.CheckAliveParticle())
-            yield return new WaitForSeconds(0.2f);
+            yield return wait;
 
         targetBarEffectPool.Pool.Release(target.gameObject);
     }
@@ -273,7 +281,7 @@ public class UIView_HUD : UIView
         hpText?.Init(playerData.GetCurrentHealth(), this);
         hpBar?.Init(playerData.GetCurrentHealth() / playerData.GetMaxHealth());
         targetBar?.Init(0f, waveSystemData.GetMaxWaveProgress());
-        targetGageText?.DataUpdate(0f, waveSystemData.GetMaxWaveProgress());
+        targetGageText?.DataUpdate(0, waveSystemData.GetMaxWaveProgress());
 
         WaveStartFirstTime = false;
     }

@@ -1,11 +1,8 @@
-using System;
-using DamageNumbersPro;
 using DG.Tweening;
 using NaughtyAttributes;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using Sequence = DG.Tweening.Sequence;
+using System;
 
 public class UIText_PlayerHP : MonoBehaviour
 {
@@ -27,10 +24,10 @@ public class UIText_PlayerHP : MonoBehaviour
 
     [Header("Color Change Settings")]
     [ShowIf("colorChange"), SerializeField] private bool overrideColor = false;
-    [ShowIf("colorChange"), SerializeField] private Color startColor = Color.softRed;
+    [ShowIf("colorChange"), SerializeField] private Color startColor = Color.red;
     [ShowIf("colorChange"), SerializeField] private Color finalColor = Color.white;
     [Space]
-    [ShowIf("colorChange"), SerializeField] private Color shieldStartColor = Color.softRed;
+    [ShowIf("colorChange"), SerializeField] private Color shieldStartColor = Color.red;
     [ShowIf("colorChange"), SerializeField] private Color shieldFinalColor = Color.white;
 
     [Header("Override FinalColor Settings")]
@@ -50,15 +47,25 @@ public class UIText_PlayerHP : MonoBehaviour
 
     private Sequence colorSeq = null;
     private Sequence shakeSeq = null;
+    private Tween shieldTween = null;
+    private Tween hpTween = null;
 
     private Vector2 originalAnchoredPos = Vector2.zero;
-
     private Vector2 originShieldAbchoredPos = Vector2.zero;
     private Vector2 spawnShieldAbchoredPos = Vector2.zero;
 
+    private Action onShieldCompletedEvent;
+    private float tempPrevHp;
+    private float tempCurrHp;
+    private float tempProgressHp;
+    private float tempDamage;
+    private float tempPrevShield;
+    private float tempCurrShield;
+    private GameObject tempDamageNum;
+
     private void Awake()
     {
-        if(null != visualRect)
+        if (null != visualRect)
             originalAnchoredPos = visualRect.anchoredPosition;
 
         if (null != shieldText)
@@ -68,12 +75,12 @@ public class UIText_PlayerHP : MonoBehaviour
             spawnShieldAbchoredPos.x += spawnShieldX;
         }
     }
-    
+
     public void Init<T>(T _value, UIView_HUD _hudSystem) where T : struct
     {
         hudSystem = _hudSystem;
 
-        if (hpText == null || (typeof(T) != typeof(int) && typeof(T) != typeof(float)))
+        if (hpText == null) 
             return;
 
         float convertedValue = Convert.ToSingle(_value);
@@ -84,178 +91,167 @@ public class UIText_PlayerHP : MonoBehaviour
 
     public void CalcShield(float _prev, float _current, Action completed = null)
     {
-        if (null == shieldText)
+        if (null == shieldText) 
             return;
 
-        if (0f >= _prev)
+        onShieldCompletedEvent = completed;
+
+        if (0f >= _prev && _current > 0f)
         {
             shieldText.gameObject.SetActive(true);
             shieldText.rectTransform.anchoredPosition = spawnShieldAbchoredPos;
             shieldText.alpha = 0f;
 
-            shieldText.rectTransform.DOAnchorPos(originShieldAbchoredPos, spawnShieldDuration)
-                .SetEase(spawnShieldEase);
-
-            shieldText.DOFade(1f, spawnShieldDuration)
-                .SetEase(spawnShieldEase);
+            shieldText.rectTransform.DOAnchorPos(originShieldAbchoredPos, spawnShieldDuration).SetEase(spawnShieldEase);
+            shieldText.DOFade(1f, spawnShieldDuration).SetEase(spawnShieldEase);
         }
 
-        DOVirtual.Float(_prev, _current, motionDuration, (value) =>
-        {
-            if (0f < value)
-                shieldText.text = "+";
-            else
-            {
-                shieldText.text = "";
-                shieldText.gameObject.SetActive(false);
-            }
+        if (shieldTween != null && shieldTween.IsActive()) shieldTween.Kill();
 
-            shieldText.text += Mathf.RoundToInt(value).ToString();
-        })
+        shieldTween = DOVirtual.Float(_prev, _current, motionDuration, UpdateShieldText)
             .SetEase(motionEase)
             .SetUpdate(false)
-            .OnComplete(() =>
-            {
-                completed?.Invoke();
-            });
+            .OnComplete(OnShieldTweenComplete);
+    }
+
+    private void UpdateShieldText(float value)
+    {
+        if (value > 0f)
+            shieldText.text = "+" + Mathf.RoundToInt(value).ToString();
+        else
+        {
+            shieldText.text = "";
+            if (shieldText.gameObject.activeSelf)
+                shieldText.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnShieldTweenComplete()
+    {
+        onShieldCompletedEvent?.Invoke();
+        onShieldCompletedEvent = null;
     }
 
     private void CalcHP(float _prev, float _current)
     {
-        DOVirtual.Float(_prev, _current, motionDuration, (value) =>
-        {
-            hpText.text = Mathf.RoundToInt(value).ToString();
-        }).SetEase(motionEase).SetUpdate(false);
+        if (hpTween != null && hpTween.IsActive()) hpTween.Kill();
+
+        hpTween = DOVirtual.Float(_prev, _current, motionDuration, UpdateHPText)
+            .SetEase(motionEase)
+            .SetUpdate(false);
     }
 
-    public void OnHit(float _prevHp, float _currHp, float _hpProgress, float _damage, 
+    private void UpdateHPText(float value)
+    {
+        hpText.text = Mathf.RoundToInt(value).ToString();
+    }
+
+    public void OnHit(float _prevHp, float _currHp, float _hpProgress, float _damage,
         float _prevShield, float _currShield, GameObject _damagNum = null)
     {
-        if (null == hpText || null == shieldText)
+        if (null == hpText || null == shieldText) 
             return;
 
+        tempPrevHp = _prevHp;
+        tempCurrHp = _currHp;
+        tempProgressHp = _hpProgress;
+        tempDamage = _damage;
+        tempPrevShield = _prevShield;
+        tempCurrShield = _currShield;
+        tempDamageNum = _damagNum;
+
         if (!damageNumber)
-            OnDefaultHit(_prevHp, _currHp, _hpProgress, _damage, _prevShield, _currShield);
-        else
-            OnDamageNumberHit(_prevHp, _currHp, _damage, _hpProgress, _prevShield, _currShield, _damagNum);
-    }
-
-    private void OnDefaultHit(float _prevHp, float _currHp, float _progressHp, float _damage, 
-        float _prevShield, float _currShield)
-    {
-        bool shield = 0f < _prevShield;
-
-        if (shield)
         {
-            Action remainDamage = () =>
-            {
-                if (0f < _damage - _prevShield)
-                {
-                    CalcHP(_prevHp, _currHp);
-                    OnColorChange(_progressHp, false);
-                }
-            };
-
-            CalcShield(_prevShield, _currShield, remainDamage);
+            OnDefaultHit();
         }
         else
-            CalcHP(_prevHp, _currHp);
+        {
+            OnDamageNumberHit();
+        }
+    }
 
-        OnColorChange(_progressHp, shield);
+    private void OnDefaultHit()
+    {
+        bool hasShield = tempPrevShield > 0f;
+
+        if (hasShield)
+            CalcShield(tempPrevShield, tempCurrShield, OnShieldCalcFinished);
+        else
+            CalcHP(tempPrevHp, tempCurrHp);
+
+        OnColorChange(tempProgressHp, hasShield);
         OnShake();
     }
 
-    private void OnDamageNumberHit(float _prev, float _current, float _damage, float _progress, 
-        float _prevShield, float _currShield, GameObject _damagNum)
+    private void OnShieldCalcFinished()
     {
-        UIText_DamageNumPlayer script = _damagNum?.GetComponent<UIText_DamageNumPlayer>();
-        if (null == script || null == visualRect)
-            return;
+        if (0f < tempDamage - tempPrevShield)
+        {
+            CalcHP(tempPrevHp, tempCurrHp);
+            OnColorChange(tempProgressHp, false);
+        }
+    }
 
-        string damageString = "-" + Mathf.RoundToInt(_damage).ToString();
+    private void OnDamageNumberHit()
+    {
+        UIText_DamageNumPlayer script = tempDamageNum?.GetComponent<UIText_DamageNumPlayer>();
+        if (null == script || null == visualRect) return;
+
+        string damageString = "-" + Mathf.RoundToInt(tempDamage).ToString();
         script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint);
 
-        Action callback = () =>
-        {
-            OnDefaultHit(_prev, _current, _progress, _damage, _prevShield, _currShield);
-            hudSystem?.ReturnDamageText(_damagNum);
-        };
+        bool dangerDamage = (tempDamage / tempPrevHp) >= 0.5f;
 
-        bool dangerDamage = 0.5f <= (_damage / _prev);
-
-        script.PlayMotion(dangerDamage, callback);
+        script.PlayMotion(dangerDamage, OnDamageNumberComplete);
     }
 
-    private void OnColorChange(float _progress, bool _shield)
+    private void OnDamageNumberComplete()
     {
-        if (!colorChange)
+        OnDefaultHit();
+        hudSystem?.ReturnDamageText(tempDamageNum);
+        tempDamageNum = null;
+    }
+
+    private void OnColorChange(float _progress, bool _isShield)
+    {
+        if (!colorChange) 
             return;
 
-        colorSeq = CancelPrevMotion(colorSeq);
+        if (colorSeq != null && colorSeq.IsActive()) colorSeq.Kill();
+        colorSeq = DOTween.Sequence();
 
-        if (_shield)
-            ShieldTextColorChanging();
-
-        else
-            HPTextColorChanging(_progress);
-    }
-
-    private void ShieldTextColorChanging()
-    {
-        colorSeq.AppendCallback(() =>
+        if (_isShield)
         {
             shieldText.color = shieldStartColor;
-        });
-
-        colorSeq.Append(shieldText.DOColor(shieldFinalColor, motionDuration)
-            .SetEase(motionEase)
-            .SetUpdate(false));
-    }
-
-    private void HPTextColorChanging(float _progress)
-    {
-        Color targetColor = finalColor;
-
-        if (overrideColor)
+            colorSeq.Append(shieldText.DOColor(shieldFinalColor, motionDuration).SetEase(motionEase));
+        }
+        else
         {
-            if (0.25f >= _progress)
-                targetColor = dangerColor;
-            else if (0.5f >= _progress)
-                targetColor = warningColor;
+            Color targetColor = finalColor;
+            if (overrideColor)
+            {
+                if (_progress <= 0.25f) targetColor = dangerColor;
+                else if (_progress <= 0.5f) targetColor = warningColor;
+            }
+
+            hpText.color = startColor;
+            colorSeq.Append(hpText.DOColor(targetColor, motionDuration).SetEase(motionEase));
         }
 
-        colorSeq.AppendCallback(() =>
-        {
-            hpText.color = startColor;
-        });
-
-        colorSeq.Append(hpText.DOColor(targetColor, motionDuration)
-            .SetEase(motionEase)
-            .SetUpdate(false));
+        colorSeq.SetUpdate(false);
     }
 
     private void OnShake()
     {
-        if (!shaking || null == visualRect)
+        if (!shaking || null == visualRect) 
             return;
 
-        shakeSeq = CancelPrevMotion(shakeSeq);
+        if (shakeSeq != null && shakeSeq.IsActive()) shakeSeq.Kill();
+        shakeSeq = DOTween.Sequence();
 
-        shakeSeq.AppendCallback(() =>
-        {
-            visualRect.anchoredPosition = originalAnchoredPos;
-        });
+        visualRect.anchoredPosition = originalAnchoredPos;
 
-        shakeSeq.Append(visualRect.DOShakeAnchorPos(shakeDuration, shakePower)
-            .SetEase(shakeEase)
-            .SetUpdate(false));
-    }
-
-    private Sequence CancelPrevMotion(Sequence target)
-    {
-        if (target.IsActive())
-            target.Kill();
-
-        return DOTween.Sequence();
+        shakeSeq.Append(visualRect.DOShakeAnchorPos(shakeDuration, shakePower).SetEase(shakeEase));
+        shakeSeq.SetUpdate(false);
     }
 }
