@@ -19,10 +19,6 @@ public class UIView_CardSystem : UIView
     public event Action<int, CardDataInstance> CardEquippedEvent;
     public event Action<List<CardDataInstance>, CardSelectionModeData> CardSelectionEndEvent;
 
-    Action cardSpawnStarStartEvent;
-    Action cardSpawnStarCompleteEvent;
-
-
     //UI Job Action Binding
     public delegate float UIActionHandler(CardUIActionData cardUIActionData);
     private UIActionHandler[] uiActionHandlers;
