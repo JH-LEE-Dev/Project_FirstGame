@@ -78,19 +78,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
         ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        for (int i = 0; i < 9; ++i)
-        {
-            CardDataInstance card = pool.Get();
-            deckPile.Add(card);
-        }
-
-        cardData = cardDataBase.GetCardData(16);
-        if (cardData == null)
-            return;
-
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < initialDeckCnt; ++i)
         {
             CardDataInstance card = pool.Get();
             deckPile.Add(card);
