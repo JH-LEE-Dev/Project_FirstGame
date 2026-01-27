@@ -465,9 +465,9 @@ public class UIView_CardSystem : UIView
         dimOverlay.SetDimOverlayActive(false);
 
         if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToHand)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToDeck)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
 
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }

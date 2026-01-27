@@ -716,6 +716,13 @@ public class HandSystem : MonoBehaviour
         if (previewCard == card) previewCard = null;
         if (hoveredCard == card) hoveredCard = null;
 
+        // 핸드 유지일 경우
+        if (type == CardReturnType.StayHand)
+        {
+            card.SetUIState(CardState.InHand);
+            return;
+        }
+
         // 임시, 나중에 연출 추가되면 어떻게 될지 모름.
         card.SetUIState(CardState.Other);
 
