@@ -52,8 +52,8 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
             if (isSelectMode)
             {
-                // 모션 생각 중.
-                Debug.Log("지금 셀렉트 모드로 패널에서 Hover On");
+                if (CardState.Selecting != owner.cardState)
+                    owner.OtherMotion.OnHover();
             }
         }
     }
@@ -94,8 +94,7 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
             if (isSelectMode)
             {
-                // 모션 생각 중.
-                Debug.Log("지금 셀렉트 모드로 패널에서 Hover Off");
+
             }
         }
     }
@@ -133,9 +132,7 @@ public class CardInput : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
             if (isSelectMode)
             {
-                // 모션 생각 중.
                 OnPointerClickChooseModeforPannel();
-                Debug.Log("지금 셀렉트 모드로 패널에서 Clicked");
             }
         }
     }

@@ -209,6 +209,9 @@ public class UIView_CardSystem : UIView
         var currentActionDataList = _actionBatch.actionList;
 
         int size = currentActionDataList.Count;
+
+        UpdateCardsCounts();
+
         for (int i = 0; i < size; ++i)
         {
             CardUIActionData currentActionData = currentActionDataList[i];
@@ -219,8 +222,6 @@ public class UIView_CardSystem : UIView
 
             await Awaitable.WaitForSecondsAsync(turnWaitTime);
         }
-
-        UpdateCardsCounts();
 
         UICommandCompleteEvent?.Invoke(_actionBatch.idx);
     }
@@ -493,17 +494,35 @@ public class UIView_CardSystem : UIView
         dimOverlay.SetDimOverlayActive(false);
 
         if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToHand)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToDeck)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.UpgradeCardsToHand)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
 
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
 
     public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
     {
+        if (CurrentPannel.Grave == _pannelType)
+        {
+            if (0 >= graveCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > graveCards.Count)
+                return;
+        }
+
+        else if (CurrentPannel.Deck == _pannelType && 0 >= deckCards.Count)
+        {
+            if (0 >= deckCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > deckCards.Count)
+                return;
+        }
+
         CallPannel(_pannelType, true);
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }
