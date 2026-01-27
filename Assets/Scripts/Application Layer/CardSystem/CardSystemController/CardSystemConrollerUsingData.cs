@@ -96,6 +96,7 @@ public enum ComplexSystemEffectType
     SpaceShuttle,
     FinalOrbit,
     Recompense,
+    HandEnhancement,
 }
 
 public enum CardSelectionSystemEffectType
@@ -120,8 +121,8 @@ public enum CardSystemActionType
     ExtinctionCardsToDeck,
     SlotCardsToExtinction,
     SlotCardsToGrave,
-    DuplicateCardCardsToDeck,
-    DuplicateCardCardsToHand,
+    DuplicateCardsToDeck,
+    DuplicateCardsToHand,
     MAX
 }
 

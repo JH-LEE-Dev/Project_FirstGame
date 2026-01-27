@@ -12,8 +12,9 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
 
     public void StartCardSelectionMode(CardSelectionMode _cardSelectionMode, int amount)
     {
-        CardSelectionModeData data = new CardSelectionModeData(cardSelectionMode, amount);
         cardSelectionMode = _cardSelectionMode;
+        CardSelectionModeData data = new CardSelectionModeData(cardSelectionMode, amount);
+
         CardSelectionStartEvent?.Invoke(data);
     }
 
@@ -35,10 +36,21 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         }
 
         if (_data.selectionMode == CardSelectionMode.DuplicateToDeck)
-            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardCardsToDeck, writeBuffer);
-        else
-            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardCardsToHand, writeBuffer);
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardsToDeck, writeBuffer);
+        else if (_data.selectionMode == CardSelectionMode.DuplicateToHand)
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardsToHand, writeBuffer);
+        else if (_data.selectionMode == CardSelectionMode.UpgradeToHand)
+            UpgradeCards(_cards);
 
         rentalBuffer.Dispose();
+    }
+
+    public void UpgradeCards(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+        {
+            if (_cards[i] != null)
+                _cards[i].bUpgrade = true;
+        }
     }
 }

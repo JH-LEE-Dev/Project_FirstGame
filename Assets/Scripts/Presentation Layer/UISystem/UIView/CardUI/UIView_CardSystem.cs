@@ -457,6 +457,8 @@ public class UIView_CardSystem : UIView
             ReturnCard(_cards, CardReturnType.FlyToGrave);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateToDeck)
             ReturnCard(_cards, CardReturnType.FlyToGrave);
+        else if(cardSelectionModeData.selectionMode == CardSelectionMode.UpgradeToHand)
+            ReturnCard(_cards, CardReturnType.FlyToGrave);
 
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }

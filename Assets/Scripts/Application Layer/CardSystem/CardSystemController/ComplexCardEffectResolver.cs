@@ -17,16 +17,19 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
     private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
+    private ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler;
 
     public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
         ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
-        ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler)
+        ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler,
+        ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
         slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
         cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
+        cardSelectionSystemActionCommandHandler = _cardSelectionSystemActionCommandHandler;
     }
 
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
@@ -87,5 +90,15 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void AdditionalDraw(int amount)
     {
         cardSystemActionCommandHandler.DrawAgain(amount);
+    }
+
+    public int GetPrevUsedCardCnt()
+    {
+        return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
+    }
+
+    public void StartCardSelectionMode(CardSelectionMode cardSelectionMode, int amount)
+    {
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(cardSelectionMode, amount);
     }
 }

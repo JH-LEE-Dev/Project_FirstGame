@@ -276,7 +276,6 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_CardsToGrave(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
-        Debug.Log("1");
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
         {

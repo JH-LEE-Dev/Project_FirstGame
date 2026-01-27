@@ -57,7 +57,7 @@ public class GameInstaller : MonoBehaviour
         cardSystemController.Initialize();
         cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver);
 
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager);
 
         uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
 

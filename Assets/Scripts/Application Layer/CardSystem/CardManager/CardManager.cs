@@ -84,7 +84,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             deckPile.Add(card);
         }
 
-        cardData = cardDataBase.GetCardData(16);
+        cardData = cardDataBase.GetCardData(17);
         if (cardData == null)
             return;
 

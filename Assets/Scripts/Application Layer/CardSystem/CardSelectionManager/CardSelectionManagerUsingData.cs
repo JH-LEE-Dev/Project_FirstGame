@@ -5,6 +5,7 @@ public enum CardSelectionMode
     DuplicateToDeck,
     ToExtinction,
     ToGrave,
+    UpgradeToHand,
 }
 
 public struct CardSelectionModeData

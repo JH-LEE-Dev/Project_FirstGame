@@ -5,4 +5,5 @@ public interface ICardSystemControlActionCommandHandler
 {
     void UseCardsAndExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards);
     void InsertFollowUpEffectCommand(CardEffectCommand command);
+    int GetPrevUsedCardCnt();
 }
