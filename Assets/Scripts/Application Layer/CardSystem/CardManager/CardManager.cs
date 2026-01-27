@@ -361,4 +361,30 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
         return card;
     }
+
+    public void CardsToHand(ReadOnlySpan<CardDataInstance> cards)
+    {
+        for(int i = 0;i<cards.Length;++i)
+        {
+            if(cards[i] != null)
+            {
+                handPile.Add(cards[i]);
+            }
+        }
+
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardsToHandEvent, cardSystemContext, cards);
+    }
+
+    public void CardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i] != null)
+            {
+                deckPile.Add(cards[i]);
+            }
+        }
+
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardsToDeckEvent, cardSystemContext, cards);
+    }
 }

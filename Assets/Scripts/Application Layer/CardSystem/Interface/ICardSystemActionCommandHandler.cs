@@ -20,4 +20,6 @@ public interface ICardSystemActionCommandHandler : ICommandHandler
     CardDataInstance CreateCard(int id);
     void CardsRemoveFromHand(ReadOnlySpan<CardDataInstance> cards);
     void ExtinctionToDeck();
+    void CardsToHand(ReadOnlySpan<CardDataInstance> cards);
+    void CardsToDeck(ReadOnlySpan<CardDataInstance> cards);
 }

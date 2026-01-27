@@ -1,12 +1,14 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class CardUICoordinator
 {
-    public event Action<int,CardDataInstance> CardEquippedEvent;
+    public event Action<int, CardDataInstance> CardEquippedEvent;
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
     public event Action<int> UICommandCompleteEvent;
+    public event Action<CardSelectionModeData, List<CardDataInstance>> CardSelectionEndEvent;
 
     private UIView_CardSystem cardUISystem;
 
@@ -40,6 +42,9 @@ public class CardUICoordinator
 
         cardUISystem.CardEquippedEvent -= CardEquipped;
         cardUISystem.CardEquippedEvent += CardEquipped;
+
+        cardUISystem.CardSelectionEndEvent -= CardSelectionEnd;
+        cardUISystem.CardSelectionEndEvent += CardSelectionEnd;
     }
 
     private void ReleaseEvent()
@@ -51,6 +56,8 @@ public class CardUICoordinator
         cardUISystem.CardUsingFinishedEvent -= CardUsingFinished;
 
         cardUISystem.CardEquippedEvent -= CardEquipped;
+
+        cardUISystem.CardSelectionEndEvent -= CardSelectionEnd;
     }
 
     public void TryCardUse(CardDataInstance usedCard)
@@ -68,7 +75,7 @@ public class CardUICoordinator
         CardUsingFinishedEvent?.Invoke();
     }
 
-    public void CardUsed(bool bVerified,int slotIdx,Transform transform)
+    public void CardUsed(bool bVerified, int slotIdx, Transform transform)
     {
         cardUISystem.CardUsingApproved(bVerified, slotIdx, transform);
     }
@@ -88,14 +95,14 @@ public class CardUICoordinator
         cardUISystem.PlayerTurnStarted();
     }
 
-    private void CardEquipped(int slotIdx,CardDataInstance equippedCard)
+    private void CardEquipped(int slotIdx, CardDataInstance equippedCard)
     {
-        CardEquippedEvent?.Invoke(slotIdx, equippedCard);   
+        CardEquippedEvent?.Invoke(slotIdx, equippedCard);
     }
 
     public void UnEquipBulletCard(int idx)
     {
-       cardUISystem.UnEquipBulletCard(idx);
+        cardUISystem.UnEquipBulletCard(idx);
     }
 
     public void CancelPreview()
@@ -105,6 +112,11 @@ public class CardUICoordinator
 
     public void CardSelectionModeStarted(CardSelectionModeData data)
     {
-        cardUISystem.StartCardSelectMode(data.amount, true);
+        cardUISystem.StartCardSelectMode(data, data.amount, true);
+    }
+
+    private void CardSelectionEnd(List<CardDataInstance> _cards,CardSelectionModeData data)
+    {
+        CardSelectionEndEvent?.Invoke(data, _cards);
     }
 }

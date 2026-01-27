@@ -4,8 +4,8 @@ using GameControlSignals;
 using UICommandSystemSignals;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
-using UnityEngine;
 using WaveSystemSignals;
+using System.Collections.Generic;
 
 public class UIModuleCoordinator
 {
@@ -107,6 +107,9 @@ public class UIModuleCoordinator
 
         gameplayUICoordinator.CardUsedEvent -= cardUICoordinator.CardUsed;
         gameplayUICoordinator.CardUsedEvent += cardUICoordinator.CardUsed;
+
+        cardUICoordinator.CardSelectionEndEvent -= CardSelectionEnd;
+        cardUICoordinator.CardSelectionEndEvent += CardSelectionEnd;
     }
 
     public void ReleaseEvents()
@@ -124,6 +127,8 @@ public class UIModuleCoordinator
         cardUICoordinator.UICommandCompleteEvent -= UICommandComplete;
 
         gameplayUICoordinator.CardUsedEvent -= cardUICoordinator.CardUsed;
+
+        cardUICoordinator.CardSelectionEndEvent -= CardSelectionEnd;
     }
 
     private void UnEquipBulletCard(int slotIdx)
@@ -242,5 +247,10 @@ public class UIModuleCoordinator
     public void CardSelectionModeStarted(CardSelectionModeStartSignal cardSelectionModeStartSignal)
     {
         cardUICoordinator.CardSelectionModeStarted(cardSelectionModeStartSignal.data);
+    }
+
+    private void CardSelectionEnd(CardSelectionModeData _data,List<CardDataInstance> _cards)
+    {
+        signalHub.Publish(new UICardSelectionEndSignal(_data, _cards));
     }
 }

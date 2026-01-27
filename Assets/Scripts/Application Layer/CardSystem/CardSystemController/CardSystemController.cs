@@ -485,4 +485,11 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     {
         OrganizeCardFollowUpEffectCommand(command);
     }
+
+    public void InsertCardSystemActionCommand(CardSystemActionType cardSystemActionType,ReadOnlySpan<CardDataInstance> _cards)
+    {
+        DispatchCardSystemActionCommand_Instant(cardSystemActionType, _cards);
+
+        CardActionEndScopeEvent?.Invoke();
+    }
 }

@@ -258,6 +258,11 @@ public class HandSystem : MonoBehaviour
 
     private void ConsumeMagic(MainCardInstance card)
     {
+
+
+
+
+
         // 지금은 즉시 반환
         ReturnToPool(card);
     }
@@ -479,7 +484,7 @@ public class HandSystem : MonoBehaviour
 
 
         // 버튼 및 텍스트 활성
-        selectEndButton.SelectEndButtonActive(true);
+        selectEndButton.SetActiveVisible(true);
         RefreshSelectEndButton();
         SettingSelectText(bCardSelectMode);
 
@@ -520,11 +525,11 @@ public class HandSystem : MonoBehaviour
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
 
-        List<MainCardInstance> selected = GetSelectedCards();
+        List<CardDataInstance> selected = GetSelectedCards();
         cardSystem.EndCardSelectMode(selected);
 
         // 버튼 및 텍스트 비활성
-        selectEndButton.SelectEndButtonActive(false);
+        selectEndButton.SetActiveVisible(false);
         selectEndButton.SetCanClick(false);
         SettingSelectText(bCardSelectMode);
 
@@ -567,13 +572,15 @@ public class HandSystem : MonoBehaviour
         wave?.Rebuild();
     }
 
-    private List<MainCardInstance> GetSelectedCards()
+    private List<CardDataInstance> GetSelectedCards()
     {
-        List<MainCardInstance> selected = new();
+        List<CardDataInstance> selected = new();
         foreach (var c in cards)
         {
             if (c != null && c.cardState == CardState.Selecting)
-                selected.Add(c);
+            {
+                selected.Add(c.CardData);
+            }
         }
         return selected;
     }
@@ -729,6 +736,7 @@ public class HandSystem : MonoBehaviour
 
             case CardReturnType.EquippedAction:
                 {
+                    Debug.Log("Wrong call (EquippedAction)");
                     break;
                 }
         }
