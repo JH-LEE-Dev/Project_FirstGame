@@ -278,6 +278,9 @@ public class HandSystem : MonoBehaviour
 
             ReturnToPool(card);
 
+            Vector2 BasePos = card.transform.position;
+            Vector2 GravePos = cardSystem.GetGravePos();
+
             computeArc();
             ComputeSelectedPositions();
 

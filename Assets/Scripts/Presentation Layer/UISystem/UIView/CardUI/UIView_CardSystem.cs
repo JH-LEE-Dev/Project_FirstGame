@@ -194,10 +194,6 @@ public class UIView_CardSystem : UIView
     {
         //handRoot.gameObject.SetActive(false);
     }
-    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
-    {
-        poolingSystem?.PlayMagicCardEffect(worldPos, initialLocalScale, onComplete);
-    }
 
     ///////////////////////////////////
 
@@ -390,10 +386,17 @@ public class UIView_CardSystem : UIView
     {
         return poolingSystem?.RentHandCard();
     }
+
     public void ReturnHandCard(MainCardInstance card)
     {
         poolingSystem?.ReturnHandCard(card);
     }
+
+    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    {
+        poolingSystem?.PlayMagicCardEffect(worldPos, initialLocalScale, onComplete);
+    }
+
     ///////////////////////////////////
 
 
@@ -522,6 +525,13 @@ public class UIView_CardSystem : UIView
         if (graveSystem == null) return Vector3.zero;
         return graveSystem.GetComponent<RectTransform>().anchoredPosition;
     }
+
+    public Vector3 GetGravePos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.transform.position;
+    }
+
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
