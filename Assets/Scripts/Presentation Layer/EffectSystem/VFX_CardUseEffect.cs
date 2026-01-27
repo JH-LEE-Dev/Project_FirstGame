@@ -20,8 +20,8 @@ public class VFX_CardUseEffect : MonoBehaviour
     private float spreadPower = 3.5f;
     private float spreadDur = 0.2f;
     private float collectDur = 0.3f;
-    private float glowIntensity = 4.5f;
-    private Color glowColor = new Color(1f, 1f, 0f, 1f); // 255,255,0
+    private float glowIntensity = 5f;
+    private Color glowColor = new Color(1f, 1f, 0.5f, 1f);
 
     private const string P_WidthX = "WidthX";
     private const string P_WidthY = "WidthY";

@@ -269,7 +269,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
         ComputeSelectedPositions();
 
-        card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.05f);
+        card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.1f);
         card.Motion.PlayConsumeShrink(0.2f, 0.03f);
 
         DOVirtual.DelayedCall(0.6f, () =>

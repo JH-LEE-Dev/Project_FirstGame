@@ -382,15 +382,31 @@ public class CardMotion : MonoBehaviour
     {
         AllKillTweens(false);
 
-        consumeScaleTween?.Kill();
+        duration = Mathf.Max(0.01f, duration);
+
 
         Vector3 baseScale = transform.localScale;
         Vector3 endScale = baseScale * endScaleMul;
 
-        consumeScaleTween = transform.DOScale(endScale, Mathf.Max(0.01f, duration))
-            .SetEase(Ease.InCubic)
-            .SetUpdate(true)
-            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+        Quaternion baseRot = transform.localRotation;
+        Quaternion endRot = baseRot * Quaternion.Euler(0f, 0f, -30f); // 왼쪽 30도
+
+
+        consumeScaleTween = DOTween.Sequence()
+                .SetUpdate(true)
+                .SetLink(gameObject, LinkBehaviour.KillOnDisable)
+
+                // 스케일
+                .Join(
+                    transform.DOScale(endScale, duration)
+                             .SetEase(Ease.InCubic)
+                )
+
+                // 회전
+                .Join(
+                    transform.DOLocalRotateQuaternion(endRot, duration)
+                             .SetEase(Ease.InCubic)
+                );
     }
 
 }

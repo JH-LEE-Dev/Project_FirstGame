@@ -23,8 +23,8 @@ public class CardVisualFloat : MonoBehaviour
     [SerializeField] private float previewFloatFreq = 0.2f;
 
     [Header("Draw Look")]
-    [SerializeField] private Color drawColor = new Color(1f, 1f, 0.07f, 1f);
-    [SerializeField] private float colorDuration = 0.5f;
+    private Color drawColor = new Color(1f, 1f, 0.5f, 1f);
+    private float colorDuration = 0.5f;
 
     [Header("Overlay Ref")]
     [SerializeField] private Image drawOverlay;

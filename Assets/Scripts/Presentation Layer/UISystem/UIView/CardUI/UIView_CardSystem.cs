@@ -654,12 +654,11 @@ public class UIView_CardSystem : UIView
 
     private void NotCardSpawnStarEvent(VFX_CardStar vfx)
     {
-
     }
 
     private void NotCardSpawnCompleteEvent(VFX_CardStar vfx)
     {
-        
+        poolingSystem?.StarEffects?.Release(vfx.gameObject);
     }
 
     public Vector3 GetDeckWorldPos()
