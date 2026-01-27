@@ -482,11 +482,11 @@ public class UIView_CardSystem : UIView
         dimOverlay.SetDimOverlayActive(false);
 
         if (cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToHand)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.DuplicateCardsToDeck)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
         else if(cardSelectionModeData.selectionMode == CardSelectionMode.UpgradeCardsToHand)
-            ReturnCard(_cards, CardReturnType.FlyToGrave);
+            ReturnCard(_cards, CardReturnType.StayHand);
 
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
