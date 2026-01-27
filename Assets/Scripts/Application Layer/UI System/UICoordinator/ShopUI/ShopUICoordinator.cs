@@ -8,4 +8,9 @@ public class ShopUICoordinator
     {
         shopUI = _shopUI;
     }
+
+    public void ShopOpened()
+    {
+        shopUI.OpenShop();
+    }
 }

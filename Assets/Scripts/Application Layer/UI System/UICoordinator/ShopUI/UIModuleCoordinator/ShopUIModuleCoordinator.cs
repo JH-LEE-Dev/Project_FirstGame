@@ -26,7 +26,7 @@ public class ShopUIModuleCoordinator
 
     private void ShopOpened(ShopOpenedSignal shopOpenedSignal)
     {
-
+        shopUICoordinator.ShopOpened();
     }
 
     public void Release()
