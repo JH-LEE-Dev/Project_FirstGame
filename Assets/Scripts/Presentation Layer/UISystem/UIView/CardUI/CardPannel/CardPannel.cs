@@ -20,12 +20,8 @@ public class CardPannel : MonoBehaviour
     private bool selectForcing = false;
     private int maxSelectCardCnt = 0;
 
-    private List<CardDataInstance> selectCards = new List<CardDataInstance>(10);
-    public List<CardDataInstance> SelectCards
-    {
-        get { return selectCards; }
-        set { selectCards = value; }
-    }
+    private List<MainCardInstance> selectCards = new List<MainCardInstance>(10);
+    private List<CardDataInstance> selectDatas = new List<CardDataInstance>(10);
 
     public CurrentPannel CurrPannelType
     {
@@ -47,35 +43,50 @@ public class CardPannel : MonoBehaviour
     {
         if(bSelectMode)
         {
+            exitButton.gameObject.SetActive(false);
             exitButton?.SetState(ButtonInstance.VisualState.Hidden);
+
+            selectButton.gameObject.SetActive(true);
             selectButton?.SetState(ButtonInstance.VisualState.VisibleDisabled);
         }
         else
         {
+            exitButton.gameObject.SetActive(true);
             exitButton?.SetState(ButtonInstance.VisualState.VisibleEnabled);
+
+            selectButton.gameObject.SetActive(false);
             selectButton?.SetState(ButtonInstance.VisualState.Hidden);
         }
     }
 
     public void ToggleSelect(MainCardInstance card)
     {
-        if (maxSelectCardCnt <= selectCards.Count)
-            return;
-
         if (CardState.Selecting == card.cardState)
         {
-            selectCards.Remove(card.CardData);
+            selectCards.Remove(card);
             card.SetUIState(CardState.Hidden);
-            // card 한테 원래대로 돌아가라고 명령
+            card.OtherMotion.OnClick(false);
+
+            if (maxSelectCardCnt > selectCards.Count && selectForcing)
+            {
+                selectButton?.SetState(ButtonInstance.VisualState.VisibleDisabled);
+            }
+
             return;
         }
 
+        if (maxSelectCardCnt <= selectCards.Count)
+            return;
+
         card.SetUIState(CardState.Selecting);
-        // card 한테 모션 재생하라고 명령
-        selectCards.Add(card.CardData);
+        card.OtherMotion.OnClick(true);
+
+        selectCards.Add(card);
 
         if (maxSelectCardCnt <= selectCards.Count && selectForcing)
+        {
             selectButton?.SetState(ButtonInstance.VisualState.VisibleEnabled);
+        }
     }
 
     public void CompleteSelectedCards()
@@ -83,10 +94,15 @@ public class CardPannel : MonoBehaviour
         if (null == cardSystem)
             return;
 
-        cardSystem.EndCardSelectModefromPannel(selectCards);
+        selectDatas.Clear();
 
-        // 여기서 원래대로 모양 돌려 놓는 거 진행, 상태까지 다
+        foreach (MainCardInstance data in selectCards)
+        {
+            data.OtherMotion.OnClick(false);
+            selectDatas.Add(data.CardData);
+        }
 
+        cardSystem.EndCardSelectModefromPannel(selectDatas);
         selectCards.Clear();
     }
 
@@ -106,6 +122,9 @@ public class CardPannel : MonoBehaviour
         {
             selectButton.onClickedEvent += DeActivatePannel;
             selectButton.onClickedEvent += CompleteSelectedCards;
+
+            selectButton.SetState(ButtonInstance.VisualState.Hidden);
+            selectButton.gameObject.SetActive(false);
         }
     }
 

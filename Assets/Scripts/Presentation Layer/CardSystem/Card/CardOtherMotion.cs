@@ -18,23 +18,39 @@ public class CardOtherMotion : MonoBehaviour
     [SerializeField] private Vector3 clickFinishScale = Vector3.zero;
     [SerializeField] private Ease clickEase = Ease.OutExpo;
 
-    private Quaternion originRot = Quaternion.identity;
+    private Vector3 originRot = Vector3.zero;
     private Vector3 originScale = Vector3.one;
 
-    private Sequence hoverSeq;
+    private Sequence seq;
 
     public void Bind(MainCardInstance _card)
     {
         card = _card;
         rt = GetComponent<RectTransform>();
 
-        originRot = rt.localRotation;
+        originRot = rt.localEulerAngles;
         originScale = rt.localScale;
     }
 
     public void OnHover()
     {
+        if (null == rt)
+            return;
 
+        CancelPrevMotion(seq);
+
+        seq = DOTween.Sequence();
+
+        rt.localScale = hoverStartScale;
+        rt.eulerAngles = hoverStartRot;
+
+        seq.Append(rt.DOLocalRotate(originRot, hoverDuration, RotateMode.FastBeyond360)
+            .SetEase(hoverEase));
+
+        seq.Join(rt.DOScale(originScale, hoverDuration)
+            .SetEase(hoverEase));
+
+        seq.OnComplete(OnOriginSetup);
     }
 
     public void ExitHover()
@@ -52,12 +68,29 @@ public class CardOtherMotion : MonoBehaviour
 
     private void SelectMotion()
     {
+        CancelPrevMotion(seq);
 
+        seq = DOTween.Sequence();
+
+        rt.localScale = clickStartScale;
+        rt.eulerAngles = hoverStartRot;
+
+        seq.Append(rt.DOScale(clickFinishScale, clickDuration)
+            .SetEase(clickEase));
+
+        seq.OnComplete(OnClickSelect);
     }
 
     private void UnSelectMotion()
     {
+        CancelPrevMotion(seq);
 
+        seq = DOTween.Sequence();
+
+        seq.Append(rt.DOScale(originScale, clickDuration)
+            .SetEase(clickEase));
+
+        seq.OnComplete(OnOriginSetup);
     }
 
     private void CancelPrevMotion(Sequence seq)
@@ -66,5 +99,24 @@ public class CardOtherMotion : MonoBehaviour
             seq.Kill();
 
         seq = null;
+    }
+
+    private void OnOriginSetup()
+    {
+        if (null == rt)
+            return;
+
+        rt.eulerAngles = originRot;
+        rt.localScale = originScale;
+    }
+
+    private void OnClickSelect()
+    {
+        rt.localScale = clickFinishScale;
+    }
+
+    private void OnClickUnSelect()
+    {
+        rt.localScale = originScale;
     }
 }
