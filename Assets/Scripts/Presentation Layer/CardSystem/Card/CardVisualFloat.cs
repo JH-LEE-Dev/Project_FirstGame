@@ -23,8 +23,8 @@ public class CardVisualFloat : MonoBehaviour
     [SerializeField] private float previewFloatFreq = 0.2f;
 
     [Header("Draw Look")]
-    [SerializeField] private Color drawColor = new Color(1f, 1f, 0.07f, 1f);
-    [SerializeField] private float colorDuration = 0.5f;
+    private Color drawColor = new Color(1f, 1f, 0.5f, 1f);
+    private float colorDuration = 0.5f;
 
     [Header("Overlay Ref")]
     [SerializeField] private Image drawOverlay;
@@ -36,9 +36,7 @@ public class CardVisualFloat : MonoBehaviour
     [SerializeField] private float drawTotalDuration = 0.4f;
     private Tween drawScaleTween;
 
-    //[Header("Draw Pop")]
-    //[SerializeField] private float dissolveDuration = 1f;
-    //[SerializeField] private Ease dissolveEase = Ease.Linear;
+
 
     [Header("CanvasGroup")]
     [SerializeField] private CanvasGroup canvasGroup;
@@ -139,6 +137,7 @@ public class CardVisualFloat : MonoBehaviour
         SetVisible(true);
     }
 
+
     public void SetVisible(bool visible)
     {
         if (canvasGroup == null) return;
@@ -148,4 +147,31 @@ public class CardVisualFloat : MonoBehaviour
         canvasGroup.interactable = visible;
     }
 
+    public Tween FadeDrawOverlayAlpha(float to, float dur)
+    {
+        if (drawOverlay == null) return null;
+
+        drawTween?.Kill();
+        var c = drawColor;
+        c.a = drawOverlay.color.a;
+        drawOverlay.color = c;
+
+        drawTween = drawOverlay.DOFade(Mathf.Clamp01(to), Mathf.Max(0.01f, dur))
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+
+        return drawTween;
+    }
+
+    public void ResetOverlayAlpha()
+    {
+        if (drawOverlay != null)
+        {
+            var c = drawColor;
+            c.a = 0f;
+            drawOverlay.color = c;
+            drawOverlay.raycastTarget = false;
+        }
+    }
 }

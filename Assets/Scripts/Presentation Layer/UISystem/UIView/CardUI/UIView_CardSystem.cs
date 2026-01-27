@@ -197,6 +197,8 @@ public class UIView_CardSystem : UIView
         //handRoot.gameObject.SetActive(false);
     }
 
+    ///////////////////////////////////
+
     public void PlayerTurnStarted()
     {
         //handRoot.gameObject.SetActive(true);
@@ -386,10 +388,17 @@ public class UIView_CardSystem : UIView
     {
         return poolingSystem?.RentHandCard();
     }
+
     public void ReturnHandCard(MainCardInstance card)
     {
         poolingSystem?.ReturnHandCard(card);
     }
+
+    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    {
+        poolingSystem?.PlayMagicCardEffect(worldPos, initialLocalScale, onComplete);
+    }
+
     ///////////////////////////////////
 
 
@@ -502,6 +511,7 @@ public class UIView_CardSystem : UIView
             return Vector2.zero;
 
         int currHandCnt = handSystem.GetCurrentHandCardCount();
+        Debug.Log(currHandCnt);
         Vector2 NextEndPos = handSystem.PredictRightmostPosForCount(currHandCnt + (currentDrawIdx + 1));
 
         return NextEndPos;
@@ -534,6 +544,13 @@ public class UIView_CardSystem : UIView
         if (graveSystem == null) return Vector3.zero;
         return graveSystem.GetComponent<RectTransform>().anchoredPosition;
     }
+
+    public Vector3 GetGravePos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.transform.position;
+    }
+
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
@@ -623,7 +640,7 @@ public class UIView_CardSystem : UIView
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
     public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
 
-    public void SpawnCardStarAtoB(int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
+    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
     {
         GameObject star = GetStarPerformerFromPool(_startWorldPos);
         VFX_CardStar vfx = star?.GetComponent<VFX_CardStar>();
@@ -633,17 +650,34 @@ public class UIView_CardSystem : UIView
         Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f);
 
         vfx.CardDataInstance = _data;
-        vfx.PlayCardSpawnEvent(_idx, 0.15f, 0.35f, Ease.OutQuad, path, SpawnCardStarAtoBStartEvent, SpawnCardStarAtoBCompleteEvent);
+
+        float delay = 0.15f;
+        float duration = 0.35f;
+        Ease ease = Ease.OutQuad;
+
+        if (bCardSpawn)
+            vfx.PlayCardSpawnEvent(_idx, delay, duration, ease, path, SpawnCardStarEvent, SpawnCardCompleteEvent);
+        else
+            vfx.PlayCardSpawnEvent(_idx, delay, duration, ease, path, NotCardSpawnStarEvent, NotCardSpawnCompleteEvent);
     }
 
-    private void SpawnCardStarAtoBStartEvent(VFX_CardStar vfx)
+    private void SpawnCardStarEvent(VFX_CardStar vfx)
     {
 
     }
 
-    private void SpawnCardStarAtoBCompleteEvent(VFX_CardStar vfx)
+    private void SpawnCardCompleteEvent(VFX_CardStar vfx)
     {
         CallOneCardDrawed(vfx.TargetPos, vfx.CardDataInstance, vfx.gameObject);
+    }
+
+    private void NotCardSpawnStarEvent(VFX_CardStar vfx)
+    {
+    }
+
+    private void NotCardSpawnCompleteEvent(VFX_CardStar vfx)
+    {
+        poolingSystem?.StarEffects?.Release(vfx.gameObject);
     }
 
     public Vector3 GetDeckWorldPos()

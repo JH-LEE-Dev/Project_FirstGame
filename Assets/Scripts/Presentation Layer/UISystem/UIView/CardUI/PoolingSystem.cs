@@ -19,12 +19,19 @@ public class PoolingSystem : MonoBehaviour
     [SerializeField] private List<MainCardInstance> otherCardPool = new();
     public List<MainCardInstance> OtherCardPool { get { return otherCardPool; } }
 
-    [SerializeField] private int handPoolSize = 20;
-    [SerializeField] private int otherPoolSize = 50;
+    private int handPoolSize = 20;
+    private int otherPoolSize = 50;
 
     // 덱, 웜홀에서 사용할 이펙트 풀링
     private ObjectPool<GameObject> starEffects;
     public ObjectPool<GameObject> StarEffects { get { return starEffects; } }
+
+    // 카드에서 사용할 이펙트 풀링
+    [SerializeField] private VFX_CardUseEffect UseCardEffectPrefab;
+    private ObjectPool<VFX_CardUseEffect> UseCardEffects;
+    private int defaultCapacity = 10;
+    private int maxSize = 50;
+
 
     private void Awake()
     {
@@ -41,6 +48,7 @@ public class PoolingSystem : MonoBehaviour
         cardSystem = owner;
         cardPooling();
         StarPooling();
+        UseCardEffectPooling();
     }
 
     private void cardPooling()
@@ -91,6 +99,35 @@ public class PoolingSystem : MonoBehaviour
             starEffects.Release(newObj);
         }
     }
+
+    private void UseCardEffectPooling()
+    {
+        UseCardEffects = new ObjectPool<VFX_CardUseEffect>(
+                    createFunc: () =>
+                    {
+                        var inst = Instantiate(UseCardEffectPrefab, transform);
+                        inst.gameObject.SetActive(false);
+                        inst.SetReleaseHandler(UseEffectRelease);
+                        return inst;
+                    },
+                    actionOnGet: e => e.gameObject.SetActive(true),
+                    actionOnRelease: e => e.gameObject.SetActive(false),
+                    actionOnDestroy: e => Destroy(e.gameObject),
+                    collectionCheck: false,
+                    defaultCapacity: defaultCapacity,
+                    maxSize: maxSize
+                );
+    }
+
+    private void UseEffectRelease(VFX_CardUseEffect e) => UseCardEffects.Release(e);
+
+    public void PlayMagicCardEffect(Vector3 worldPos, float initialLocalScale, System.Action onComplete = null)
+    {
+        var e = UseCardEffects.Get();
+        e.Play(worldPos, initialLocalScale, onComplete);
+    }
+
+
 
     // 카드 랜트.
     public MainCardInstance RentHandCard()

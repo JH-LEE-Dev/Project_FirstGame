@@ -43,6 +43,7 @@ public enum CardReturnType
     FlyToGrave,
     Extinction,
     EquippedAction,
+    StayHand,
     Temp,
 }
 
