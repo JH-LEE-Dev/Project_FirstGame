@@ -8,22 +8,28 @@ using DG.Tweening;
 
 public class UIView_CardSystem : UIView
 {
+    //이벤트
     public event Action<int> UICommandCompleteEvent;
     public event Action<CardDataInstance> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
     public event Action<int, CardDataInstance> CardEquippedEvent;
     public event Action<List<CardDataInstance>> CardSelectionEndEvent;
 
+
+    //UI Job Action Binding
     public delegate float UIActionHandler(CardUIActionData cardUIActionData);
     private UIActionHandler[] uiActionHandlers;
 
+
     //사용 승인을 받은 카드
     private MainCardInstance verificationWaitCard;
+
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<CardDataInstance> deckCards;
     IReadOnlyList<CardDataInstance> handCards;
     IReadOnlyList<CardDataInstance> graveCards;
+
 
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
@@ -32,6 +38,7 @@ public class UIView_CardSystem : UIView
     [Header("Buttons")]
     [SerializeField] private TurnEndButton turnFinishedButton;
     ////////////
+
 
     [Header("Systems")]
     [SerializeField] private PoolingSystem poolingSystem;
@@ -63,17 +70,27 @@ public class UIView_CardSystem : UIView
     private bool bWorkingBlock = false;
     public bool WorkingBlock { get { return bWorkingBlock; } set { bWorkingBlock = value; } }
 
-    public override void OnDestroy()
-    {
-        UICommandCompleteEvent = null;
-    }
 
+    /// <summary>
+    /// 시스템 함수들 ----------------------------------------------------------------
+    /// </summary>
     public override void Initialize(UIViewContext ctx)
     {
         base.Initialize(ctx);
 
         BindUIActionHandlers();
     }
+
+    protected override void OnShow()
+    {
+        base.OnShow();
+    }
+
+    protected override void OnHide()
+    {
+        base.OnHide();
+    }
+
 
     private void BindUIActionHandlers()
     {
@@ -117,7 +134,198 @@ public class UIView_CardSystem : UIView
         extinctionSystem?.Init(this);
         //pathSystem?.Init(this);
     }
+    public override void OnDestroy()
+    {
+        UICommandCompleteEvent = null;
+    }
 
+    //----------------------------------End Line-----------------------------------------------------
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 외부 신호 반응 함수들 ------------------------------------------------------------
+    /// </summary>
+    public void CardUsingFinished()
+    {
+        handSystem?.CancelPreview();
+
+        turnFinishedButton.gameObject.SetActive(false);
+        CardUsingFinishedEvent?.Invoke();
+    }
+
+    public void CardDrawFinished()
+    {
+        turnFinishedButton.gameObject.SetActive(true);
+    }
+
+    public void EnemyTurnStarted()
+    {
+        //handRoot.gameObject.SetActive(false);
+    }
+
+    public void PlayerTurnStarted()
+    {
+        //handRoot.gameObject.SetActive(true);
+    }
+
+    public async void ReceiveUIAction(CardUIActionBatch _actionBatch)
+    {
+        var currentActionDataList = _actionBatch.actionList;
+
+        int size = currentActionDataList.Count;
+        for (int i = 0; i < size; ++i)
+        {
+            CardUIActionData currentActionData = currentActionDataList[i];
+
+            CardUIActionType currentType = currentActionData.uiActionType;
+
+            float turnWaitTime = uiActionHandlers[(int)currentType].Invoke(currentActionData);
+
+            await Awaitable.WaitForSecondsAsync(turnWaitTime);
+        }
+
+        UpdateCardsCounts();
+
+        UICommandCompleteEvent?.Invoke(_actionBatch.idx);
+    }
+
+    public void CardUsingApproved(bool boolean, int slotIdx, Transform slotTransform) // true이면 verificationWaitCard -> 사용 승인.
+    {
+        if (boolean)
+        {
+            handSystem?.UseCard(verificationWaitCard, slotIdx, slotTransform);
+        }
+        else
+        {
+            //카드 사용 실패.
+            Debug.Log("이 카드를 사용할 수 없습니다.");
+
+            verificationWaitCard.Motion.PlayReject();
+        }
+    }
+
+    //----------------------------------End Line-----------------------------------------------------
+
+
+
+
+
+
+    /// <summary>
+    /// UI Job 함수들 ------------------------------------------------------
+    /// </summary>
+    private float CardPileDraw(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        DrawingCards(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+    private float CardAdditionalDraw(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        DrawingCards(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+
+    private float GraveCardsToDeck(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        graveSystem?.CardMoveToDeckEffect(uiActionData.cards.Count);
+
+        return turnWaitTime;
+    }
+
+    private float HandCardsToGrave(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
+
+        return turnWaitTime;
+    }
+
+    private float CardsToExtinction(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
+            Debug.Log("사용된 카드가 소멸로 감.");
+        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
+        {
+            Debug.Log("슬롯에 있던 카드가 소멸로 감.");
+            ReturnStateAllCard(CardState.Equipped);
+        }
+
+        ReturnCard(uiActionData.cards, CardReturnType.Extinction);
+
+        return turnWaitTime;
+    }
+
+    private float CardsToGrave(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
+            Debug.Log("사용된 카드가 묘지로 감.");
+        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
+        {
+            Debug.Log("슬롯에 있던 카드가 묘지로 감.");
+            ReturnStateAllCard(CardState.Equipped);
+        }
+
+        ReturnCard(uiActionData.cards, CardReturnType.FlyToGrave);
+
+        return turnWaitTime;
+    }
+
+    private float ExtinctionCardsToDeck(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+
+        return turnWaitTime;
+    }
+
+    private float GraveCardsToHand(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0.5f;
+
+        graveSystem?.CardDrawToHands(uiActionData.cards);
+
+        return turnWaitTime;
+    }
+
+    //----------------------------------End Line-----------------------------------------------------
+
+
+
+
+
+
+    /// <summary>
+    /// UI 구현 함수들 ------------------------------------------------------------------------------
+    /// </summary>
     /////////////////////////////////// For PoolingSystem
     public MainCardInstance RentHandCard()
     {
@@ -138,21 +346,6 @@ public class UIView_CardSystem : UIView
         verificationWaitCard = _card;
 
         TryCardUseEvent?.Invoke(_card.CardData);
-    }
-
-    public void CardUsingApproved(bool boolean, int slotIdx, Transform slotTransform) // true이면 verificationWaitCard -> 사용 승인.
-    {
-        if (boolean)
-        {
-            handSystem?.UseCard(verificationWaitCard, slotIdx, slotTransform);
-        }
-        else
-        {
-            //카드 사용 실패.
-            Debug.Log("이 카드를 사용할 수 없습니다.");
-
-            verificationWaitCard.Motion.PlayReject();
-        }
     }
 
     public void OnCardLeftClick(MainCardInstance _card)
@@ -407,161 +600,6 @@ public class UIView_CardSystem : UIView
         return getObj;
     }
     /////////////////////////////////////////////////
-
-    protected override void OnShow()
-    {
-        base.OnShow();
-    }
-
-    protected override void OnHide()
-    {
-        base.OnHide();
-    }
-
-    public void RenderUI()
-    {
-
-    }
-
-    public void CardUsingFinished()
-    {
-        handSystem?.CancelPreview();
-
-        turnFinishedButton.gameObject.SetActive(false);
-        CardUsingFinishedEvent?.Invoke();
-    }
-
-    public void CardDrawFinished()
-    {
-        turnFinishedButton.gameObject.SetActive(true);
-    }
-
-    public void EnemyTurnStarted()
-    {
-        //handRoot.gameObject.SetActive(false);
-    }
-
-    public void PlayerTurnStarted()
-    {
-        //handRoot.gameObject.SetActive(true);
-    }
-
-    public async void ReceiveUIAction(CardUIActionBatch _actionBatch)
-    {
-        var currentActionDataList = _actionBatch.actionList;
-
-        int size = currentActionDataList.Count;
-        for (int i = 0; i < size; ++i)
-        {
-            CardUIActionData currentActionData = currentActionDataList[i];
-
-            CardUIActionType currentType = currentActionData.uiActionType;
-
-            float turnWaitTime = uiActionHandlers[(int)currentType].Invoke(currentActionData);
-
-            await Awaitable.WaitForSecondsAsync(turnWaitTime);
-        }
-
-        UpdateCardsCounts();
-
-        UICommandCompleteEvent?.Invoke(_actionBatch.idx);
-    }
-
-    private float CardPileDraw(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        DrawingCards(uiActionData.cards);
-
-        return turnWaitTime;
-    }
-
-    private float CardAdditionalDraw(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        DrawingCards(uiActionData.cards);
-
-        return turnWaitTime;
-    }
-
-
-    private float GraveCardsToDeck(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        graveSystem?.CardMoveToDeckEffect(uiActionData.cards.Count);
-
-        return turnWaitTime;
-    }
-
-    private float HandCardsToGrave(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
-
-        return turnWaitTime;
-    }
-
-    private float CardsToExtinction(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
-            Debug.Log("사용된 카드가 소멸로 감.");
-        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
-        {
-            Debug.Log("슬롯에 있던 카드가 소멸로 감.");
-            ReturnStateAllCard(CardState.Equipped);
-        }
-
-        ReturnCard(uiActionData.cards, CardReturnType.Extinction);
-
-        return turnWaitTime;
-    }
-
-    private float CardsToGrave(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
-            Debug.Log("사용된 카드가 묘지로 감.");
-        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
-        {
-            Debug.Log("슬롯에 있던 카드가 묘지로 감.");
-            ReturnStateAllCard(CardState.Equipped);
-        }
-
-        ReturnCard(uiActionData.cards, CardReturnType.FlyToGrave);
-
-        return turnWaitTime;
-    }
-
-    private float ExtinctionCardsToDeck(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-
-        return turnWaitTime;
-    }
-
-    private float GraveCardsToHand(CardUIActionData uiActionData)
-    {
-        //설정할 것.
-        float turnWaitTime = 0.5f;
-
-        graveSystem?.CardDrawToHands(uiActionData.cards);
-
-        return turnWaitTime;
-    }
 
     private void UpdateCardsCounts()
     {
