@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a4c0d2982664884997047cd19c295a1, type: 3}
   m_Name: DuplicateCardsToDeck Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_DuplicateCardsToDeck
-  cardSystemActionTimingType: 0
+  cardSystemActionTimingType: 3

@@ -20,3 +20,6 @@ MonoBehaviour:
   bonusRange: 5
   bonusCrit: 5
   bonusDamage: 1
+  upgradedBonusRange: 10
+  upgradedBonusCrit: 10
+  upgradedBonusDamage: 2

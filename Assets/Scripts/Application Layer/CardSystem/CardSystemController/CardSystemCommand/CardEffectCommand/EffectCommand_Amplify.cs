@@ -4,10 +4,15 @@ using UnityEngine;
 public class EffectCommand_Amplify : CardEffectCommand<ICardSlotSystemActionCommandHandler>
 {
     [SerializeField] int bonusValueModifier = 1;
+    [SerializeField] int upgradedBonusValueModifier = 1;
 
     protected override void Execute(ICardSlotSystemActionCommandHandler cardSlotSystemActionCommandHandler)
     {
-        cardSlotSystemActionCommandHandler.ApplyValueModifier(bonusValueModifier);
+        if (nestingCnt != 0)
+            cardSlotSystemActionCommandHandler.ApplyValueModifier(bonusValueModifier*valueModifier);
+
+        if (upgradeNestingCnt != 0)
+            cardSlotSystemActionCommandHandler.ApplyValueModifier(upgradedBonusValueModifier * valueModifier);
 
         ResetCommandData();
     }

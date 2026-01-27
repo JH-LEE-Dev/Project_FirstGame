@@ -72,25 +72,13 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(0);
+        CardData cardData = cardDataBase.GetCardData(1);
         if (cardData == null)
             return;
 
         ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        for (int i = 0; i < 9; ++i)
-        {
-            CardDataInstance card = pool.Get();
-            deckPile.Add(card);
-        }
-
-        cardData = cardDataBase.GetCardData(16);
-        if (cardData == null)
-            return;
-
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < initialDeckCnt; ++i)
         {
             CardDataInstance card = pool.Get();
             deckPile.Add(card);
@@ -100,6 +88,26 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     private void OnDestroy()
     {
 
+    }
+
+    public IReadOnlyList<CardDataInstance> GetExtinctionPile()
+    {
+        return extinctionPile;
+    }
+
+    public IReadOnlyList<CardDataInstance> GetDeckPile()
+    {
+        return deckPile;
+    }
+
+    public IReadOnlyList<CardDataInstance> GetGravePile()
+    {
+        return gravePile;
+    }
+
+    public IReadOnlyList<CardDataInstance> GetHandPile()
+    {
+        return handPile;
     }
 
     public void CardPileDraw(int amount, bool bAdditional)
@@ -220,14 +228,14 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             deckPile.Add(card);
         }
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.GraveToDeckEvent, cardSystemContext, writeBuffer.Slice(0, gravePile.Count));
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, gravePile.Count));
 
         rentalBuffer.Dispose();
 
         gravePile.Clear();
     }
 
-    public void ExtinctionToDeck()
+    public void AllExtinctionCardsToDeck()
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(extinctionPile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -239,7 +247,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             deckPile.Add(card);
         }
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.ExtinctionToDeckEvent, cardSystemContext, writeBuffer.Slice(0, extinctionPile.Count));
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.ExtinctionCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, extinctionPile.Count));
 
         rentalBuffer.Dispose();
 
@@ -254,7 +262,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
                 extinctionPile.Add(cards[i]);
         }
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardToExtinctionEvent, cardSystemContext,cards);
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardsToExtinctionEvent, cardSystemContext, cards);
     }
 
     public void CardsToGrave(ReadOnlySpan<CardDataInstance> cards)
@@ -267,7 +275,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             }
         }
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardToGraveEvent, cardSystemContext, cards);
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.CardsToGraveEvent, cardSystemContext, cards);
     }
 
     public void ExecuteCommand(ICardSystemActionCommand actionCommand)
@@ -285,7 +293,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     {
         HandToGrave();
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.HandToGraveEvent, cardSystemContext);
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.HandCardsToGraveEvent, cardSystemContext);
     }
 
     public void ApplyValueModifier(int valueModifier)
@@ -308,7 +316,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         return true;
     }
 
-    public void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
+    public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards)
     {
         for (int i = 0; i < graveToDeckCards.Length; ++i)
         {
@@ -319,34 +327,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
             }
         }
 
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.GraveToHandEvent, cardSystemContext, graveToDeckCards);
-    }
-
-    public IReadOnlyList<CardDataInstance> GetHandPile()
-    {
-        return handPile;
-    }
-
-    public void RandomExtinctionCardToDeck()
-    {
-        if (extinctionPile.Count == 0)
-        {
-            Debug.Log("소멸된 카드가 없습니다.");
-            return;
-        }
-
-        using var rentalBuffer = new RentalScope<CardDataInstance>(1);
-        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
-
-        int randomIdx = UnityEngine.Random.Range(0, extinctionPile.Count - 1);
-
-        deckPile.Add(extinctionPile[randomIdx]);
-        writeBuffer[0] = extinctionPile[randomIdx];
-        extinctionPile.RemoveAt(randomIdx);
-
-        cardManagerEventInvoker.Dispatch(CardSystemEventType.ExtinctionToDeckEvent, cardSystemContext, writeBuffer.Slice(0, 1));
-
-        rentalBuffer.Dispose();
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.GraveCardsToHandEvent, cardSystemContext, graveToDeckCards);
     }
 
     public CardDataInstance CreateCard(int id)
@@ -364,9 +345,9 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void CardsToHand(ReadOnlySpan<CardDataInstance> cards)
     {
-        for(int i = 0;i<cards.Length;++i)
+        for (int i = 0; i < cards.Length; ++i)
         {
-            if(cards[i] != null)
+            if (cards[i] != null)
             {
                 handPile.Add(cards[i]);
             }
@@ -386,5 +367,33 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         }
 
         cardManagerEventInvoker.Dispatch(CardSystemEventType.CardsToDeckEvent, cardSystemContext, cards);
+    }
+
+    public void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i] != null)
+            {
+                deckPile.Add(cards[i]);
+                extinctionPile.Remove(cards[i]);
+            }
+        }
+
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.ExtinctionCardsToDeckEvent, cardSystemContext, cards);
+    }
+
+    public void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i] != null)
+            {
+                deckPile.Add(cards[i]);
+                gravePile.Remove(cards[i]);
+            }
+        }
+
+        cardManagerEventInvoker.Dispatch(CardSystemEventType.GraveCardsToDeckEvent, cardSystemContext, cards);
     }
 }

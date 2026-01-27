@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78884f82861457945a6529432302e29f, type: 3}
   m_Name: Shield Command
   m_EditorClassIdentifier: Assembly-CSharp::ShieldStrategy
-  effectApplyType: 0
   cardSystemActionTimingType: 0
-  bonusShield: 2
+  effectApplyType: 0
+  nestingCnt: 0
+  upgradeNestingCnt: 0
+  valueModifier: 1
+  bonusShield: 4
+  upgradedBonusShield: 6

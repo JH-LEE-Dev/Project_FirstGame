@@ -4,10 +4,15 @@ using UnityEngine;
 public class EffectCommand_IncreaseHP : CardEffectCommand<ICardStatusEffectCommandHandler>
 {
     [SerializeField] float bonusHP = 0f;
+    [SerializeField] float upgradedBonusHP = 0f;
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.HPIncrease(bonusHP);
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.HPIncrease(bonusHP * nestingCnt * valueModifier);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.HPIncrease(upgradedBonusHP * upgradeNestingCnt * valueModifier);
 
         ResetCommandData();
     }

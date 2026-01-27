@@ -87,8 +87,7 @@ MonoBehaviour:
   starEffectPrefab: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
   inactiveHandPool: []
   otherCardPool: []
-  handPoolSize: 20
-  otherPoolSize: 50
+  UseCardEffectPrefab: {fileID: 8812057462481426186, guid: 4c521fe5a302c794382c3df6fad6c83a, type: 3}
 --- !u!1 &1608474574109399140
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,11 +9,14 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
     public RequestCardSystemActionDelegate RequestCardSystemActionEvent;
 
     private CardSelectionMode cardSelectionMode;
+    private SelectCardPileType selectCardPileType;
 
-    public void StartCardSelectionMode(CardSelectionMode _cardSelectionMode, int amount)
+    public void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount)
     {
-        CardSelectionModeData data = new CardSelectionModeData(cardSelectionMode, amount);
+        selectCardPileType = _selectCardPileType;
         cardSelectionMode = _cardSelectionMode;
+        CardSelectionModeData data = new CardSelectionModeData(selectCardPileType,cardSelectionMode, amount);
+
         CardSelectionStartEvent?.Invoke(data);
     }
 
@@ -34,11 +37,26 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
                 writeBuffer[i] = _cards[i];
         }
 
-        if (_data.selectionMode == CardSelectionMode.DuplicateToDeck)
-            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardCardsToDeck, writeBuffer);
-        else
-            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardCardsToHand, writeBuffer);
+        if (_data.selectionMode == CardSelectionMode.DuplicateCardsToDeck)
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardsToDeck, writeBuffer);
+        else if (_data.selectionMode == CardSelectionMode.DuplicateCardsToHand)
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.DuplicateCardsToHand, writeBuffer);
+        else if (_data.selectionMode == CardSelectionMode.UpgradeCardsToHand)
+            UpgradeCards(_cards);
+        else if(_data.selectionMode == CardSelectionMode.GraveCardsToDeck)
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.GraveCardsToDeck, writeBuffer);
+        else if(_data.selectionMode == CardSelectionMode.GraveCardsToHand)
+            RequestCardSystemActionEvent?.Invoke(CardSystemActionType.GraveCardsToHand, writeBuffer);
 
         rentalBuffer.Dispose();
+    }
+
+    public void UpgradeCards(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+        {
+            if (_cards[i] != null)
+                _cards[i].bUpgrade = true;
+        }
     }
 }

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9f40c1ba9b0bcc49925291c2f8d3aa8, type: 3}
+  m_Name: MeteorShower Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_MeteorShower
+  cardSystemActionTimingType: 1
+  effectApplyType: 3
+  nestingCnt: 0
+  upgradeNestingCnt: 0
+  valueModifier: 1
+  attackCnt: 1
+  bonusAttack: 3
+  upgradedAttackCnt: 1
+  upgradedBonusAttack: 4
+  conditionCheckCardId: 4
+  upgradedConditionCheckCardId: 4

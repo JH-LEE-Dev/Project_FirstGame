@@ -4,22 +4,23 @@ using UnityEngine;
 
 public interface ICardSystemActionCommandHandler : ICommandHandler
 {
+    IReadOnlyList<CardDataInstance> GetHandPile();
+    IReadOnlyList<CardDataInstance> GetExtinctionPile();
+    IReadOnlyList<CardDataInstance> GetDeckPile();
+    IReadOnlyList<CardDataInstance> GetGravePile();
+
     void StartCardPileDraw();
     void DrawAgain(int drawAmount);
     void ApplyValueModifier(int valueModifier);
-
     bool DeckConditionCheck(int cardID);
-
-    void GraveToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards);
+    void GraveCardsToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards);
     void CardsToGrave(ReadOnlySpan<CardDataInstance> cards);
-
-    IReadOnlyList<CardDataInstance> GetHandPile();
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cards);
-
-    void RandomExtinctionCardToDeck();
     CardDataInstance CreateCard(int id);
     void CardsRemoveFromHand(ReadOnlySpan<CardDataInstance> cards);
-    void ExtinctionToDeck();
+    void AllExtinctionCardsToDeck();
+    void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
+    void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
     void CardsToHand(ReadOnlySpan<CardDataInstance> cards);
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards);
 }

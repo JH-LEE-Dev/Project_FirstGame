@@ -145,6 +145,15 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShopButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""bde8982b-c5f3-4eaa-a267-8802aece01b6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -257,6 +266,17 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4a1b707-ad5c-4dc4-831b-c04be28f0d70"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShopButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -271,6 +291,7 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
         m_Combat_ESC = m_Combat.FindAction("ESC", throwIfNotFound: true);
         m_Combat_LeftClick = m_Combat.FindAction("LeftClick", throwIfNotFound: true);
         m_Combat_RightClick = m_Combat.FindAction("RightClick", throwIfNotFound: true);
+        m_Combat_ShopButton = m_Combat.FindAction("ShopButton", throwIfNotFound: true);
     }
 
     ~@InputActionSystem()
@@ -357,6 +378,7 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_ESC;
     private readonly InputAction m_Combat_LeftClick;
     private readonly InputAction m_Combat_RightClick;
+    private readonly InputAction m_Combat_ShopButton;
     /// <summary>
     /// Provides access to input actions defined in input action map "Combat".
     /// </summary>
@@ -392,6 +414,10 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Combat/RightClick".
         /// </summary>
         public InputAction @RightClick => m_Wrapper.m_Combat_RightClick;
+        /// <summary>
+        /// Provides access to the underlying input action "Combat/ShopButton".
+        /// </summary>
+        public InputAction @ShopButton => m_Wrapper.m_Combat_ShopButton;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -436,6 +462,9 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
+            @ShopButton.started += instance.OnShopButton;
+            @ShopButton.performed += instance.OnShopButton;
+            @ShopButton.canceled += instance.OnShopButton;
         }
 
         /// <summary>
@@ -465,6 +494,9 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
+            @ShopButton.started -= instance.OnShopButton;
+            @ShopButton.performed -= instance.OnShopButton;
+            @ShopButton.canceled -= instance.OnShopButton;
         }
 
         /// <summary>
@@ -547,5 +579,12 @@ public partial class @InputActionSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShopButton" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShopButton(InputAction.CallbackContext context);
     }
 }

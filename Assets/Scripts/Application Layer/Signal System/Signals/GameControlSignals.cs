@@ -23,4 +23,5 @@ namespace GameControlSignals
             waveIdx = _waveIdx;
         }
     }
+    public struct ShopOpenedSignal { }
 }

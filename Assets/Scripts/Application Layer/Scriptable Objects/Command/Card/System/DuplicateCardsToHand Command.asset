@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af98958bc4e9ecb4d9081fb93a45c9f9, type: 3}
   m_Name: DuplicateCardsToHand Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_DuplicateCardsToHand
-  cardSystemActionTimingType: 0
+  cardSystemActionTimingType: 3

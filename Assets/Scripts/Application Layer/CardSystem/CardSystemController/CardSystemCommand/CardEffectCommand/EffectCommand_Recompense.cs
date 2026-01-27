@@ -6,8 +6,17 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
 {
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        int prevUsedBulletCard = complexSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
-        complexSystemActionCommandHandler.AdditionalDraw(prevUsedBulletCard);
+        if (nestingCnt != 0)
+        {
+            int prevUsedBulletCardCnt = complexSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
+            complexSystemActionCommandHandler.AdditionalDraw(prevUsedBulletCardCnt);
+        }
+
+        if(upgradeNestingCnt != 0)
+        {
+            int prevUsedCardCnt = complexSystemActionCommandHandler.GetPrevUsedCardCnt();
+            complexSystemActionCommandHandler.AdditionalDraw(prevUsedCardCnt);
+        }
 
         ResetCommandData();
     }

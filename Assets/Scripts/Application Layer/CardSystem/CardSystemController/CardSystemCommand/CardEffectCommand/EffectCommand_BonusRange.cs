@@ -4,10 +4,15 @@ using UnityEngine;
 public class EffectCommand_BonusRange : CardEffectCommand<ICardStatusEffectCommandHandler>
 {
     [SerializeField] private float bonusRange = 0;
+    [SerializeField] private float upgradedBonusRange = 0;
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier*nestingCnt);
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier * nestingCnt);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange * valueModifier * upgradeNestingCnt);
 
         ResetCommandData();
     }

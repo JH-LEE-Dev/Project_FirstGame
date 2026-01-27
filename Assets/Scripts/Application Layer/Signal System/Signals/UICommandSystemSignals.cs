@@ -2,11 +2,11 @@ using System;
 
 namespace UICommandSystemSignals
 {
-    public struct CardSystem_JobDispatchSignal 
+    public struct CardSystem_ActionDispatchSignal 
     {
         public CardUIActionBatch actionDataBatch;
 
-        public CardSystem_JobDispatchSignal(CardUIActionBatch _actionDataBatch)
+        public CardSystem_ActionDispatchSignal(CardUIActionBatch _actionDataBatch)
         {
             actionDataBatch = _actionDataBatch;
         }

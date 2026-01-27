@@ -35,6 +35,9 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
             {
                 ++usingCnt;
                 writeBuffer_Using[i] = handPile[i];
+
+                if (upgradeNestingCnt != 0)
+                    handPile[i].bUpgrade = true;
             }
             else
             {

@@ -59,12 +59,12 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
         creatorMap[(int)CardSystemEventType.CardPileDrawEvent] = (context, cards) => CreateJob_Draw(context, cards);
         creatorMap[(int)CardSystemEventType.CardAdditionalDrawEvent] = (context, cards) => CreateJob_AdditionalDraw(context, cards);
-        creatorMap[(int)CardSystemEventType.HandToGraveEvent] = (context, cards) => CreateJob_HandToGrave(context, cards);
-        creatorMap[(int)CardSystemEventType.GraveToDeckEvent] = (context, cards) => CreateJob_GraveToDeck(context, cards);
-        creatorMap[(int)CardSystemEventType.CardToExtinctionEvent] = (context, cards) => CreateJob_CardsToExtinction(context, cards);
-        creatorMap[(int)CardSystemEventType.ExtinctionToDeckEvent] = (context, cards) => CreateJob_ExtinctionToDeck(context, cards);
-        creatorMap[(int)CardSystemEventType.GraveToHandEvent] = (context, cards) => CreateJob_GraveToHand(context, cards);
-        creatorMap[(int)CardSystemEventType.CardToGraveEvent] = (context, cards) => CreateJob_CardsToGrave(context, cards);
+        creatorMap[(int)CardSystemEventType.HandCardsToGraveEvent] = (context, cards) => CreateJob_HandToGrave(context, cards);
+        creatorMap[(int)CardSystemEventType.GraveCardsToDeckEvent] = (context, cards) => CreateJob_GraveToDeck(context, cards);
+        creatorMap[(int)CardSystemEventType.CardsToExtinctionEvent] = (context, cards) => CreateJob_CardsToExtinction(context, cards);
+        creatorMap[(int)CardSystemEventType.ExtinctionCardsToDeckEvent] = (context, cards) => CreateJob_ExtinctionToDeck(context, cards);
+        creatorMap[(int)CardSystemEventType.GraveCardsToHandEvent] = (context, cards) => CreateJob_GraveToHand(context, cards);
+        creatorMap[(int)CardSystemEventType.CardsToGraveEvent] = (context, cards) => CreateJob_CardsToGrave(context, cards);
         creatorMap[(int)CardSystemEventType.CardsToHandEvent] = (context, cards) => CreateJob_CardsToHand(context, cards);
         creatorMap[(int)CardSystemEventType.CardsToDeckEvent] = (context, cards) => CreateJob_CardsToDeck(context, cards);
     }
@@ -276,7 +276,6 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     public void CreateJob_CardsToGrave(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
-        Debug.Log("1");
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
         {

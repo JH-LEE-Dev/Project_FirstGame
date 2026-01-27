@@ -35,6 +35,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     private CardSlotManager cardSlotManager;
 
+    private int prevUsedCardCnt;
+
     public void Initialize()
     {
         cardSlotManager = new CardSlotManager();
@@ -87,6 +89,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardActionEndScopeEvent?.Invoke();
 
         cardSlotManager.ClearAllPrevBulletCard();
+
+        prevUsedCardCnt = 0;
     }
 
     private void DispatchCardSystemActionCommand_BeforeTurn()
@@ -183,6 +187,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     private void CardUsed(CardDataInstance usedCard)
     {
+        ++prevUsedCardCnt;
+
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
@@ -191,7 +197,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             if (usedCard.bUpgrade)
                 OrganizeCardEffectCommand(usedCard, 0, 1);
             else
-                OrganizeCardEffectCommand(usedCard);
+                OrganizeCardEffectCommand(usedCard, 1);
 
             DispatchCardEffect_BeforeAttack();
 
@@ -261,8 +267,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
 
-            if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -272,8 +277,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             CardEffectCommand effectCommand = cardSystemCommands[(int)cardSystemEffectTypes[i]];
 
-            if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -283,8 +287,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             CardEffectCommand effectCommand = slotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
 
-            if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -294,8 +297,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             CardEffectCommand effectCommand = complexSystemCommands[(int)complexSystemEffectsTypes[i]];
 
-            if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
@@ -305,18 +307,11 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffectTypes[i]];
 
-            if (usedCard.GetCardData().cardType == CardType.Bullet)
-                effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
             CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
             InsertCommandToList(timing, effectCommand);
         }
-    }
-
-    private void OrganizeCardFollowUpEffectCommand(CardEffectCommand command, int nestingCnt = 0, int upgradeNestingCnt = 0)
-    {
-        CardSystemActionTimingType timing = command.GetCardActionTimingType();
-        InsertCommandToList(timing, command);
     }
 
     private void InsertCommandToList(CardSystemActionTimingType timingType, CardEffectCommand command)
@@ -421,7 +416,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void GameStarted()
     {
-        DispatchCardSystemActionCommand_Instant(CardSystemActionType.ExtinctionCardsToDeck);
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.AllExtinctionCardsToDeck);
         CardActionEndScopeEvent?.Invoke();
     }
 
@@ -481,15 +476,15 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         usedCardPile.Clear();
     }
 
-    public void InsertFollowUpEffectCommand(CardEffectCommand command)
-    {
-        OrganizeCardFollowUpEffectCommand(command);
-    }
-
-    public void InsertCardSystemActionCommand(CardSystemActionType cardSystemActionType,ReadOnlySpan<CardDataInstance> _cards)
+    public void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
     {
         DispatchCardSystemActionCommand_Instant(cardSystemActionType, _cards);
 
         CardActionEndScopeEvent?.Invoke();
+    }
+
+    public int GetPrevUsedCardCnt()
+    {
+        return prevUsedCardCnt;
     }
 }

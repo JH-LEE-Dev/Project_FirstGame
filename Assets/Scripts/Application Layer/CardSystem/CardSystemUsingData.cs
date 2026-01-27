@@ -42,4 +42,7 @@ public enum CardName
     Distortion,
     Recompense,
     QuantumEntanglement,
+    HandEnhancement,
+    HalleysComet,
+    Scan,
 }

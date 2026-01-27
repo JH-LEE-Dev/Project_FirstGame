@@ -6,10 +6,16 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectCommandHandler>
 {
     [SerializeField] private int hpDecreaseAmount = 0;
+    [SerializeField] private int upgradedHPDecreaseAmount = 0;
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount);
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount * nestingCnt * valueModifier);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.HPDecrease(upgradedHPDecreaseAmount * nestingCnt * valueModifier);
+
 
         ResetCommandData();
     }

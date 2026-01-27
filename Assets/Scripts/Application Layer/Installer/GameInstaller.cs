@@ -22,12 +22,14 @@ public class GameInstaller : MonoBehaviour
     private CardSystem cardSystem;
     private ComplexCardEffectResolver complexCardEffectResolver;
     private CardSelectionManager cardSelectionManager;
+    private ShopUIInstaller shopUIInstaller;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
     public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
     {
         inputManager = _inputManager;
+        bootStrapProvider = _bootStrapProvider;
 
         gameController = GetComponentInChildren<GameController>();
         unitSpawner = GetComponent<UnitSpawner>();
@@ -44,6 +46,7 @@ public class GameInstaller : MonoBehaviour
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
         cardSelectionManager= new CardSelectionManager();
+        shopUIInstaller = GetComponentInChildren<ShopUIInstaller>();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -57,9 +60,10 @@ public class GameInstaller : MonoBehaviour
         cardSystemController.Initialize();
         cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver);
 
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager);
 
         uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
+        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub);
 
         SetupGamePlayScene();
     }
