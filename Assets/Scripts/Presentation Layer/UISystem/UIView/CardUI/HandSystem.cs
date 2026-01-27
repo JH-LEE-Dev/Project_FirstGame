@@ -258,6 +258,14 @@ public class HandSystem : MonoBehaviour
 
     private void ConsumeMagic(MainCardInstance card)
     {
+        if (card.CardData.GetCardData().elementType == ElementType.Extinction)
+        {
+            ReturnToPool(card);
+            computeArc();
+            ComputeSelectedPositions();
+            return;
+        }
+
         float scaleOffset = card.transform.localScale.x * 30f;
         cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
 
@@ -491,6 +499,23 @@ public class HandSystem : MonoBehaviour
 
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
+
+        int n = Mathf.Max(0, selectCount);
+        List<CardDataInstance> available = new();
+
+        foreach (var c in cards)
+        {
+            if (c != null && c.cardState == CardState.InHand)
+                available.Add(c.CardData);
+        }
+        // 0장 요구 혹은, 0장일 때
+        if (available.Count == 0 || n == 0) return;
+
+        if (bSelectforcing && available.Count <= n)
+        {
+            cardSystem.EndCardSelectMode(available);
+            return;
+        }
 
         bCardSelectMode = true;
 
