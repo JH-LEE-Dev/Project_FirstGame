@@ -23,7 +23,7 @@ public class GameplayUIManager : UIManager
         if (view is UIView_HUD hudUI)
             hudUI.DataInjection(waveSystemData);
 
-        if (view is UIView_Unit unitUI)
-            unitUI.DataInjection();
+        if (view is UIView_Unit_World unitWorldUI)
+            unitWorldUI.DataInjection();
     }
 }

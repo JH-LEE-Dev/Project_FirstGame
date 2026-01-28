@@ -61,6 +61,10 @@ public class UnitSystem
 
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
         unitLogicSystem.PlayerGetHPEvent += PlayerGetHP;
+
+        unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
+        unitLogicSystem.EnemyTakeDamageEvent += EnemyTakeDamage;
+
     }
 
     private void ReleaseEvents()
@@ -88,6 +92,8 @@ public class UnitSystem
         unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
 
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
+
+        unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
     }
 
     private void SubscribeEvents()
@@ -161,6 +167,11 @@ public class UnitSystem
     private void PlayerGetHP(float amount)
     {
         signalHub.Publish(new PlayerGetHPSignal(amount));
+    }
+
+    private void EnemyTakeDamage(IEnemyData enemyData,float damage)
+    {
+        signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage));
     }
 
     public void Release()

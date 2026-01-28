@@ -34,6 +34,8 @@ public class Bullet : MonoBehaviour
     private int criticalChanceModifier = 0;
     private int weaknessModifier = 0;
 
+    private Collider2D directHitObject;
+
     private void Awake()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
@@ -107,6 +109,9 @@ public class Bullet : MonoBehaviour
 
         foreach (var enemy in hitEnemies)
         {
+            if (enemy == directHitObject)
+                continue;
+
             ApplyDamage(enemy);
         }
     }
@@ -134,6 +139,8 @@ public class Bullet : MonoBehaviour
 
     private void ApplyDamage(Collider2D other)
     {
+        directHitObject = other;
+
         // 데미지 처리
         effectComponent.PlayImpactEffect();
 

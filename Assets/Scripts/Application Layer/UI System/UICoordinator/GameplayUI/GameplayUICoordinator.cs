@@ -14,32 +14,35 @@ public class GameplayUICoordinator
     public event Action<bool, int, Transform> CardUsedEvent;
 
     private UIView_HUD hudUISystem;
-    private UIView_Unit unitUISystem;
+    private UIView_Unit_World unitWorldUISystem;
+    private UIView_Unit_Canvas unitCanvasUISystem;
     private UIView_Gameplay gameplayUISystem;
 
-    public void Initialize(UIView_HUD _hudUISystem, UIView_Unit _unitUISystem,UIView_Gameplay _gameplayUISystem)
+    public void Initialize(UIView_HUD _hudUISystem, UIView_Unit_World _unitWorldUISystem,
+        UIView_Gameplay _gameplayUISystem,UIView_Unit_Canvas _unitCanvasUISystem)
     {
         hudUISystem = _hudUISystem;
-        unitUISystem = _unitUISystem;
+        unitWorldUISystem = _unitWorldUISystem;
         gameplayUISystem = _gameplayUISystem;
+        unitCanvasUISystem = _unitCanvasUISystem;
 
         BindEvents();
     }
 
     private void BindEvents()
     {
-        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
-        unitUISystem.UnEquipBulletCardEvent += UnEquipBulletCard;
+        unitWorldUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
+        unitWorldUISystem.UnEquipBulletCardEvent += UnEquipBulletCard;
 
-        unitUISystem.CancelCardPreviewEvent -= CancelCardPreview;
-        unitUISystem.CancelCardPreviewEvent += CancelCardPreview;
+        unitWorldUISystem.CancelCardPreviewEvent -= CancelCardPreview;
+        unitWorldUISystem.CancelCardPreviewEvent += CancelCardPreview;
     }
 
     private void ReleaseEvents()
     {
-        unitUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
+        unitWorldUISystem.UnEquipBulletCardEvent -= UnEquipBulletCard;
 
-        unitUISystem.CancelCardPreviewEvent -= CancelCardPreview;
+        unitWorldUISystem.CancelCardPreviewEvent -= CancelCardPreview;
     }
 
     public void Release()
@@ -60,7 +63,7 @@ public class GameplayUICoordinator
 
     public void PlayerAttacked()
     {
-        unitUISystem.UnEquipBulletCardForShoot();
+        unitWorldUISystem.UnEquipBulletCardForShoot();
     }
 
     public void CardUseTimeStarted()
@@ -94,7 +97,7 @@ public class GameplayUICoordinator
     }
     public void CharacterSpawned(ICharacterData characterData)
     {
-        unitUISystem.Initialize(characterData);
+        unitWorldUISystem.Initialize(characterData);
     }
 
     public void WaveEnded()
@@ -119,12 +122,12 @@ public class GameplayUICoordinator
 
     public void CardSlotCntChanged(int cnt)
     {
-        unitUISystem.SetBulletSocketCount(cnt);
+        unitWorldUISystem.SetBulletSocketCount(cnt);
     }
 
     public void EquipBulletCard(int slotIdx,CardDataInstance equippedCard)
     {
-        unitUISystem.EquipBulletCard(slotIdx, equippedCard);
+        unitWorldUISystem.EquipBulletCard(slotIdx, equippedCard);
     }
 
     private void UnEquipBulletCard(int slotIdx)
@@ -142,8 +145,13 @@ public class GameplayUICoordinator
         Transform slotTransform = null;
 
         if (bVerified == true)
-            slotTransform = unitUISystem.GetSocketTransform(slotIdx);
+            slotTransform = unitWorldUISystem.GetSocketTransform(slotIdx);
 
         CardUsedEvent?.Invoke(bVerified, slotIdx, slotTransform);
+    }
+
+    public void EnemyTakeDamage(IEnemyData enemyData,float damage)
+    {
+        unitWorldUISystem.EnemyTakeDamage(enemyData, damage);
     }
 }

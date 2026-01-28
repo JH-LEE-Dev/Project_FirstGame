@@ -6,7 +6,7 @@ using static UnityEngine.Rendering.GPUSort;
 
 public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICardSystemData
 {
-    private CardSystemContextType cardSystemContext;
+    //내부 의존성
     public CardManagerEventInvoker cardManagerEventInvoker;
 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
@@ -27,6 +27,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     [SerializeField] private int cardPileDrawAmount = 5;
     [SerializeField] private int initialDeckCnt = 40;
 
+    private CardSystemContextType cardSystemContext;
     public void Initialize()
     {
         cardManagerEventInvoker = new CardManagerEventInvoker();

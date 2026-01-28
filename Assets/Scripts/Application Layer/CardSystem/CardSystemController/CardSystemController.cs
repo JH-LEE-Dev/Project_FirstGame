@@ -199,8 +199,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             else
                 OrganizeCardEffectCommand(usedCard, 1);
 
-            DispatchCardEffect_BeforeAttack();
-
             writeBuffer[0] = usedCard;
             DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, writeBuffer.Slice(0, 1));
 
@@ -214,6 +212,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 writeBuffer[0] = usedCard;
                 DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToExtinction, writeBuffer.Slice(0, 1));
             }
+
+            DispatchCardEffect_BeforeAttack();
         }
         else
         {

@@ -36,6 +36,8 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.Subscribe<CardDrawFinishedSignal>(CardDrawFinished);
         signalHub.Subscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
+        signalHub.Subscribe<CardUsedSignal>(CardUsed);
+        signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
 
         //For GameplayUICoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -53,8 +55,8 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
         signalHub.Subscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
-        signalHub.Subscribe<CardUsedSignal>(CardUsed);
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
+        signalHub.Subscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
     }
 
     private void UnSubscribeEvents()
@@ -64,6 +66,8 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardDrawFinishedSignal>(CardDrawFinished);
         signalHub.UnSubscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
+        signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
+        signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
 
         //For GameplayUICoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -81,8 +85,8 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
         signalHub.UnSubscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
-        signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
-        signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
+        signalHub.UnSubscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
+
     }
 
     public void BindEvents()
@@ -252,5 +256,10 @@ public class GameplayUIModuleCoordinator
     private void CardSelectionEnd(CardSelectionModeData _data,List<CardDataInstance> _cards)
     {
         signalHub.Publish(new UICardSelectionEndSignal(_data, _cards));
+    }
+
+    private void EnemyTakeDamage(EnemyTakeDamageSignal enemyTakeDamageSignal)
+    {
+        gameplayUICoordinator.EnemyTakeDamage(enemyTakeDamageSignal.enemyData, enemyTakeDamageSignal.damage);
     }
 }

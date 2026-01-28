@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class ClickCatchSystem : MonoBehaviour, IPointerClickHandler
 {
-    private UIView_Unit uIView_Unit;
+    private UIView_Unit_World unitWorldUI;
     private WorldCanvasEnabler canvasEnabler;
 
-    public void Init(UIView_Unit _uIView_Unit)
+    public void Init(UIView_Unit_World _unitWorldUI)
     {
-        uIView_Unit = _uIView_Unit;
+        unitWorldUI = _unitWorldUI;
         canvasEnabler = GetComponent<WorldCanvasEnabler>();
         canvasEnabler.Initialize();
     }
@@ -16,6 +16,6 @@ public class ClickCatchSystem : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left ||
             eventData.button == PointerEventData.InputButton.Right)
-            uIView_Unit?.CancelPreview();
+            unitWorldUI?.CancelPreview();
     }
 }
