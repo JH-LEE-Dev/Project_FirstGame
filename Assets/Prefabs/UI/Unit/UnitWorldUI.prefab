@@ -107,9 +107,9 @@ MonoBehaviour:
     onFinishedSize: {x: 0.125, y: 0.125}
     onPosOffset: {x: 0, y: 0, z: 0}
     onEase: 6
-    offDelay: 0.5
-    offDuration: 0.35
-    offEase: 18
+    offDelay: 0.25
+    offDuration: 1
+    offEase: 5
   noramlDamageColor: {r: 1, g: 1, b: 1, a: 1}
   critDamageColor: {r: 1, g: 0.6470588, b: 0, a: 1}
 --- !u!1 &3970654669902497496
