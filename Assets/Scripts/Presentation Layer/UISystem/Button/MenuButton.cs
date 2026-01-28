@@ -101,7 +101,7 @@ public class MenuButton : MonoBehaviour
         seq.Join(mainText.DOColor(originColor, exitDuration)
             .SetEase(exitEase));
 
-        seq.OnComplete(ResetTextAndLocalScale);
+        seq.OnComplete(ResetExitTextAndLocalScale);
 
         seq.SetUpdate(false);
     }
@@ -147,6 +147,12 @@ public class MenuButton : MonoBehaviour
     private void ResetTextAndLocalScale()
     {
         mainText.color = enterColor;
+        visualRect.localScale = originScale;
+    }
+
+    private void ResetExitTextAndLocalScale()
+    {
+        mainText.color = originColor;
         visualRect.localScale = originScale;
     }
 

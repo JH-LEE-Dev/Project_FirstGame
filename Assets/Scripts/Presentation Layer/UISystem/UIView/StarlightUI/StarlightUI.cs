@@ -51,6 +51,7 @@ public class StarlightUI : MonoBehaviour
     private Vector3 starAddBaseScale;
 
     private int starBase = 0;
+    public int GetStarlight() => starBase;
     private int starAddTotal = 0;
     private int starBaseDisplayed = 0;
     private int starAddDisplayed = 0;
@@ -90,17 +91,19 @@ public class StarlightUI : MonoBehaviour
         if (starlightTM) starlightTM.text = starBaseDisplayed.ToString();
     }
 
-    public void ActivateSubUI(int uiIndex, int addValue)
+    public void ActivateSubUI(StarLightAcquisitionType type, int addValue)
     {
-        if (uiIndex < 0 || uiIndex >= starlightSubUIs.Count) return;
+        int idx = IndexHeshing(type);
 
-        var ui = starlightSubUIs[uiIndex];
+        if (idx < 0 || idx >= starlightSubUIs.Count) return;
+
+        var ui = starlightSubUIs[idx];
 
         ui.AddToAddCount(addValue);
 
         if (!ui.GetSubUIActive())
         {
-            Vector2 startPos = GetAssignedPivotPosIfActivated(uiIndex);
+            Vector2 startPos = GetAssignedPivotPosIfActivated(idx);
             ui.StartSubUIActive(startPos);
         }
 
@@ -409,5 +412,15 @@ public class StarlightUI : MonoBehaviour
             pivotCursor++;
         }
         return list;
+    }
+
+    private int IndexHeshing(StarLightAcquisitionType type)
+    {
+        if (type == StarLightAcquisitionType.Kill)
+            return 0;
+        else if (type == StarLightAcquisitionType.Ability)
+            return 1;
+        else
+            return 2;
     }
 }
