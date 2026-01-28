@@ -73,10 +73,10 @@ public class CardMotion : MonoBehaviour
     private float extinctionPhase;
     private float extinctionBaseZ;
     private float extinctionAmplitudeStart = 1f;
-    private float extinctionIntensityMul = 0.8f; 
+    private float extinctionIntensityMul = 1f; 
     private float extinctionAngle = 3.5f;       
-    private float extinctionFreqStart = 2f;    
-    private float extinctionFreqEnd = 5f;     
+    private float extinctionFreqStart = 5f;    
+    private float extinctionFreqEnd = 15f;     
     private Tween extinctionScaleTween;
 
 
@@ -450,11 +450,7 @@ public class CardMotion : MonoBehaviour
 
     public void PlayExtinctionShake(
     float dur = 0.35f,
-    float scaleMul = 0.7f,
-    float angleDeg = 15f,
-    float freqStart = 2f,
-    float freqEnd = 28f
-)
+    float scaleMul = 0.7f)
     {
         // 기존 트윈/상태 정리 (필요한 것만)
         AllKillTweens(false);
@@ -464,10 +460,6 @@ public class CardMotion : MonoBehaviour
         extinctionTime = 0f;
         extinctionPhase = 0f;
         extinctionActive = true;
-
-        extinctionAngle = angleDeg;
-        extinctionFreqStart = freqStart;
-        extinctionFreqEnd = freqEnd;
 
         // 현재 회전 기준으로 흔들기 (프리뷰/손패 어느 상태든 자연스럽게)
         extinctionBaseZ = rt.localEulerAngles.z;
