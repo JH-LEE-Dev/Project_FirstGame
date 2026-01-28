@@ -542,6 +542,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1745713331082156441}
   - component: {fileID: 4781159696933469916}
+  - component: {fileID: 2448975008160909883}
   m_Layer: 5
   m_Name: ShopUI
   m_TagString: Untagged
@@ -588,6 +589,21 @@ MonoBehaviour:
   deleteCardButton: {fileID: 995281331382040946}
   viewDeckButton: {fileID: 8533398694871001669}
   nextStageButton: {fileID: 6339073766100794928}
+--- !u!114 &2448975008160909883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4607152452573246931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28a8c49febc4a82499287a908618dfe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopPoolingSystem
+  cardUIPrefab: {fileID: 5863989176703220490, guid: a1372fd0e5f97c247a2a0bd87210d898, type: 3}
+  dissolveTemplate: {fileID: 2100000, guid: 5a0e9086bd6bbf245bd506367fc008db, type: 2}
+  cardPool: []
 --- !u!1 &4699137084814940110
 GameObject:
   m_ObjectHideFlags: 0

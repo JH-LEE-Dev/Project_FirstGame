@@ -36,7 +36,7 @@ public class UIView_Shop : UIView
         SafeBind(viewDeckButton, OnClick_ViewDeck);
         SafeBind(nextStageButton, OnClick_NextStage);
 
-        if (!shopPoolingSystem) shopPoolingSystem.GetComponent<ShopPoolingSystem>();
+        if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
     }
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
     {
