@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class UIView_Unit : UIView
+public class UIView_Unit_World : UIView
 {
     public event Action<int> UnEquipBulletCardEvent;
     public event Action CancelCardPreviewEvent;
@@ -115,5 +115,10 @@ public class UIView_Unit : UIView
     public void UnEquipBulletCardForShoot()
     {
         bulletsocketSystem?.UnEquipBulletCardForShoot();
+    }
+
+    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage)
+    {
+        Debug.Log("적이 데미지를 입었습니다.");
     }
 }

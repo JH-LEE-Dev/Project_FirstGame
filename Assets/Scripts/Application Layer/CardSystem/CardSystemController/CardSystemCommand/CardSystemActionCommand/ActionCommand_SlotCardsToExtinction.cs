@@ -14,7 +14,6 @@ public class ActionCommand_SlotCardsToExtinction : CardSystemActionCommand<ICard
 
     protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
     {
-        Debug.Log("1");
         cardSystemActionCommandHandler.CardsToExtinction(cards.AsSpan<CardDataInstance>().Slice(0,cnt));
     }
 }

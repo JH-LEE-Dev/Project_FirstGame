@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Enemy : Unit, IEnemyData
 {
+    public event Action<EnemyTypeData> EnemyIsKilledEvent;
+    public event Action<IEnemyData,float> EnemyTakeDamageEvent;
+
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
 
@@ -95,6 +98,16 @@ public class Enemy : Unit, IEnemyData
     public override void TakeDamage(float damage)
     {
         healthComponent.TakeDamange(damage);
+        EnemyTakeDamageEvent?.Invoke(this, damage);
+    }
+
+    private void EnemyIsKilled()
+    {
+        EnemyIsKilledEvent?.Invoke(enemyTypeData);
+
+        sr.gameObject.SetActive(false);
+        col.enabled = false;
+        vfxDeadImpact.Play(true);
     }
 
     //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
@@ -119,9 +132,7 @@ public class Enemy : Unit, IEnemyData
     {
         base.HandleDead();
 
-        sr.gameObject.SetActive(false);
-        col.enabled = false;
-        vfxDeadImpact.Play(true);
+        EnemyIsKilled();
     }
 
     public override void ApplyWeakness(int turnCnt)
@@ -208,11 +219,6 @@ public class Enemy : Unit, IEnemyData
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
-    }
-
-    public float GetHealth()
-    {
-        throw new System.NotImplementedException();
     }
 
     public override void KnockBack(Vector2 dir, float power)

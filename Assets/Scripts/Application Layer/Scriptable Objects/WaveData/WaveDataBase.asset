@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDatabase
   waveData:
   - waveIdx: 0
-    enemyCnt: 3
+    enemyCnt: 1
   - waveIdx: 1
-    enemyCnt: 5
+    enemyCnt: 2
   - waveIdx: 2
-    enemyCnt: 8
+    enemyCnt: 3
   - waveIdx: 3
-    enemyCnt: 11
+    enemyCnt: 4

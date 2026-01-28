@@ -41,4 +41,14 @@ namespace UnitLogicSystemSignals
         }
     }
     public struct PlayerAttackedSignal { }
+    public struct EnemyTakeDamageSignal 
+    {
+        public IEnemyData enemyData;
+        public float damage;
+        public EnemyTakeDamageSignal(IEnemyData _enemyData,float _damage)
+        {
+            enemyData = _enemyData;
+            damage = _damage;
+        }
+    }
 }

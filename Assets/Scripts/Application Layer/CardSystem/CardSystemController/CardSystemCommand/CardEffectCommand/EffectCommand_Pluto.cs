@@ -16,6 +16,9 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardSystemActionCommandHan
     {
         IReadOnlyList<CardDataInstance> extinctionPile = cardSystemActionCommandHandler.GetExtinctionPile();
 
+        if (extinctionPile.Count == 0)
+            return;
+
         using var rentalBuffer = new RentalScope<CardDataInstance>(1);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 

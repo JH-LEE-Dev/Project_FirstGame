@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoolingSystem
   cardUIPrefab: {fileID: 5863989176703220490, guid: 827b05f9504ae1142bf1560356c38466, type: 3}
   starEffectPrefab: {fileID: 4116877401703609468, guid: ae091bda36ecff640b6805e7efc85d0f, type: 3}
+  dissolveTemplate: {fileID: 2100000, guid: 5a0e9086bd6bbf245bd506367fc008db, type: 2}
   inactiveHandPool: []
   otherCardPool: []
   UseCardEffectPrefab: {fileID: 8812057462481426186, guid: 4c521fe5a302c794382c3df6fad6c83a, type: 3}
@@ -2332,6 +2333,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3238078695943160092, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8659498737982374597, guid: c1d3d2262d359ec43ba6ba6d1bd4192d, type: 3}
+      propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

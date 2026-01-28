@@ -10,6 +10,7 @@ public class PoolingSystem : MonoBehaviour
     [Header("Prefab & Root")]
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private GameObject starEffectPrefab;
+    [SerializeField] private Material dissolveTemplate;
 
     [Header("Pools")]
     // 비활성중인 패
@@ -60,7 +61,7 @@ public class PoolingSystem : MonoBehaviour
             MainCardInstance card = go.GetComponent<MainCardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(cardSystem, CardInstanceType.Hand);
+            card.Initialize(cardSystem, CardInstanceType.Hand, dissolveTemplate);
             inactiveHandPool.Add(card);
 
         }
@@ -76,7 +77,7 @@ public class PoolingSystem : MonoBehaviour
 
             card.TurnOffGlowFilter();
             card.gameObject.SetActive(false);
-            card.Initialize(cardSystem, CardInstanceType.Other);
+            card.Initialize(cardSystem, CardInstanceType.Other, dissolveTemplate);
 
             otherCardPool.Add(card);
         }

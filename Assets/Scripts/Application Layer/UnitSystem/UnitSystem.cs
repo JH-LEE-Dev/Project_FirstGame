@@ -61,6 +61,10 @@ public class UnitSystem
 
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
         unitLogicSystem.PlayerGetHPEvent += PlayerGetHP;
+
+        unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
+        unitLogicSystem.EnemyTakeDamageEvent += EnemyTakeDamage;
+
     }
 
     private void ReleaseEvents()
@@ -88,6 +92,8 @@ public class UnitSystem
         unitLogicSystem.PlayerGetShieldEvent -= PlayerGetShield;
 
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
+
+        unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
     }
 
     private void SubscribeEvents()
@@ -102,6 +108,7 @@ public class UnitSystem
         signalHub.Subscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.Subscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
     }
 
     private void UnSubscribeEvents()
@@ -114,6 +121,7 @@ public class UnitSystem
         signalHub.UnSubscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.UnSubscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
     }
 
     private void EnemySpawned()
@@ -159,6 +167,11 @@ public class UnitSystem
     private void PlayerGetHP(float amount)
     {
         signalHub.Publish(new PlayerGetHPSignal(amount));
+    }
+
+    private void EnemyTakeDamage(IEnemyData enemyData,float damage)
+    {
+        signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage));
     }
 
     public void Release()

@@ -24,6 +24,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
         prevHealth = maxHealth;
         currentHealth = maxHealth;
         currentShield = 0;
+        prevShield = 0;
     }
 
     protected override void OnDestroy()

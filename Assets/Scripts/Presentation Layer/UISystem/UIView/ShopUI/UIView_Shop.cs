@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using System;
 
 public class UIView_Shop : UIView
 {
-    private const int initialcardMerchandiseCnt = 5;
+    public event Action ShopIsClosedEvent;
 
-    [SerializeField] private CardDataBase cardDataBase;
+    //외부 의존성
+    private IShopSystemData shopSystemData;
+
     [SerializeField] private Button buyButton_1;
     [SerializeField] private Button buyButton_2;
     [SerializeField] private Button buyButton_3;
@@ -15,32 +17,23 @@ public class UIView_Shop : UIView
     [SerializeField] private Button buyButton_5;
     [SerializeField] private Button shopCloseButton;
 
-    private List<CardData> cardDataList =new List<CardData>(initialcardMerchandiseCnt);
-
     public override void Initialize(UIViewContext ctx)
     {
         base.Initialize(ctx);
     }
 
+    public void DataInjection(IShopSystemData _shopSystemData)
+    {
+        shopSystemData = _shopSystemData;
+    }
+
     public void OpenShop()
     {
-        PrepareMerchandise();
+
     }
 
     public void CloseShop()
     {
-        cardDataList.Clear();
-    }
 
-    private void PrepareMerchandise()
-    {
-        for (int i = 0; i < initialcardMerchandiseCnt; ++i)
-        {
-            int randomIdx = UnityEngine.Random.Range(0, cardDataBase.cardData.Count - 1);
-
-            CardData cardData = cardDataBase.cardData[randomIdx];
-
-            cardDataList.Add(cardData);
-        }
     }
 }

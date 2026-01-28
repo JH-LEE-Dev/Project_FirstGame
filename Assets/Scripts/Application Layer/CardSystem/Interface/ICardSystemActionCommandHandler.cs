@@ -8,7 +8,6 @@ public interface ICardSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetExtinctionPile();
     IReadOnlyList<CardDataInstance> GetDeckPile();
     IReadOnlyList<CardDataInstance> GetGravePile();
-
     void StartCardPileDraw();
     void DrawAgain(int drawAmount);
     void ApplyValueModifier(int valueModifier);
@@ -18,7 +17,7 @@ public interface ICardSystemActionCommandHandler : ICommandHandler
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cards);
     CardDataInstance CreateCard(int id);
     void CardsRemoveFromHand(ReadOnlySpan<CardDataInstance> cards);
-    void AllExtinctionCardsToDeck();
+    void ResetCardPiles();
     void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
     void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
     void CardsToHand(ReadOnlySpan<CardDataInstance> cards);

@@ -10,6 +10,7 @@ public class ShopUIInstaller : MonoBehaviour
     private InputManager inputManager;
     private SignalHub signalHub;
     private IBootStrapProvider bootStrapProvider;
+    private IShopSystemData shopSystemData;
 
     //내부 의존성
     private ShopUIManager uiManager;
@@ -26,9 +27,8 @@ public class ShopUIInstaller : MonoBehaviour
 
     public const string LAYER_SHOPUI = "ShopUI";
 
-    bool bShopOpened = false;
-
-    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager,SignalHub _signalHub)
+    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager,SignalHub _signalHub,
+        IShopSystemData _shopSystemData)
     {
         signalHub =_signalHub;
         bootStrapProvider = _bootStrapProvider;
@@ -36,8 +36,9 @@ public class ShopUIInstaller : MonoBehaviour
         uiManager = GetComponent<ShopUIManager>();
         shopUICoordinator = new ShopUICoordinator();
         shopUIModuleCoordinator = new ShopUIModuleCoordinator();    
+        shopSystemData = _shopSystemData;
 
-        uiManager.Initialize(inputManager);
+        uiManager.Initialize(inputManager,shopSystemData);
 
         SetupShopUI();
     }
@@ -45,6 +46,9 @@ public class ShopUIInstaller : MonoBehaviour
     public void Release()
     {
         ReleaseEvent();
+
+        shopUIModuleCoordinator.Release();
+        shopUICoordinator.Release();
     }
 
     public void SetupShopUI()
@@ -103,13 +107,10 @@ public class ShopUIInstaller : MonoBehaviour
 
     private void BindEvent()
     {
-        inputManager.inputReader.ShopButtonPressedEvent -= OpenShop;
-        inputManager.inputReader.ShopButtonPressedEvent += OpenShop;
     }
 
     public void ReleaseEvent()
     {
-        inputManager.inputReader.ShopButtonPressedEvent -= OpenShop;
     }
 
     private void SetAnchorToCanvas(Transform transform)
@@ -121,19 +122,5 @@ public class ShopUIInstaller : MonoBehaviour
 
         rt.offsetMin = Vector2.zero;   // Left, Bottom
         rt.offsetMax = Vector2.zero;   // Right, Top
-    }
-
-    private void OpenShop()
-    {
-        if (bShopOpened)
-        {
-            bShopOpened = false;
-            uiManager.Close<UIView_Shop>();
-        }
-        else
-        {
-            bShopOpened = true;
-            UIView_Shop shopUI = uiManager.Open<UIView_Shop>();
-        }
     }
 }

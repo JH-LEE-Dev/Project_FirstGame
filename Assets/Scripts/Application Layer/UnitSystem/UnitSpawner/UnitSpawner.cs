@@ -10,7 +10,7 @@ public class UnitSpawner : MonoBehaviour
 {
     public event Action<Character> CharacterCreatedEvent;
     public event Action<Earth> PlayerCreatedEvent;
-    public event Action<List<Enemy>> EnemyCreatedEvent; 
+    public event Action<List<Enemy>> EnemyCreatedEvent;
 
     [Header("Enemy Pool Settings")]
     [SerializeField] const int enemyMaxCount = 40;
@@ -79,10 +79,10 @@ public class UnitSpawner : MonoBehaviour
 
     }
 
-    //풀 용량 초기화 상황에서 Enemy 파괴.
     private void OnDestroyEnemy(Enemy enemy)
     {
-        Destroy(enemy.gameObject);
+        if (enemy != null)
+            Destroy(enemy.gameObject);
     }
 
     public void Initiallize(InputManager _inputManager,

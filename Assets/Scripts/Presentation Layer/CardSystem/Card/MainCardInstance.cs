@@ -35,10 +35,13 @@ public class MainCardInstance : CardInstance
         if (VisualFloat) VisualFloat.Bind(this);
     }
 
-    public void Initialize(UIView_CardSystem system, CardInstanceType type)
+    public void Initialize(UIView_CardSystem system, CardInstanceType type, Material template)
     {
         cardSystem = system;
         cardInstanceType = type;
+        dissolveMatInstance = new Material(template);
+
+        ApplyDissolveMaterialToVisuals();
     }
 
     public void SetUIState(CardState state)
