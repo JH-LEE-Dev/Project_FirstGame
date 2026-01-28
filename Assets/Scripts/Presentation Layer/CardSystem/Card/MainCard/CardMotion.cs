@@ -40,9 +40,9 @@ public class CardMotion : MonoBehaviour
     private Sequence rejectSeq;
 
     [Header("Grave Motion")]
-    [SerializeField] private float graveDuration = 0.4f;
-    [SerializeField] private float graveTiltZ = 80f;     // 왼쪽으로 기울기(도)
-    [SerializeField] private float graveScale = 0.3f;    // 줄어드는 비율
+    private float graveDuration = 0.2f;
+    private float graveTiltZ = 80f;     // 왼쪽으로 기울기(도)
+    private float graveScale = 0.3f;    // 줄어드는 비율
     private Tween flyTween;
     private Tween flyRotateTween;
     private Tween flyScaleTween;
