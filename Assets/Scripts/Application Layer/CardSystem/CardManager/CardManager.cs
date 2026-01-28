@@ -70,7 +70,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(0);
+        CardData cardData = cardDataBase.GetCardData(12);
         if (cardData == null)
             return;
 

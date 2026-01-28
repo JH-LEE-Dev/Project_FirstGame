@@ -137,6 +137,7 @@ public class StarlightUI : MonoBehaviour
             yield return new WaitForSeconds(gap);
         }
     }
+
     private void Relayout()
     {
         int pivotCursor = 0;
