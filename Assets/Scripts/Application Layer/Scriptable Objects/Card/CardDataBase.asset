@@ -16,13 +16,13 @@ MonoBehaviour:
   - id: 0
     cardImage: {fileID: 0}
     cardName: 0
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 00000000
     cardSlotSystemEffects: 
@@ -31,13 +31,13 @@ MonoBehaviour:
   - id: 1
     cardImage: {fileID: 0}
     cardName: 1
+    cardNameId: 1
+    cardDescriptionId: 1
     cardType: 1
     elementType: 0
     usingType: 0
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 01000000
     cardSlotSystemEffects: 
@@ -46,13 +46,13 @@ MonoBehaviour:
   - id: 2
     cardImage: {fileID: 0}
     cardName: 2
+    cardNameId: 2
+    cardDescriptionId: 2
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 02000000
     cardSlotSystemEffects: 
@@ -61,13 +61,13 @@ MonoBehaviour:
   - id: 3
     cardImage: {fileID: 0}
     cardName: 3
+    cardNameId: 3
+    cardDescriptionId: 3
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 0
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 00000000
@@ -76,13 +76,13 @@ MonoBehaviour:
   - id: 4
     cardImage: {fileID: 0}
     cardName: 4
+    cardNameId: 4
+    cardDescriptionId: 4
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -91,13 +91,13 @@ MonoBehaviour:
   - id: 5
     cardImage: {fileID: 0}
     cardName: 5
+    cardNameId: 5
+    cardDescriptionId: 5
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 00000000
     cardStatusEffects: 03000000
     cardSlotSystemEffects: 
@@ -106,13 +106,13 @@ MonoBehaviour:
   - id: 6
     cardImage: {fileID: 0}
     cardName: 6
+    cardNameId: 6
+    cardDescriptionId: 6
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 01000000
     cardStatusEffects: 04000000
     cardSlotSystemEffects: 
@@ -121,13 +121,13 @@ MonoBehaviour:
   - id: 7
     cardImage: {fileID: 0}
     cardName: 7
+    cardNameId: 7
+    cardDescriptionId: 7
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 0
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -136,13 +136,13 @@ MonoBehaviour:
   - id: 8
     cardImage: {fileID: 0}
     cardName: 8
+    cardNameId: 8
+    cardDescriptionId: 8
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -151,13 +151,13 @@ MonoBehaviour:
   - id: 9
     cardImage: {fileID: 0}
     cardName: 9
+    cardNameId: 9
+    cardDescriptionId: 9
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 01000000
@@ -166,13 +166,13 @@ MonoBehaviour:
   - id: 10
     cardImage: {fileID: 0}
     cardName: 10
+    cardNameId: 10
+    cardDescriptionId: 10
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 05000000
     cardSlotSystemEffects: 
@@ -181,13 +181,13 @@ MonoBehaviour:
   - id: 11
     cardImage: {fileID: 0}
     cardName: 11
+    cardNameId: 11
+    cardDescriptionId: 11
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 06000000
     cardSlotSystemEffects: 
@@ -196,13 +196,13 @@ MonoBehaviour:
   - id: 12
     cardImage: {fileID: 0}
     cardName: 12
+    cardNameId: 12
+    cardDescriptionId: 12
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 0
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 02000000
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -211,13 +211,13 @@ MonoBehaviour:
   - id: 13
     cardImage: {fileID: 0}
     cardName: 13
+    cardNameId: 13
+    cardDescriptionId: 13
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 0800000007000000
     cardSlotSystemEffects: 
@@ -226,13 +226,13 @@ MonoBehaviour:
   - id: 14
     cardImage: {fileID: 0}
     cardName: 14
+    cardNameId: 14
+    cardDescriptionId: 14
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 09000000
     cardSlotSystemEffects: 
@@ -241,13 +241,13 @@ MonoBehaviour:
   - id: 15
     cardImage: {fileID: 0}
     cardName: 15
+    cardNameId: 15
+    cardDescriptionId: 15
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -256,13 +256,13 @@ MonoBehaviour:
   - id: 16
     cardImage: {fileID: 0}
     cardName: 16
+    cardNameId: 16
+    cardDescriptionId: 16
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -271,13 +271,13 @@ MonoBehaviour:
   - id: 17
     cardImage: {fileID: 0}
     cardName: 17
+    cardNameId: 17
+    cardDescriptionId: 17
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -286,13 +286,13 @@ MonoBehaviour:
   - id: 18
     cardImage: {fileID: 0}
     cardName: 18
+    cardNameId: 18
+    cardDescriptionId: 18
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
@@ -301,13 +301,13 @@ MonoBehaviour:
   - id: 19
     cardImage: {fileID: 0}
     cardName: 19
+    cardNameId: 19
+    cardDescriptionId: 19
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 

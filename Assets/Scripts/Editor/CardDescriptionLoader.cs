@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEditor; // 이게 핵심입니다. 에디터 전용 기능
-using System.IO;   // 파일 입출력
+using UnityEditor; 
+using System.IO;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,7 @@ public class RawCardList
     public List<RawCardData> cards;
 }
 
-public class CardImporter : EditorWindow
+public class CardDescriptionLoader : EditorWindow
 {
     [MenuItem("Tools/Card Data/Import from JSON")]
     public static void ImportJsonData()
@@ -59,6 +59,7 @@ public class CardImporter : EditorWindow
             ++cnt;
         }
 
+        EditorUtility.SetDirty(asset);
         // 4. 변경사항 디스크에 쓰기
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

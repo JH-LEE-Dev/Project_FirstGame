@@ -82,6 +82,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
         for (int i = 0; i < initialDeckCnt; ++i)
         {
             CardDataInstance card = pool.Get();
+            card.bPermanent = true;
             permanentDeckPile.Add(card);
         }
     }
@@ -237,9 +238,32 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
 
     public void ResetCardPiles()
     {
-        gravePile.Clear();
+        for (int i = 0; i < deckPile.Count; ++i)
+        {
+            if (deckPile[i].bPermanent == false)
+                cardPools[deckPile[i].GetCardData().id].Release(deckPile[i]);
+        }
         deckPile.Clear();
+
+        for (int i = 0; i < gravePile.Count; ++i)
+        {
+            if (gravePile[i].bPermanent == false)
+                cardPools[gravePile[i].GetCardData().id].Release(gravePile[i]);
+        }
+        gravePile.Clear();
+
+        for (int i = 0; i < extinctionPile.Count; ++i)
+        {
+            if (extinctionPile[i].bPermanent == false)
+                cardPools[extinctionPile[i].GetCardData().id].Release(extinctionPile[i]);
+        }
         extinctionPile.Clear();
+
+        for (int i = 0; i < handPile.Count; ++i)
+        {
+            if (handPile[i].bPermanent == false)
+                cardPools[handPile[i].GetCardData().id].Release(handPile[i]);
+        }
         handPile.Clear();
 
         for (int i = 0; i < permanentDeckPile.Count; ++i)
