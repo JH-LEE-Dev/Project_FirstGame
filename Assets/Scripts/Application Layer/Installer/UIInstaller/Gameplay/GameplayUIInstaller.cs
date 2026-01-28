@@ -110,10 +110,11 @@ public class GameplayUIInstaller : MonoBehaviour
         UIView_HUD hudObject = uiManager.Open<UIView_HUD>();
         UIView_CardSystem cardSystemObject = uiManager.Open<UIView_CardSystem>();
         UIView_Gameplay gameplayObject = uiManager.Open<UIView_Gameplay>();
-        UIView_Unit unitUIObject = uiManager.Open<UIView_Unit>();
+        UIView_Unit_World unitWorldUIObject = uiManager.Open<UIView_Unit_World>();
+        UIView_Unit_Canvas unitCanvasUIObject = uiManager.Open<UIView_Unit_Canvas>();
 
         cardUICoordinator.Initialize(cardSystemObject);
-        gameplayUICoordinator.Initialize(hudObject, unitUIObject, gameplayObject);
+        gameplayUICoordinator.Initialize(hudObject, unitWorldUIObject, gameplayObject, unitCanvasUIObject);
         gameplayUIModuleCoordinator.Initialize(signalHub, cardUICoordinator, gameplayUICoordinator);
 
         SetAnchorToCanvas(hudObject.transform);

@@ -22,6 +22,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action PlayerAttackedEvent;
     public event Action<float> PlayerGetShieldEvent;
     public event Action<float> PlayerGetHPEvent;
+    public event Action<IEnemyData, float> EnemyTakeDamageEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -108,6 +109,9 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
             enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
             enemyUnits[i].EnemyIsKilledEvent += EnemyIsKilled;
+
+            enemyUnits[i].EnemyTakeDamageEvent -= EnemyTakeDamage;
+            enemyUnits[i].EnemyTakeDamageEvent += EnemyTakeDamage;
         }
     }
 
@@ -228,5 +232,10 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void ResetPlayer(WaveStartSignal waveStartSignal)
     {
         playerUnit.ResetPlayer();
+    }
+
+    private void EnemyTakeDamage(IEnemyData enemyData, float damage)
+    {
+        EnemyTakeDamageEvent?.Invoke(enemyData, damage);
     }
 }
