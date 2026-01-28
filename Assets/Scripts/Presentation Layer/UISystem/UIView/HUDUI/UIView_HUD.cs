@@ -33,6 +33,10 @@ public class UIView_HUD : UIView
     [SerializeField] private ObjectPoolingSystem playerDamageNumPool;
     [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
 
+    [Header("StarlightUI")]
+    [SerializeField] private StarlightUI starlight;
+
+
     private bool WaveStartFirstTime = true;
 
     protected override void Awake()
@@ -292,4 +296,32 @@ public class UIView_HUD : UIView
 
     public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
     public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
+
+
+    // For StarlightUI
+
+    // StarLightAcquisitionType.Kill -> 적 유닛을 킬 하면 오르는 재화
+    // StarLightAcquisitionType.Ability -> 카드 능력 혹은 서브위성으로 인한 추가 재화
+    // StarLightAcquisitionType.OverKill -> Wave 클리어 충족치를 넘겼을 때, 그 만큼 버는 재화
+    // addValue -> 더해질 재화
+    public void ActivateSubUI(StarLightAcquisitionType type, int addValue)
+    {
+        starlight?.ActivateSubUI(type, addValue);
+    }
+    // 적 턴까지 전부 끝났을 때 한번 호출. (
+    public void TurnAdjustment()
+    {
+        starlight?.TurnAdjustment();
+    }
+    // Wave 자체가 끝났을 때 호출. (최종 정산)
+    public void WaveAdjustment()
+    {
+        starlight?.WaveAdjustment();
+    }
+    // UI가 가리키는 현재 자산
+    public int GetStarlight()
+    {
+        if (!starlight) return -1;
+        return starlight.GetStarlight();
+    }
 }

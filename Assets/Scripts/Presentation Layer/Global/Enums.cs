@@ -92,3 +92,10 @@ enum RectSelect
     Middle,
     Bottom,
 };
+
+public enum StarLightAcquisitionType
+{
+    Kill,
+    Ability,
+    OverKill,
+}
