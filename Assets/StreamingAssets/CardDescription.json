@@ -1,101 +1,121 @@
 {
   "cards": [
-    {
+    { 
+      "name" : "추가 공격력",
       "id": 0,
       "nameId": 0,
       "descriptionId": 0
     },
-    {
+    { 
+      "name" : "실드",
       "id": 1,
       "nameId": 1,
       "descriptionId": 1
     },
     {
+      "name" : "추가 범위",
       "id": 2,
       "nameId": 2,
       "descriptionId": 2
     },
-    {
+    { 
+      "name" : "증폭",
       "id": 3,
       "nameId": 3,
       "descriptionId": 3
     },
-    {
+    { 
+      "name" : "유성우",
       "id": 4,
       "nameId": 4,
       "descriptionId": 4
     },
-    {
+    { 
+      "name" : "플레어",
       "id": 5,
       "nameId": 5,
       "descriptionId": 5
     },
     {
+      "name" : "희생",
       "id": 6,
       "nameId": 6,
       "descriptionId": 6
     },
     {
+      "name" : "우주 왕복선",
       "id": 7,
       "nameId": 7,
       "descriptionId": 7
     },
     {
+      "name" : "마지막 궤도",
       "id": 8,
       "nameId": 8,
       "descriptionId": 8
     },
-    {
+    { 
+      "name" : "영역 확보",
       "id": 9,
       "nameId": 9,
       "descriptionId": 9
     },
-    {
+    { 
+      "name" : "치명타",
       "id": 10,
       "nameId": 10,
       "descriptionId": 10
     },
-    {
+    { 
+      "name" : "균열 감지",
       "id": 11,
       "nameId": 11,
       "descriptionId": 11
     },
-    {
+    { 
+      "name" : "명왕성",
       "id": 12,
       "nameId": 12,
       "descriptionId": 12
     },
-    {
+    { 
+      "name" : "과잉 대비",
       "id": 13,
       "nameId": 13,
       "descriptionId": 13
     },
-    {
+    { 
+      "name" : "왜곡",
       "id": 14,
       "nameId": 14,
       "descriptionId": 14
     },
-    {
+    { 
+      "name" : "보답",
       "id": 15,
       "nameId": 15,
       "descriptionId": 15
     },
     {
+      "name" : "양자 얽힘",
       "id": 16,
       "nameId": 16,
       "descriptionId": 16
     },
     {
+      "name" : "패 강화",
       "id": 17,
       "nameId": 17,
       "descriptionId": 17
     },
-    {
+    { 
+      "name" : "핼리 혜성", 
       "id": 18,
       "nameId": 18,
       "descriptionId": 18
     },
      {
+      "name" : "탐색",
       "id": 19,
       "nameId": 19,
       "descriptionId": 19

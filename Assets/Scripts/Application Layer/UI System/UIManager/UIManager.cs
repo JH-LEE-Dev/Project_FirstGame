@@ -32,10 +32,10 @@ public class UIManager : MonoBehaviour
         worldLayerRoot = canvasRoot.worldLayerRoot;
     }
 
-    public void Initialize(InputManager inputManager)
+    public void Initialize(InputManager _inputManager,ICardLocalizationSystem _cardLocalizationSystem)
     {
         viewCtx = new UIViewContext();
-        viewCtx.Initialize(inputManager);
+        viewCtx.Initialize(_inputManager, _cardLocalizationSystem);
     }
 
     protected void Awake()

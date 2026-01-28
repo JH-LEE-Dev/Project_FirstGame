@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.ComponentModel.Design;
+using NaughtyAttributes;
 
 public class UIView_Unit_World : UIView
 {
@@ -18,6 +20,9 @@ public class UIView_Unit_World : UIView
 
     [SerializeField] private GameObject clickCatchSystemPrefab;
     private ClickCatchSystem clickCatchSystem;
+
+    [Header("DamageNumSystem Settings")]
+    [SerializeField] private DamageNumberSystem damageNumberSystem;
 
 
     protected override void Awake()
@@ -117,8 +122,9 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem?.UnEquipBulletCardForShoot();
     }
 
-    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage)
+    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage,bool bCritical)
     {
         Debug.Log("적이 데미지를 입었습니다.");
+        damageNumberSystem?.SpawnBasicDamageNumber(_damage, _enemyData.GetTransform().position);
     }
 }

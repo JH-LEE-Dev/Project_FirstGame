@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class GameInstaller : MonoBehaviour
 {
     //외부 의존성
     private InputManager inputManager;
     private IBootStrapProvider bootStrapProvider;
+    private ICardLocalizationSystem cardLocalizationSystem;
 
     //내부 의존성
     private UnitSpawner unitSpawner;
@@ -17,7 +17,7 @@ public class GameInstaller : MonoBehaviour
     private CardSystemController cardSystemController;
     private UnitLogicSystem unitLogicSystem;
     private EnvironmentManager environmentManager;
-    private GameplayUIInstaller uiInstaller;
+    private GameplayUIInstaller gameplayUIInstaller;
     private SignalHub signalHub;
     private UnitSystem unitSystem;
     private CardSystem cardSystem;
@@ -29,7 +29,8 @@ public class GameInstaller : MonoBehaviour
 
     [SerializeField] private WaveDatabase waveDatabase;
 
-    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager)
+    public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager,
+        ICardLocalizationSystem _cardLocalizationSystem)
     {
         inputManager = _inputManager;
         bootStrapProvider = _bootStrapProvider;
@@ -44,7 +45,7 @@ public class GameInstaller : MonoBehaviour
         cardSystemController = GetComponent<CardSystemController>();
         unitLogicSystem = GetComponent<UnitLogicSystem>();
         environmentManager = GetComponentInChildren<EnvironmentManager>();
-        uiInstaller = GetComponentInChildren<GameplayUIInstaller>();
+        gameplayUIInstaller = GetComponentInChildren<GameplayUIInstaller>();
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
@@ -67,8 +68,8 @@ public class GameInstaller : MonoBehaviour
 
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager);
 
-        uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
-        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager);
+        gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager,cardLocalizationSystem);
+        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager,cardLocalizationSystem,cardManager);
 
         shopSystem.Initialize(signalHub, shopManager);
 
@@ -77,7 +78,7 @@ public class GameInstaller : MonoBehaviour
 
     public void SetupGamePlayScene()
     {
-        uiInstaller.SetupUI();
+        gameplayUIInstaller.SetupUI();
         gameController.SetupGameController();
     }
 
@@ -96,7 +97,7 @@ public class GameInstaller : MonoBehaviour
         cardManager.Release();
         cardSystemController.Release();
         waveManager.Release();
-        uiInstaller.Release();
+        gameplayUIInstaller.Release();
         shopUIInstaller.Release();
         shopSystem.Release();
         shopManager.Release();

@@ -169,9 +169,9 @@ public class UnitSystem
         signalHub.Publish(new PlayerGetHPSignal(amount));
     }
 
-    private void EnemyTakeDamage(IEnemyData enemyData,float damage)
+    private void EnemyTakeDamage(IEnemyData enemyData,float damage,bool bCritical)
     {
-        signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage));
+        signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage, bCritical));
     }
 
     public void Release()

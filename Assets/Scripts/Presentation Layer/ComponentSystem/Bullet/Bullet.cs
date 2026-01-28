@@ -146,19 +146,21 @@ public class Bullet : MonoBehaviour
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
+        bool bCritical = false;
+
         int critical = UnityEngine.Random.Range(0, 100);
 
         float totalDamage = attack;
 
         if (critical < criticalChance + criticalChanceModifier)
         {
-            Debug.Log("Critical!!!");
+            bCritical = true;
             totalDamage = attack * 2;
         }
 
         if (hit != null)
         {
-            hit.TakeDamage(totalDamage + attackModifier);
+            hit.TakeDamage(totalDamage + attackModifier, bCritical);
             hit.ApplyWeakness(weaknessModifier);
             ApplyKnockBack(hit, other.transform.position);
         }

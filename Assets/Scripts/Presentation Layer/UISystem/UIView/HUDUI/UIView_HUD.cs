@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -25,8 +26,11 @@ public class UIView_HUD : UIView
     [SerializeField] private BarMotion targetBar;
     [SerializeField] private UIText_TargetGage targetGageText;
 
+    [Header("DamageNumber")]
+    [SerializeField] private DamageNumberSystem damageNumberSystem;
+
     [Header("Pooling System")]
-    [SerializeField] private ObjectPoolingSystem damagePool;
+    [SerializeField] private ObjectPoolingSystem playerDamageNumPool;
     [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
 
     [Header("StarlightUI")]
@@ -188,7 +192,7 @@ public class UIView_HUD : UIView
         // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: damagePool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: playerDamageNumPool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
@@ -290,8 +294,8 @@ public class UIView_HUD : UIView
         WaveStartFirstTime = false;
     }
 
-    public void ReturnDamageText(GameObject target) => damagePool?.Pool.Release(target);
-    public GameObject GetDamageObj() => damagePool.Pool.Get();
+    public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
+    public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
 
 
     // For StarlightUI

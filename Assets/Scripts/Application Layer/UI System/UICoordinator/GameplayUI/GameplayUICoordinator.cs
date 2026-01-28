@@ -150,8 +150,8 @@ public class GameplayUICoordinator
         CardUsedEvent?.Invoke(bVerified, slotIdx, slotTransform);
     }
 
-    public void EnemyTakeDamage(IEnemyData enemyData,float damage)
+    public void EnemyTakeDamage(IEnemyData enemyData,float damage,bool bCritical)
     {
-        unitWorldUISystem.EnemyTakeDamage(enemyData, damage);
+        unitWorldUISystem.EnemyTakeDamage(enemyData, damage,bCritical);
     }
 }

@@ -16,7 +16,7 @@ public class ECombatComponent : CombatComponent
 
         if(target != null )
         {
-            target.TakeDamage(attack);
+            target.TakeDamage(attack,false);
         }
     }
 }

@@ -29,7 +29,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4706195621971914959}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2524402950988499541
@@ -49,3 +50,111 @@ MonoBehaviour:
   uiRoot: {fileID: 4944410294537709981}
   bulletSocketSystemPrefab: {fileID: 6922502279702456963, guid: ff156f6272b09e849958add35f5fa146, type: 3}
   clickCatchSystemPrefab: {fileID: 1764982564372588467, guid: aeb280d7059c2cb4381ba7591cf77870, type: 3}
+  damageNumberSystem: {fileID: 1952432284334122069}
+--- !u!1 &3916907660417457956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4706195621971914959}
+  - component: {fileID: 1952432284334122069}
+  m_Layer: 5
+  m_Name: DamageNumberSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4706195621971914959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3916907660417457956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2907680496638333301}
+  m_Father: {fileID: 4944410294537709981}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1952432284334122069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3916907660417457956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85cd4ebb6b48324e93ec1b543559e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageNumberSystem
+  damagePool: {fileID: 3817688349586317529}
+  unitValue:
+    bOnShake: 1
+    bAlphaStart: 1
+    onDuration: 0.25
+    onShakePower: 0.15
+    onAlpha: 0
+    onStartSize: {x: 0.5, y: 0.5}
+    onFinishedSize: {x: 0.125, y: 0.125}
+    onPosOffset: {x: 0, y: 0, z: 0}
+    onEase: 6
+    offDelay: 0.25
+    offDuration: 1
+    offEase: 5
+  noramlDamageColor: {r: 1, g: 1, b: 1, a: 1}
+  critDamageColor: {r: 1, g: 0.6470588, b: 0, a: 1}
+--- !u!1 &3970654669902497496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2907680496638333301}
+  - component: {fileID: 3817688349586317529}
+  m_Layer: 5
+  m_Name: PoolingSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2907680496638333301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3970654669902497496}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4706195621971914959}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3817688349586317529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3970654669902497496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09fde36e684cd9b41b7b768cad452785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolingSystem
+  prefab: {fileID: 7678269579920830026, guid: 581c6bc0eb150fc40b6a97d1d5b7349f, type: 3}
+  maxPoolSize: 50

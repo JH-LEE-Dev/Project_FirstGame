@@ -1,56 +1,96 @@
 using System.Collections.Generic;
+using System.Text;
+using TMPro;
 using UnityEngine;
-using System.IO;
 
-// 1. 텍스트 데이터를 담을 그릇 (가벼운 클래스)
 [System.Serializable]
-public class CardTextData
+public struct CardTextData
 {
     public int id;
-    public string name; // Name
-    public string description; // Description
+    public string name;
+    public string description;
+    public string upgradedDescription;
 }
 
-// 2. JSON 파싱용 래퍼
 [System.Serializable]
-public class LangDataWrapper
+public struct LangDataWrapper
 {
     public List<CardTextData> data;
 }
 
-public class LocalizationManager
+public class LocalizationManager : ICardLocalizationSystem
 {
-    private Dictionary<int, CardTextData> textMap = new Dictionary<int, CardTextData>(50);
+    private Dictionary<int, byte[]> nameMap = new Dictionary<int, byte[]>(100);
+    private Dictionary<int, byte[]> descMap = new Dictionary<int, byte[]>(100);
+    private Dictionary<int, byte[]> upgradedDescMap = new Dictionary<int, byte[]>(100);
 
+    private StringBuilder sharedBuffer = new StringBuilder(500);
+
+    private char[] charBuffer = new char[1024];
     public void LoadLanguage(string fileName)
     {
-        textMap.Clear();
-        string path = Path.Combine(Application.streamingAssetsPath, fileName + ".json");
+        nameMap.Clear();
+        descMap.Clear();
+        upgradedDescMap.Clear();
 
-        if (File.Exists(path))
+        TextAsset textAsset = Resources.Load<TextAsset>(fileName);
+
+        if (textAsset == null)
         {
-            string json = File.ReadAllText(path);
-            LangDataWrapper wrapper = JsonUtility.FromJson<LangDataWrapper>(json);
+            Debug.Log("Korean Localization Asset is null!");
+            return;
+        }
 
-            // 리스트를 딕셔너리로 고속 변환
-            foreach (var item in wrapper.data)
+        LangDataWrapper wrapper = JsonUtility.FromJson<LangDataWrapper>(textAsset.text);
+
+        foreach (var item in wrapper.data)
+        {
+            if (!nameMap.ContainsKey(item.id))
             {
-                // 중복 ID 방지 체크 후 삽입
-                if (!textMap.ContainsKey(item.id))
-                {
-                    textMap.Add(item.id, item);
-                }
+                nameMap.Add(item.id, Encoding.UTF8.GetBytes(item.name));
+                descMap.Add(item.id, Encoding.UTF8.GetBytes(item.description));
+                upgradedDescMap.Add(item.id, Encoding.UTF8.GetBytes(item.upgradedDescription));
             }
+        }
+
+        Resources.UnloadAsset(textAsset);
+    }
+
+    public void SetCardUIText(int id, TMP_Text targetName, TMP_Text targetDesc, TMP_Text targetUpgradedDesc)
+    {
+        if (nameMap.TryGetValue(id, out byte[] nameBytes))
+        {
+            BytesToBuffer(nameBytes); // 버퍼에 씀 (Alloc 0)
+            targetName.SetText(sharedBuffer); // TMP가 SB를 읽음 (Alloc 0)
+        }
+
+        if (descMap.TryGetValue(id, out byte[] descBytes))
+        {
+            BytesToBuffer(descBytes);
+            targetDesc.SetText(sharedBuffer);
+        }
+
+        if (upgradedDescMap.TryGetValue(id, out byte[] upgradedDescBytes))
+        {
+            BytesToBuffer(upgradedDescBytes);
+            targetUpgradedDesc.SetText(sharedBuffer);
         }
     }
 
-    // [사용 함수] ID만 던지면 텍스트 뭉치를 줌
-    public CardTextData GetCardText(int id)
+    // 바이트 배열을 StringBuilder에 밀어넣는 함수
+    private void BytesToBuffer(byte[] sourceBytes)
     {
-        if (textMap.TryGetValue(id, out CardTextData data))
+        sharedBuffer.Clear();
+
+        int charCount = Encoding.UTF8.GetCharCount(sourceBytes);
+
+        if (charCount > charBuffer.Length)
         {
-            return data;
+            charBuffer = new char[charCount + 256];
         }
-        return null; // 혹은 "Missing Text" 더미 데이터 반환
+
+        Encoding.UTF8.GetChars(sourceBytes, 0, sourceBytes.Length, charBuffer, 0);
+
+        sharedBuffer.Append(charBuffer, 0, charCount);
     }
 }

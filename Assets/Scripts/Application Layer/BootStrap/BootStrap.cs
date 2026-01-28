@@ -21,6 +21,9 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
 
     private GameInstaller gameInstaller;
     private MainMenuInstaller mainMenuInstaller;
+    private LocalizationManager localizationManager;
+
+    private const string koreanLocalizationFileName = "CardDescription_Korean";
 
     private void BootTempScene()
     {
@@ -45,6 +48,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
         audioManager = GetComponent<AudioManager>();
         sceneManager = GetComponent<SceneController>();
         inputManager = GetComponent<InputManager>();
+        localizationManager = new LocalizationManager();
 
         inputManager.Initialize();
 
@@ -57,6 +61,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
             BootTempScene();
 
         //Sound.PlayBGM("BGM_MainMenu");
+        localizationManager.LoadLanguage(koreanLocalizationFileName);
     }
 
     public void OnDestroy()
@@ -81,7 +86,7 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
     public void SetupGameplayScene()
     {
         gameInstaller = Instantiate(gameInstaller_Prefab);
-        gameInstaller.Initialize(this,inputManager);
+        gameInstaller.Initialize(this,inputManager,localizationManager);
     }
 
     private void StartGameplayScene()
