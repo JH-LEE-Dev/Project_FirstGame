@@ -105,6 +105,9 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         {
             enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
             enemyUnits[i].UnitIsDeadEvent += EnemyIsDead;
+
+            enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
+            enemyUnits[i].EnemyIsKilledEvent += EnemyIsKilled;
         }
     }
 
@@ -115,6 +118,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
             for (int i = 0; i < enemyUnits.Count; ++i)
             {
                 enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
+                enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
             }
         }
     }
@@ -122,6 +126,11 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     private void EnemyIsDead(Unit deadUnit)
     {
         EnemyIsDeadEvent?.Invoke(deadUnit.transform.position);
+    }
+
+    private void EnemyIsKilled(EnemyTypeData enemyTypeData)
+    {
+        playerUnit.EarnMoney(enemyTypeData.rewardWhenKilled);
     }
 
     public void StartEnemyMove(StartMoveSignal startMoveSignal)
@@ -214,5 +223,10 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         playerUnit.statusEffectReceiver.IncreaseHP(amount);
         PlayerGetHPEvent?.Invoke(amount);
+    }
+
+    public void ResetPlayer(WaveStartSignal waveStartSignal)
+    {
+        playerUnit.ResetPlayer();
     }
 }

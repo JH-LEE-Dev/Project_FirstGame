@@ -12,4 +12,6 @@ public class EnemyTypeData
     public float health;
     public float attack;
     public float shield;
+
+    public int rewardWhenKilled;
 }

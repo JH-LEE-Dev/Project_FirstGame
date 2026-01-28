@@ -69,36 +69,6 @@ public class StarlightUI : MonoBehaviour
     private int hitCounter = 0;
     private Coroutine waveRoutine;
 
-
-    [Button]
-    public void TestOn1()
-    {
-        ActivateSubUI(0, 10);
-    }
-    [Button]
-    public void TestOn2()
-    {
-        ActivateSubUI(1, 10);
-    }
-    [Button]
-    public void TestOn3()
-    {
-        ActivateSubUI(2, 10);
-    }
-    [Button]
-    public void TestTurnAdjustment()
-    {
-        TurnAdjustment();
-    }
-
-    [Button]
-    public void TestWaveAdjustment()
-    {
-        WaveAdjustment();
-    }
-
-
-
     private void Awake()
     {
         for (int i = 0; i < starlightSubUIs.Count; i++)
@@ -119,8 +89,6 @@ public class StarlightUI : MonoBehaviour
         starAddDisplayed = 0;
         if (starlightTM) starlightTM.text = starBaseDisplayed.ToString();
     }
-
-
 
     public void ActivateSubUI(int uiIndex, int addValue)
     {

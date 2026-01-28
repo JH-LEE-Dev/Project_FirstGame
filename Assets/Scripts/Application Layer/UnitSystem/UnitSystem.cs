@@ -102,6 +102,7 @@ public class UnitSystem
         signalHub.Subscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.Subscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
     }
 
     private void UnSubscribeEvents()
@@ -114,6 +115,7 @@ public class UnitSystem
         signalHub.UnSubscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
+        signalHub.UnSubscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
     }
 
     private void EnemySpawned()

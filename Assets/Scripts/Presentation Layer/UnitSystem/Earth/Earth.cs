@@ -9,6 +9,8 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
 
     protected HealthComponent healthComponent;
 
+    private int money = 0;
+
     private void Awake()
     {
         healthComponent = GetComponent<HealthComponent>();
@@ -63,5 +65,15 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     public void ApplyWeakness(int turnCnt)
     {
         throw new NotImplementedException();
+    }
+
+    public void ResetPlayer()
+    {
+        healthComponent.ResetHealthComponent();
+    }
+
+    public void EarnMoney(int amount)
+    {
+        money += amount;
     }
 }
