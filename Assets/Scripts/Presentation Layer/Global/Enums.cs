@@ -25,6 +25,7 @@ public enum CardInstanceType
 {
     Hand,
     Other,
+    Shop,
     END
 }
 
