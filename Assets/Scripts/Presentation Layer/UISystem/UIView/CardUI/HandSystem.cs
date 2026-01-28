@@ -179,7 +179,7 @@ public class HandSystem : MonoBehaviour
         // 프리뷰 카드 사용이라면 프리뷰 상태 정리
         if (previewCard == _card)
         {
-            previewCard.Motion.EndPreview();
+            //previewCard.Motion.EndPreview();
             previewCard.SetUIState(CardState.Other); // Other는 연출 중인 놈을 의미함. 자유분방
             previewCard = null;
         }
@@ -258,43 +258,75 @@ public class HandSystem : MonoBehaviour
 
     private void ConsumeMagic(MainCardInstance card)
     {
-        if (card.CardData.GetCardData().elementType == ElementType.Extinction)
+        ElementType cardElementType = card.CardData.GetCardData().elementType;
+
+        switch (cardElementType)
         {
-            ReturnToPool(card);
-            computeArc();
-            ComputeSelectedPositions();
-            return;
+            case ElementType.Extinction:
+                {
+                    card.SetUIState(CardState.Other);
+                    hoveredCard = null;
+                    if (previewCard == card) previewCard = null;
+
+                    float dissolveDur = 1f;
+                    float ShakeDur = 0.35f;
+
+                    card.Motion.PlayExtinctionShake(
+                    ShakeDur
+                    );
+
+                    card.PlayConsumeExtinction(
+                    dissolveDur,
+                    onComplete: (c) =>
+                    {
+                        if (c == null) return;
+                        if (c is MainCardInstance mc)
+                            ReturnToPool(mc);
+                        computeArc();
+                        ComputeSelectedPositions();
+                    });
+
+                    computeArc();
+                    ComputeSelectedPositions();
+                }
+                return;
+            case ElementType.Rotation:
+                {
+                    float scaleOffset = card.transform.localScale.x * 20f;
+                    cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
+
+                    card.SetUIState(CardState.Other);
+
+                    hoveredCard = null;
+                    if (previewCard == card) previewCard = null;
+
+                    computeArc();
+                    ComputeSelectedPositions();
+
+                    card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.1f);
+                    card.Motion.PlayConsumeShrink(0.2f, 0.03f);
+
+                    DOVirtual.DelayedCall(0.6f, () =>
+                    {
+                        if (card == null) return;
+
+                        ReturnToPool(card);
+
+                        Vector2 BasePos = card.transform.position;
+                        Vector2 GravePos = cardSystem.GetGravePos();
+
+                        cardSystem.SpawnStarAtoB(false, 0, BasePos, GravePos);
+
+                        computeArc();
+                        ComputeSelectedPositions();
+
+                    }).SetUpdate(true);
+
+                }
+                return;
+            default:
+                return;
         }
-
-        float scaleOffset = card.transform.localScale.x * 20f;
-        cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
-
-        card.SetUIState(CardState.Other);
-
-        hoveredCard = null;
-        if (previewCard == card) previewCard = null;
-
-        computeArc();
-        ComputeSelectedPositions();
-
-        card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.1f);
-        card.Motion.PlayConsumeShrink(0.2f, 0.03f);
-
-        DOVirtual.DelayedCall(0.6f, () =>
-        {
-            if (card == null) return;
-
-            ReturnToPool(card);
-
-            Vector2 BasePos = card.transform.position;
-            Vector2 GravePos = cardSystem.GetGravePos();
-
-            cardSystem.SpawnStarAtoB(false, 0, BasePos, GravePos);
-
-            computeArc();
-            ComputeSelectedPositions();
-
-        }).SetUpdate(true);
     }
 
 

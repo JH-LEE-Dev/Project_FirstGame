@@ -67,6 +67,17 @@ public class CardMotion : MonoBehaviour
 
     [Header("Using Motion")]
     private Tween consumeScaleTween;
+    private bool extinctionActive;
+    private float extinctionTime;
+    private float extinctionDur;
+    private float extinctionPhase;
+    private float extinctionBaseZ;
+    private float extinctionAmplitudeStart = 1f;
+    private float extinctionIntensityMul = 0.8f; 
+    private float extinctionAngle = 3.5f;       
+    private float extinctionFreqStart = 2f;    
+    private float extinctionFreqEnd = 5f;     
+    private Tween extinctionScaleTween;
 
 
     public int socketIndex { get; private set; }
@@ -93,6 +104,8 @@ public class CardMotion : MonoBehaviour
         SelectTween?.Kill();
 
         consumeScaleTween?.Kill();
+        extinctionScaleTween?.Kill();
+        extinctionActive = false;
 
         if (bRestoreScale) transform.localScale = originScale;
     }
@@ -113,6 +126,7 @@ public class CardMotion : MonoBehaviour
     private void Update()
     {
         ToTargetPos(Time.unscaledDeltaTime);
+        TickExtinctionShake(Time.unscaledDeltaTime);
     }
 
     public void SetSocketIndex(int index)
@@ -408,5 +422,64 @@ public class CardMotion : MonoBehaviour
                              .SetEase(Ease.InCubic)
                 );
     }
+
+    private void TickExtinctionShake(float dt)
+    {
+        if (!extinctionActive) return;
+
+        extinctionTime += dt;
+
+        float u = extinctionTime / extinctionDur;
+        if (u >= 1f)
+        {
+            extinctionActive = false;
+            return;
+        }
+
+        float uu = u * u;
+
+        float freq = Mathf.Lerp(extinctionFreqStart, extinctionFreqEnd, uu) * extinctionIntensityMul;
+        float omega = freq * Mathf.PI * 2f;
+        extinctionPhase += omega * dt;
+
+        float amp = Mathf.Lerp(extinctionAmplitudeStart, extinctionAngle, uu) * extinctionIntensityMul;
+
+        float z = extinctionBaseZ + Mathf.Sin(extinctionPhase) * amp;
+        rt.localRotation = Quaternion.Euler(0f, 0f, z);
+    }
+
+    public void PlayExtinctionShake(
+    float dur = 0.35f,
+    float scaleMul = 0.7f,
+    float angleDeg = 15f,
+    float freqStart = 2f,
+    float freqEnd = 28f
+)
+    {
+        // 기존 트윈/상태 정리 (필요한 것만)
+        AllKillTweens(false);
+        velocity = Vector2.zero;
+
+        extinctionDur = Mathf.Max(0.01f, dur * 3f);
+        extinctionTime = 0f;
+        extinctionPhase = 0f;
+        extinctionActive = true;
+
+        extinctionAngle = angleDeg;
+        extinctionFreqStart = freqStart;
+        extinctionFreqEnd = freqEnd;
+
+        // 현재 회전 기준으로 흔들기 (프리뷰/손패 어느 상태든 자연스럽게)
+        extinctionBaseZ = rt.localEulerAngles.z;
+
+        // 스케일은 dur 동안 줄이기 (콜백/람다 없음)
+        Vector3 baseScale = transform.localScale;
+        extinctionScaleTween?.Kill();
+        extinctionScaleTween = transform.DOScale(baseScale * scaleMul, dur)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+    }
+
 
 }
