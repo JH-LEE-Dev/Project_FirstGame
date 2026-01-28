@@ -1,10 +1,12 @@
 using DG.Tweening;
 using NaughtyAttributes;
+using System;
 using TMPro;
 using UnityEngine;
 
 using Sequence = DG.Tweening.Sequence;
 
+[Serializable]
 public class DamageNumUnitValue
 {
     [Header("Basic On Motion Settings")]
@@ -28,10 +30,11 @@ public class DamageNumUnit : MonoBehaviour
 {
     [Header("Main Settings")]
     [SerializeField] private TMP_Text text;
-    [SerializeField] private RectTransform visualRect;
+    [SerializeField] private Transform visual;
     private float data = 0f;
     public float DataValue { get { return data; } }
 
+    private DamageNumberSystem owner;
     private DamageNumUnitValue unitValue;
 
     private Sequence visualSeq;
@@ -45,8 +48,10 @@ public class DamageNumUnit : MonoBehaviour
 
     public void SetupData(float _value) => data = _value;
 
-    public void SetupUnitValue(DamageNumUnitValue _value)
+    public void SetupUnitValue(DamageNumUnitValue _value, DamageNumberSystem dnbs)
     {
+        owner = dnbs;
+
         unitValue = _value;
         Initialize();
     }
@@ -54,7 +59,10 @@ public class DamageNumUnit : MonoBehaviour
     public void BasicSpawnUnit(float _value, Vector3 _spawnWorldPos)
     {
         SetupData(_value);
-        visualRect.anchoredPosition = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(_spawnWorldPos, visualRect);
+        visual.position = _spawnWorldPos;
+        data = _value;
+
+        text.text = data.ToString();
 
         OnDamageNumber();
     }
@@ -64,7 +72,10 @@ public class DamageNumUnit : MonoBehaviour
         BasicSpawnUnit(_value, _spawnWorldPos);
 
         bSumMotion = true;
-        targetPos = UIWorldUtil.GetGenerateTheAnchoredPosfromWorldPos(_targetWorldPos, visualRect);
+        targetPos = _targetWorldPos;
+        data = _value;
+
+        text.text = data.ToString();
 
         OnDamageNumber();
     }
@@ -73,11 +84,20 @@ public class DamageNumUnit : MonoBehaviour
     {
         CancelPrevMotion(visualSeq);
 
+        visual.localScale = unitValue.onStartSize;
+
+        if (unitValue.bAlphaStart)
+        {
+            text.alpha = unitValue.onAlpha;
+        }
+        else
+        {
+            text.alpha = 1f;
+        }
+
         visualSeq = DOTween.Sequence();
 
-        visualSeq.AppendCallback(OnDamageNumCallback);
-
-        visualSeq.Append(visualRect.DOScale(unitValue.onFinishedSize, unitValue.onDuration)
+        visualSeq.Append(visual.DOScale(unitValue.onFinishedSize, unitValue.onDuration)
             .SetEase(unitValue.onEase));
 
         if (unitValue.bAlphaStart)
@@ -85,29 +105,15 @@ public class DamageNumUnit : MonoBehaviour
             visualSeq.Join(text.DOFade(1f, unitValue.onDuration)
                 .SetEase(Ease.OutExpo));
         }
-        else
-        {
-            text.alpha = 1f;
-        }
 
         if (unitValue.bOnShake)
         {
-            visualSeq.Append(visualRect.DOShakeAnchorPos(unitValue.offDelay, unitValue.onShakePower)
+            visualSeq.Append(visual.DOShakePosition(unitValue.offDelay, unitValue.onShakePower)
                 .SetEase(unitValue.onEase));
         }
 
         visualSeq.OnComplete(OnDamageNumComplete);
         visualSeq.SetUpdate(false);
-    }
-
-    private void OnDamageNumCallback()
-    {
-        visualRect.localScale = unitValue.onStartSize;
-
-        if (unitValue.bAlphaStart)
-        {
-            text.alpha = unitValue.onAlpha;
-        }
     }
 
     private void OnDamageNumComplete()
@@ -136,6 +142,13 @@ public class DamageNumUnit : MonoBehaviour
 
         visualSeq.Append(text.DOFade(0f, unitValue.offDuration)
             .SetEase(unitValue.offEase));
+
+        visualSeq.OnComplete(FinishedMotionComplete);
+    }
+
+    private void FinishedMotionComplete()
+    {
+        owner?.ReleaseUnit(gameObject);
     }
 
     private void CancelPrevMotion(Sequence seq)
@@ -148,20 +161,16 @@ public class DamageNumUnit : MonoBehaviour
 
     private void Initialize()
     {
-        if (null == visualRect)
+        if (null == visual)
             return;
 
-        originRot = visualRect.localEulerAngles;
-        originScale = visualRect.localScale;
-        originPos = visualRect.localPosition;
+        originRot = visual.localEulerAngles;
+        originScale = visual.localScale;
+        originPos = visual.localPosition;
     }
 
-    [Button]
-    private void BasicTestButton()
+    private void OnDisable()
     {
-        unitValue.bOnShake = true;
-        unitValue.onStartSize = new Vector2(2, 2);
-
-        BasicSpawnUnit(10, Vector3.zero);
+        visualSeq.Kill();
     }
 }

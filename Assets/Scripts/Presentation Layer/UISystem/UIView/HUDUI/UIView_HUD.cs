@@ -31,10 +31,7 @@ public class UIView_HUD : UIView
 
     [Header("Pooling System")]
     [SerializeField] private ObjectPoolingSystem playerDamageNumPool;
-    [SerializeField] private ObjectPoolingSystem enemyDamageNumPool;
     [SerializeField] private ObjectPoolingSystem targetBarEffectPool;
-
-    public ObjectPoolingSystem EnemyDamageNumPool { get { return enemyDamageNumPool; } }
 
     private bool WaveStartFirstTime = true;
 
@@ -44,8 +41,6 @@ public class UIView_HUD : UIView
 
         if (uiPrefab != null)
             Instantiate(uiPrefab, uiRoot);
-
-        InitializeEnemyDamageNumPool();
     }
 
     public void PlayerSpawned(IPlayerData _playerData)
@@ -293,19 +288,6 @@ public class UIView_HUD : UIView
         targetGageText?.DataUpdate(0, waveSystemData.GetMaxWaveProgress());
 
         WaveStartFirstTime = false;
-    }
-
-    private void InitializeEnemyDamageNumPool()
-    {
-        if (null == enemyDamageNumPool || null == damageNumberSystem)
-            return;
-
-        List<GameObject> list = enemyDamageNumPool.GetPoolList();
-        foreach (GameObject item in list)
-        {
-            DamageNumUnit script = item.GetComponent<DamageNumUnit>();
-            script?.SetupUnitValue(damageNumberSystem.UnitValue);
-        }
     }
 
     public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
