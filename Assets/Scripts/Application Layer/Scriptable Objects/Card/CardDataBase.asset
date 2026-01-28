@@ -14,300 +14,300 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDataBase
   cardData:
   - id: 0
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 569ebfdddf6b1bf4d9bceb72685857d5, type: 3}
     cardName: 0
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 00000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 1
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 78ab533565c658d4e83a0137666d2567, type: 3}
     cardName: 1
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 0
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 01000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 2
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 4f9971ba4406db841b63669e28f6af42, type: 3}
     cardName: 2
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 02000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 3
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 092df0d800f7ae740880a9e1b2aeacc3, type: 3}
     cardName: 3
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 0
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 00000000
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 4
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: aa0df5b8762655a428461ed9c13ba9da, type: 3}
     cardName: 4
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 00000000
     selectionSystemEffects: 
   - id: 5
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: d83727b4b31973a409bfacd4121a2744, type: 3}
     cardName: 5
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 00000000
     cardStatusEffects: 03000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 6
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: cd2599286dda0a240b41d900e7364183, type: 3}
     cardName: 6
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 01000000
     cardStatusEffects: 04000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 7
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 61182b4312c402842a0b1c1c75168ec4, type: 3}
     cardName: 7
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 0
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 01000000
     selectionSystemEffects: 
   - id: 8
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 7970959484593cc4b8dbd766a08b4f81, type: 3}
     cardName: 8
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 02000000
     selectionSystemEffects: 
   - id: 9
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 91969fe26952bca4b90b670b882ff22a, type: 3}
     cardName: 9
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 01000000
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 10
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: a19226ffbccc02c4292b0929df88ec7b, type: 3}
     cardName: 10
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 05000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 11
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: acb46c465dbf2424aa719a5a9ceb2e71, type: 3}
     cardName: 11
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 1
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 06000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 12
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 4335ca719e7139342b3eecab10c60d55, type: 3}
     cardName: 12
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 0
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 02000000
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 13
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: b589c2a4a7770a54cb14d27e51f70ce2, type: 3}
     cardName: 13
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 0800000007000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 14
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 6781248076b5c74488e135a0326218eb, type: 3}
     cardName: 14
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 0
     elementType: 0
     usingType: 0
     priority: 1
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 09000000
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 15
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 458fa3e6e4f9bce4394f34f179e49178, type: 3}
     cardName: 15
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 03000000
     selectionSystemEffects: 
   - id: 16
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: d206bc5909bc0e541a25fd80f4f0e036, type: 3}
     cardName: 16
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 05000000
     selectionSystemEffects: 
   - id: 17
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 5cf88fd80895bfa469018ff854a2d43a, type: 3}
     cardName: 17
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 04000000
     selectionSystemEffects: 
   - id: 18
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: aa17d4ef8d9b1a64e99476d4220d1412, type: 3}
     cardName: 18
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 0
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
     complexSystemEffects: 06000000
     selectionSystemEffects: 
   - id: 19
-    cardImage: {fileID: 0}
+    cardImage: {fileID: 21300000, guid: 7b294001e30c95a4f814350c32c92efd, type: 3}
     cardName: 19
+    cardNameId: 0
+    cardDescriptionId: 0
     cardType: 1
     elementType: 1
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardDescription: 
-    bFlash: 0
     cardSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 

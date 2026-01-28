@@ -142,7 +142,7 @@ public class UIView_CardSystem : UIView
 
         deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
         graveSystem?.SetupCount(CountUIType.VisibleWhenZero, graveCards.Count);
-        //extinctionSystem?.SetupCount(CountUIType.VisibleWhenZero, extinctionCards.Count);
+        extinctionSystem?.SetupCount(CountUIType.VisibleWhenZero, extinctionCards.Count);
     }
 
     protected override void Awake()
@@ -628,7 +628,7 @@ public class UIView_CardSystem : UIView
                 break;
 
             case CurrentPannel.Extinction:
-                //ActivatePannel(cards);
+                ActivatePannel(extinctionCards);
                 break;
         }
     }
@@ -755,6 +755,8 @@ public class UIView_CardSystem : UIView
     {
         graveSystem?.SetCount(graveCards.Count);
         deckSystem?.SetCount(deckCards.Count);
+        extinctionSystem?.SetCount(extinctionCards.Count);
+        Debug.Log(extinctionCards.Count);
     }
 
     private void DrawingCards(List<CardDataInstance> _datas)
