@@ -145,7 +145,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
 
         cardEffect_BeforeAttack.Clear();
-        CardActionEndScopeEvent?.Invoke();
     }
 
     private void DispatchCardEffect_AfterAttack()
@@ -202,6 +201,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             writeBuffer[0] = usedCard;
             DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsRemoveFromHand, writeBuffer.Slice(0, 1));
 
+            DispatchCardEffect_BeforeAttack();
+
             if (usedCard.GetCardData().elementType == ElementType.Rotation)
             {
                 writeBuffer[0] = usedCard;
@@ -213,7 +214,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 DispatchCardSystemActionCommand_Instant(CardSystemActionType.UsedCardsToExtinction, writeBuffer.Slice(0, 1));
             }
 
-            DispatchCardEffect_BeforeAttack();
+            CardActionEndScopeEvent?.Invoke();
         }
         else
         {
