@@ -117,7 +117,7 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem?.UnEquipBulletCardForShoot();
     }
 
-    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage)
+    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage,bool bCritical)
     {
         Debug.Log("적이 데미지를 입었습니다.");
     }

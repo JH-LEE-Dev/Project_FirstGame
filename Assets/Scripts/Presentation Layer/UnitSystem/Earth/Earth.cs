@@ -16,7 +16,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
         healthComponent = GetComponent<HealthComponent>();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool bCritical)
     {
         healthComponent.TakeDamange(damage);
         TakeDamageEvent?.Invoke(damage);

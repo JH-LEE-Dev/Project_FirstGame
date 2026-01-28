@@ -10,6 +10,9 @@ public class UIView_Shop : UIView
     //외부 의존성
     private IShopSystemData shopSystemData;
 
+    //현재 게임 시스템의 카드 정보.
+    IReadOnlyList<CardDataInstance> deckCards;
+
     [SerializeField] private Button buyButton_1;
     [SerializeField] private Button buyButton_2;
     [SerializeField] private Button buyButton_3;
@@ -22,14 +25,14 @@ public class UIView_Shop : UIView
         base.Initialize(ctx);
     }
 
-    public void DataInjection(IShopSystemData _shopSystemData)
+    public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards)
     {
         shopSystemData = _shopSystemData;
     }
 
     public void OpenShop()
     {
-
+    
     }
 
     public void CloseShop()

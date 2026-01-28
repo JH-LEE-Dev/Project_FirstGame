@@ -18,6 +18,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     private List<CardDataInstance> gravePile = new List<CardDataInstance>(50);
     private List<CardDataInstance> extinctionPile = new List<CardDataInstance>(50);
 
+    IReadOnlyList<CardDataInstance> ICardSystemData.permenantDeckCards => permanentDeckPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.deckCards => deckPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.handCards => handPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.graveCards => gravePile;
@@ -28,6 +29,7 @@ public class CardManager : MonoBehaviour, ICardSystemActionCommandHandler, ICard
     [SerializeField] private int initialDeckCnt = 40;
 
     private CardSystemContextType cardSystemContext;
+
     public void Initialize()
     {
         cardManagerEventInvoker = new CardManagerEventInvoker();

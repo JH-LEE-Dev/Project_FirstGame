@@ -45,10 +45,12 @@ namespace UnitLogicSystemSignals
     {
         public IEnemyData enemyData;
         public float damage;
-        public EnemyTakeDamageSignal(IEnemyData _enemyData,float _damage)
+        public bool bCritical;
+        public EnemyTakeDamageSignal(IEnemyData _enemyData,float _damage,bool _bCritical)
         {
             enemyData = _enemyData;
             damage = _damage;
+            bCritical = _bCritical;
         }
     }
 }

@@ -22,7 +22,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action PlayerAttackedEvent;
     public event Action<float> PlayerGetShieldEvent;
     public event Action<float> PlayerGetHPEvent;
-    public event Action<IEnemyData, float> EnemyTakeDamageEvent;
+    public event Action<IEnemyData, float,bool> EnemyTakeDamageEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -210,7 +210,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     public void HPDecrease(float amount)
     {
-        playerUnit.TakeDamage(amount);
+        playerUnit.TakeDamage(amount,false);
     }
 
     public void ApplyCriticalChanceModifier(int chance)
@@ -234,8 +234,8 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         playerUnit.ResetPlayer();
     }
 
-    private void EnemyTakeDamage(IEnemyData enemyData, float damage)
+    private void EnemyTakeDamage(IEnemyData enemyData, float damage,bool bCritical)
     {
-        EnemyTakeDamageEvent?.Invoke(enemyData, damage);
+        EnemyTakeDamageEvent?.Invoke(enemyData, damage, bCritical);
     }
 }

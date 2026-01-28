@@ -27,7 +27,7 @@ public class MainMenuUIInstaller : MonoBehaviour
         inputManager = _inputManager;
         uiManager = GetComponent<MainMenuUIManager>();
 
-        uiManager.Initialize(inputManager);
+        uiManager.Initialize(inputManager,null);
     }
 
     public void Release()

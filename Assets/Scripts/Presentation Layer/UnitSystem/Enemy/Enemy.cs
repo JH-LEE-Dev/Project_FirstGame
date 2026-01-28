@@ -4,7 +4,7 @@ using UnityEngine;
 public class Enemy : Unit, IEnemyData
 {
     public event Action<EnemyTypeData> EnemyIsKilledEvent;
-    public event Action<IEnemyData,float> EnemyTakeDamageEvent;
+    public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -95,10 +95,10 @@ public class Enemy : Unit, IEnemyData
         combatComponent.Initialize(ctx, visualComponentCoordinator, enemyTypeData.attack);
     }
 
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(float damage, bool bCritical)
     {
         healthComponent.TakeDamange(damage);
-        EnemyTakeDamageEvent?.Invoke(this, damage);
+        EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 
     private void EnemyIsKilled()

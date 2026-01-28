@@ -163,7 +163,7 @@ public class Character : Unit, ICharacterData
     }
 
     //데미지 입는 함수 - 미구현.
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(float damage, bool bCritical)
     {
 
     }

@@ -260,6 +260,7 @@ public class GameplayUIModuleCoordinator
 
     private void EnemyTakeDamage(EnemyTakeDamageSignal enemyTakeDamageSignal)
     {
-        gameplayUICoordinator.EnemyTakeDamage(enemyTakeDamageSignal.enemyData, enemyTakeDamageSignal.damage);
+        gameplayUICoordinator.EnemyTakeDamage(enemyTakeDamageSignal.enemyData, enemyTakeDamageSignal.damage,
+            enemyTakeDamageSignal.bCritical);
     }
 }

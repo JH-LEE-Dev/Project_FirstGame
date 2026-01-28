@@ -35,7 +35,7 @@ public class Unit : MonoBehaviour, IDamageable
     /// <summary>
     /// 시스템 코드 존. --------------------------------------
     /// </summary>
-    
+
     public virtual void Initialize(InputManager _inputManager, GameServiceLocator _gameServiceLocator)
     {
         gameServiceLocator = _gameServiceLocator;
@@ -125,7 +125,7 @@ public class Unit : MonoBehaviour, IDamageable
     }
 
     //체력 깎이는 함수.
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage, bool bCritical)
     {
         healthComponent.TakeDamange(damage);
     }

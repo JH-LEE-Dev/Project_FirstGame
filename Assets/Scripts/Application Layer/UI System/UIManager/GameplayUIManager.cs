@@ -6,10 +6,10 @@ public class GameplayUIManager : UIManager
     ICardSystemData cardSystemData;
     IWaveSystemData waveSystemData;
 
-    public void Initialize(InputManager inputManager, ICardSystemData _cardSystemData,
-        IWaveSystemData _waveSystemData)
+    public void Initialize(InputManager _inputManager, ICardSystemData _cardSystemData,
+        IWaveSystemData _waveSystemData,ICardLocalizationSystem _cardLocalizationSystem)
     {
-        base.Initialize(inputManager);
+        base.Initialize(_inputManager, _cardLocalizationSystem);
 
         cardSystemData = _cardSystemData;
         waveSystemData = _waveSystemData;
