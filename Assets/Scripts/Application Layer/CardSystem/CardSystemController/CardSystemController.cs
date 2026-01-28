@@ -416,7 +416,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void GameStarted()
     {
-        DispatchCardSystemActionCommand_Instant(CardSystemActionType.AllExtinctionCardsToDeck);
+        DispatchCardSystemActionCommand_Instant(CardSystemActionType.ResetCardPiles);
         CardActionEndScopeEvent?.Invoke();
     }
 

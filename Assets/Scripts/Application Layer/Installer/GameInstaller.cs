@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class GameInstaller : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class GameInstaller : MonoBehaviour
     private ComplexCardEffectResolver complexCardEffectResolver;
     private CardSelectionManager cardSelectionManager;
     private ShopUIInstaller shopUIInstaller;
+    private ShopSystem shopSystem;
+    private ShopManager shopManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -47,6 +50,8 @@ public class GameInstaller : MonoBehaviour
         complexCardEffectResolver = new ComplexCardEffectResolver();
         cardSelectionManager= new CardSelectionManager();
         shopUIInstaller = GetComponentInChildren<ShopUIInstaller>();
+        shopSystem = new ShopSystem();
+        shopManager = GetComponent<ShopManager>();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -63,7 +68,9 @@ public class GameInstaller : MonoBehaviour
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager);
 
         uiInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager);
-        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub);
+        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager);
+
+        shopSystem.Initialize(signalHub, shopManager);
 
         SetupGamePlayScene();
     }
@@ -90,6 +97,10 @@ public class GameInstaller : MonoBehaviour
         cardSystemController.Release();
         waveManager.Release();
         uiInstaller.Release();
+        shopUIInstaller.Release();
+        shopSystem.Release();
+        shopManager.Release();
+        environmentManager.Release();
     }
 
     private void Awake()

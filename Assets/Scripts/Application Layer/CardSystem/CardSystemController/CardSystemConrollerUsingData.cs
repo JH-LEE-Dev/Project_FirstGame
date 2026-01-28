@@ -121,7 +121,7 @@ public enum CardSystemActionType
     UsedCardsRemoveFromHand,
     UsedCardsToGrave,
     UsedCardsToExtinction,
-    AllExtinctionCardsToDeck,
+    ResetCardPiles,
     SlotCardsToExtinction,
     SlotCardsToGrave,
     DuplicateCardsToDeck,

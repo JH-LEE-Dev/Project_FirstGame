@@ -14,6 +14,7 @@ public class CardDataInstance
     //카드 인스턴스마다 가변인 데이터는 CardDataInstance에 노출.
     public bool bUpgrade = false;
     public int valueModifier = 1;
+    public bool bPermanent = false;
 
     public void Initialize(CardData cardData)
     {

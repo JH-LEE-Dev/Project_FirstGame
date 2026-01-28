@@ -253,7 +253,7 @@ MonoBehaviour:
   - {fileID: 8004459324530729153, guid: d3dec4ec9dad8444cbff1a4e56ed260e, type: 3}
   - {fileID: 5906714827194331106, guid: 2e1ac48127c7b2042a3791b20e940111, type: 3}
   - {fileID: 2524402950988499541, guid: 8c2e27bd2120b3c49bbb5ed56c773b1e, type: 3}
-  - {fileID: 7479391541565165887, guid: 18e03ad1f7aea1543a1a76f963478917, type: 3}
+  - {fileID: 0}
 --- !u!114 &2669582842453573755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5455,6 +5455,7 @@ GameObject:
   - component: {fileID: 2872902873382345209}
   - component: {fileID: -1934595178798189937}
   - component: {fileID: 3996470548536073360}
+  - component: {fileID: 4970203025210532969}
   m_Layer: 0
   m_Name: GameInstaller
   m_TagString: Untagged
@@ -5604,13 +5605,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4f2608f8b22e2fb4e8fa8c8b5d8f9bb6, type: 2}
   - {fileID: 11400000, guid: 4576fe6f266c3604496bb732103aec87, type: 2}
   - {fileID: 11400000, guid: 8846e308aef83f847a999127c0887b80, type: 2}
-  - {fileID: 11400000, guid: 23a8d354425921d44aa05f3e3d0f8211, type: 2}
+  - {fileID: 11400000, guid: 2ef8cf870ae30424cb8e82708df7b639, type: 2}
   - {fileID: 11400000, guid: b163911070c40e74cb4adb7910875640, type: 2}
   - {fileID: 11400000, guid: e7bdf111e201bbe45bed0491df9691f2, type: 2}
   - {fileID: 11400000, guid: 1d68f70658f22314ab9c573d10705e67, type: 2}
   - {fileID: 11400000, guid: ad53631c9d6767a4a9e889a1055b2ce3, type: 2}
   - {fileID: 11400000, guid: 20b1588303c208d4483ca69df4d59dff, type: 2}
   - {fileID: 11400000, guid: 3a7b1c38d74517c4593779d0ea0c28c5, type: 2}
+--- !u!114 &4970203025210532969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132615358195672310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 651cb12000d180f4da4a4a8ba8a717f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopManager
+  cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
 --- !u!1 &3851426605135345241
 GameObject:
   m_ObjectHideFlags: 0
@@ -15613,6 +15627,7 @@ GameObject:
   - component: {fileID: 7045863790459964670}
   - component: {fileID: 8204895467648919775}
   - component: {fileID: 3947076227568364635}
+  - component: {fileID: 5381542907353359417}
   m_Layer: 0
   m_Name: SubSystem
   m_TagString: Untagged
@@ -15662,6 +15677,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
   MoveTurnDelay: 2
+--- !u!114 &5381542907353359417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6075681662851944013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 651cb12000d180f4da4a4a8ba8a717f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopManager
+  cardDataBase: {fileID: 0}
 --- !u!1 &6785999967380246694
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,5 @@
-using UnityEngine;
-using GameControlSignals;
+using ShopSystemSignals;
+using ShopSystemUISignals;
 
 public class ShopUIModuleCoordinator
 {
@@ -12,25 +12,43 @@ public class ShopUIModuleCoordinator
         shopUICoordinator = _shopUICoordinator;
 
         SubscribeSignals();
+        BindEvents();
     }
 
     public void SubscribeSignals()
     {
-        signalHub.Subscribe<ShopOpenedSignal>(ShopOpened);
+        signalHub.Subscribe<ShopIsReadySignal>(ShopOpened);
     }
 
     private void UnSubscribeSignals()
     {
-        signalHub.UnSubscribe<ShopOpenedSignal>(ShopOpened);
+        signalHub.UnSubscribe<ShopIsReadySignal>(ShopOpened);
     }
 
-    private void ShopOpened(ShopOpenedSignal shopOpenedSignal)
+    private void BindEvents()
+    {
+        shopUICoordinator.ShopIsClosedEvent -= ShopIsClosed;
+        shopUICoordinator.ShopIsClosedEvent += ShopIsClosed;
+    }
+
+    private void ReleaseEvents()
+    {
+        shopUICoordinator.ShopIsClosedEvent -= ShopIsClosed;
+    }
+
+    private void ShopOpened(ShopIsReadySignal shopOpenedSignal)
     {
         shopUICoordinator.ShopOpened();
+    }
+
+    private void ShopIsClosed()
+    {
+        signalHub.Publish(new ShopIsClosedSignal());
     }
 
     public void Release()
     {
         UnSubscribeSignals();
+        ReleaseEvents();
     }
 }

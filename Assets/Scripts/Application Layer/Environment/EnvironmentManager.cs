@@ -5,6 +5,16 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
     private OrbitPathComponent orbitPathComponent;
     private FallBoundaryComponent fallBoundaryLineComponent;
 
+    public void Initialize()
+    {
+
+    }
+
+    public void Release()
+    {
+
+    }
+
     public Vector3 GetPathPosition(float value)
     {
         return orbitPathComponent.GetPathPosition(value);
