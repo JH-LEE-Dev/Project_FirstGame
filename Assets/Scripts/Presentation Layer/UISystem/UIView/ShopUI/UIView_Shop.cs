@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+
 
 public class UIView_Shop : UIView
 {
@@ -56,12 +58,27 @@ public class UIView_Shop : UIView
 
     }
 
-    public ShopCardInstance RentCard()
+
+
+
+
+
+
+
+
+
+    ////////////// PoolingCard
+
+    public ShopCardInstance RentCard(CardDataInstance data)
     {
-        return shopPoolingSystem?.RentCard();
+        var card = shopPoolingSystem?.RentCard();
+        card.ApplyData(data);
+        // 알아서 Active On
+        return card;
     }
     public void ReturnCard(ShopCardInstance card)
     {
+        // 알아서 Active Off, Data 초기화
         shopPoolingSystem?.ReturnCard(card);
     }
 

@@ -36,10 +36,10 @@ public class ShopPoolingSystem : MonoBehaviour
 
         int last = cardPool.Count - 1;
 
-
         var card = cardPool[last];
         cardPool.RemoveAt(last);
 
+        card.gameObject.SetActive(true);
         return card;
     }
     // Ä«µå ¹Ý³³
@@ -48,6 +48,7 @@ public class ShopPoolingSystem : MonoBehaviour
         if (card == null) return;
 
         card.Clear();
+        card.gameObject.SetActive(false);
         cardPool.Add(card);
     }
 
