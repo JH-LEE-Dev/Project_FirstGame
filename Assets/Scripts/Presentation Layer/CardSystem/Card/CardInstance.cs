@@ -83,7 +83,7 @@ public class CardInstance : MonoBehaviour
         cardData = dataInstance;
         CardData data = cardData.GetCardData();
 
-        CardImageChange(data.id); //
+        CardImageChange(data.cardImage); //
         CardFrameChange(data.cardType);
         CardIconChange(data.elementType);
         CardNameChange(data.id); //
@@ -109,10 +109,9 @@ public class CardInstance : MonoBehaviour
         if (cardDescription) cardDescription.text = string.Empty;
     }
 
-    private void CardImageChange(int id)
+    private void CardImageChange(Sprite _cardImage)
     {
-        // TODO: sprite Àû¿ë
-        // cardImage.sprite = ...
+        cardImage.sprite = _cardImage;
     }
 
     private void CardFrameChange(CardType type)
