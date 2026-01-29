@@ -5,6 +5,15 @@ public class ShopCardInstance : CardInstance
     private UIView_Shop uIView_Shop;
     public UIView_Shop Shop => uIView_Shop;
 
+    private ShopCardState cardState = ShopCardState.Idle;
+    public ShopCardState GetCardState()
+    {
+        return cardState;
+    }
+    public void SetCardState(ShopCardState state)
+    {
+        cardState = state;
+    }
 
     public ShopCardMotion Motion { get; private set; }
     public ShopCardVisual Visual { get; private set; }

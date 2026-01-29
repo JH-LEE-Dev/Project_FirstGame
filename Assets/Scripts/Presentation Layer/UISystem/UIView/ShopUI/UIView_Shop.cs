@@ -95,6 +95,8 @@ public class UIView_Shop : UIView
         Debug.Log("[Shop] PickUpCard clicked");
 
         CardPackRerollEvent?.Invoke();
+
+
     }
 
     private void OnClick_EnforceCard()
