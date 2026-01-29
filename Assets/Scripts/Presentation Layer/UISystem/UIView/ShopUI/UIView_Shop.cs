@@ -161,8 +161,17 @@ public class UIView_Shop : UIView
         card.ApplyData(data);
 
         card.transform.SetParent(attachTransform);
-        card.transform.localScale = cardSize;
+        card.Motion.SetOriginScale(cardSize);
 
+        // 알아서 Active On
+        return card;
+    }
+
+    public ShopCardInstance RentCard(CardDataInstance data, Vector2 cardSize)
+    {
+        var card = shopPoolingSystem?.RentCard();
+        card.ApplyData(data);
+        card.Motion.SetOriginScale(cardSize);
         // 알아서 Active On
         return card;
     }
