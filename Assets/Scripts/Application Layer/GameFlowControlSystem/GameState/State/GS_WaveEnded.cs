@@ -20,7 +20,7 @@ public class GS_WaveEnded : GameState
     {
         await Awaitable.WaitForSecondsAsync(nextWaveDelay);
 
-        gameStateMachine.ChangeState<GS_ShopTime>();
+        gameStateMachine.ChangeState<GS_WaveStarted>();
     }
 
     public override void Update()
