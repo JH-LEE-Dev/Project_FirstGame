@@ -22,11 +22,18 @@ public class UIView_Shop : UIView
     [SerializeField] private Button viewDeckButton;
     [SerializeField] private Button nextStageButton;
 
+
+    private int pickUpCardCount = 2;
+    private bool pickUpCardForce = false;
+    private int enforceCardCount = 1;
+    private int deleteCardCount = 1;
+
     private bool EnforcedComplete = false;
     private bool DeletedComplete = false;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
+    private ShopSelectSystem selectSystem;
 
     [Header("DeckSystem")]
     [SerializeField] private ShopCardPannel cardPannel;
@@ -47,8 +54,11 @@ public class UIView_Shop : UIView
 
         if (!shopPoolingSystem)
             shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        if (!selectSystem)
+            selectSystem = GetComponent<ShopSelectSystem>();
 
         shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
+        selectSystem.Init(this);
 
         cardPannel?.Init(this);
         deckSystem?.Init(this);
@@ -163,6 +173,21 @@ public class UIView_Shop : UIView
     }
 
 
+    ////////////// SelectSystem
+
+    public void ToggleSelect(ShopCardInstance card)
+    {
+        selectSystem.ToggleSelect(card);
+    }
+
+    public void SelectComplete()
+    {
+        // bool 임. 
+        selectSystem.SelectComplete();
+    }
+
+
+
     ////////////// Click
     ///
     private void OnClick_PickUpCard()
@@ -171,31 +196,26 @@ public class UIView_Shop : UIView
 
         CardPackRerollEvent?.Invoke();
 
-
-
+        selectSystem.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce);
     }
 
     private void OnClick_EnforceCard()
     {
         Debug.Log("[Shop] EnforceCard clicked");
-        // TODO: 강화 로직
+        selectSystem.SetSelectMode(ShopBehaviorType.Enforce, enforceCardCount, false);
 
     }
 
     private void OnClick_DeleteCard()
     {
         Debug.Log("[Shop] DeleteCard clicked");
-        // TODO: 삭제 로직
-
+        selectSystem.SetSelectMode(ShopBehaviorType.Delete, enforceCardCount, false);
 
     }
 
     private void OnClick_ViewDeck()
     {
         Debug.Log("[Shop] ViewDeck clicked");
-        // TODO: 덱 보기 UI 열기
-
-
     }
     private void OnClick_NextStage()
     {

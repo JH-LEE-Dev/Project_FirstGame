@@ -25,5 +25,23 @@ public class ShopCardMotion : MonoBehaviour
 
     }
 
+    public void ToIdle()
+    {
 
+    }
+
+    public void ToSelect()
+    {
+
+    }
+
+    public void HoverOn()
+    {
+
+    }
+
+    public void HoverOff()
+    {
+
+    }
 }
