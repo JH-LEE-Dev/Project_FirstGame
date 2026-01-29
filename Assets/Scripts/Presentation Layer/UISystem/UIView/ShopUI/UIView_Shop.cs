@@ -227,19 +227,6 @@ public class UIView_Shop : UIView
 
     public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
     {
-        Debug.Log(cards.Count);
-
-        if (0 >= cards.Count)
-            return;
-
-        if (null == cards[0])
-            Debug.Log("π∫µ• ≥  æÓ∂ª∞‘ ∂’∑»æÓ");
-
-        CardData data = cards[0].GetCardData();
-
-        if (null == data)
-            Debug.Log("µ•¿Ã≈Õ ≥Œ");
-
         Debug.Log(cards[0]?.GetCardData()?.cardName);
     }
 
