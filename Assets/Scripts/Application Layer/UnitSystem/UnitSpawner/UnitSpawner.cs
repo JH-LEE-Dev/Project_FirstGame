@@ -80,7 +80,7 @@ public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
 
     private void OnReleaseEnemy(Enemy enemy)
     {
-
+        enemy.DeActivateEnemy();
     }
 
     private void OnDestroyEnemy(Enemy enemy)

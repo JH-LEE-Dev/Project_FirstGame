@@ -6,5 +6,8 @@ using UnityEngine.Audio;
 public class WaveData
 {
     public int waveIdx = 0;
-    public int enemyCnt = 1;
+    public int spawnEnemyCnt = 0;
+    public int InitialEnemyCnt = 0;
+    public int currentEnemyThreshold = 0;
+    public int numberOfEnemiesToKill = 0;
 }

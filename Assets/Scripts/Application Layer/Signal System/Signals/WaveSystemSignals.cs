@@ -14,14 +14,5 @@ namespace WaveSystemSignals
     public struct WaveMoveEndSignal  { }
     public struct WaveEndSignal  { }
     public struct AllEnemyDeadSignal  { }
-    public struct WaveProgressUpdatedSignal  
-    {
-        public Vector2 position;
-
-        public WaveProgressUpdatedSignal(Vector2 _position)
-        {
-            position = _position;
-        }
-    }
 }
 

@@ -50,11 +50,11 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
         signalHub.Subscribe<WaveEndSignal>(WaveEnded);
         signalHub.Subscribe<GameStartedSignal>(GameStarted);
-        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
         signalHub.Subscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.Subscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
+        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
     }
 
     private void UnSubscribeEvents()
@@ -78,11 +78,10 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
         signalHub.UnSubscribe<WaveEndSignal>(WaveEnded);
         signalHub.UnSubscribe<GameStartedSignal>(GameStarted);
-        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
         signalHub.UnSubscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
-
+        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
     }
 
     public void BindEvents()
@@ -190,11 +189,6 @@ public class GameplayUIModuleCoordinator
         gameplayUICoordinator.WaveEnded();
     }
 
-    private void EnemyIsDead(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
-    {
-        gameplayUICoordinator.EnemyIsDead(waveProgressUpdatedSignal.position);
-    }
-
     private void PlayerGetShield(PlayerGetShieldSignal playerGetShieldSignal)
     {
         gameplayUICoordinator.PlayerGetShield(playerGetShieldSignal.amount);
@@ -249,5 +243,10 @@ public class GameplayUIModuleCoordinator
     {
         gameplayUICoordinator.EnemyTakeDamage(enemyTakeDamageSignal.enemyData, enemyTakeDamageSignal.damage,
             enemyTakeDamageSignal.bCritical);
+    }
+
+    private void EnemyIsKilled(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
+    {
+        gameplayUICoordinator.EnemyIsKilled(waveProgressUpdatedSignal.enemyData);
     }
 }

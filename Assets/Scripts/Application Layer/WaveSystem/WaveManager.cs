@@ -15,18 +15,21 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     private WaveDatabase waveDatabase;
 
     private int currentEnemyCount = 0;
-    private int maxEnemyCount = 0;
+    private int remainkilledEnemyCnt = 0;
+    private int numberOfEnemiesToKill = 0;
+    private int spawnEnemyCnt = 0;
+    private int currentEnemyThreshold = 0;
     private bool bIsWaveEnded = false;
 
     //인터페이스 구현 존
     public int GetCurrentWaveProgress()
     {
-        return currentEnemyCount;
+        return remainkilledEnemyCnt;
     }
 
     public int GetMaxWaveProgress()
     {
-        return maxEnemyCount;
+        return numberOfEnemiesToKill;
     }
 
     public void Initialize(SignalHub _signalHub, WaveDatabase _waveDatabase)
@@ -46,14 +49,14 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     {
         signalHub.Subscribe<StartSpawnWaveSignal>(SpawnWave);
         signalHub.Subscribe<EnemyTurnStartSignal>(StartEnemyMoveTurn);
-        signalHub.Subscribe<EnemyIsDeadSignal>(EnemyIsDead);
+        signalHub.Subscribe<EnemyIsKilledSignal>(EnemyIsKilled);
     }
 
     private void UnSubscribeEvents()
     {
         signalHub.UnSubscribe<StartSpawnWaveSignal>(SpawnWave);
         signalHub.UnSubscribe<EnemyTurnStartSignal>(StartEnemyMoveTurn);
-        signalHub.UnSubscribe<EnemyIsDeadSignal>(EnemyIsDead);
+        signalHub.UnSubscribe<EnemyIsKilledSignal>(EnemyIsKilled);
     }
 
     private void OnDestroy()
@@ -68,10 +71,18 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
 
         if (curWaveData != null)
         {
-            currentEnemyCount = curWaveData.enemyCnt;
-            maxEnemyCount = currentEnemyCount;
+            currentEnemyCount = curWaveData.InitialEnemyCnt;
+            numberOfEnemiesToKill = curWaveData.numberOfEnemiesToKill;
+            remainkilledEnemyCnt = curWaveData.numberOfEnemiesToKill;
+            currentEnemyThreshold = curWaveData.currentEnemyThreshold;
+            spawnEnemyCnt = curWaveData.spawnEnemyCnt;
             signalHub.Publish(new SpawnWaveSignal(currentEnemyCount));
         }
+    }
+
+    public void SpawnAdditionalWave()
+    {
+        signalHub.Publish(new SpawnWaveSignal(spawnEnemyCnt));
     }
 
     public void StartEnemyMoveTurn(EnemyTurnStartSignal enemyTurnStartSignal)
@@ -100,15 +111,22 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         StartCoroutine(WaveMoveEnd());
     }
 
-    public void EnemyIsDead(EnemyIsDeadSignal enemyIsDeadSignal)
+    public void EnemyIsKilled(EnemyIsKilledSignal enemyIskilledSignal)
     {
         --currentEnemyCount;
+        --remainkilledEnemyCnt;
 
-        if (currentEnemyCount == 0)
+        signalHub.Publish(new WaveProgressUpdatedSignal(enemyIskilledSignal.enemyData));
+
+        if (remainkilledEnemyCnt == 0)
         {
             bIsWaveEnded = true;
+            return;
         }
 
-        signalHub.Publish(new WaveProgressUpdatedSignal(enemyIsDeadSignal.position));
+        if (currentEnemyCount <= currentEnemyThreshold)
+        {
+            SpawnAdditionalWave();
+        }
     }
 }

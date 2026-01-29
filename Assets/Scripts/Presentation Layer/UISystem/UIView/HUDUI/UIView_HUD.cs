@@ -119,9 +119,13 @@ public class UIView_HUD : UIView
 
     public void EnemyIsDead(Vector2 deadPosition)
     {
-        Target_BarUpdate(deadPosition);
+        //Target_BarUpdate(deadPosition);
     }
 
+    public void EnemyIsKilled(Vector2 deadPosition)
+    {
+        Target_BarUpdate(deadPosition);
+    }
     public void PlayerGetShield(float amount)
     {
         HP_BarShieldCalc();

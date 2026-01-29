@@ -56,6 +56,8 @@ public class UnitSystem
         unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
         unitLogicSystem.EnemyTakeDamageEvent += EnemyTakeDamage;
 
+        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
+        unitLogicSystem.EnemyIsKilledEvent += EnemyIsKilled;
     }
 
     private void ReleaseEvents()
@@ -79,6 +81,8 @@ public class UnitSystem
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
 
         unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
+
+        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
     }
 
     private void SubscribeEvents()
@@ -142,6 +146,11 @@ public class UnitSystem
     private void EnemyTakeDamage(IEnemyData enemyData,float damage,bool bCritical)
     {
         signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage, bCritical));
+    }
+
+    private void EnemyIsKilled(IEnemyData _enemyData)
+    {
+        signalHub.Publish(new EnemyIsKilledSignal(_enemyData));
     }
 
     public void Release()

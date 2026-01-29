@@ -1,11 +1,12 @@
 using CardSystemSignals;
+using CardSystemUISignal;
 using GameControlSignals;
+using System;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
-using WaveSystemSignals;
-using CardSystemUISignal;
-using System;
 using UnityEngine;
+using UnityEngine.UIElements;
+using WaveSystemSignals;
 
 public class GameplayUICoordinator
 {
@@ -144,5 +145,10 @@ public class GameplayUICoordinator
     public void EnemyTakeDamage(IEnemyData enemyData,float damage,bool bCritical)
     {
         unitWorldUISystem.EnemyTakeDamage(enemyData, damage,bCritical);
+    }
+
+    public void EnemyIsKilled(IEnemyData _enemyData)
+    {
+        hudUISystem.EnemyIsKilled(_enemyData.GetTransform().position);
     }
 }

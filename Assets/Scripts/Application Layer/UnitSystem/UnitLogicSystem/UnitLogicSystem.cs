@@ -13,6 +13,7 @@ using CardSystemUISignal;
 //캐릭터를 Facade로 사용할 것.
 public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 {
+    public event Action<IEnemyData> EnemyIsKilledEvent;
     public event Action EnemySpawnedEvent;
     public event Action<Character> CharacterSpawendEvent;
     public event Action<Earth> PlayerSpawnedEvent;
@@ -132,9 +133,10 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         EnemyIsDeadEvent?.Invoke(deadUnit.transform.position);
     }
 
-    private void EnemyIsKilled(EnemyTypeData enemyTypeData)
+    private void EnemyIsKilled(IEnemyData _enemyData,EnemyTypeData enemyTypeData)
     {
         playerUnit.EarnMoney(enemyTypeData.rewardWhenKilled);
+        EnemyIsKilledEvent?.Invoke(_enemyData);
     }
 
     public void StartEnemyMove(StartMoveSignal startMoveSignal)
