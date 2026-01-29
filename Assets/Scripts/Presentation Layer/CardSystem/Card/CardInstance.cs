@@ -26,6 +26,9 @@ public class CardInstance : MonoBehaviour
     private Tween consumeTween;
     private System.Action<CardInstance> consumeComplete;
 
+    protected ICardLocalizationSystem cardLocalizationSystem;
+
+
     private float GetDissolve01() => dissolve01;
     private void SetDissolve01(float v)
     {
@@ -65,6 +68,14 @@ public class CardInstance : MonoBehaviour
     {
 
     }
+
+    public virtual void Initialize(Material template, ICardLocalizationSystem cls)
+    {
+        dissolveMatInstance = new Material(template);
+        ApplyDissolveMaterialToVisuals();
+        cardLocalizationSystem = cls;
+    }
+
     private void CacheBaseIfNeeded()
     {
         if (cardName) nameBaseAlpha = cardName.alpha;
@@ -83,11 +94,10 @@ public class CardInstance : MonoBehaviour
         cardData = dataInstance;
         CardData data = cardData.GetCardData();
 
-        CardImageChange(data.cardImage); //
+        CardImageChange(data.cardImage);
         CardFrameChange(data.cardType);
         CardIconChange(data.elementType);
-        CardNameChange(data.id); //
-        CardDescriptionChange(data.id); //
+        CardNameAndDescriptionChange(cardData);
     }
 
     public void Clear()
@@ -145,22 +155,21 @@ public class CardInstance : MonoBehaviour
         }
     }
 
-    private void CardNameChange(int id)
+    private void CardNameAndDescriptionChange(CardDataInstance dataInstance)
     {
         if (!cardName) return;
         cardName.alpha = 1f;
-        cardName.SetText("Name Test");
+
+        CardData cardData = dataInstance.GetCardData();
+
+        Debug.Log("CardNameAndDescriptionChange call");
+        // °­È­µÊ
+        if (dataInstance.bUpgrade == true)
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);
+        // °­È­¾ÈµÊ
+        else
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
     }
-
-    private void CardDescriptionChange(int id)
-    {
-        if (!cardDescription) return;
-        cardDescription.alpha = 1f;
-        cardDescription.SetText("Description Change OK");
-    }
-
-
-
 
     // For Dissolve
 

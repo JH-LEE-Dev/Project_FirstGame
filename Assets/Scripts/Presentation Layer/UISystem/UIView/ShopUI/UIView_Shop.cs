@@ -38,6 +38,7 @@ public class UIView_Shop : UIView
         SafeBind(nextStageButton, OnClick_NextStage);
 
         if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
     }
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
     {
