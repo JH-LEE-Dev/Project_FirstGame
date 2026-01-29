@@ -48,4 +48,19 @@ public class ShopManager : MonoBehaviour, IShopSystemData
             cardMerchandiseData.Add(cardData);
         }
     }
+
+    public void RerollMerchandise()
+    {
+        cardMerchandiseData.Clear();
+        Debug.Log("¸®·Ñ");
+
+        for (int i = 0; i < initialcardMerchandiseCnt; ++i)
+        {
+            int randomIdx = UnityEngine.Random.Range(0, cardDataBase.cardData.Count - 1);
+
+            CardData cardData = cardDataBase.cardData[randomIdx];
+
+            cardMerchandiseData.Add(cardData);
+        }
+    }
 }

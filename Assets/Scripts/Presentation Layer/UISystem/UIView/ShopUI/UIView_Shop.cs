@@ -7,6 +7,7 @@ using System;
 public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
+    public event Action CardPackRerollEvent;
 
     //외부 의존성
     private IShopSystemData shopSystemData;
@@ -38,6 +39,7 @@ public class UIView_Shop : UIView
 
         if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
     }
+
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
     {
         if (!btn)
@@ -76,6 +78,7 @@ public class UIView_Shop : UIView
         // 알아서 Active On
         return card;
     }
+
     public void ReturnCard(ShopCardInstance card)
     {
         // 알아서 Active Off, Data 초기화
@@ -88,6 +91,7 @@ public class UIView_Shop : UIView
     {
         Debug.Log("[Shop] PickUpCard clicked");
 
+        CardPackRerollEvent?.Invoke();
     }
 
     private void OnClick_EnforceCard()
@@ -115,7 +119,7 @@ public class UIView_Shop : UIView
     {
         Debug.Log("[Shop] NextStage clicked");
 
-
+        ShopIsClosedEvent?.Invoke();
     }
 
 

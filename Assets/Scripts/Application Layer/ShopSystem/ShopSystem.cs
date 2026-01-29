@@ -1,5 +1,6 @@
 using GameControlSignals;
 using ShopSystemSignals;
+using ShopSystemUISignals;
 
 public class ShopSystem 
 {
@@ -19,11 +20,15 @@ public class ShopSystem
     private void SubscribeSignals()
     {
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopOpened);
+        signalHub.Subscribe<CardPackRerollSignal>(CardPackReroll);
+        signalHub.Subscribe<ShopIsClosedSignal>(ShopIsClosed);
     }
 
     private void UnSubscribeSignals()
     {
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopOpened);
+        signalHub.UnSubscribe<CardPackRerollSignal>(CardPackReroll);
+        signalHub.UnSubscribe<ShopIsClosedSignal>(ShopIsClosed);
     }
 
     private void BindEvents()
@@ -43,13 +48,23 @@ public class ShopSystem
         ReleaseEvents();
     }
 
-    private void ShopOpened(ShopTimeStartedSignal shopOpenedSignal)
-    {
-        shopManager.OpenShop();
-    }
-
     private void ShopIsReady()
     {
         signalHub.Publish(new ShopIsReadySignal());
+    }
+
+    private void CardPackReroll(CardPackRerollSignal cardPackRerollSignal)
+    {
+        shopManager.RerollMerchandise();
+    }
+
+    private void ShopIsClosed(ShopIsClosedSignal shopIsClosedSignal)
+    {
+        shopManager.CloseShop();
+    }
+
+    private void ShopOpened(ShopTimeStartedSignal shopOpenedSignal)
+    {
+        shopManager.OpenShop();
     }
 }

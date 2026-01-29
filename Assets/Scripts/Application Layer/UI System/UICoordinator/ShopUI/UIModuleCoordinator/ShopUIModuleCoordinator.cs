@@ -25,15 +25,26 @@ public class ShopUIModuleCoordinator
         signalHub.UnSubscribe<ShopIsReadySignal>(ShopOpened);
     }
 
+    public void Release()
+    {
+        UnSubscribeSignals();
+        ReleaseEvents();
+    }
+
     private void BindEvents()
     {
         shopUICoordinator.ShopIsClosedEvent -= ShopIsClosed;
         shopUICoordinator.ShopIsClosedEvent += ShopIsClosed;
+
+        shopUICoordinator.CardPackRerollEvent -= CardPackReroll;
+        shopUICoordinator.CardPackRerollEvent += CardPackReroll;
     }
 
     private void ReleaseEvents()
     {
         shopUICoordinator.ShopIsClosedEvent -= ShopIsClosed;
+
+        shopUICoordinator.CardPackRerollEvent -= CardPackReroll;
     }
 
     private void ShopOpened(ShopIsReadySignal shopOpenedSignal)
@@ -46,9 +57,8 @@ public class ShopUIModuleCoordinator
         signalHub.Publish(new ShopIsClosedSignal());
     }
 
-    public void Release()
+    private void CardPackReroll()
     {
-        UnSubscribeSignals();
-        ReleaseEvents();
+        signalHub.Publish(new CardPackRerollSignal());
     }
 }

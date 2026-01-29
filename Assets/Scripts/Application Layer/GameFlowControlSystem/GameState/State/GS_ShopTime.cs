@@ -31,6 +31,6 @@ public class GS_ShopTime : GameState
 
     private void ShopIsClosed(ShopIsClosedSignal shopIsClosedSignal)
     {
-        gameStateMachine.ChangeState<GS_WaveEnded>();
+        gameStateMachine.ChangeState<GS_WaveStarted>();
     }
 }
