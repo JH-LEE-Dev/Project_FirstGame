@@ -21,7 +21,8 @@ public class UIView_Shop : UIView
     [SerializeField] private Button viewDeckButton;
     [SerializeField] private Button nextStageButton;
 
-
+    private bool EnforcedComplete = false;
+    private bool DeletedComplete = false;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
@@ -57,6 +58,7 @@ public class UIView_Shop : UIView
 
     public void OpenShop()
     {
+
 
     }
 
