@@ -80,11 +80,11 @@ public abstract class BaseCardPannel : MonoBehaviour
 
         if (null != selectButton)
         {
-            selectButton.onClickedEvent -= DeActivatePannel;
-            selectButton.onClickedEvent += DeActivatePannel;
-
             selectButton.onClickedEvent -= CompleteSelectedCards;
             selectButton.onClickedEvent += CompleteSelectedCards;
+
+            selectButton.onClickedEvent -= DeActivatePannel;
+            selectButton.onClickedEvent += DeActivatePannel;
         }
     }
 
