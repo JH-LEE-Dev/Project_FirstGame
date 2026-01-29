@@ -1,14 +1,25 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Hand Enhancement")]
 public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     [SerializeField] int upgradeAmount = 1;
 
+    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    {
+        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+
+        cardSystemContextType = CardSystemContextType.UpgradeCardsFromHand;
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+
+        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
+        Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
         if (nestingCnt != 0)
         {
@@ -18,8 +29,10 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
             {
                 for (int i = 0; i < handPile.Count; ++i)
                 {
-                    handPile[i].bUpgrade = true;
+                    writeBuffer_Upgrade[i] = handPile[i];
                 }
+
+                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade);
             }
         }
 
@@ -27,9 +40,13 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         {
             for (int i = 0; i < handPile.Count; ++i)
             {
-                handPile[i].bUpgrade = true;
+                writeBuffer_Upgrade[i] = handPile[i];
             }
+
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade);
         }
+
+        rentalBuffer_Upgrade.Dispose();
 
         ResetCommandData();
     }

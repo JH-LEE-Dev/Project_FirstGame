@@ -12,6 +12,9 @@ public enum CardUIActionType
     ExtinctionCardsToDeck,
     CardsToHand,
     CardsToDeck,
+    CardsUpgraded,
+    CardsValueModified,
+    ValueModified,
     MAX,
 }
 

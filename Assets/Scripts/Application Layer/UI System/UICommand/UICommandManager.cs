@@ -34,14 +34,16 @@ public class UICommandManager : MonoBehaviour
     {
         signalHub.Subscribe<UICommandCompleteSignal>(ReleaseJobBatch);
         signalHub.SubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.Subscribe<CardSystemEventSignal, CardDataInstance>(ReceiveCardSystemEventSignal);
+        signalHub.Subscribe<CardLogicSystemEventSignal, CardDataInstance>(ReceiveCardLogicSystemEventSignal);
+        signalHub.Subscribe<CardDataControlSystemEventSignal, CardDataInstance>(ReceiveCardDataControlSystemEventSignal);
     }
 
     private void UnSubscribeEvents()
     {
         signalHub.UnSubscribe<UICommandCompleteSignal>(ReleaseJobBatch);
         signalHub.UnSubscribeScope<CardActionScopeSignal>(DispatchCommand);
-        signalHub.UnSubscribe<CardSystemEventSignal, CardDataInstance>(ReceiveCardSystemEventSignal);
+        signalHub.UnSubscribe<CardLogicSystemEventSignal, CardDataInstance>(ReceiveCardLogicSystemEventSignal);
+        signalHub.UnSubscribe<CardDataControlSystemEventSignal, CardDataInstance>(ReceiveCardDataControlSystemEventSignal);
     }
 
 
@@ -51,9 +53,14 @@ public class UICommandManager : MonoBehaviour
             dispatcher.Release();
     }
 
-    private void ReceiveCardSystemEventSignal(CardSystemEventSignal cardSystemEventSignal,ReadOnlySpan<CardDataInstance> cards = default)
+    private void ReceiveCardLogicSystemEventSignal(CardLogicSystemEventSignal cardSystemEventSignal,ReadOnlySpan<CardDataInstance> cards = default)
     {
         commandFactory_CardSystem.CreateCommand(cardSystemEventSignal.data, cards);
+    }
+
+    private void ReceiveCardDataControlSystemEventSignal(CardDataControlSystemEventSignal cardDataControlSystemEventSignal, ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        commandFactory_CardSystem.CreateCommand(cardDataControlSystemEventSignal.data, cards);
     }
 
     private void DispatchCommand(ScopeSignal<CardActionScopeSignal> signal)

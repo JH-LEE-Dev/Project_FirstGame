@@ -47,21 +47,17 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void PlayerSpawned(IPlayerData _playerData)
-    {
-        playerData = _playerData;
-
-        IntializeChildrenHUD();
-    }
-
     private void Start()
     {
         
     }
 
-    public void DataInjection(IWaveSystemData _waveSystemData)
+    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData)
     {
         waveSystemData = _waveSystemData;
+        playerData = _playerData;
+
+        IntializeChildrenHUD();
     }
 
     protected override void OnShow()
@@ -123,9 +119,13 @@ public class UIView_HUD : UIView
 
     public void EnemyIsDead(Vector2 deadPosition)
     {
-        Target_BarUpdate(deadPosition);
+        //Target_BarUpdate(deadPosition);
     }
 
+    public void EnemyIsKilled(Vector2 deadPosition)
+    {
+        Target_BarUpdate(deadPosition);
+    }
     public void PlayerGetShield(float amount)
     {
         HP_BarShieldCalc();

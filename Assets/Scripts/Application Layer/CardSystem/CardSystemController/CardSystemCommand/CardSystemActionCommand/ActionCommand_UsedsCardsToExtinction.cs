@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/UsedCardsToExtinction")]
-public class ActionCommand_UsedCardsToExtinction : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/UsedCardsToExtinction")]
+public class ActionCommand_UsedCardsToExtinction : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -12,7 +12,7 @@ public class ActionCommand_UsedCardsToExtinction : CardSystemActionCommand<ICard
         cardSystemContextType = CardSystemContextType.UsedCardsToExtinction;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.CardsToExtinction(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }

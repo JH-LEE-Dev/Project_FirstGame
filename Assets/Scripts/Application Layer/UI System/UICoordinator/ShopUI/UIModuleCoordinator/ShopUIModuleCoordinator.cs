@@ -1,5 +1,6 @@
 using ShopSystemSignals;
 using ShopSystemUISignals;
+using UnitSpawnSystemSignals;
 
 public class ShopUIModuleCoordinator
 {

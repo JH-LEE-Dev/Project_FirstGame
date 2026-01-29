@@ -53,4 +53,20 @@ namespace UnitLogicSystemSignals
             bCritical = _bCritical;
         }
     }
+    public struct EnemyIsKilledSignal 
+    {
+        public IEnemyData enemyData;
+        public EnemyIsKilledSignal(IEnemyData _enemyData)
+        {
+            enemyData = _enemyData;
+        }
+    }
+    public struct WaveProgressUpdatedSignal
+    {
+        public IEnemyData enemyData;
+        public WaveProgressUpdatedSignal(IEnemyData _enemyData)
+        {
+            enemyData = _enemyData;
+        }
+    }
 }

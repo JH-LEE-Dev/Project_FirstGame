@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Enemy : Unit, IEnemyData
 {
-    public event Action<EnemyTypeData> EnemyIsKilledEvent;
+    public event Action<IEnemyData,EnemyTypeData> EnemyIsKilledEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
 
     //내부 의존성
@@ -45,7 +45,9 @@ public class Enemy : Unit, IEnemyData
 
     public void DeActivateEnemy()
     {
-
+        col.gameObject.SetActive(false);
+        sr.gameObject.SetActive(false);
+        healthComponent.ResetHealthComponent();
     }
 
     public void Activate(Vector3 spawnPos)
@@ -103,7 +105,7 @@ public class Enemy : Unit, IEnemyData
 
     private void EnemyIsKilled()
     {
-        EnemyIsKilledEvent?.Invoke(enemyTypeData);
+        EnemyIsKilledEvent?.Invoke(this,enemyTypeData);
 
         sr.gameObject.SetActive(false);
         col.enabled = false;

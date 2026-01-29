@@ -43,7 +43,6 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.Subscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
-        signalHub.Subscribe<PlayerSpawnedSignal>(PlayerSpawned);
         signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.Subscribe<PlayerGetShieldSignal>(PlayerGetShield);
@@ -51,12 +50,11 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
         signalHub.Subscribe<WaveEndSignal>(WaveEnded);
         signalHub.Subscribe<GameStartedSignal>(GameStarted);
-        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
         signalHub.Subscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
-        signalHub.Subscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.Subscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
+        signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
     }
 
     private void UnSubscribeEvents()
@@ -73,7 +71,6 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardDrawFinishedSignal>(CardUseTimeStarted);
-        signalHub.UnSubscribe<PlayerSpawnedSignal>(PlayerSpawned);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
@@ -81,12 +78,10 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
         signalHub.UnSubscribe<WaveEndSignal>(WaveEnded);
         signalHub.UnSubscribe<GameStartedSignal>(GameStarted);
-        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsDead);
         signalHub.UnSubscribe<CardSlotCntChangedSignal>(CardSlotCntChanged);
-        signalHub.UnSubscribe<CharacterSpawnedSignal>(CharacterSpawned);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
-
+        signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
     }
 
     public void BindEvents()
@@ -188,19 +183,10 @@ public class GameplayUIModuleCoordinator
     {
         gameplayUICoordinator.GameStarted();
     }
-    private void CharacterSpawned(CharacterSpawnedSignal characterSpawnedSignal)
-    {
-        gameplayUICoordinator.CharacterSpawned(characterSpawnedSignal.characterData);
-    }
 
     private void WaveEnded(WaveEndSignal waveEndSignal)
     {
         gameplayUICoordinator.WaveEnded();
-    }
-
-    private void EnemyIsDead(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
-    {
-        gameplayUICoordinator.EnemyIsDead(waveProgressUpdatedSignal.position);
     }
 
     private void PlayerGetShield(PlayerGetShieldSignal playerGetShieldSignal)
@@ -226,11 +212,6 @@ public class GameplayUIModuleCoordinator
     public void CardUseTimeStarted(CardDrawFinishedSignal cardDrawFinishedSignal)
     {
         gameplayUICoordinator.CardUseTimeStarted();
-    }
-
-    public void PlayerSpawned(PlayerSpawnedSignal playerSpawnedSignal)
-    {
-        gameplayUICoordinator.PlayerSpawned(playerSpawnedSignal.playerData);
     }
 
     public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
@@ -262,5 +243,10 @@ public class GameplayUIModuleCoordinator
     {
         gameplayUICoordinator.EnemyTakeDamage(enemyTakeDamageSignal.enemyData, enemyTakeDamageSignal.damage,
             enemyTakeDamageSignal.bCritical);
+    }
+
+    private void EnemyIsKilled(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
+    {
+        gameplayUICoordinator.EnemyIsKilled(waveProgressUpdatedSignal.enemyData);
     }
 }

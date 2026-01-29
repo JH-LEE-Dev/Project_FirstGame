@@ -45,6 +45,8 @@ public class ShopCardInstance : CardInstance
         Visual?.SetVisible(visible);
     }
 
+
+
     private void OnCardStateChanged(ShopCardState prev, ShopCardState next)
     {
         switch (next)

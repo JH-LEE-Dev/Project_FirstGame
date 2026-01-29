@@ -47,12 +47,12 @@ public class CardInstance : MonoBehaviour
     private readonly Color bulletFrameColor = Hex("#DEAB48", 1f);
     private readonly Color bulletTextFrameColor = Hex("#FAE1AA", 1f);
     private readonly Color bulletGlowColor = new Color32(145, 181, 32, 72);
-    private readonly Color bulletAOColor = Hex("#7B6D21", 0.3f);
+    private readonly Color bulletAOColor = Hex("#7B6D21", 0.18f);
 
     private readonly Color magicFrameColor = Hex("#696EC2", 1f);
     private readonly Color magicTextFrameColor = Hex("#DAD5ED", 1f);
     private readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
-    private readonly Color magicAOColor = Hex("#0025CD", 0.3f);
+    private readonly Color magicAOColor = Hex("#0025CD", 0.18f);
 
     private float nameBaseAlpha = 1f;
     private float descBaseAlpha = 1f;

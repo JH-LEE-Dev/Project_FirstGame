@@ -1,18 +1,59 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Amplify")]
-public class EffectCommand_Amplify : CardEffectCommand<ICardSlotSystemActionCommandHandler>
+public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     [SerializeField] int bonusValueModifier = 1;
     [SerializeField] int upgradedBonusValueModifier = 1;
 
-    protected override void Execute(ICardSlotSystemActionCommandHandler cardSlotSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
+        Debug.Log("1");
+        var bulletCards = complexSystemActionCommandHandler.GetCurrentBulletCards();
+
+        using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
         if (nestingCnt != 0)
-            cardSlotSystemActionCommandHandler.ApplyValueModifier(bonusValueModifier*valueModifier);
+        {
+            int modifiedCnt = 0;
+
+            for (int i = 0; i < bulletCards.Count; ++i)
+            {
+                for (int j = 0; j < bulletCards[i].Count; ++j)
+                {
+                    if (bulletCards[i][j].GetCardData().usingType == UsingType.Nesting)
+                    {
+                        writeBuffer[modifiedCnt] = bulletCards[i][j];
+                        ++modifiedCnt;
+                    }
+                }
+            }
+
+            if (modifiedCnt != 0)
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier);
+        }
 
         if (upgradeNestingCnt != 0)
-            cardSlotSystemActionCommandHandler.ApplyValueModifier(upgradedBonusValueModifier * valueModifier);
+        {
+            int modifiedCnt = 0;
+
+            for (int i = 0; i < bulletCards.Count; ++i)
+            {
+                for (int j = 0; j < bulletCards[i].Count; ++j)
+                {
+                    if (bulletCards[i][j].GetCardData().usingType == UsingType.Nesting)
+                    {
+                        writeBuffer[modifiedCnt] = bulletCards[i][j];
+                        ++modifiedCnt;
+                    }
+                }
+            }
+
+            if (modifiedCnt != 0)
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
+        }
 
         ResetCommandData();
     }

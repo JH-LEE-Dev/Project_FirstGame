@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/DuplicateCardsToHand")]
-public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/DuplicateCardsToHand")]
+public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -11,7 +11,7 @@ public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardS
         cardSystemContextType = CardSystemContextType.DuplicateCardCardsToHand;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(cnt);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;

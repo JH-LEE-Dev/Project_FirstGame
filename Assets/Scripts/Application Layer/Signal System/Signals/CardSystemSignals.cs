@@ -15,11 +15,20 @@ namespace CardSystemSignals
     }
     public struct CardDrawStartSignal  { }
 
-    public struct CardSystemEventSignal 
+    public struct CardLogicSystemEventSignal 
     {
-        public CardSystemEventData data;
+        public CardLogicSystemEventData data;
 
-        public CardSystemEventSignal(CardSystemEventData data)
+        public CardLogicSystemEventSignal(CardLogicSystemEventData data)
+        {
+            this.data = data;
+        }
+    }
+    public struct CardDataControlSystemEventSignal
+    {
+        public CardDataControlSystemEventData data;
+
+        public CardDataControlSystemEventSignal(CardDataControlSystemEventData data)
         {
             this.data = data;
         }

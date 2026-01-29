@@ -10,8 +10,6 @@ public class CardPannelSelectButton : ButtonInstance
     protected override void Awake()
     {
         base.Awake();
-
-        SetState(VisualState.Hidden);
     }
 
     protected override void OnHoverEnter(PointerEventData eventData)

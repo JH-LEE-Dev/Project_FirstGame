@@ -13,18 +13,23 @@ public class ShopSelectSystem : MonoBehaviour
 
     private ButtonInstance confirmButton;
 
+    private bool allowZeroConfirm = false;
+
     public void Init(UIView_Shop owner)
     {
         uIView_Shop = owner;
         selected.Clear();
         RefreshConfirmButton();
     }
-    public void SetSelectMode(ShopBehaviorType _type, int _selectCount, bool _selectforce, ButtonInstance _buttonInstance = null)
+    public void SetSelectMode(ShopBehaviorType _type, int _selectCount, bool _selectforce, 
+        ButtonInstance _buttonInstance = null,
+        bool _allowZeroConfirm = false)
     {
         type = _type;
         selectCount = _selectCount;
         selectforce = _selectforce;
         confirmButton = _buttonInstance;
+        allowZeroConfirm = _allowZeroConfirm;
 
         ClearSelection();
         RefreshConfirmButton();
@@ -101,6 +106,8 @@ public class ShopSelectSystem : MonoBehaviour
         if (selectforce)
             return selected.Count == selectCount;
 
+        // force=false일 때 정책
+        if (allowZeroConfirm) return true;
         return selected.Count > 0;
     }
 

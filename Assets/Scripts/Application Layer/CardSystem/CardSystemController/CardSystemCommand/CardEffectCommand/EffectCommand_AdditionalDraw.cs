@@ -1,18 +1,18 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/AdditionalDraw")]
-public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardSystemActionCommandHandler>
+public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemActionCommandHandler>
 {
     [SerializeField] private int drawAmount = 0;
     [SerializeField] private int upgradedDrawAmount = 0;
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardLogicSystemActionCommandHandler)
     {
         if (nestingCnt != 0)
-            cardSystemActionCommandHandler.DrawAgain(drawAmount * nestingCnt*valueModifier);
+            cardLogicSystemActionCommandHandler.DrawAgain(drawAmount * nestingCnt*valueModifier);
 
         if(upgradeNestingCnt != 0)
-            cardSystemActionCommandHandler.DrawAgain(upgradedDrawAmount * upgradeNestingCnt*valueModifier);
+            cardLogicSystemActionCommandHandler.DrawAgain(upgradedDrawAmount * upgradeNestingCnt*valueModifier);
 
         ResetCommandData();
     }

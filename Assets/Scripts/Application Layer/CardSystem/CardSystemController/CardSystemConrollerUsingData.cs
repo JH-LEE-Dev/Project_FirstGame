@@ -44,9 +44,15 @@ public struct CardIdComparer : IComparer<CardDataInstance>
     }
 }
 
-public struct CardSystemEventData
+public struct CardLogicSystemEventData
 {
-    public CardSystemEventType eventType;
+    public CardLogicSystemEventType eventType;
+    public CardSystemContextType contextType;
+}
+
+public struct CardDataControlSystemEventData
+{
+    public CardDataControlSystemEventType eventType;
     public CardSystemContextType contextType;
 }
 
@@ -77,16 +83,36 @@ public enum CardStatusEffectType
     Distortion,
 }
 
-public enum CardSystemEffectType
+public enum CardLogicSystemActionType
+{
+    CardPileDraw,
+    UsedCardsRemoveFromHand,
+    UsedCardsToGrave,
+    UsedCardsToExtinction,
+    ResetCardPiles,
+    SlotCardsToExtinction,
+    SlotCardsToGrave,
+    DuplicateCardsToDeck,
+    DuplicateCardsToHand,
+    GraveCardsToDeck,
+    GraveCardsToHand,
+    MAX
+}
+
+public enum CardLogicSystemEffectType
 {
     FlareAdditionalDraw,
     SacrificeAdditionalDraw,
     Pluto,
 }
 
+public enum CardDataControlSystemEffectType
+{
+
+}
+
 public enum CardSlotSystemEffectType
 {
-    Amplify,
     SecureTheZone,
 }
 
@@ -100,6 +126,7 @@ public enum ComplexSystemEffectType
     QuantumEntanglement,
     HalleysComet,
     Scan,
+    Amplify,
 }
 
 public enum CardSelectionSystemEffectType
@@ -115,21 +142,12 @@ public enum CardSystemActionTimingType
     Instant,
 }
 
-public enum CardSystemActionType
+public enum CardDataControlSystemActionType
 {
-    CardPileDraw,
-    UsedCardsRemoveFromHand,
-    UsedCardsToGrave,
-    UsedCardsToExtinction,
-    ResetCardPiles,
-    SlotCardsToExtinction,
-    SlotCardsToGrave,
-    DuplicateCardsToDeck,
-    DuplicateCardsToHand,
-    GraveCardsToDeck,
-    GraveCardsToHand,
-    MAX
+    CardsUpgraded,
+    MAX,
 }
+
 
 public enum CardEffectPriority
 {
@@ -151,5 +169,9 @@ public enum CardSystemContextType
     DuplicateCardCardsToDeck,
     DuplicateCardCardsToHand,
     GraveCardsToDeck,
+    UpgradeCardsFromDeck,
+    UpgradeCardsFromHand,
+    UpgradeCardsFromExtinction,
+    UpgradeCardsFromGrave,
     MAX
 }
