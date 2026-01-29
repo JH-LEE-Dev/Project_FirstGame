@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54fba7c3d1a1d3c44a804209cd563ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtinctionSystem
-  extinctionCount: {fileID: 0}
+  extinctionCount: {fileID: 1248659789340174926}
   enterEventDuration: 0.4
   enterEventSizeMulti: 1.15
   enterEventEase: 18
@@ -452,6 +452,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 748982c049403c34fb96bf662fb26389, type: 3}
+--- !u!114 &1248659789340174926 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8546889991990635733, guid: 748982c049403c34fb96bf662fb26389, type: 3}
+  m_PrefabInstance: {fileID: 7478374912657065627}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71a3293b6faeb741bcb1681e80b443a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CountUI
 --- !u!224 &6316728169823036370 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3486068213477762377, guid: 748982c049403c34fb96bf662fb26389, type: 3}
