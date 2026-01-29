@@ -1,27 +1,25 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardPannel : MonoBehaviour
+public abstract class BaseCardPannel : MonoBehaviour
 {
     [Header("Main Settings")]
-    [SerializeField] private CardPannelExitButton exitButton;
-    [SerializeField] private CardPannelSelectButton selectButton;
-    private UIView_CardSystem cardSystem;
-    private ScrollRect pannelScroll = null;
+    [SerializeField] protected CardPannelExitButton exitButton;
+    [SerializeField] protected CardPannelSelectButton selectButton;
 
-    private CurrentPannel currPannelType = CurrentPannel.NONE;
+    protected ScrollRect pannelScroll = null;
 
-    private bool pannelSelectMode = false;
+    protected CurrentPannel currPannelType = CurrentPannel.NONE;
+
+    protected bool pannelSelectMode = false;
     public bool PannelSelectMode { get { return pannelSelectMode; } set { pannelSelectMode = value; } }
 
-    private bool selectForcing = false;
-    private int maxSelectCardCnt = 0;
+    protected bool selectForcing = false;
+    protected int maxSelectCardCnt = 0;
 
-    private List<MainCardInstance> selectCards = new List<MainCardInstance>(10);
-    private List<CardDataInstance> selectDatas = new List<CardDataInstance>(10);
+    protected List<MainCardInstance> selectCards = new List<MainCardInstance>(10);
+    protected List<CardDataInstance> selectDatas = new List<CardDataInstance>(10);
 
     public CurrentPannel CurrPannelType
     {
@@ -29,7 +27,7 @@ public class CardPannel : MonoBehaviour
         set { currPannelType = value; }
     }
 
-    public void StartSelectMode(int _selectCnt, bool _bSelectForcing)
+    public virtual void StartSelectMode(int _selectCnt, bool _bSelectForcing)
     {
         pannelSelectMode = true;
         selectForcing = _bSelectForcing;
@@ -39,9 +37,9 @@ public class CardPannel : MonoBehaviour
             selectButton?.SetState(ButtonInstance.VisualState.VisibleEnabled);
     }
 
-    public void SetupSelectMode(bool bSelectMode)
+    public virtual void SetupSelectMode(bool bSelectMode)
     {
-        if(bSelectMode)
+        if (bSelectMode)
         {
             exitButton.gameObject.SetActive(false);
             exitButton?.SetState(ButtonInstance.VisualState.Hidden);
@@ -59,7 +57,7 @@ public class CardPannel : MonoBehaviour
         }
     }
 
-    public void ToggleSelect(MainCardInstance card)
+    public virtual void ToggleSelect(MainCardInstance card)
     {
         if (CardState.Selecting == card.cardState)
         {
@@ -89,46 +87,20 @@ public class CardPannel : MonoBehaviour
         }
     }
 
-    public void CompleteSelectedCards()
-    {
-        if (null == cardSystem)
-            return;
+    protected abstract void CompleteSelectedCards();
 
-        selectDatas.Clear();
-
-        foreach (MainCardInstance data in selectCards)
-        {
-            data.OtherMotion.OnClick(false);
-            selectDatas.Add(data.CardData);
-        }
-
-        cardSystem.EndCardSelectModefromPannel(selectDatas);
-        selectCards.Clear();
-    }
-
-    public void Init(UIView_CardSystem _cardSystem)
-    {
-        cardSystem = _cardSystem;
-    }
-
-    private void Awake()
+    protected virtual void Awake()
     {
         pannelScroll = gameObject.GetComponentInChildren<ScrollRect>();
 
-        if(null != exitButton)
-            exitButton.onClickedEvent += DeActivatePannel;
-
         if (null != selectButton)
         {
-            selectButton.onClickedEvent += DeActivatePannel;
-            selectButton.onClickedEvent += CompleteSelectedCards;
-
             selectButton.SetState(ButtonInstance.VisualState.Hidden);
             selectButton.gameObject.SetActive(false);
         }
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (null != exitButton)
         {
@@ -139,14 +111,14 @@ public class CardPannel : MonoBehaviour
         if (null != selectButton)
         {
             selectButton.onClickedEvent -= DeActivatePannel;
-            selectButton.onClickedEvent -= CompleteSelectedCards;
-
             selectButton.onClickedEvent += DeActivatePannel;
+
+            selectButton.onClickedEvent -= CompleteSelectedCards;
             selectButton.onClickedEvent += CompleteSelectedCards;
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (null != exitButton)
             exitButton.onClickedEvent -= DeActivatePannel;
@@ -158,7 +130,7 @@ public class CardPannel : MonoBehaviour
         }
     }
 
-    private void DeActivatePannel()
+    protected void DeActivatePannel()
     {
         gameObject.SetActive(false);
         pannelScroll.verticalNormalizedPosition = 1f;

@@ -8,6 +8,9 @@ public class ShopPoolingSystem : MonoBehaviour
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private Material dissolveTemplate;
     [SerializeField] private List<ShopCardInstance> cardPool = new();
+
+    public List<ShopCardInstance> CardPool;
+
     private int poolSize = 50;
 
     public void Init(UIView_Shop owner)

@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 7358706110774650695}
   - component: {fileID: 9132191112841657630}
   - component: {fileID: 6152041836335415834}
-  - component: {fileID: 8622928418035731899}
+  - component: {fileID: 4785409515011434031}
   m_Layer: 5
   m_Name: Card_Pannel
   m_TagString: Untagged
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8622928418035731899
+--- !u!114 &4785409515011434031
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -555,9 +555,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3014680100241126493}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaf0b1ab8cad6124abd0422c946cf337, type: 3}
+  m_Script: {fileID: 11500000, guid: 00bf3d949aefdd047b6e54e781653639, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardPannel
+  m_EditorClassIdentifier: Assembly-CSharp::BattleCardPannel
   exitButton: {fileID: 373545234855725382}
   selectButton: {fileID: 8049328943040201672}
 --- !u!1 &3824288190898372488
@@ -705,7 +705,7 @@ MonoBehaviour:
   deckSystem: {fileID: 4229179034747352173}
   graveSystem: {fileID: 8356947880062379578}
   extinctionSystem: {fileID: 4099708205957563033}
-  cardPannel: {fileID: 8622928418035731899}
+  cardPannel: {fileID: 4785409515011434031}
   pannelContent: {fileID: 1618857870683622363}
 --- !u!1 &4291138023601622407
 GameObject:
