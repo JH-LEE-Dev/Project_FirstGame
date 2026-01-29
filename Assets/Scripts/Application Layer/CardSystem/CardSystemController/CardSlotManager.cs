@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
@@ -117,28 +116,19 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         bulletCardSlot.Sort(comparer);
     }
 
-    public void ApplyValueModifier(int valueModifier)
-    {
-        for (int i = 0; i < bulletCardSlot.Count; ++i)
-        {
-            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
-            {
-                if (bulletCardSlot[i][j].GetCardData().usingType == UsingType.Nesting)
-                {
-                    bulletCardSlot[i][j].valueModifier *= valueModifier;
-                }
-            }
-        }
-    }
-
     public void ExecuteCommand(CardSystemCommand command)
     {
         command.Execute(this);
     }
 
-    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedRotationBulletCard()
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCard()
     {
         return prevBulletCardSlot;
+    }
+
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
+    {
+        return bulletCardSlot;
     }
 
     public void ApplySlotCntModifier(int cnt)

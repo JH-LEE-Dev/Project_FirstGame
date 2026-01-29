@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/ResetCardPiles")]
-public class ActionCommand_ResetCardPiles : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/ResetCardPiles")]
+public class ActionCommand_ResetCardPiles : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.ResetCardPiles();
     }

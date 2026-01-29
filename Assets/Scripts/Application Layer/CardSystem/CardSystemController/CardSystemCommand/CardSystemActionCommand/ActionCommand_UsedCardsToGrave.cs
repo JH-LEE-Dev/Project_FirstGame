@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/UsedCardsToGrave")]
-public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/UsedCardsToGrave")]
+public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -12,7 +12,7 @@ public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardSyste
         cardSystemContextType = CardSystemContextType.UsedCardsToGrave;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         using var rentalBuffer_ToGrave = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer_ToGrave = rentalBuffer_ToGrave.Span;
@@ -27,12 +27,12 @@ public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardSyste
             if (cards[i].GetCardData().id == (int)CardName.Distortion)
             {
                 CardDataInstance duplicatedCard = cardSystemActionCommandHandler.CreateCard(cards[i].GetCardData().id);
-                writeBuffer_Duplicate[i] = duplicatedCard;
+                writeBuffer_Duplicate[duplicatedCnt] = duplicatedCard;
                 ++duplicatedCnt;
             }
 
+            writeBuffer_ToGrave[graveCnt] = cards[i];
             ++graveCnt;
-            writeBuffer_ToGrave[i] = cards[i];
         }
 
         if (graveCnt != 0)

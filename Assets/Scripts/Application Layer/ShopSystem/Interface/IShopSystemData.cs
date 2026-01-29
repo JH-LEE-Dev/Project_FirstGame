@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IShopSystemData
 {
-    IReadOnlyList<CardData> cardMerchandiseData { get; }
+    IReadOnlyList<CardDataInstance> cardMerchandiseData { get; }
 }

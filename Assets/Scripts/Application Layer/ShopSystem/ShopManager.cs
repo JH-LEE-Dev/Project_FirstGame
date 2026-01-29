@@ -4,7 +4,10 @@ using System;
 
 public class ShopManager : MonoBehaviour, IShopSystemData
 {
-    IReadOnlyList<CardData> IShopSystemData.cardMerchandiseData => cardMerchandiseData;
+    IReadOnlyList<CardDataInstance> IShopSystemData.cardMerchandiseData => cardMerchandiseData;
+
+    //寇何 狼粮己
+    private ICardLogicSystemProvider cardLogicSystemProvider;
 
     public event Action ShopIsReadyEvent;
 
@@ -13,11 +16,12 @@ public class ShopManager : MonoBehaviour, IShopSystemData
     [Header("Card Data")]
     [SerializeField] private CardDataBase cardDataBase;
 
-    private List<CardData> cardMerchandiseData = new List<CardData>(initialcardMerchandiseCnt);
+    private List<CardData> cardDataMerchandiseData = new List<CardData>(initialcardMerchandiseCnt);
+    private List<CardDataInstance> cardMerchandiseData = new List<CardDataInstance>(initialcardMerchandiseCnt);
 
-    public void Initialize()
+    public void Initialize(ICardLogicSystemProvider _cardLogicSystemProvider)
     {
-
+        cardLogicSystemProvider = _cardLogicSystemProvider;
     }
 
     public void Release()
@@ -34,6 +38,18 @@ public class ShopManager : MonoBehaviour, IShopSystemData
 
     public void CloseShop()
     {
+        ReleaseMerchandise();
+    }
+
+    private void ReleaseMerchandise()
+    {
+        cardDataMerchandiseData.Clear();
+
+        for(int i = 0;i<cardMerchandiseData.Count;++i)
+        {
+            cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
+        }
+
         cardMerchandiseData.Clear();
     }
 
@@ -45,14 +61,21 @@ public class ShopManager : MonoBehaviour, IShopSystemData
 
             CardData cardData = cardDataBase.cardData[randomIdx];
 
-            cardMerchandiseData.Add(cardData);
+            cardDataMerchandiseData.Add(cardData);
+            cardMerchandiseData.Add(cardLogicSystemProvider.CreateCard(cardData.id));
         }
     }
 
     public void RerollMerchandise()
     {
+        cardDataMerchandiseData.Clear();
+
+        for (int i = 0; i < cardMerchandiseData.Count; ++i)
+        {
+            cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
+        }
+
         cardMerchandiseData.Clear();
-        Debug.Log("府费");
 
         for (int i = 0; i < initialcardMerchandiseCnt; ++i)
         {
@@ -60,7 +83,8 @@ public class ShopManager : MonoBehaviour, IShopSystemData
 
             CardData cardData = cardDataBase.cardData[randomIdx];
 
-            cardMerchandiseData.Add(cardData);
+            cardDataMerchandiseData.Add(cardData);
+            cardMerchandiseData.Add(cardLogicSystemProvider.CreateCard(cardData.id));
         }
     }
 }

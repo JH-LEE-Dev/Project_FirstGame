@@ -13,23 +13,26 @@ using UnityEngine;
 
 public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 {
-    private ICardSystemActionCommandHandler cardSystemActionCommandHandler;
+    private ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler;
     private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
     private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
     private ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler;
+    private ICardDataControlSystemActionCommandHandler cardDataControlActionCommandHandler;
 
-    public void Initialize(ICardSystemActionCommandHandler _cardSystemActionCommandHandler,
+    public void Initialize(ICardLogicSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
         ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
         ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler,
-        ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler)
+        ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler,
+        ICardDataControlSystemActionCommandHandler _cardDataControlActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
         slotSystemActionCommandHandler = _cardSlotSystemActionCommandHandler;
         cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
         cardSelectionSystemActionCommandHandler = _cardSelectionSystemActionCommandHandler;
+        cardDataControlActionCommandHandler = _cardDataControlActionCommandHandler;
     }
 
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
@@ -49,7 +52,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards()
     {
-        return slotSystemActionCommandHandler.GetPrevUsedRotationBulletCard();
+        return slotSystemActionCommandHandler.GetPrevUsedBulletCard();
     }
 
     public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards)
@@ -117,8 +120,28 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemActionCommandHandler.GraveCardsToDeck(cards);
     }
 
-    public void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards)
+    public void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
     {
-        cardSystemControlActionCommandHandler.RequestCardSystemActionCommand(cardSystemActionType, _cards);
+        cardSystemControlActionCommandHandler.RequestCardLogicSystemActionCommand(cardSystemActionType, _cards, _cardSystemContextType);
+    }
+
+    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
+    {
+        cardSystemControlActionCommandHandler.RequestCardDataControlSystemActionCommand(cardDataControlSystemActionType, _cards, _cardSystemContextType);
+    }
+
+    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards)
+    {
+        cardDataControlActionCommandHandler.UpgradeCards(cards);
+    }
+
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
+    {
+        return slotSystemActionCommandHandler.GetCurrentBulletCards();
+    }
+
+    public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
+    {
+        cardDataControlActionCommandHandler.ApplyValueModifier(cards, valueModifier);
     }
 }

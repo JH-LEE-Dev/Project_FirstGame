@@ -35,15 +35,6 @@ public class UnitSystem
         unitSpawner.EnemyCreatedEvent -= unitLogicSystem.EnemyCreated;
         unitSpawner.EnemyCreatedEvent += unitLogicSystem.EnemyCreated;
 
-        unitLogicSystem.EnemySpawnedEvent -= EnemySpawned;
-        unitLogicSystem.EnemySpawnedEvent += EnemySpawned;
-
-        unitLogicSystem.CharacterSpawendEvent -= CharacterSpawend;
-        unitLogicSystem.CharacterSpawendEvent += CharacterSpawend;
-
-        unitLogicSystem.PlayerSpawnedEvent -= PlayerSpawned;
-        unitLogicSystem.PlayerSpawnedEvent += PlayerSpawned;
-
         unitLogicSystem.EnemyIsDeadEvent -= EnemyIsDead;
         unitLogicSystem.EnemyIsDeadEvent += EnemyIsDead;
 
@@ -74,12 +65,6 @@ public class UnitSystem
         unitSpawner.CharacterCreatedEvent -= unitLogicSystem.CharacterCreated;
 
         unitSpawner.EnemyCreatedEvent -= unitLogicSystem.EnemyCreated;
-
-        unitLogicSystem.EnemySpawnedEvent -= EnemySpawned;
-
-        unitLogicSystem.CharacterSpawendEvent -= CharacterSpawend;
-
-        unitLogicSystem.PlayerSpawnedEvent -= PlayerSpawned;
 
         unitLogicSystem.EnemyIsDeadEvent -= EnemyIsDead;
 
@@ -122,21 +107,6 @@ public class UnitSystem
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
-    }
-
-    private void EnemySpawned()
-    {
-        signalHub.Publish(new EnemySpawnedSignal());
-    }
-
-    private void CharacterSpawend(Character character)
-    {
-        signalHub.Publish(new CharacterSpawnedSignal(character));
-    }
-
-    private void PlayerSpawned(Earth player)
-    {
-        signalHub.Publish(new PlayerSpawnedSignal(player));
     }
 
     private void EnemyIsDead(Vector2 position)

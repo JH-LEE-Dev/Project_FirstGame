@@ -5456,6 +5456,7 @@ GameObject:
   - component: {fileID: -1934595178798189937}
   - component: {fileID: 3996470548536073360}
   - component: {fileID: 4970203025210532969}
+  - component: {fileID: 1573170377193865263}
   m_Layer: 0
   m_Name: GameInstaller
   m_TagString: Untagged
@@ -5583,14 +5584,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d51ffa67a1ec3cc4094852ebd9814eca, type: 2}
   - {fileID: 11400000, guid: 5b76bee04d5f0604285d94c20d63120f, type: 2}
   - {fileID: 11400000, guid: 088dd351158251248aac4f54e74ebc56, type: 2}
-  cardSystemCommands:
+  cardLogicSystemCommands:
   - {fileID: 11400000, guid: 5fdbbf50f0367f04f98bb83d3995c183, type: 2}
   - {fileID: 11400000, guid: 1f9b2abbc091b6c4fa0c1525569139ce, type: 2}
   - {fileID: 11400000, guid: 192db7c3347d09145b9eaeb2c84f3df8, type: 2}
-  slotSystemCommands:
-  - {fileID: 11400000, guid: b121abc56d4b5b04398acbc479bad094, type: 2}
+  cardSlotSystemCommands:
   - {fileID: 11400000, guid: 4459c70d8f7d95941b148bdf26564291, type: 2}
-  complexSystemCommands:
+  cardComplexSystemCommands:
   - {fileID: 11400000, guid: 36e9c6dd3d8d4344f84875e19312bf0f, type: 2}
   - {fileID: 11400000, guid: ec142422fe00f354baf3f7dffaf268dc, type: 2}
   - {fileID: 11400000, guid: 23d70140d9cfd294f996e75ef106d83b, type: 2}
@@ -5599,8 +5599,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1fd75fb5769a83b4fb73ce85131c85d1, type: 2}
   - {fileID: 11400000, guid: 4425f55f6ed8ec34da1c4399f0459093, type: 2}
   - {fileID: 11400000, guid: fdbebd4c178216949bf704bfdcdd14d0, type: 2}
+  - {fileID: 11400000, guid: b121abc56d4b5b04398acbc479bad094, type: 2}
   cardSelectionSystemCommands: []
-  cardSystemActionCommands:
+  cardLogicSystemActionCommands:
   - {fileID: 11400000, guid: c226817e29eec994a88b90e277dca034, type: 2}
   - {fileID: 11400000, guid: 4f2608f8b22e2fb4e8fa8c8b5d8f9bb6, type: 2}
   - {fileID: 11400000, guid: 4576fe6f266c3604496bb732103aec87, type: 2}
@@ -5612,6 +5613,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ad53631c9d6767a4a9e889a1055b2ce3, type: 2}
   - {fileID: 11400000, guid: 20b1588303c208d4483ca69df4d59dff, type: 2}
   - {fileID: 11400000, guid: 3a7b1c38d74517c4593779d0ea0c28c5, type: 2}
+  cardDataControlSystemActionCommands:
+  - {fileID: 11400000, guid: c1b4736c1b319f74eaeacf24206ee4b7, type: 2}
 --- !u!114 &4970203025210532969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5625,6 +5628,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopManager
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
+--- !u!114 &1573170377193865263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132615358195672310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faccffae816b0674f91eb73f2ffc99ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardDataControlManager
 --- !u!1 &3851426605135345241
 GameObject:
   m_ObjectHideFlags: 0

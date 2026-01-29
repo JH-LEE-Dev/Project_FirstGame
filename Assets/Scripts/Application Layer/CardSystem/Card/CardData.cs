@@ -17,7 +17,8 @@ public class CardData
     public CardEffectPriority priority = CardEffectPriority.Normal;
     public bool bUpgradable = false;
 
-    public List<CardSystemEffectType> cardSystemEffects;
+    public List<CardLogicSystemEffectType> cardLogicSystemEffects;
+    public List<CardDataControlSystemEffectType> cardDataControlSystemEffects;
     public List<CardStatusEffectType> cardStatusEffects;
     public List<CardSlotSystemEffectType> cardSlotSystemEffects;
     public List<ComplexSystemEffectType> complexSystemEffects;

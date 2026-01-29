@@ -1,12 +1,10 @@
-using GameControlSignals;
 using System.Collections.Generic;
-using UnitSpawnSystemSignals;
 using UnityEngine;
 using UnityEngine.Pool;
 using System;
 using WaveSystemSignals;
 
-public class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
 {
     public event Action<Character> CharacterCreatedEvent;
     public event Action<Earth> PlayerCreatedEvent;
@@ -34,6 +32,11 @@ public class UnitSpawner : MonoBehaviour
     public Character characterUnit { get; private set; }
     public Earth playerUnit { get; private set; }
 
+    public ICharacterData characterData => characterUnit;
+
+    public IPlayerData playerData => playerUnit;
+
+    public List<IEnemyData> enemiesData => enemiesData;
 
     [Header("Wave Spawn Settings")]
     [SerializeField] private GameObject waveSpawnPoint;
@@ -46,6 +49,7 @@ public class UnitSpawner : MonoBehaviour
 
 
     private List<Enemy> enemies = new List<Enemy>(40);
+    private List<IEnemyData> enemyData = new List<IEnemyData>(40);
 
     // Enemy Ǯ
     ObjectPool<Enemy> enemyPool;
@@ -192,6 +196,7 @@ public class UnitSpawner : MonoBehaviour
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
 
+                enemyData.Add(spawnedUnit);
                 enemies.Add(spawnedUnit);
             }
         }

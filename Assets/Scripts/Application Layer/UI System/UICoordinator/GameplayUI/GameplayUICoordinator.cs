@@ -71,11 +71,6 @@ public class GameplayUICoordinator
         hudUISystem.CardUseTimeStarted();
     }
 
-    public void PlayerSpawned(IPlayerData playerData)
-    {
-        hudUISystem.PlayerSpawned(playerData);
-    }
-
     public void CardUsingFinished()
     {
         gameplayUISystem.CardUsingFinished();
@@ -94,10 +89,6 @@ public class GameplayUICoordinator
     public void GameStarted()
     {
         hudUISystem.GameStarted();
-    }
-    public void CharacterSpawned(ICharacterData characterData)
-    {
-        unitWorldUISystem.Initialize(characterData);
     }
 
     public void WaveEnded()

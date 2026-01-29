@@ -13,6 +13,7 @@ public class GameplayUIInstaller : MonoBehaviour
     private ICardSystemData cardSystemData;
     private IWaveSystemData waveSystemData;
     private ICardLocalizationSystem cardLocalizationSystem;
+    private IUnitSpawnSystemData unitSpawnSystemData;
 
     //내부 의존성
     private GameplayUIManager uiManager;
@@ -31,7 +32,7 @@ public class GameplayUIInstaller : MonoBehaviour
 
     public void Initialize(IBootStrapProvider _bootStrapProvider, SignalHub _signalHub,
         InputManager _inputManager, ICardSystemData _cardSystemData, IWaveSystemData _waveSystemData,
-        ICardLocalizationSystem _cardLocalizationSystem)
+        ICardLocalizationSystem _cardLocalizationSystem,IUnitSpawnSystemData _unitSpawnSystemData)
     {
         inputManager = _inputManager;
         bootStrapProvider = _bootStrapProvider;
@@ -39,6 +40,7 @@ public class GameplayUIInstaller : MonoBehaviour
         cardSystemData = _cardSystemData;
         waveSystemData = _waveSystemData;
         cardLocalizationSystem = _cardLocalizationSystem; 
+        unitSpawnSystemData = _unitSpawnSystemData;
 
         uiManager = GetComponent<GameplayUIManager>();
         uiCommandManager = GetComponent<UICommandManager>();
@@ -47,7 +49,7 @@ public class GameplayUIInstaller : MonoBehaviour
         gameplayUICoordinator = new GameplayUICoordinator();
 
         uiCommandManager.Initialize(signalHub);
-        uiManager.Initialize(inputManager, cardSystemData, waveSystemData,cardLocalizationSystem);
+        uiManager.Initialize(inputManager, cardSystemData, waveSystemData,cardLocalizationSystem,unitSpawnSystemData);
 
         SetupUIElement();
     }

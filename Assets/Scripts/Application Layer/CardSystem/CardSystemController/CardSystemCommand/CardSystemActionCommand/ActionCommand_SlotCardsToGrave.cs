@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/SlotCardsToGrave")]
-public class ActionCommand_SlotCardsToGrave : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/SlotCardsToGrave")]
+public class ActionCommand_SlotCardsToGrave : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -11,7 +11,7 @@ public class ActionCommand_SlotCardsToGrave : CardSystemActionCommand<ICardSyste
         cardSystemContextType = CardSystemContextType.SlotCardsToGrave;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.CardsToGrave(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }

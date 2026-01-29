@@ -47,21 +47,17 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    public void PlayerSpawned(IPlayerData _playerData)
-    {
-        playerData = _playerData;
-
-        IntializeChildrenHUD();
-    }
-
     private void Start()
     {
         
     }
 
-    public void DataInjection(IWaveSystemData _waveSystemData)
+    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData)
     {
         waveSystemData = _waveSystemData;
+        playerData = _playerData;
+
+        IntializeChildrenHUD();
     }
 
     protected override void OnShow()
