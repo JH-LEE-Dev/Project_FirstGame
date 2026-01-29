@@ -104,23 +104,42 @@ public class PoolingSystem : MonoBehaviour
     private void UseCardEffectPooling()
     {
         UseCardEffects = new ObjectPool<VFX_CardUseEffect>(
-                    createFunc: () =>
-                    {
-                        var inst = Instantiate(UseCardEffectPrefab, transform);
-                        inst.gameObject.SetActive(false);
-                        inst.SetReleaseHandler(UseEffectRelease);
-                        return inst;
-                    },
-                    actionOnGet: e => e.gameObject.SetActive(true),
-                    actionOnRelease: e => e.gameObject.SetActive(false),
-                    actionOnDestroy: e => Destroy(e.gameObject),
-                    collectionCheck: false,
-                    defaultCapacity: defaultCapacity,
-                    maxSize: maxSize
-                );
+            createFunc: CreateUseCardEffect,
+            actionOnGet: OnGetUseCardEffect,
+            actionOnRelease: OnReleaseUseCardEffect,
+            actionOnDestroy: OnDestroyUseCardEffect,
+            collectionCheck: false,
+            defaultCapacity: defaultCapacity,
+            maxSize: maxSize);
     }
 
-    private void UseEffectRelease(VFX_CardUseEffect e) => UseCardEffects.Release(e);
+    private VFX_CardUseEffect CreateUseCardEffect()
+    {
+        var inst = Instantiate(UseCardEffectPrefab, transform);
+        inst.gameObject.SetActive(false);
+        inst.SetReleaseHandler(UseEffectRelease);
+        return inst;
+    }
+
+    private void OnGetUseCardEffect(VFX_CardUseEffect e)
+    {
+        e.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseUseCardEffect(VFX_CardUseEffect e)
+    {
+        e.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyUseCardEffect(VFX_CardUseEffect e)
+    {
+        Destroy(e.gameObject);
+    }
+
+    private void UseEffectRelease(VFX_CardUseEffect e)
+    {
+        UseCardEffects.Release(e);
+    }
 
     public void PlayMagicCardEffect(Vector3 worldPos, float scaleMul, System.Action onComplete = null)
     {

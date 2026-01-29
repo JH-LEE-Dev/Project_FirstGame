@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 
 
-
 public class HandSystem : MonoBehaviour
 {
     private UIView_CardSystem cardSystem;
@@ -171,38 +170,32 @@ public class HandSystem : MonoBehaviour
 
     public void UseCard(MainCardInstance _card, int socketIndex = 0, Transform transform = null)
     {
+
         if (_card == null) return;
+        if (!cards.Contains(_card)) return;
+
 
         int idx = cards.IndexOf(_card);
         if (idx < 0) return;
 
         // 프리뷰 카드 사용이라면 프리뷰 상태 정리
-        if (previewCard == _card)
-        {
-            //previewCard.Motion.EndPreview();
-            previewCard.SetUIState(CardState.Other); // Other는 연출 중인 놈을 의미함. 자유분방
-            previewCard = null;
-        }
-        else if (previewCard != null)
-        {
-            // 다른 카드 프리뷰 중이면 취소
-            CancelPreview();
-        }
+        if (previewCard == _card) previewCard = null;
+        // 다른 카드 프리뷰 중이면 취소
+        else if (previewCard != null) CancelPreview();
 
         hoveredCard = null;
 
+        // 재정렬 방어로직
+        if (_card.cardState == CardState.InHand || _card.cardState == CardState.Selecting || _card.cardState == CardState.Preview)
+            _card.SetUIState(CardState.Other);
+
+        computeArc();
+        ComputeSelectedPositions();
+
         CardType type = _card.CardData.GetCardData().cardType;
 
-        switch (type)
-        {
-            case CardType.Bullet:
-                EquipBullet(_card, socketIndex, transform);
-                break;
-
-            case CardType.Magic:
-                ConsumeMagic(_card);
-                break;
-        }
+        // 장착 연출하러 고고씽
+        if (type == CardType.Bullet) EquipBullet(_card, socketIndex, transform);
 
     }
     private void EquipBullet(MainCardInstance card, int socketIndex, Transform transform)
@@ -240,7 +233,7 @@ public class HandSystem : MonoBehaviour
 
 
         // 한 소켓에는 여러장이 들어갈 수 있기 때문에, 해당 소켓안에 있던 모든 카드가 복귀한다.
-        foreach(var card in cards)
+        foreach (var card in cards)
         {
             if (card == null) continue;
             if (card.Motion.socketIndex != socketIndex || CardState.Equipped != card.cardState) continue;
@@ -255,81 +248,6 @@ public class HandSystem : MonoBehaviour
 
         computeArc();
     }
-
-    private void ConsumeMagic(MainCardInstance card)
-    {
-        ElementType cardElementType = card.CardData.GetCardData().elementType;
-
-        switch (cardElementType)
-        {
-            case ElementType.Extinction:
-                {
-                    card.SetUIState(CardState.Other);
-                    hoveredCard = null;
-                    if (previewCard == card) previewCard = null;
-
-                    float dissolveDur = 1f;
-                    float ShakeDur = 0.35f;
-
-                    card.Motion.PlayExtinctionShake(
-                    ShakeDur
-                    );
-
-                    card.PlayConsumeExtinction(
-                    dissolveDur,
-                    onComplete: (c) =>
-                    {
-                        if (c == null) return;
-                        if (c is MainCardInstance mc)
-                            ReturnToPool(mc);
-                        computeArc();
-                        ComputeSelectedPositions();
-                    });
-
-                    computeArc();
-                    ComputeSelectedPositions();
-                }
-                return;
-            case ElementType.Rotation:
-                {
-                    float scaleOffset = card.transform.localScale.x * 20f;
-                    cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
-
-                    card.SetUIState(CardState.Other);
-
-                    hoveredCard = null;
-                    if (previewCard == card) previewCard = null;
-
-                    computeArc();
-                    ComputeSelectedPositions();
-
-                    card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.1f);
-                    card.Motion.PlayConsumeShrink(0.2f, 0.03f);
-
-                    DOVirtual.DelayedCall(0.6f, () =>
-                    {
-                        if (card == null) return;
-
-                        ReturnToPool(card);
-
-                        Vector2 BasePos = card.transform.position;
-                        Vector2 GravePos = cardSystem.GetGravePos();
-
-                        cardSystem.SpawnStarAtoB(false, 0, BasePos, GravePos);
-
-                        computeArc();
-                        ComputeSelectedPositions();
-
-                    }).SetUpdate(true);
-
-                }
-                return;
-            default:
-                return;
-        }
-    }
-
-
     public void ToggleSelect(MainCardInstance card)
     {
         if (!bCardSelectMode) return;
@@ -720,14 +638,12 @@ public class HandSystem : MonoBehaviour
 
         foreach (var c in targets)
         {
-            float useDelay = 
-                (type == CardReturnType.FlyToGrave || type == CardReturnType.Extinction)
-                ? 
-                delay : 0f;
+            bool bUseDalay = (type == CardReturnType.FlyToGrave || type == CardReturnType.Extinction || type == CardReturnType.MagicUse);
+            float useDelay = bUseDalay ? delay : 0f;
 
-            ReturnCard(c, type, useDelay);
+            ReturnCard_Internal(c, type, useDelay);
 
-            if (type == CardReturnType.FlyToGrave || type == CardReturnType.Extinction)
+            if (bUseDalay)
                 delay += interval;
         }
     }
@@ -746,14 +662,14 @@ public class HandSystem : MonoBehaviour
 
             if (!targetSet.Contains(card.CardData)) continue;
 
-            ReturnCard(card, type, delay, true);
+            ReturnCard_Internal(card, type, delay, true);
         }
 
         computeArc();
     }
 
     // 연출 후, ReturnToPool
-    private void ReturnCard(MainCardInstance card, CardReturnType type = CardReturnType.Temp, float delay = 0f, bool computeArcOptimization = false)
+    private void ReturnCard_Internal(MainCardInstance card, CardReturnType type = CardReturnType.Temp, float delay = 0f, bool computeArcOptimization = false)
     {
         if (card == null) return;
 
@@ -764,69 +680,129 @@ public class HandSystem : MonoBehaviour
         if (type == CardReturnType.StayHand)
         {
             card.SetUIState(CardState.InHand);
+            if (computeArcOptimization == false)
+            {
+                computeArc();
+                ComputeSelectedPositions();
+            }
             return;
         }
 
-        // 임시, 나중에 연출 추가되면 어떻게 될지 모름.
-        card.SetUIState(CardState.Other);
 
-        // 소켓 저장 인덱스 초기화
+        card.SetUIState(CardState.Other);
         card.Motion.SetSocketIndex(-1);
 
-        if (computeArcOptimization == false) computeArc();
+        if (computeArcOptimization == false)
+        {
+            computeArc();
+            ComputeSelectedPositions();
+        }
 
         switch (type)
         {
             case CardReturnType.Temp:
-                {
-                    ReturnToPool(card);
-                    break;
-                }
+                ReturnToPool(card);
+                break;
 
             case CardReturnType.FlyToGrave:
-                {
-                    Vector3 gravePos = cardSystem.GetGraveAnchoredPos();
-
-                    DOVirtual.DelayedCall(delay, () =>
-                    {
-                        if (card == null) return;
-                        if (card.cardState == CardState.Hidden) return;
-
-                        card.Motion.FlyToGrave(gravePos, () =>
-                        {
-                            ReturnToPool(card);
-                        });
-
-                    }).SetUpdate(true);
-
-                    break;
-                }
+                PlayFlyToGraveAndReturn(card, delay);
+                break;
 
             case CardReturnType.Extinction:
-                {
-                    // TODO: 소멸 연출(셰이더) 끝나면 ReturnToPool 호출
+                PlayExtinctionAndReturn(card, delay);
+                break;
 
-                    DOVirtual.DelayedCall(delay, () =>
-                    {
-                        if (card == null) return;
-                        ReturnToPool(card);
-                    }).SetUpdate(true);
-
-                    break;
-                }
-
-            case CardReturnType.EquippedAction:
-                {
-                    Debug.Log("Wrong call (EquippedAction)");
-                    break;
-                }
+            case CardReturnType.MagicUse:
+                PlayMagicUseAndReturn(card, delay);
+                break;
         }
     }
+
+    private void PlayFlyToGraveAndReturn(MainCardInstance card, float delay)
+    {
+        Vector3 gravePos = cardSystem.GetGraveAnchoredPos();
+
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            if (card == null) return;
+            if (card.cardState == CardState.Hidden) return;
+
+            card.Motion.FlyToGrave(gravePos, () =>
+            {
+                ReturnToPool(card);
+            });
+
+        }).SetUpdate(true);
+    }
+
+    private void PlayExtinctionAndReturn(MainCardInstance card, float delay)
+    {
+        // 예: 소멸 시간/떨림 시간 튜닝
+        float dissolveDur = 1.0f;
+        float shakeDur = 0.35f;
+
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            if (card == null) return;
+            if (card.cardState == CardState.Hidden) return;
+
+            card.Motion.PlayExtinctionShake(shakeDur);
+
+            card.PlayConsumeExtinction(
+                dissolveDur,
+                onComplete: (c) =>
+                {
+                    if (c == null) return;
+                    if (c is MainCardInstance mc)
+                        ReturnToPool(mc);
+
+                    computeArc();
+                    ComputeSelectedPositions();
+                });
+
+        }).SetUpdate(true);
+    }
+
+    private void PlayMagicUseAndReturn(MainCardInstance card, float delay)
+    {
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            if (card == null) return;
+            if (card.cardState == CardState.Hidden) return;
+
+            float scaleOffset = card.transform.localScale.x * 20f;
+            cardSystem.PlayMagicCardEffect(card.transform.position, scaleOffset);
+
+            // 노란 오버레이 강화, 쪼그라짐
+            card.VisualFloat?.FadeDrawOverlayAlpha(1f, 0.1f);
+            card.Motion.PlayConsumeShrink(0.2f, 0.03f);
+
+            // 마무리 반납
+            DOVirtual.DelayedCall(0.6f, () =>
+            {
+                if (card == null) return;
+                if (card.cardState == CardState.Hidden) return;
+
+                // 별똥별/묘지 이펙트 (너 기존 로직)
+                Vector2 basePos = card.transform.position;
+                Vector2 gravePos = cardSystem.GetGravePos();
+                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos);
+
+                ReturnToPool(card);
+
+                computeArc();
+                ComputeSelectedPositions();
+            }).SetUpdate(true);
+
+        }).SetUpdate(true);
+    }
+
 
 
     // 사용 연출이 전부 끝난 뒤에 호출되는 함수. (단순 풀링 반납)
     private void ReturnToPool(MainCardInstance _card)
     {
+        if (_card.cardState == CardState.Hidden) return;
         if (_card == null) return;
 
         // 카드가 손패 리스트 안에 있으면 제거

@@ -41,11 +41,15 @@ public enum CardState
 
 public enum CardReturnType
 {
-    FlyToGrave,
-    Extinction,
-    EquippedAction,
-    StayHand,
-    Temp,
+    FlyToGrave,     // 사용없는 연출. 묘지로 슝 날아가여 풀링반납.
+
+    Extinction,     // 소멸 연출 이후 풀링반납.
+
+    MagicUse,       // 마법 연출 이후 풀링반납.
+
+    StayHand,       // 손에 그대로 있기. 풀링반납안함. 다시 패로 감.
+
+    Temp,           // 즉시 삭제
 }
 
 public enum CurrentPannel

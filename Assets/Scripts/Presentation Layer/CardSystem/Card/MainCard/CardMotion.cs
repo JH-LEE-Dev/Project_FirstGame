@@ -40,9 +40,9 @@ public class CardMotion : MonoBehaviour
     private Sequence rejectSeq;
 
     [Header("Grave Motion")]
-    [SerializeField] private float graveDuration = 0.4f;
-    [SerializeField] private float graveTiltZ = 80f;     // 왼쪽으로 기울기(도)
-    [SerializeField] private float graveScale = 0.3f;    // 줄어드는 비율
+    private float graveDuration = 0.2f;
+    private float graveTiltZ = 80f;     // 왼쪽으로 기울기(도)
+    private float graveScale = 0.3f;    // 줄어드는 비율
     private Tween flyTween;
     private Tween flyRotateTween;
     private Tween flyScaleTween;
@@ -145,6 +145,8 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardInstanceType != CardInstanceType.Hand) return;
         if ((owner.cardState == CardState.InHand || owner.cardState == CardState.Selecting) == false) return;
+
+        dt = Mathf.Min(dt, 1f / 30f);
 
         Vector2 pos = rt.anchoredPosition;
 
@@ -426,6 +428,8 @@ public class CardMotion : MonoBehaviour
     private void TickExtinctionShake(float dt)
     {
         if (!extinctionActive) return;
+
+        dt = Mathf.Min(dt, 1f / 30f);
 
         extinctionTime += dt;
 

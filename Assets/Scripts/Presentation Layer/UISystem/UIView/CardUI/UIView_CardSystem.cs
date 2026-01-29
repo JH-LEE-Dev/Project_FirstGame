@@ -254,7 +254,7 @@ public class UIView_CardSystem : UIView
     private float CardPileDraw(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         DrawingCards(uiActionData.cards);
 
@@ -264,7 +264,7 @@ public class UIView_CardSystem : UIView
     private float CardAdditionalDraw(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         DrawingCards(uiActionData.cards);
 
@@ -275,7 +275,7 @@ public class UIView_CardSystem : UIView
     private float GraveCardsToDeck(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         graveSystem?.CardMoveToDeckEffect(uiActionData.cards.Count);
 
@@ -285,7 +285,7 @@ public class UIView_CardSystem : UIView
     private float HandCardsToGrave(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
 
@@ -295,17 +295,19 @@ public class UIView_CardSystem : UIView
     private float CardsToExtinction(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
+        {
             Debug.Log("사용된 카드가 소멸로 감.");
+            ReturnCard(uiActionData.cards, CardReturnType.Extinction);
+
+        }
         else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
         {
             Debug.Log("슬롯에 있던 카드가 소멸로 감.");
             ReturnStateAllCard(CardState.Equipped);
         }
-
-        ReturnCard(uiActionData.cards, CardReturnType.Extinction);
 
         return turnWaitTime;
     }
@@ -313,17 +315,19 @@ public class UIView_CardSystem : UIView
     private float CardsToGrave(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
+        {
             Debug.Log("사용된 카드가 묘지로 감.");
+            ReturnCard(uiActionData.cards, CardReturnType.MagicUse);
+
+        }
         else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
         {
             Debug.Log("슬롯에 있던 카드가 묘지로 감.");
             ReturnStateAllCard(CardState.Equipped);
         }
-
-        ReturnCard(uiActionData.cards, CardReturnType.FlyToGrave);
 
         return turnWaitTime;
     }
@@ -331,7 +335,7 @@ public class UIView_CardSystem : UIView
     private float ExtinctionCardsToDeck(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         return turnWaitTime;
     }
@@ -339,7 +343,7 @@ public class UIView_CardSystem : UIView
     private float GraveCardsToHand(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         graveSystem?.CardDrawToHands(uiActionData.cards);
 
@@ -349,7 +353,7 @@ public class UIView_CardSystem : UIView
     private float CardsToHand(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToHand)
         {
@@ -367,7 +371,7 @@ public class UIView_CardSystem : UIView
     private float CardsToDeck(CardUIActionData uiActionData)
     {
         //설정할 것.
-        float turnWaitTime = 0.5f;
+        float turnWaitTime = 0f;
 
         if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToDeck)
         {
@@ -552,7 +556,6 @@ public class UIView_CardSystem : UIView
     {
         if (state == CardState.Equipped)
         {
-            /* UIView_Unit.UnEquipBulletCardForShoot */
             handSystem?.ReturnStateAllCard(state, CardReturnType.Temp);
         }
         else handSystem?.ReturnStateAllCard(state, type, delay, interval);
