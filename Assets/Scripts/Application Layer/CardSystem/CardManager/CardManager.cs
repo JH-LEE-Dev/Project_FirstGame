@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -164,6 +165,17 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         var rentalBuffer = new RentalScope<CardDataInstance>(amount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        int n = deckPile.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = UnityEngine.Random.Range(0, n + 1);
+
+            var card_1 = deckPile[k];
+            deckPile[k] = deckPile[n];
+            deckPile[n] = card_1;
+        }
 
         for (int i = 0; i < amount; ++i)
         {
