@@ -21,11 +21,10 @@ public class ShopCardInstance : CardInstance
         if (Visual) Visual.Bind(this);
     }
 
-    public void Initialize(UIView_Shop shop, Material template)
+    public virtual void Initialize(UIView_Shop shop, Material template, ICardLocalizationSystem cls)
     {
+        base.Initialize(template, cls);
         uIView_Shop = shop;
-        dissolveMatInstance = new Material(template);
-        ApplyDissolveMaterialToVisuals();
     }
     public void SetVisible(bool visible)
     {
