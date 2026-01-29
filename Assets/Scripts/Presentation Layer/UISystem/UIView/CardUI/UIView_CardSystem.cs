@@ -418,6 +418,7 @@ public class UIView_CardSystem : UIView
         if (uiActionData.cardSystemContextType == CardSystemContextType.UpgradeCardsFromHand)
         {
             Debug.Log("패에 있는 카드가 강화됨");
+            handSystem.UpgradeCard(uiActionData.cards);
         }
 
         return turnWaitTime;

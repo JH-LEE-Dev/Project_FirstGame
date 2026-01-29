@@ -2500,6 +2500,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickUpSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 1904963403862118372, guid: 342e440879e64fe4982dd4283002112a, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4629601204821290196, guid: 342e440879e64fe4982dd4283002112a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2578,6 +2582,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4629601204821290196, guid: 342e440879e64fe4982dd4283002112a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7340602590923709412, guid: 342e440879e64fe4982dd4283002112a, type: 3}
+      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -111,10 +111,3 @@ public enum ShopCardState
     Select,
 }
 
-public enum ShopBehaviorType
-{
-    PickUp,
-    Enforce,
-    Delete,
-}
-

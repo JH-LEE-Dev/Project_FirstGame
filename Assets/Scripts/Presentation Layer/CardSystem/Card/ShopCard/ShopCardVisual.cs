@@ -10,6 +10,12 @@ public class ShopCardVisual : MonoBehaviour
     private Vector2 basePos;
     private float seed;
 
+    [Header("Float")]
+    [SerializeField] private float floatPosAmp = 0.5f;
+    [SerializeField] private float floatRotAmp = 0.2f;
+    [SerializeField] private float FloatFreq = 0.2f;
+
+
     [Header("Overlay Ref")]
     [SerializeField] private Image drawOverlay;
 
@@ -43,7 +49,7 @@ public class ShopCardVisual : MonoBehaviour
 
     private void Update()
     {
-
+        Floating();
     }
 
     public void SetVisible(bool visible)
@@ -54,4 +60,17 @@ public class ShopCardVisual : MonoBehaviour
         canvasGroup.blocksRaycasts = visible;
         canvasGroup.interactable = visible;
     }
+    private void Floating()
+    {
+        float t = Time.unscaledTime + seed;
+        float w = FloatFreq * Mathf.PI * 2f;
+
+        float x = Mathf.Sin(t * w) * floatPosAmp;
+        float y = Mathf.Cos(t * w * 1.13f) * (floatPosAmp * 0.8f);
+        float rz = Mathf.Sin(t * w * 0.9f) * floatRotAmp;
+
+        visual.anchoredPosition = basePos + new Vector2(x, y);
+        visual.localRotation = Quaternion.Euler(0f, 0f, rz);
+    }
+
 }

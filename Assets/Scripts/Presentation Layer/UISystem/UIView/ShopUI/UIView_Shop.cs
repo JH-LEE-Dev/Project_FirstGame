@@ -8,6 +8,7 @@ public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
+    public event Action<List<CardDataInstance>,ShopBehaviorType> ShopUIOutputEvent;
 
     //외부 의존성
     private IShopSystemData shopSystemData;
@@ -148,7 +149,7 @@ public class UIView_Shop : UIView
     [Button]
     private void TestCall_PannelSelectMode()
     {
-        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, 2, true);
+        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, 2, true);
     }
 
 
@@ -160,8 +161,17 @@ public class UIView_Shop : UIView
         card.ApplyData(data);
 
         card.transform.SetParent(attachTransform);
-        card.transform.localScale = cardSize;
+        card.Motion.SetOriginScale(cardSize);
 
+        // 알아서 Active On
+        return card;
+    }
+
+    public ShopCardInstance RentCard(CardDataInstance data, Vector2 cardSize)
+    {
+        var card = shopPoolingSystem?.RentCard();
+        card.ApplyData(data);
+        card.Motion.SetOriginScale(cardSize);
         // 알아서 Active On
         return card;
     }
@@ -214,7 +224,7 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] EnforceCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, enforceCardCount, true);
+        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true);
     }
 
     private void OnClick_DeleteCard()
@@ -240,11 +250,12 @@ public class UIView_Shop : UIView
 
     public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
     {
-        Debug.Log(cards.Count);
         foreach(var c in cards)
         {
             Debug.Log(c.GetCardData().cardName);
         }
+
+        ShopUIOutputEvent?.Invoke(cards, type);
     }
 
     // For PickUpCard
