@@ -1,9 +1,9 @@
+using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-
-
 public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
@@ -14,6 +14,7 @@ public class UIView_Shop : UIView
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<CardDataInstance> deckCards;
+
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
     [SerializeField] private Button enforceCardButton;
@@ -27,6 +28,12 @@ public class UIView_Shop : UIView
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
 
+    [Header("DeckSystem")]
+    [SerializeField] private ShopCardPannel cardPannel;
+    [SerializeField] private ShopDeckSystem deckSystem;
+    [SerializeField] private GameObject pannelContent = null;
+    public GameObject PannelContent { get { return pannelContent; } }
+    public ShopCardPannel CardPannel { get { return cardPannel; } }
 
     public override void Initialize(UIViewContext ctx)
     {
@@ -38,8 +45,13 @@ public class UIView_Shop : UIView
         SafeBind(viewDeckButton, OnClick_ViewDeck);
         SafeBind(nextStageButton, OnClick_NextStage);
 
-        if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        if (!shopPoolingSystem) 
+            shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+
         shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
+
+        cardPannel?.Init(this);
+        deckSystem?.Init(this);
     }
 
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
@@ -55,6 +67,7 @@ public class UIView_Shop : UIView
     public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards)
     {
         shopSystemData = _shopSystemData;
+        deckCards = _deckCards;
     }
 
     public void OpenShop()
@@ -66,18 +79,70 @@ public class UIView_Shop : UIView
 
 
 
+    /////////////// Pannel & Deck
+    public void StartCardSelectModefromPannel(int _selectCount, bool _bSelectforcing)
+    {
+        CallPannel(true);
+        cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
+    }
 
 
+    public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
+    {
+        
+    }
 
+    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
+    {
+        if (null == shopPoolingSystem || null == pannelContent)
+            return;
 
+        int inCount = _inCards.Count;
+
+        if (0 >= inCount)
+            return;
+
+        foreach (CardDataInstance data in _inCards)
+        {
+            RentCard(data, pannelContent.transform, new Vector2(5f, 5f));
+        }
+    }
+
+    public void CallPannel(bool bSelectMode = false)
+    {
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = CurrentPannel.Deck;
+        cardPannel.gameObject.SetActive(true);
+        cardPannel.SetupSelectMode(bSelectMode);
+
+        ActivatePannel(deckCards);
+    }
+
+    public void ForceDeActivatePannelSelf(CurrentPannel callType)
+    {
+        if (null == cardPannel || callType != cardPannel.CurrPannelType)
+            return;
+
+        cardPannel.gameObject.SetActive(false);
+    }
+
+    [Button]
+    private void TestCall_PannelSelectMode()
+    {
+        StartCardSelectModefromPannel(3, true);
+    }
 
 
     ////////////// PoolingCard
 
-    public ShopCardInstance RentCard(CardDataInstance data)
+    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector2 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
+        card.transform.SetParent(attachTransform);
+
         // 알아서 Active On
         return card;
     }

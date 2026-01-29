@@ -66,8 +66,8 @@ public class UIView_CardSystem : UIView
 
     [SerializeField] private HandSystem handSystem;
     public HandSystem HandSystem => handSystem;
-    [SerializeField] private DeckSystem deckSystem;
-    public DeckSystem DeckSystem => deckSystem;
+    [SerializeField] private BattleDeckSystem deckSystem;
+    public BattleDeckSystem DeckSystem => deckSystem;
     // [SerializeField] private WormholeSystem WormholeSystem;
 
     // ¹¦Áö
@@ -80,10 +80,10 @@ public class UIView_CardSystem : UIView
 
     // µ¦, ¹¦Áö, ¼Ò¸ê °ø¿ë
     [Header("Pannel")]
-    [SerializeField] private CardPannel cardPannel = null;
+    [SerializeField] private BattleCardPannel cardPannel = null;
     [SerializeField] private GameObject pannelContent = null;
     public GameObject PannelContent { get { return pannelContent; } }
-    public CardPannel CardPannel { get { return cardPannel; } }
+    public BattleCardPannel CardPannel { get { return cardPannel; } }
 
     // µå·Î¿ì Áß ÀÛ¾÷ ÁßÁö
     private bool bWorkingBlock = false;
