@@ -146,6 +146,8 @@ public class CardMotion : MonoBehaviour
         if (owner.cardInstanceType != CardInstanceType.Hand) return;
         if ((owner.cardState == CardState.InHand || owner.cardState == CardState.Selecting) == false) return;
 
+        dt = Mathf.Min(dt, 1f / 30f);
+
         Vector2 pos = rt.anchoredPosition;
 
         float k = followFreq * followFreq;
@@ -426,6 +428,8 @@ public class CardMotion : MonoBehaviour
     private void TickExtinctionShake(float dt)
     {
         if (!extinctionActive) return;
+
+        dt = Mathf.Min(dt, 1f / 30f);
 
         extinctionTime += dt;
 

@@ -69,7 +69,7 @@ public class CardVisualFloat : MonoBehaviour
 
         if (owner.cardState == CardState.Preview || owner.cardState == CardState.Selecting) 
             PreviewFloating();
-        else if (owner.cardState == CardState.InHand)
+        else if (owner.cardState == CardState.InHand || owner.cardState == CardState.Hidden)
             HandFloating();
     }
 
