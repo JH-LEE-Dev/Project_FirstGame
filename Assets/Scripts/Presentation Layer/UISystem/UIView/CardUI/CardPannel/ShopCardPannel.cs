@@ -1,9 +1,16 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopCardPannel : BaseCardPannel
 {
     [Header("Main Settings")]
     private UIView_Shop owner;
+    private List<ShopCardInstance> rentCards = new(50);
+
+    public List<ShopCardInstance> RentCards { get { return rentCards; } set { rentCards = value; } }
+
+    public CardPannelSelectButton SelectBtn { get { return selectButton; }  set { selectButton = value; } }
 
     public void Init(UIView_Shop _owner) => owner = _owner;
 
@@ -12,16 +19,21 @@ public class ShopCardPannel : BaseCardPannel
         if (null == owner)
             return;
 
-        selectDatas.Clear();
+        owner.SelectComplete();
+    }
 
-        foreach (MainCardInstance data in selectCards)
+    public void SetupSelectMode(bool bSelectMode, bool bSelectBtnHidden = false)
+    {
+        if (bSelectBtnHidden)
         {
-            data.OtherMotion.OnClick(false);
-            selectDatas.Add(data.CardData);
+            selectButton.gameObject.SetActive(false);
+            selectButton?.SetState(ButtonInstance.VisualState.Hidden);
         }
-
-        owner.EndCardSelectModefromPannel(selectDatas);
-        selectCards.Clear();
+        else
+        {
+            selectButton.gameObject.SetActive(true);
+            selectButton?.SetState(ButtonInstance.VisualState.VisibleDisabled);
+        }
     }
 
     protected override void Awake()
@@ -37,5 +49,15 @@ public class ShopCardPannel : BaseCardPannel
     protected override void OnDisable()
     {
         base.OnDisable();
+    }
+
+    protected override void DeActivatePannel()
+    {
+        base.DeActivatePannel();
+        
+        foreach (ShopCardInstance data in RentCards)
+        {
+            owner?.ReturnCard(data);
+        }
     }
 }

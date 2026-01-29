@@ -27,6 +27,36 @@ public class BattleCardPannel : BaseCardPannel
         selectCards.Clear();
     }
 
+    public void ToggleSelect(MainCardInstance card)
+    {
+        if (CardState.Selecting == card.cardState)
+        {
+            selectCards.Remove(card);
+            card.SetUIState(CardState.Hidden);
+            card.OtherMotion.OnClick(false);
+
+            if (maxSelectCardCnt > selectCards.Count && selectForcing)
+            {
+                selectButton?.SetState(ButtonInstance.VisualState.VisibleDisabled);
+            }
+
+            return;
+        }
+
+        if (maxSelectCardCnt <= selectCards.Count)
+            return;
+
+        card.SetUIState(CardState.Selecting);
+        card.OtherMotion.OnClick(true);
+
+        selectCards.Add(card);
+
+        if (maxSelectCardCnt <= selectCards.Count && selectForcing)
+        {
+            selectButton?.SetState(ButtonInstance.VisualState.VisibleEnabled);
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();

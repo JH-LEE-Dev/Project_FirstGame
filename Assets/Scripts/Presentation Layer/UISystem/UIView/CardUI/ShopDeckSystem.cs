@@ -31,7 +31,7 @@ public class ShopDeckSystem : BaseDeckSystem
     public override void OnPointerUp(PointerEventData _eventData)
     {
         base.OnPointerUp(_eventData);
-        owner?.CallPannel();
+        owner?.CallPannel(bSelectBtnHidden: true);
     }
 
     public override void OnPointerEnter(PointerEventData _eventData)
