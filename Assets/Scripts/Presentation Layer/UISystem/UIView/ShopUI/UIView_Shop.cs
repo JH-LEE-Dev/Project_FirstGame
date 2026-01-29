@@ -181,10 +181,9 @@ public class UIView_Shop : UIView
         selectSystem.ToggleSelect(card);
     }
 
-    public void SelectComplete()
+    public bool SelectComplete()
     {
-        // bool юс. 
-        selectSystem.SelectComplete();
+        return selectSystem.SelectComplete();
     }
 
 
@@ -196,8 +195,10 @@ public class UIView_Shop : UIView
         Debug.Log("[Shop] PickUpCard clicked");
 
         CardPackRerollEvent?.Invoke();
+        selectSystem?.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce
+            , pickUpSystem.GetPickUpButton(), true);
 
-        selectSystem.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce);
+        //pickUpSystem?.PickUpCardMode(shopSystemData.cardMerchandiseData);
     }
 
     private void OnClick_EnforceCard()
@@ -206,7 +207,7 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] EnforceCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, enforceCardCount, false);
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, enforceCardCount, true);
     }
 
     private void OnClick_DeleteCard()
@@ -215,7 +216,7 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] DeleteCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, false);
+        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true);
     }
 
     private void OnClick_ViewDeck()

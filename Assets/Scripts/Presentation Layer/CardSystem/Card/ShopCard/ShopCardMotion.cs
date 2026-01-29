@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ShopCardMotion : MonoBehaviour
@@ -7,6 +8,7 @@ public class ShopCardMotion : MonoBehaviour
 
     private Vector3 originScale;
 
+    private Tween moveTween;
 
     public void Bind(ShopCardInstance card)
     {
@@ -18,6 +20,9 @@ public class ShopCardMotion : MonoBehaviour
     public void AllKillTweens(bool bRestoreScale = true)
     {
         if (bRestoreScale) transform.localScale = originScale;
+
+        moveTween?.Kill();
+        moveTween = null;
     }
 
     private void Update()
@@ -44,4 +49,18 @@ public class ShopCardMotion : MonoBehaviour
     {
 
     }
+
+    public void MoveTo(Vector2 targetAnchoredPos, float duration, bool useUnscaledTime = true)
+    {
+        if (!rt) return;
+
+        AllKillTweens();
+
+        moveTween = rt
+                    .DOAnchorPos(targetAnchoredPos, Mathf.Max(0.01f, duration))
+                    .SetEase(Ease.OutCubic)
+                    .SetUpdate(useUnscaledTime)
+                    .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+    }
+
 }
