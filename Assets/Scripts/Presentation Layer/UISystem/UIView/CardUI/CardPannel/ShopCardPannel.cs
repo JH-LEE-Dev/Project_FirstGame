@@ -6,34 +6,20 @@ public class ShopCardPannel : BaseCardPannel
 {
     [Header("Main Settings")]
     private UIView_Shop owner;
-    private ShopBehaviorType behaviorType;
-
     private List<ShopCardInstance> rentCards = new(50);
+
     public List<ShopCardInstance> RentCards { get { return rentCards; } set { rentCards = value; } }
 
-    public void Init(UIView_Shop _owner) => owner = _owner;
+    public CardPannelSelectButton SelectBtn { get { return selectButton; }  set { selectButton = value; } }
 
-    public void StartSelectMode(ShopBehaviorType _type, int _selectCnt, bool _bSelectForcing)
-    {
-        base.StartSelectMode(_selectCnt, _bSelectForcing);
-        behaviorType = _type;
-    }
+    public void Init(UIView_Shop _owner) => owner = _owner;
 
     protected override void CompleteSelectedCards()
     {
         if (null == owner)
             return;
 
-        selectDatas.Clear();
-
-        foreach (MainCardInstance data in selectCards)
-        {
-            data.OtherMotion.OnClick(false);
-            selectDatas.Add(data.CardData);
-        }
-
-        owner.OutputSelectedCards(selectDatas, behaviorType);
-        selectCards.Clear();
+        owner.SelectComplete();
     }
 
     public void SetupSelectMode(bool bSelectMode, bool bSelectBtnHidden = false)
@@ -58,22 +44,11 @@ public class ShopCardPannel : BaseCardPannel
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        if (null != exitButton)
-        {
-            exitButton.onClickedEvent -= ResetValues;
-            exitButton.onClickedEvent += ResetValues;
-        }
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-
-        if (null != exitButton)
-        {
-            exitButton.onClickedEvent -= ResetValues;
-        }
     }
 
     protected override void DeActivatePannel()
@@ -84,10 +59,5 @@ public class ShopCardPannel : BaseCardPannel
         {
             owner?.ReturnCard(data);
         }
-    }
-
-    private void ResetValues()
-    {
-
     }
 }

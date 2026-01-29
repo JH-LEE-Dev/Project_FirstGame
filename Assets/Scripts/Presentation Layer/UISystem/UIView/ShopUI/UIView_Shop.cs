@@ -71,6 +71,7 @@ public class UIView_Shop : UIView
             Debug.LogWarning($"{nameof(UIView_Shop)}: Button reference missing for {action.Method.Name}");
             return;
         }
+
         btn.onClick.AddListener(action);
     }
 
@@ -92,8 +93,11 @@ public class UIView_Shop : UIView
     /////////////// Pannel & Deck
     public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
     {
+        if (null == cardPannel)
+            return;
+
         CallPannel(true);
-        cardPannel?.StartSelectMode(_type, _selectCount, _bSelectforcing);
+        selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
     }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
@@ -193,18 +197,20 @@ public class UIView_Shop : UIView
 
     private void OnClick_EnforceCard()
     {
-        Debug.Log("[Shop] EnforceCard clicked");
-        selectSystem.SetSelectMode(ShopBehaviorType.Enforce, enforceCardCount, false);
+        if (DeletedComplete || EnforcedComplete)
+            return;
 
-        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, 1, true);
+        Debug.Log("[Shop] EnforceCard clicked");
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, enforceCardCount, false);
     }
 
     private void OnClick_DeleteCard()
     {
-        Debug.Log("[Shop] DeleteCard clicked");
-        selectSystem.SetSelectMode(ShopBehaviorType.Delete, enforceCardCount, false);
+        if (DeletedComplete || EnforcedComplete)
+            return;
 
-        StartCardSelectModefromPannel(ShopBehaviorType.Delete, 1, true);
+        Debug.Log("[Shop] DeleteCard clicked");
+        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, false);
     }
 
     private void OnClick_ViewDeck()

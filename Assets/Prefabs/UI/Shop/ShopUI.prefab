@@ -969,6 +969,7 @@ GameObject:
   - component: {fileID: 1745713331082156441}
   - component: {fileID: 4781159696933469916}
   - component: {fileID: 2448975008160909883}
+  - component: {fileID: 8273497226068451207}
   m_Layer: 5
   m_Name: ShopUI
   m_TagString: Untagged
@@ -1035,6 +1036,18 @@ MonoBehaviour:
   dissolveTemplate: {fileID: 2100000, guid: 5a0e9086bd6bbf245bd506367fc008db, type: 2}
   cardPool: []
   CardPool: []
+--- !u!114 &8273497226068451207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4607152452573246931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eacb6ef04ef18e1449d01db127b8b61c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopSelectSystem
 --- !u!1 &4699137084814940110
 GameObject:
   m_ObjectHideFlags: 0
