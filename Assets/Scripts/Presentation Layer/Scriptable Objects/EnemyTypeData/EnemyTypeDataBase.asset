@@ -17,31 +17,31 @@ MonoBehaviour:
     sprite: {fileID: 9018329983352920618, guid: 0d2dd8e6cc2a64d41b9cd2b15b1331fe, type: 3}
     scale: 2
     moveForce: 6
-    health: 5
-    attack: 24
+    health: 1
+    attack: 5
     shield: 0
     rewardWhenKilled: 100
   - id: Two
     sprite: {fileID: 215401576309132004, guid: c97a667afec2bd5419ec6d2d48465c7c, type: 3}
     scale: 4
     moveForce: 7
-    health: 5
-    attack: 12
+    health: 1
+    attack: 4
     shield: 0
     rewardWhenKilled: 80
   - id: Three
     sprite: {fileID: 6024657178149202955, guid: 47566be39d3a771448842dc5e7f9403e, type: 3}
     scale: 3
     moveForce: 5
-    health: 5
-    attack: 17
+    health: 1
+    attack: 6
     shield: 0
     rewardWhenKilled: 90
   - id: Four
     sprite: {fileID: -4734392874465410214, guid: ccfe7fa19208eb44c8518c1d58cf0572, type: 3}
     scale: 3
     moveForce: 8
-    health: 0
-    attack: 7
+    health: 1
+    attack: 3
     shield: 0
     rewardWhenKilled: 110
