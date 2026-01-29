@@ -186,8 +186,8 @@ public class HandSystem : MonoBehaviour
         hoveredCard = null;
 
         // 재정렬 방어로직
-        if (_card.cardState == CardState.InHand || _card.cardState == CardState.Selecting || _card.cardState == CardState.Preview)
-            _card.SetUIState(CardState.Other);
+        //if (_card.cardState == CardState.InHand || _card.cardState == CardState.Selecting || _card.cardState == CardState.Preview)
+        //    _card.SetUIState(CardState.Other);
 
         computeArc();
         ComputeSelectedPositions();
