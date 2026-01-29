@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Pluto")]
-public class EffectCommand_Pluto : CardEffectCommand<ICardSystemActionCommandHandler>
+public class EffectCommand_Pluto : CardEffectCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -12,7 +12,7 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardSystemActionCommandHan
         cardSystemContextType = CardSystemContextType.ExtinctionCardsToDeck;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         IReadOnlyList<CardDataInstance> extinctionPile = cardSystemActionCommandHandler.GetExtinctionPile();
 

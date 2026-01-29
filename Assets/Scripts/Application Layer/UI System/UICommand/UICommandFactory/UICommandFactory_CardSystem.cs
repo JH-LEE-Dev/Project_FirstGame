@@ -5,8 +5,10 @@ using UnityEngine.Pool;
 
 public class UICommandFactory_CardSystem : UICommandFactory
 {
-    public delegate void CommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
-    private CommandCreator[] creatorMap;
+    public delegate void CardLogicSystemCommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
+    private CardLogicSystemCommandCreator[] cardLogicSystemCreatorMap;
+    public delegate void CardDataControlSystemCommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
+    private CardDataControlSystemCommandCreator[] cardDataControlSystemCreatorMap;
 
     const int maxBatchPoolSize = 10;
     const int jobListSize = 10;
@@ -55,18 +57,32 @@ public class UICommandFactory_CardSystem : UICommandFactory
 
     private void InitializeCreatorMap()
     {
-        creatorMap = new CommandCreator[(int)CardSystemEventType.MAX];
+        cardLogicSystemCreatorMap = new CardLogicSystemCommandCreator[(int)CardLogicSystemEventType.MAX];
+        cardDataControlSystemCreatorMap = new CardDataControlSystemCommandCreator[(int)CardDataControlSystemEventType.MAX];
 
-        creatorMap[(int)CardSystemEventType.CardPileDrawEvent] = (context, cards) => CreateJob_Draw(context, cards);
-        creatorMap[(int)CardSystemEventType.CardAdditionalDrawEvent] = (context, cards) => CreateJob_AdditionalDraw(context, cards);
-        creatorMap[(int)CardSystemEventType.HandCardsToGraveEvent] = (context, cards) => CreateJob_HandToGrave(context, cards);
-        creatorMap[(int)CardSystemEventType.GraveCardsToDeckEvent] = (context, cards) => CreateJob_GraveToDeck(context, cards);
-        creatorMap[(int)CardSystemEventType.CardsToExtinctionEvent] = (context, cards) => CreateJob_CardsToExtinction(context, cards);
-        creatorMap[(int)CardSystemEventType.ExtinctionCardsToDeckEvent] = (context, cards) => CreateJob_ExtinctionToDeck(context, cards);
-        creatorMap[(int)CardSystemEventType.GraveCardsToHandEvent] = (context, cards) => CreateJob_GraveToHand(context, cards);
-        creatorMap[(int)CardSystemEventType.CardsToGraveEvent] = (context, cards) => CreateJob_CardsToGrave(context, cards);
-        creatorMap[(int)CardSystemEventType.CardsToHandEvent] = (context, cards) => CreateJob_CardsToHand(context, cards);
-        creatorMap[(int)CardSystemEventType.CardsToDeckEvent] = (context, cards) => CreateJob_CardsToDeck(context, cards);
+        var logic = cardLogicSystemCreatorMap;
+
+        //Card Logic System 맵 할당
+        BindLogic(CardLogicSystemEventType.CardPileDrawEvent, CreateJob_Draw);
+        BindLogic(CardLogicSystemEventType.CardAdditionalDrawEvent, CreateJob_AdditionalDraw);
+        BindLogic(CardLogicSystemEventType.HandCardsToGraveEvent, CreateJob_HandToGrave);
+        BindLogic(CardLogicSystemEventType.GraveCardsToDeckEvent, CreateJob_GraveToDeck);
+        BindLogic(CardLogicSystemEventType.CardsToExtinctionEvent, CreateJob_CardsToExtinction);
+        BindLogic(CardLogicSystemEventType.ExtinctionCardsToDeckEvent, CreateJob_ExtinctionToDeck);
+        BindLogic(CardLogicSystemEventType.GraveCardsToHandEvent, CreateJob_GraveToHand);
+        BindLogic(CardLogicSystemEventType.CardsToGraveEvent, CreateJob_CardsToGrave);
+        BindLogic(CardLogicSystemEventType.CardsToHandEvent, CreateJob_CardsToHand);
+        BindLogic(CardLogicSystemEventType.CardsToDeckEvent, CreateJob_CardsToDeck);
+
+        //Card Data Control System 맵 할당
+        BindData(CardDataControlSystemEventType.CardsUpgraded, CreateJob_CardsUpgraded);
+        BindData(CardDataControlSystemEventType.CardsValueModified, CreateJob_CardsValueModified);
+
+        void BindLogic(CardLogicSystemEventType type, CardLogicSystemCommandCreator action)
+            => cardLogicSystemCreatorMap[(int)type] = action;
+
+        void BindData(CardDataControlSystemEventType type, CardDataControlSystemCommandCreator action)
+            => cardDataControlSystemCreatorMap[(int)type] = action;
     }
 
     public void ReleaseSlot(int index)
@@ -119,9 +135,14 @@ public class UICommandFactory_CardSystem : UICommandFactory
         return availableBatch;
     }
 
-    public void CreateCommand(CardSystemEventData cardSystemEventData, ReadOnlySpan<CardDataInstance> cards = default)
+    public void CreateCommand(CardLogicSystemEventData cardLogicSystemEventData, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        creatorMap[(int)cardSystemEventData.eventType]?.Invoke(cardSystemEventData.contextType,cards);
+        cardLogicSystemCreatorMap[(int)cardLogicSystemEventData.eventType]?.Invoke(cardLogicSystemEventData.contextType,cards);
+    }
+
+    public void CreateCommand(CardDataControlSystemEventData cardDataControlSystemEventData, ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        cardDataControlSystemCreatorMap[(int)cardDataControlSystemEventData.eventType]?.Invoke(cardDataControlSystemEventData.contextType, cards);
     }
 
     public void CreateJob_Draw(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> drawCards)
@@ -369,6 +390,56 @@ public class UICommandFactory_CardSystem : UICommandFactory
         batch.actionList.Add(new CardUIActionData
         {
             uiActionType = CardUIActionType.CardsToDeck,
+            cardSystemContextType = _cardSystemContextType,
+            cards = cardList
+        });
+    }
+
+    public void CreateJob_CardsUpgraded(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
+            return;
+        }
+
+        var cardList = cardListPool.Get();
+
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i] != null)
+                cardList.Add(cards[i]);
+        }
+
+        batch.actionList.Add(new CardUIActionData
+        {
+            uiActionType = CardUIActionType.CardsUpgraded,
+            cardSystemContextType = _cardSystemContextType,
+            cards = cardList
+        });
+    }
+
+    public void CreateJob_CardsValueModified(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
+    {
+        var batch = InitializeActionDataBatch();
+        if (batch.actionList == null)
+        {
+            Debug.LogError("UI 명령이 포화 상태라서 연출이 누락되었습니다!");
+            return;
+        }
+
+        var cardList = cardListPool.Get();
+
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i] != null)
+                cardList.Add(cards[i]);
+        }
+
+        batch.actionList.Add(new CardUIActionData
+        {
+            uiActionType = CardUIActionType.CardsValueModified,
             cardSystemContextType = _cardSystemContextType,
             cards = cardList
         });

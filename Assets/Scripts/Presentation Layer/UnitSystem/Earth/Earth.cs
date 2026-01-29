@@ -76,4 +76,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     {
         money += amount;
     }
+
+    public int GetPlayerCurrentMoney()
+    {
+        return money;
+    }
 }

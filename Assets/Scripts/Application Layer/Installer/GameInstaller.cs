@@ -26,6 +26,7 @@ public class GameInstaller : MonoBehaviour
     private ShopUIInstaller shopUIInstaller;
     private ShopSystem shopSystem;
     private ShopManager shopManager;
+    private CardDataControlManager cardDataControlManager;  
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -54,6 +55,7 @@ public class GameInstaller : MonoBehaviour
         shopSystem = new ShopSystem();
         shopManager = GetComponent<ShopManager>();
         cardLocalizationSystem = _cardLocalizationSystem;
+        cardDataControlManager = GetComponent<CardDataControlManager>();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -63,15 +65,17 @@ public class GameInstaller : MonoBehaviour
         unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
         unitLogicSystem.Initialize();
 
+        cardDataControlManager.Initialize();
         cardManager.Initialize();
         cardSystemController.Initialize();
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver);
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver, cardDataControlManager);
 
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager, cardDataControlManager);
 
-        gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager,cardLocalizationSystem);
-        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager,cardLocalizationSystem,cardManager);
+        gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager,cardLocalizationSystem,unitSpawner);
+        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager,cardLocalizationSystem,cardManager,unitSpawner);
 
+        shopManager.Initialize(cardManager);
         shopSystem.Initialize(signalHub, shopManager);
 
         SetupGamePlayScene();

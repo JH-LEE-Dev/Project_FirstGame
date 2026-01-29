@@ -162,7 +162,6 @@ public class CardInstance : MonoBehaviour
 
         CardData cardData = dataInstance.GetCardData();
 
-        Debug.Log("CardNameAndDescriptionChange call");
         // °­È­µÊ
         if (dataInstance.bUpgrade == true)
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);

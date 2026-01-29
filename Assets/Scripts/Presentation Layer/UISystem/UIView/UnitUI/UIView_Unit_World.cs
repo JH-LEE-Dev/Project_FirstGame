@@ -1,7 +1,8 @@
-using UnityEngine;
+using NaughtyAttributes;
 using System;
 using System.ComponentModel.Design;
-using NaughtyAttributes;
+using UnityEditor.U2D.Animation;
+using UnityEngine;
 
 public class UIView_Unit_World : UIView
 {
@@ -30,12 +31,7 @@ public class UIView_Unit_World : UIView
         base.Awake();
     }
 
-    public void DataInjection()
-    {
-       
-    }
-
-    public void Initialize(ICharacterData _characterData)
+    public void DataInjection(ICharacterData _characterData)
     {
         characterData = _characterData;
 

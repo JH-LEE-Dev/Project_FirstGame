@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public interface ICardSystemActionCommandHandler : ICommandHandler
+public interface ICardLogicSystemActionCommandHandler : ICommandHandler
 {
     IReadOnlyList<CardDataInstance> GetHandPile();
     IReadOnlyList<CardDataInstance> GetExtinctionPile();
@@ -10,7 +9,6 @@ public interface ICardSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetGravePile();
     void StartCardPileDraw();
     void DrawAgain(int drawAmount);
-    void ApplyValueModifier(int valueModifier);
     bool DeckConditionCheck(int cardID);
     void GraveCardsToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards);
     void CardsToGrave(ReadOnlySpan<CardDataInstance> cards);

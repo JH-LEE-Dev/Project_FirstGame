@@ -25,32 +25,44 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
         using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer_Extinction = rentalBuffer_Extinction.Span;
 
+        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
+        Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
+
         int usingCnt = 0;
         int extinctionCnt = 0;
+        int upgradeCnt = 0;
 
         for (int i = 0; i < handPile.Count; ++i)
         {
             if (handPile[i].GetCardData().usingType == UsingType.Nesting &&
                 handPile[i].GetCardData().cardType == CardType.Bullet)
             {
+                writeBuffer_Using[usingCnt] = handPile[i];
                 ++usingCnt;
-                writeBuffer_Using[i] = handPile[i];
 
                 if (upgradeNestingCnt != 0)
-                    handPile[i].bUpgrade = true;
+                {
+                    writeBuffer_Upgrade[upgradeCnt] = handPile[i];
+                    ++upgradeCnt;
+                }
             }
             else
             {
+                writeBuffer_Extinction[extinctionCnt] = handPile[i];
                 ++extinctionCnt;
-                writeBuffer_Extinction[i] = handPile[i];
             }
         }
 
-        complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0,extinctionCnt));
+        complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt));
 
-        complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0,usingCnt));
+        complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt));
+
+        complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
+            writeBuffer_Upgrade.Slice(0, upgradeCnt),CardSystemContextType.UpgradeCardsFromHand);
+
         rentalBuffer_Using.Dispose();
         rentalBuffer_Extinction.Dispose();
+        rentalBuffer_Upgrade.Dispose();
 
         ResetCommandData();
     }

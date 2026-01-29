@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Amplify Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Amplify
   cardSystemActionTimingType: 1
-  effectApplyType: 2
+  effectApplyType: 3
   nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1

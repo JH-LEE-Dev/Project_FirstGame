@@ -11,6 +11,7 @@ public class UIView_Shop : UIView
 
     //외부 의존성
     private IShopSystemData shopSystemData;
+    private IPlayerData playerData;
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<CardDataInstance> deckCards;
@@ -52,9 +53,11 @@ public class UIView_Shop : UIView
         btn.onClick.AddListener(action);
     }
 
-    public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards)
+    public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards,
+        IPlayerData _playerData)
     {
         shopSystemData = _shopSystemData;
+        playerData = _playerData;
     }
 
     public void OpenShop()
@@ -63,6 +66,10 @@ public class UIView_Shop : UIView
 
     }
 
+    public void PlayerSpawned(IPlayerData _playerData)
+    {
+        playerData = _playerData;
+    }
 
 
 

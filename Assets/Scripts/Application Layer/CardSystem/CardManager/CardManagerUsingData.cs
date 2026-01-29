@@ -17,7 +17,7 @@ public ref struct RentalScope<T>
     public void Dispose() => ArrayPool<T>.Shared.Return(_array, true);
 }
 
-public enum CardSystemEventType
+public enum CardLogicSystemEventType
 {
     CardPileDrawEvent,
     CardAdditionalDrawEvent,
@@ -26,8 +26,15 @@ public enum CardSystemEventType
     GraveCardsToHandEvent,
     CardsToExtinctionEvent,
     CardsToGraveEvent,
-    ExtinctionCardsToDeckEvent,
     CardsToHandEvent,
     CardsToDeckEvent,
+    ExtinctionCardsToDeckEvent,
+    MAX,
+}
+
+public enum CardDataControlSystemEventType
+{
+    CardsUpgraded,
+    CardsValueModified,
     MAX,
 }

@@ -10,4 +10,5 @@ public interface IPlayerData
     float GetPrevHealth();
 
     float GetPrevShield();
+    int GetPlayerCurrentMoney();
 }

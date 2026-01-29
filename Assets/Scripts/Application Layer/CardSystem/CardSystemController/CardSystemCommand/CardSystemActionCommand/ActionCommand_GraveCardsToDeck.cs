@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardSystemAction/GraveCardsToDeck")]
-public class ActionCommand_GraveCardsToDeck : CardSystemActionCommand<ICardSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardLogicSystemAction/GraveCardsToDeck")]
+public class ActionCommand_GraveCardsToDeck : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
     public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -12,7 +12,7 @@ public class ActionCommand_GraveCardsToDeck : CardSystemActionCommand<ICardSyste
         cardSystemContextType = CardSystemContextType.GraveCardsToDeck;
     }
 
-    protected override void Execute(ICardSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
         cardSystemActionCommandHandler.GraveCardsToDeck(cards.AsSpan<CardDataInstance>().Slice(0,cnt));
     }

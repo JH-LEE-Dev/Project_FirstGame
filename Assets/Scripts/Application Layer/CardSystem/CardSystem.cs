@@ -12,16 +12,18 @@ public class CardSystem
     private CardSystemController cardSystemController;
     private ComplexCardEffectResolver complexCardEffectResolver;
     private CardSelectionManager cardSelectionManager;
+    private CardDataControlManager cardDataControlManager;
 
     public void Initialize(SignalHub _signalHub, CardManager _cardManager,
         CardSystemController _cardSystemController,CardSelectionManager _cardSelectionManager,
-        ComplexCardEffectResolver _complexCardEffectResolver)
+        ComplexCardEffectResolver _complexCardEffectResolver, CardDataControlManager _cardDataControlManager)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
         cardSystemController = _cardSystemController;
         cardSelectionManager = _cardSelectionManager;
         complexCardEffectResolver = _complexCardEffectResolver;
+        cardDataControlManager =_cardDataControlManager;
 
         SubscribeEvents();
         BindEvents();
@@ -53,8 +55,11 @@ public class CardSystem
 
     private void BindEvents()
     {
-        cardManager.cardManagerEventInvoker.CardManagerEvent -= PublishCardSystemEvent;
-        cardManager.cardManagerEventInvoker.CardManagerEvent += PublishCardSystemEvent;
+        cardManager.cardSystemEventInvoker.CardManagerEvent -= PublishCardLogicSystemEvent;
+        cardManager.cardSystemEventInvoker.CardManagerEvent += PublishCardLogicSystemEvent;
+
+        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent -= PublishCardDataControlSystemEvent;
+        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent += PublishCardDataControlSystemEvent;
 
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
         cardSystemController.CardDrawStartEvent += CardDrawStarted;
@@ -62,20 +67,23 @@ public class CardSystem
         cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
         cardSystemController.CardDrawFinishedEvent += CardDrawFinished;
 
-        cardSystemController.SystemCommandDispatchEvent -= cardManager.ExecuteCommand;
-        cardSystemController.SystemCommandDispatchEvent += cardManager.ExecuteCommand;
+        cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
+        cardSystemController.CardLogicSystemCommandDispatchEvent += cardManager.ExecuteCommand;
 
-        cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
-        cardSystemController.StatusCommandDispatchEvent += CardStatusEffectDispatch;
+        cardSystemController.CardDataControlSystemCommandDispatchEvent -= cardDataControlManager.ExecuteCommand;
+        cardSystemController.CardDataControlSystemCommandDispatchEvent += cardDataControlManager.ExecuteCommand;
 
-        cardSystemController.SelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
-        cardSystemController.SelectionSystemCommandDispatchEvent += cardSelectionManager.ExecuteCommand;
+        cardSystemController.CardStatusCommandDispatchEvent -= CardStatusEffectDispatch;
+        cardSystemController.CardStatusCommandDispatchEvent += CardStatusEffectDispatch;
+
+        cardSystemController.CardSelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
+        cardSystemController.CardSelectionSystemCommandDispatchEvent += cardSelectionManager.ExecuteCommand;
 
         cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
         cardSystemController.CardActionEndScopeEvent += CardActionEndScope;
 
-        cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
-        cardSystemController.ComplexCommandDispatchEvent += complexCardEffectResolver.ExecuteCommand;
+        cardSystemController.CardComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
+        cardSystemController.CardComplexCommandDispatchEvent += complexCardEffectResolver.ExecuteCommand;
 
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
         cardSystemController.CardSlotCntChangedEvent += CardSlotCntChanged;
@@ -83,33 +91,42 @@ public class CardSystem
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
         cardSelectionManager.CardSelectionStartEvent += CardSelectionModeStart;
 
-        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.RequestCardSystemActionCommand;
-        cardSelectionManager.RequestCardSystemActionEvent += cardSystemController.RequestCardSystemActionCommand;
+        cardSelectionManager.RequestCardLogicSystemActionEvent -= cardSystemController.RequestCardLogicSystemActionCommand;
+        cardSelectionManager.RequestCardLogicSystemActionEvent += cardSystemController.RequestCardLogicSystemActionCommand;
+
+        cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
+        cardSelectionManager.RequestCardDataControlSystemActionEvent += cardSystemController.RequestCardDataControlSystemActionCommand;
     }
 
     private void ReleaseEvents()
     {
-        cardManager.cardManagerEventInvoker.CardManagerEvent -= PublishCardSystemEvent;
+        cardManager.cardSystemEventInvoker.CardManagerEvent -= PublishCardLogicSystemEvent;
+
+        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent -= PublishCardDataControlSystemEvent;
 
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
 
         cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
 
-        cardSystemController.SystemCommandDispatchEvent -= cardManager.ExecuteCommand;
+        cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
 
-        cardSystemController.StatusCommandDispatchEvent -= CardStatusEffectDispatch;
+        cardSystemController.CardDataControlSystemCommandDispatchEvent -= cardDataControlManager.ExecuteCommand;
 
-        cardSystemController.SelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
+        cardSystemController.CardStatusCommandDispatchEvent -= CardStatusEffectDispatch;
+
+        cardSystemController.CardSelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
 
         cardSystemController.CardActionEndScopeEvent -= CardActionEndScope;
 
-        cardSystemController.ComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
+        cardSystemController.CardComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
 
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
 
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
 
-        cardSelectionManager.RequestCardSystemActionEvent -= cardSystemController.RequestCardSystemActionCommand;
+        cardSelectionManager.RequestCardLogicSystemActionEvent -= cardSystemController.RequestCardLogicSystemActionCommand;
+
+        cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
     }
 
     public void Release()
@@ -128,9 +145,14 @@ public class CardSystem
         cardSystemController.CardUsingFinished();
     }
 
-    private void PublishCardSystemEvent(CardSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
+    private void PublishCardLogicSystemEvent(CardLogicSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        signalHub.Publish(new CardSystemEventSignal(data), cards);
+        signalHub.Publish(new CardLogicSystemEventSignal(data), cards);
+    }
+
+    private void PublishCardDataControlSystemEvent(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        signalHub.Publish(new CardDataControlSystemEventSignal(data), cards);
     }
 
     private void CardDrawStarted()

@@ -8,6 +8,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void ApplyAttackCntModifier(int attckCnt);
 
     IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards();
+    IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards();
     void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards);
     void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
 
@@ -23,5 +24,8 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     int GetPrevUsedCardCnt();
     void AdditionalDraw(int amount);
     void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount);
-    void RequestCardSystemActionCommand(CardSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards);
+    void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards,CardSystemContextType _cardSystemContextType);
+    void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType);
+    void UpgradeCards(ReadOnlySpan<CardDataInstance> cards);
+    void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier);
 }

@@ -120,16 +120,21 @@ public class UIView_CardSystem : UIView
     {
         uiActionHandlers = new UIActionHandler[(int)CardUIActionType.MAX];
 
-        uiActionHandlers[(int)CardUIActionType.PileDraw] = (uiActionData) => CardPileDraw(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.GraveCardsToDeck] = (uiActionData) => GraveCardsToDeck(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.ExtinctionCardsToDeck] = (uiActionData) => ExtinctionCardsToDeck(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.CardsToExtinction] = (uiActionData) => CardsToExtinction(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.GraveCardsToHand] = (uiActionData) => GraveCardsToHand(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.CardsToGrave] = (uiActionData) => CardsToGrave(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.AdditionalDraw] = (uiActionData) => CardAdditionalDraw(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.HandCardsToGrave] = (uiActionData) => HandCardsToGrave(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.CardsToHand] = (uiActionData) => CardsToHand(uiActionData);
-        uiActionHandlers[(int)CardUIActionType.CardsToDeck] = (uiActionData) => CardsToDeck(uiActionData);
+        void Bind(CardUIActionType type, UIActionHandler handler)
+            => uiActionHandlers[(int)type] = handler;
+
+        Bind(CardUIActionType.PileDraw, CardPileDraw);
+        Bind(CardUIActionType.GraveCardsToDeck, GraveCardsToDeck);
+        Bind(CardUIActionType.ExtinctionCardsToDeck, ExtinctionCardsToDeck);
+        Bind(CardUIActionType.CardsToExtinction, CardsToExtinction);
+        Bind(CardUIActionType.GraveCardsToHand, GraveCardsToHand);
+        Bind(CardUIActionType.CardsToGrave, CardsToGrave);
+        Bind(CardUIActionType.AdditionalDraw, CardAdditionalDraw);
+        Bind(CardUIActionType.HandCardsToGrave, HandCardsToGrave);
+        Bind(CardUIActionType.CardsToHand, CardsToHand);
+        Bind(CardUIActionType.CardsToDeck, CardsToDeck);
+        Bind(CardUIActionType.CardsValueModified, CardValuesModified);
+        Bind(CardUIActionType.CardsUpgraded, CardsUpgraded);
     }
     protected override void Awake()
     {
@@ -256,6 +261,8 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
+        Debug.Log("카드 뭉치가 드로우됨.");
+
         DrawingCards(uiActionData.cards);
 
         return turnWaitTime;
@@ -265,6 +272,8 @@ public class UIView_CardSystem : UIView
     {
         //설정할 것.
         float turnWaitTime = 0f;
+
+        Debug.Log("카드가 추가로 드로우됨.");
 
         DrawingCards(uiActionData.cards);
 
@@ -277,6 +286,8 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
+        Debug.Log("묘지의 카드가 덱으로 감");
+
         graveSystem?.CardMoveToDeckEffect(uiActionData.cards.Count);
 
         return turnWaitTime;
@@ -286,6 +297,8 @@ public class UIView_CardSystem : UIView
     {
         //설정할 것.
         float turnWaitTime = 0f;
+
+        Debug.Log("패의 카드가 묘지로 감");
 
         ReturnStateAllCard(CardState.InHand, CardReturnType.FlyToGrave);
 
@@ -337,6 +350,8 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
+        Debug.Log("묘지의 카드가 패로 감");
+
         return turnWaitTime;
     }
 
@@ -344,6 +359,8 @@ public class UIView_CardSystem : UIView
     {
         //설정할 것.
         float turnWaitTime = 0f;
+
+        Debug.Log("묘지의 카드가 패로 감");
 
         graveSystem?.CardDrawToHands(uiActionData.cards);
 
@@ -377,6 +394,30 @@ public class UIView_CardSystem : UIView
         {
             Debug.Log("복사된 카드가 덱으로 감");
             //복사된 카드가 덱으로 들어옴.
+        }
+
+        return turnWaitTime;
+    }
+
+    private float CardValuesModified(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0f;
+
+        //카드 수치가 증폭됨.
+        Debug.Log("카드 수치가 증폭됨");
+
+        return turnWaitTime;
+    }
+
+    private float CardsUpgraded(CardUIActionData uiActionData)
+    {
+        //설정할 것.
+        float turnWaitTime = 0f;
+
+        if (uiActionData.cardSystemContextType == CardSystemContextType.UpgradeCardsFromHand)
+        {
+            Debug.Log("패에 있는 카드가 강화됨");
         }
 
         return turnWaitTime;
@@ -759,7 +800,6 @@ public class UIView_CardSystem : UIView
         graveSystem?.SetCount(graveCards.Count);
         deckSystem?.SetCount(deckCards.Count);
         extinctionSystem?.SetCount(extinctionCards.Count);
-        Debug.Log(extinctionCards.Count);
     }
 
     private void DrawingCards(List<CardDataInstance> _datas)

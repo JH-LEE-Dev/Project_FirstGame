@@ -13,6 +13,7 @@ public class ShopUIInstaller : MonoBehaviour
     private IShopSystemData shopSystemData;
     private ICardLocalizationSystem cardLocalizationSystem;
     private ICardSystemData cardSystemData;
+    private IUnitSpawnSystemData unitSpawnSystemData;
 
     //내부 의존성
     private ShopUIManager uiManager;
@@ -30,7 +31,8 @@ public class ShopUIInstaller : MonoBehaviour
     public const string LAYER_SHOPUI = "ShopUI";
 
     public void Initialize(IBootStrapProvider _bootStrapProvider, InputManager _inputManager,SignalHub _signalHub,
-        IShopSystemData _shopSystemData,ICardLocalizationSystem _cardLocalizationSystem, ICardSystemData _cardSystemData)
+        IShopSystemData _shopSystemData,ICardLocalizationSystem _cardLocalizationSystem, ICardSystemData _cardSystemData,
+        IUnitSpawnSystemData _unitSpawnSystemData)
     {
         signalHub =_signalHub;
         bootStrapProvider = _bootStrapProvider;
@@ -41,8 +43,9 @@ public class ShopUIInstaller : MonoBehaviour
         shopSystemData = _shopSystemData;
         cardLocalizationSystem = _cardLocalizationSystem;
         cardSystemData = _cardSystemData;
+        unitSpawnSystemData = _unitSpawnSystemData;
 
-        uiManager.Initialize(inputManager,shopSystemData,cardLocalizationSystem,cardSystemData);
+        uiManager.Initialize(inputManager,shopSystemData,cardLocalizationSystem,cardSystemData, unitSpawnSystemData);
 
         SetupShopUI();
     }
