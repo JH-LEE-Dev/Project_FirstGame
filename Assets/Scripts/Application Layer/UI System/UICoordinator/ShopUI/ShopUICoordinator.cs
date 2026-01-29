@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using UnitSpawnSystemSignals;
 
 public class ShopUICoordinator
 {
+    public event Action<List<CardDataInstance>, ShopBehaviorType> ShopOutputEvent;
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
 
@@ -22,6 +24,9 @@ public class ShopUICoordinator
 
         shopUI.CardPackRerollEvent -= CardPackReroll;
         shopUI.CardPackRerollEvent += CardPackReroll;
+
+        shopUI.ShopUIOutputEvent -= ShopOutput;
+        shopUI.ShopUIOutputEvent += ShopOutput;
     }
 
     private void ReleaseEvents()
@@ -29,6 +34,8 @@ public class ShopUICoordinator
         shopUI.ShopIsClosedEvent -= ShopIsClosed;
 
         shopUI.CardPackRerollEvent -= CardPackReroll;
+
+        shopUI.ShopUIOutputEvent -= ShopOutput;
     }
 
     public void ShopOpened()
@@ -51,5 +58,10 @@ public class ShopUICoordinator
     private void CardPackReroll()
     {
         CardPackRerollEvent?.Invoke();
+    }
+
+    private void ShopOutput(List<CardDataInstance> _cards, ShopBehaviorType _type)
+    {
+        ShopOutputEvent?.Invoke(_cards, _type);
     }
 }

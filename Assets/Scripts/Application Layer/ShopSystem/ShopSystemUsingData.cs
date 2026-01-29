@@ -5,3 +5,10 @@ public enum ShopSystemInputType
     DeleteCardsFromDeck,
     UpgradeCardsFromDeck,
 }
+
+public enum ShopBehaviorType
+{
+    PickUp,
+    Upgrade,
+    Delete,
+}

@@ -1,6 +1,6 @@
 using ShopSystemSignals;
 using ShopSystemUISignals;
-using UnitSpawnSystemSignals;
+using System.Collections.Generic;
 
 public class ShopUIModuleCoordinator
 {
@@ -39,6 +39,9 @@ public class ShopUIModuleCoordinator
 
         shopUICoordinator.CardPackRerollEvent -= CardPackReroll;
         shopUICoordinator.CardPackRerollEvent += CardPackReroll;
+
+        shopUICoordinator.ShopOutputEvent -= ShopOutput;
+        shopUICoordinator.ShopOutputEvent += ShopOutput;
     }
 
     private void ReleaseEvents()
@@ -61,5 +64,10 @@ public class ShopUIModuleCoordinator
     private void CardPackReroll()
     {
         signalHub.Publish(new CardPackRerollSignal());
+    }
+
+    private void ShopOutput(List<CardDataInstance> _cards,ShopBehaviorType _shopBehaviorType)
+    {
+        signalHub.Publish(new ShopOutputSignal(_cards,_shopBehaviorType));
     }
 }

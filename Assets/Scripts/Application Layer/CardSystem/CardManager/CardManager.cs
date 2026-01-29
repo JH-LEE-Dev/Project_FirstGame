@@ -414,4 +414,35 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, cards);
     }
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// ±¸Á¶ ¹Ù²Ü °Í.
+    /// </summary>
+    public void AddCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            permanentDeckPile.Add(_cards[i]);
+    }
+
+    public void DeleteCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            permanentDeckPile.Remove(_cards[i]);
+    }
+
+    public void UpgradeCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            _cards[i].bUpgrade = true;
+    }
 }
