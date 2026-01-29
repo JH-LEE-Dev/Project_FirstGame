@@ -54,6 +54,10 @@ public class ShopPoolingSystem : MonoBehaviour
 
         card.Clear();
         card.gameObject.SetActive(false);
+
+        card.transform.SetParent(transform);
+        card.Motion.AllKillTweens(true);
+
         cardPool.Add(card);
     }
 

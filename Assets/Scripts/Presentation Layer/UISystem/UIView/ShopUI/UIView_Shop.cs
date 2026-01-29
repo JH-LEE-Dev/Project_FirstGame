@@ -45,7 +45,7 @@ public class UIView_Shop : UIView
         SafeBind(viewDeckButton, OnClick_ViewDeck);
         SafeBind(nextStageButton, OnClick_NextStage);
 
-        if (!shopPoolingSystem) 
+        if (!shopPoolingSystem)
             shopPoolingSystem = GetComponent<ShopPoolingSystem>();
 
         shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
@@ -89,7 +89,7 @@ public class UIView_Shop : UIView
 
     public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
     {
-        
+
     }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
@@ -141,8 +141,17 @@ public class UIView_Shop : UIView
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
-        card.transform.SetParent(attachTransform);
 
+        card.transform.SetParent(attachTransform);
+        card.transform.localScale = cardSize;
+
+        // 알아서 Active On
+        return card;
+    }
+    public ShopCardInstance RentCard(CardDataInstance data)
+    {
+        var card = shopPoolingSystem?.RentCard();
+        card.ApplyData(data);
         // 알아서 Active On
         return card;
     }
@@ -155,11 +164,13 @@ public class UIView_Shop : UIView
 
 
     ////////////// Click
+    ///
     private void OnClick_PickUpCard()
     {
         Debug.Log("[Shop] PickUpCard clicked");
 
         CardPackRerollEvent?.Invoke();
+
 
 
     }
@@ -178,6 +189,7 @@ public class UIView_Shop : UIView
 
 
     }
+
     private void OnClick_ViewDeck()
     {
         Debug.Log("[Shop] ViewDeck clicked");
@@ -192,7 +204,11 @@ public class UIView_Shop : UIView
         ShopIsClosedEvent?.Invoke();
     }
 
+    public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
+    {
 
+
+    }
 
     // For PickUpCard
 

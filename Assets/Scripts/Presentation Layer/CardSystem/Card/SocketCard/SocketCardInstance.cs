@@ -13,10 +13,11 @@ public class SocketCardInstance : CardInstance, IPointerEnterHandler, IPointerEx
         canvasEnabler.Initialize();
     }
 
-    public void Bind(int _socketIndex, BulletSocketSystem _bulletSocketSystem)
+    public void Bind(int _socketIndex, BulletSocketSystem _bulletSocketSystem, ICardLocalizationSystem cls)
     {
         socketIndex = _socketIndex;
         bulletSocketSystem = _bulletSocketSystem;
+        cardLocalizationSystem = cls;
     }
 
     // For Input

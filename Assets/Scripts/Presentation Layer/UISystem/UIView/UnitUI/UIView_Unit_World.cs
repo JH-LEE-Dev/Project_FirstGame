@@ -49,7 +49,7 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem = go.GetComponent<BulletSocketSystem>();
 
         // ¿”Ω√ 2∞≥
-        bulletsocketSystem.Init(2, this);
+        bulletsocketSystem.Init(2, this, viewCtx.cardLocalizationSystem);
     }
 
     private void InitializeClickCatchSystem()
