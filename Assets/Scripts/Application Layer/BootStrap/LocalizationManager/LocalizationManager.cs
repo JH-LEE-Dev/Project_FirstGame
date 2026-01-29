@@ -15,7 +15,7 @@ public struct CardTextData
 [System.Serializable]
 public struct LangDataWrapper
 {
-    public List<CardTextData> data;
+    public List<CardTextData> cards;
 }
 
 public class LocalizationManager : ICardLocalizationSystem
@@ -43,9 +43,8 @@ public class LocalizationManager : ICardLocalizationSystem
 
         LangDataWrapper wrapper = JsonUtility.FromJson<LangDataWrapper>(textAsset.text);
 
-        foreach (var item in wrapper.data)
+        foreach (var item in wrapper.cards)
         {
-            Debug.Log("Sex");
             if (!nameMap.ContainsKey(item.id))
             {
                 nameMap.Add(item.id, Encoding.UTF8.GetBytes(item.name));
