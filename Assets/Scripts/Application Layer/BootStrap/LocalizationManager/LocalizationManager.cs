@@ -45,6 +45,7 @@ public class LocalizationManager : ICardLocalizationSystem
 
         foreach (var item in wrapper.data)
         {
+            Debug.Log("Sex");
             if (!nameMap.ContainsKey(item.id))
             {
                 nameMap.Add(item.id, Encoding.UTF8.GetBytes(item.name));
@@ -56,7 +57,7 @@ public class LocalizationManager : ICardLocalizationSystem
         Resources.UnloadAsset(textAsset);
     }
 
-    public void SetCardUIText(int id, TMP_Text targetName, TMP_Text targetDesc, TMP_Text targetUpgradedDesc)
+    public void SetCardUIText(int id, TextMeshProUGUI targetName, TextMeshProUGUI targetDesc, TextMeshProUGUI targetUpgradedDesc)
     {
         if (nameMap.TryGetValue(id, out byte[] nameBytes) && targetName)
         {
