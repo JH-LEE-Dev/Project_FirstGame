@@ -64,9 +64,10 @@ public class PickUpSystem : MonoBehaviour
 
 
         newCards.Clear();
+        Vector3 newScale = new Vector3(3.6f, 3.6f, 1f);
         foreach (var data in datas)
         {
-            var card = uIView_Shop.RentCard(data);
+            var card = uIView_Shop.RentCard(data, newScale);
             newCards.Add(card);
 
             card.SetVisible(false);

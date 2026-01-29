@@ -582,6 +582,25 @@ public class HandSystem : MonoBehaviour
         return selected;
     }
 
+    /////////////////////// For Upgrade
+
+    public void UpgradeCard(List<CardDataInstance> datas)
+    {
+        if (datas == null || datas.Count == 0) return;
+
+        HashSet<CardDataInstance> dataSet = new HashSet<CardDataInstance>(datas);
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            if (dataSet.Contains(card.CardData))
+            {
+                card.UpdateForEnforce();
+            }
+        }
+    }
+
+
     /////////////////////// For Draw
 
     public int GetCurrentHandCardCount()

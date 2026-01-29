@@ -18,6 +18,11 @@ public class ShopCardMotion : MonoBehaviour
         originScale = transform.localScale;
     }
 
+    public void SetOriginScale(Vector3 _originScale)
+    {
+        originScale = transform.localScale = _originScale;
+    }
+
     public void AllKillTweens(bool bRestoreScale = true)
     {
         if (bRestoreScale) transform.localScale = originScale;
@@ -36,13 +41,12 @@ public class ShopCardMotion : MonoBehaviour
 
     public void ToIdle()
     {
-        Vector3 targetScale = originScale * 2f;
-        transform.localScale = targetScale;
+        transform.localScale = originScale;
     }
 
     public void ToSelect()
     {
-        Vector3 targetScale = originScale * 2.5f;
+        Vector3 targetScale = originScale * 1.3f;
         transform.localScale = targetScale;
     }
 
