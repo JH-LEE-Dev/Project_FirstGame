@@ -1,8 +1,9 @@
+using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Unity.VisualScripting;
 public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
@@ -66,6 +67,7 @@ public class UIView_Shop : UIView
     public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards)
     {
         shopSystemData = _shopSystemData;
+        deckCards = _deckCards;
     }
 
     public void OpenShop()
@@ -102,7 +104,7 @@ public class UIView_Shop : UIView
 
         foreach (CardDataInstance data in _inCards)
         {
-            RentCard(data, pannelContent.transform);
+            RentCard(data, pannelContent.transform, new Vector2(5f, 5f));
         }
     }
 
@@ -126,12 +128,16 @@ public class UIView_Shop : UIView
         cardPannel.gameObject.SetActive(false);
     }
 
-
+    [Button]
+    private void TestCall_PannelSelectMode()
+    {
+        StartCardSelectModefromPannel(3, true);
+    }
 
 
     ////////////// PoolingCard
 
-    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform)
+    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector2 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);

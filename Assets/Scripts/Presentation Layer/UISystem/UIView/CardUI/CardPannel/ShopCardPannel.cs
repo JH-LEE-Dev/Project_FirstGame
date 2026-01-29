@@ -20,7 +20,7 @@ public class ShopCardPannel : BaseCardPannel
             selectDatas.Add(data.CardData);
         }
 
-        //owner.EndCardSelectModefromPannel(selectDatas);
+        owner.EndCardSelectModefromPannel(selectDatas);
         selectCards.Clear();
     }
 
