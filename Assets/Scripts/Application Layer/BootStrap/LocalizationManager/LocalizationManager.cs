@@ -15,7 +15,7 @@ public struct CardTextData
 [System.Serializable]
 public struct LangDataWrapper
 {
-    public List<CardTextData> data;
+    public List<CardTextData> cards;
 }
 
 public class LocalizationManager : ICardLocalizationSystem
@@ -43,7 +43,7 @@ public class LocalizationManager : ICardLocalizationSystem
 
         LangDataWrapper wrapper = JsonUtility.FromJson<LangDataWrapper>(textAsset.text);
 
-        foreach (var item in wrapper.data)
+        foreach (var item in wrapper.cards)
         {
             if (!nameMap.ContainsKey(item.id))
             {
@@ -56,7 +56,7 @@ public class LocalizationManager : ICardLocalizationSystem
         Resources.UnloadAsset(textAsset);
     }
 
-    public void SetCardUIText(int id, TMP_Text targetName, TMP_Text targetDesc, TMP_Text targetUpgradedDesc)
+    public void SetCardUIText(int id, TextMeshProUGUI targetName, TextMeshProUGUI targetDesc, TextMeshProUGUI targetUpgradedDesc)
     {
         if (nameMap.TryGetValue(id, out byte[] nameBytes) && targetName)
         {
