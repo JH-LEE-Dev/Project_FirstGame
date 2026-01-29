@@ -35,6 +35,9 @@ public class UIView_Shop : UIView
     private ShopPoolingSystem shopPoolingSystem;
     private ShopSelectSystem selectSystem;
 
+    [Header("PickUpSystem")]
+    [SerializeField] private PickUpSystem pickUpSystem;
+
     [Header("DeckSystem")]
     [SerializeField] private ShopCardPannel cardPannel;
     [SerializeField] private ShopDeckSystem deckSystem;
@@ -60,8 +63,10 @@ public class UIView_Shop : UIView
         shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
         selectSystem.Init(this);
 
+        pickUpSystem?.Init(this);
         cardPannel?.Init(this);
         deckSystem?.Init(this);
+
     }
 
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
@@ -209,7 +214,7 @@ public class UIView_Shop : UIView
     private void OnClick_DeleteCard()
     {
         Debug.Log("[Shop] DeleteCard clicked");
-        selectSystem.SetSelectMode(ShopBehaviorType.Delete, enforceCardCount, false);
+        selectSystem.SetSelectMode(ShopBehaviorType.Delete, deleteCardCount, false);
 
     }
 
