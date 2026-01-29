@@ -104,3 +104,10 @@ public enum StarLightAcquisitionType
     Ability,
     OverKill,
 }
+
+public enum ShopCardState
+{ 
+    Idle,
+    Select,
+}
+

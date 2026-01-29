@@ -26,6 +26,9 @@ public class CardInstance : MonoBehaviour
     private Tween consumeTween;
     private System.Action<CardInstance> consumeComplete;
 
+    protected ICardLocalizationSystem cardLocalizationSystem;
+
+
     private float GetDissolve01() => dissolve01;
     private void SetDissolve01(float v)
     {
@@ -56,6 +59,9 @@ public class CardInstance : MonoBehaviour
     private float aoBaseAlpha = 1f;
     private Color glowBaseColor;
 
+    private readonly Color enforceTextColor = new Color32(35, 255, 30, 255);
+    private readonly Color normalTextColor = new Color32(0, 0, 0, 255);
+
     // 데이터
     private CardDataInstance cardData;
     public CardDataInstance CardData => cardData;
@@ -65,6 +71,14 @@ public class CardInstance : MonoBehaviour
     {
 
     }
+
+    public virtual void Initialize(Material template, ICardLocalizationSystem cls)
+    {
+        dissolveMatInstance = new Material(template);
+        ApplyDissolveMaterialToVisuals();
+        cardLocalizationSystem = cls;
+    }
+
     private void CacheBaseIfNeeded()
     {
         if (cardName) nameBaseAlpha = cardName.alpha;
@@ -83,11 +97,10 @@ public class CardInstance : MonoBehaviour
         cardData = dataInstance;
         CardData data = cardData.GetCardData();
 
-        CardImageChange(data.cardImage); //
+        CardImageChange(data.cardImage);
         CardFrameChange(data.cardType);
         CardIconChange(data.elementType);
-        CardNameChange(data.id); //
-        CardDescriptionChange(data.id); //
+        CardNameAndDescriptionChange(cardData);
     }
 
     public void Clear()
@@ -145,22 +158,31 @@ public class CardInstance : MonoBehaviour
         }
     }
 
-    private void CardNameChange(int id)
+    private void CardNameAndDescriptionChange(CardDataInstance dataInstance)
     {
         if (!cardName) return;
-        cardName.alpha = 1f;
-        cardName.SetText("Name Test");
+
+        CardData cardData = dataInstance.GetCardData();
+
+        // 강화됨
+        if (dataInstance.bUpgrade == true)
+        {
+            cardName.color = enforceTextColor;
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);
+        }
+        // 강화안됨
+        else
+        {
+            cardName.color = normalTextColor;
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
+        }
     }
 
-    private void CardDescriptionChange(int id)
+    public void UpdateForEnforce()
     {
-        if (!cardDescription) return;
-        cardDescription.alpha = 1f;
-        cardDescription.SetText("Description Change OK");
+        // 연출은 나중에.
+        CardNameAndDescriptionChange(cardData);
     }
-
-
-
 
     // For Dissolve
 

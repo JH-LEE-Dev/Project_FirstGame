@@ -44,7 +44,10 @@ public class UIView_Shop : UIView
         SafeBind(viewDeckButton, OnClick_ViewDeck);
         SafeBind(nextStageButton, OnClick_NextStage);
 
-        if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        if (!shopPoolingSystem) 
+            shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+
+        shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
 
         cardPannel?.Init(this);
         deckSystem?.Init(this);
@@ -151,6 +154,8 @@ public class UIView_Shop : UIView
         Debug.Log("[Shop] PickUpCard clicked");
 
         CardPackRerollEvent?.Invoke();
+
+
     }
 
     private void OnClick_EnforceCard()

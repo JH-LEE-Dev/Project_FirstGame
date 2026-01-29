@@ -53,6 +53,7 @@ public class GameInstaller : MonoBehaviour
         shopUIInstaller = GetComponentInChildren<ShopUIInstaller>();
         shopSystem = new ShopSystem();
         shopManager = GetComponent<ShopManager>();
+        cardLocalizationSystem = _cardLocalizationSystem;
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);

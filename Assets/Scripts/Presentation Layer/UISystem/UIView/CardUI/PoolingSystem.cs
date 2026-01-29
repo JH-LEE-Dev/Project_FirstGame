@@ -33,7 +33,6 @@ public class PoolingSystem : MonoBehaviour
     private int defaultCapacity = 10;
     private int maxSize = 50;
 
-
     private void Awake()
     {
 
@@ -44,15 +43,15 @@ public class PoolingSystem : MonoBehaviour
         
     }
 
-    public void Init(UIView_CardSystem owner)
+    public void Init(UIView_CardSystem owner, ICardLocalizationSystem cls)
     {
         cardSystem = owner;
-        cardPooling();
+        cardPooling(cls);
         StarPooling();
         UseCardEffectPooling();
     }
 
-    private void cardPooling()
+    private void cardPooling(ICardLocalizationSystem cls)
     {
         // hands
         for (int i = 0; i < handPoolSize; ++i)
@@ -61,7 +60,7 @@ public class PoolingSystem : MonoBehaviour
             MainCardInstance card = go.GetComponent<MainCardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(cardSystem, CardInstanceType.Hand, dissolveTemplate);
+            card.Initialize(cardSystem, CardInstanceType.Hand, dissolveTemplate, cls);
             inactiveHandPool.Add(card);
 
         }
@@ -77,7 +76,7 @@ public class PoolingSystem : MonoBehaviour
 
             card.TurnOffGlowFilter();
             card.gameObject.SetActive(false);
-            card.Initialize(cardSystem, CardInstanceType.Other, dissolveTemplate);
+            card.Initialize(cardSystem, CardInstanceType.Other, dissolveTemplate, cls);
 
             otherCardPool.Add(card);
         }

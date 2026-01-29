@@ -131,6 +131,10 @@ public class UIView_CardSystem : UIView
         uiActionHandlers[(int)CardUIActionType.CardsToHand] = (uiActionData) => CardsToHand(uiActionData);
         uiActionHandlers[(int)CardUIActionType.CardsToDeck] = (uiActionData) => CardsToDeck(uiActionData);
     }
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
         IReadOnlyList<CardDataInstance> _graveCards,IReadOnlyList<CardDataInstance> _extinctionCards)
@@ -143,18 +147,13 @@ public class UIView_CardSystem : UIView
         deckSystem?.SetupCount(CountUIType.VisibleWhenZero, deckCards.Count);
         graveSystem?.SetupCount(CountUIType.VisibleWhenZero, graveCards.Count);
         extinctionSystem?.SetupCount(CountUIType.VisibleWhenZero, extinctionCards.Count);
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
 
         SetAnchorToCanvas(uiRoot.transform);
 
         turnFinishedButton.OnCompleteAction(CardUsingFinished);
         turnFinishedButton.gameObject.SetActive(false);
 
-        poolingSystem?.Init(this);
+        poolingSystem?.Init(this, viewCtx.cardLocalizationSystem);
         handSystem?.Init(this);
         deckSystem?.Init(this);
         graveSystem?.Init(this);
@@ -162,6 +161,7 @@ public class UIView_CardSystem : UIView
         cardPannel?.Init(this);
         //pathSystem?.Init(this);
     }
+
     public override void OnDestroy()
     {
         UICommandCompleteEvent = null;

@@ -13,13 +13,15 @@ public class ShopPoolingSystem : MonoBehaviour
 
     private int poolSize = 50;
 
-    public void Init(UIView_Shop owner)
+
+
+    public void Init(UIView_Shop owner, ICardLocalizationSystem cls)
     {
         uIView_Shop = owner;
-        cardPooling();
+        cardPooling(cls);
     }
 
-    private void cardPooling()
+    private void cardPooling(ICardLocalizationSystem cls)
     {
         for (int i = 0; i < poolSize; ++i)
         {
@@ -27,7 +29,7 @@ public class ShopPoolingSystem : MonoBehaviour
             ShopCardInstance card = go.GetComponent<ShopCardInstance>();
             card.gameObject.SetActive(false);
 
-            card.Initialize(uIView_Shop, dissolveTemplate);
+            card.Initialize(uIView_Shop, dissolveTemplate, cls);
             cardPool.Add(card);
         }
     }

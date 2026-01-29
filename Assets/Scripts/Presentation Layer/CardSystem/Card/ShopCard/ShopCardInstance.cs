@@ -5,6 +5,15 @@ public class ShopCardInstance : CardInstance
     private UIView_Shop uIView_Shop;
     public UIView_Shop Shop => uIView_Shop;
 
+    private ShopCardState cardState = ShopCardState.Idle;
+    public ShopCardState GetCardState()
+    {
+        return cardState;
+    }
+    public void SetCardState(ShopCardState state)
+    {
+        cardState = state;
+    }
 
     public ShopCardMotion Motion { get; private set; }
     public ShopCardVisual Visual { get; private set; }
@@ -21,11 +30,10 @@ public class ShopCardInstance : CardInstance
         if (Visual) Visual.Bind(this);
     }
 
-    public void Initialize(UIView_Shop shop, Material template)
+    public virtual void Initialize(UIView_Shop shop, Material template, ICardLocalizationSystem cls)
     {
+        base.Initialize(template, cls);
         uIView_Shop = shop;
-        dissolveMatInstance = new Material(template);
-        ApplyDissolveMaterialToVisuals();
     }
     public void SetVisible(bool visible)
     {
