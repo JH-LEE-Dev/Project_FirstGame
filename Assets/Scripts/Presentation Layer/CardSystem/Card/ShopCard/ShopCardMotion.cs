@@ -9,6 +9,7 @@ public class ShopCardMotion : MonoBehaviour
     private Vector3 originScale;
 
     private Tween moveTween;
+    private Tween scaleTween;
 
     public void Bind(ShopCardInstance card)
     {
@@ -23,6 +24,9 @@ public class ShopCardMotion : MonoBehaviour
 
         moveTween?.Kill();
         moveTween = null;
+
+        scaleTween?.Kill();
+        scaleTween = null;
     }
 
     private void Update()
@@ -32,12 +36,14 @@ public class ShopCardMotion : MonoBehaviour
 
     public void ToIdle()
     {
-
+        Vector3 targetScale = originScale * 2f;
+        transform.localScale = targetScale;
     }
 
     public void ToSelect()
     {
-
+        Vector3 targetScale = originScale * 2.5f;
+        transform.localScale = targetScale;
     }
 
     public void HoverOn()
@@ -50,17 +56,26 @@ public class ShopCardMotion : MonoBehaviour
 
     }
 
-    public void MoveTo(Vector2 targetAnchoredPos, float duration, bool useUnscaledTime = true)
+    public void PickUpMoveTo(Vector2 targetAnchoredPos, float duration, bool useUnscaledTime = true)
     {
         if (!rt) return;
 
         AllKillTweens();
 
+        Vector3 targetScale = originScale * 2f;
+
         moveTween = rt
-                    .DOAnchorPos(targetAnchoredPos, Mathf.Max(0.01f, duration))
-                    .SetEase(Ease.OutCubic)
-                    .SetUpdate(useUnscaledTime)
-                    .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+                .DOAnchorPos(targetAnchoredPos, Mathf.Max(0.01f, duration))
+                .SetEase(Ease.OutCubic)
+                .SetUpdate(useUnscaledTime)
+                .SetLink(gameObject, LinkBehaviour.KillOnDisable);
+
+        // 스케일 확대
+        scaleTween = rt
+            .DOScale(targetScale, Mathf.Max(0.01f, duration))
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(useUnscaledTime)
+            .SetLink(gameObject, LinkBehaviour.KillOnDisable);
     }
 
 }

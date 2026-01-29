@@ -29,7 +29,7 @@ public class PickUpCancelPannal : MonoBehaviour, IPointerClickHandler
         gameObject.SetActive(true);
 
         dim.raycastTarget = true;
-        SetAlpha(0.5f);
+        SetAlpha(0.7f);
     }
 
     public void Hide()

@@ -205,7 +205,7 @@ public class UIView_Shop : UIView
         selectSystem?.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce
             , pickUpSystem.GetPickUpButton(), true);
 
-        //pickUpSystem?.PickUpCardMode(shopSystemData.cardMerchandiseData);
+        pickUpSystem?.PickUpCardMode(shopSystemData.cardMerchandiseData);
     }
 
     private void OnClick_EnforceCard()
@@ -240,7 +240,11 @@ public class UIView_Shop : UIView
 
     public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
     {
-        Debug.Log(cards[0]?.GetCardData()?.cardName);
+        Debug.Log(cards.Count);
+        foreach(var c in cards)
+        {
+            Debug.Log(c.GetCardData().cardName);
+        }
     }
 
     // For PickUpCard

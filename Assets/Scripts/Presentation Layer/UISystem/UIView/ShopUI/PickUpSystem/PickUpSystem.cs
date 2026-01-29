@@ -18,8 +18,8 @@ public class PickUpSystem : MonoBehaviour
     public CardPannelSelectButton GetPickUpButton() { return pickUpButton; }
 
     [Header("Layout")]
-    [SerializeField] private float cardGap = 220f;
-    [SerializeField] private float revealDur = 0.25f;
+    private float cardGap = 320f;
+    private float revealDur = 0.3f;
 
     private readonly List<ShopCardInstance> newCards = new();
 
@@ -32,7 +32,11 @@ public class PickUpSystem : MonoBehaviour
         pack.Init();
         cancelPannel.Init();
 
+
+        // 취소 버튼
         cancelPannel.Bind(OnCancelClicked);
+
+        // 팩 버튼
         pack.Bind(OnPackClicked);
     }
 
@@ -104,20 +108,18 @@ public class PickUpSystem : MonoBehaviour
             card.SetVisible(true);
 
             float x = (i - mid) * cardGap;
-            Vector2 target = new Vector2(x, 0f);
+            Vector2 target = new Vector2(x, pickUpCardPivot.anchoredPosition.y);
 
-            card.Motion?.MoveTo(target, revealDur);
+            card.Motion?.PickUpMoveTo(target, revealDur);
         }
     }
 
     private void OnCancelClicked()
     {
-        // 오픈 전에는 나가기 가능
         if (state == State.WaitingOpen)
         {
             ExitMode();
         }
-        // 오픈 후에는 무시(스펙)
     }
 
     private void OnConfirmClicked()
@@ -130,11 +132,10 @@ public class PickUpSystem : MonoBehaviour
 
     private void ExitMode()
     {
-        // 카드 정리(풀로 반환하거나 숨김)
         for (int i = 0; i < newCards.Count; i++)
         {
             if (!newCards[i]) continue;
-            uIView_Shop.ReturnCard(newCards[i]); // 너의 풀링 함수에 맞게
+            uIView_Shop.ReturnCard(newCards[i]);
         }
         newCards.Clear();
 
