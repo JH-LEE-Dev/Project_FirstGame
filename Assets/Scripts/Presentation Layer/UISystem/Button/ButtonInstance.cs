@@ -91,7 +91,7 @@ public abstract class ButtonInstance : MonoBehaviour,
 
         SetAlpha(targetA);
 
-        if (state == newState) return;
+        if (old == newState) return;
         OnStateChanged(old, state);
     }
 

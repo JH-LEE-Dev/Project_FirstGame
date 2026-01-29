@@ -27,19 +27,18 @@ public class BulletSocketSystem : MonoBehaviour
 
     private UIView_Unit_World unitWorldUI;
 
-    public void Init(int _slotCount, UIView_Unit_World _unitWorldUI)
+    public void Init(int _slotCount, UIView_Unit_World _unitWorldUI, ICardLocalizationSystem cls)
     {
         if (pivot == null) { enabled = false; return; }
 
-        BuildSlotsIfNeeded();
-        BuildCardIntanceIfneeded();
+        BuildSlotsIfNeeded(cls);
 
         SetCount(_slotCount);
         unitWorldUI = _unitWorldUI;
     }
 
     // 풀링 함수
-    private void BuildSlotsIfNeeded()
+    private void BuildSlotsIfNeeded(ICardLocalizationSystem cls)
     {
         sockets.Clear();
         if (socketPrefab == null) return;
@@ -66,14 +65,9 @@ public class BulletSocketSystem : MonoBehaviour
 
             var card = go.GetComponent<SocketCardInstance>();
             if (card == null) continue;
-            card.Bind(i, this);
+            card.Bind(i, this, cls);
             cards.Add(card);
         }
-    }
-
-    private void BuildCardIntanceIfneeded()
-    {
-
     }
 
     //////////////////////////////////////////////// 위치 잡기

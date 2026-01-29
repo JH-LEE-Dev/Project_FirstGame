@@ -8,6 +8,9 @@ public class ShopPoolingSystem : MonoBehaviour
     [SerializeField] private GameObject cardUIPrefab;
     [SerializeField] private Material dissolveTemplate;
     [SerializeField] private List<ShopCardInstance> cardPool = new();
+
+    public List<ShopCardInstance> CardPool;
+
     private int poolSize = 50;
 
 
@@ -51,6 +54,10 @@ public class ShopPoolingSystem : MonoBehaviour
 
         card.Clear();
         card.gameObject.SetActive(false);
+
+        card.transform.SetParent(transform);
+        card.Motion.AllKillTweens(true);
+
         cardPool.Add(card);
     }
 

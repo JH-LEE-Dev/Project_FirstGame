@@ -1,9 +1,9 @@
+using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-
-
 public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
@@ -15,6 +15,7 @@ public class UIView_Shop : UIView
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<CardDataInstance> deckCards;
+
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
     [SerializeField] private Button enforceCardButton;
@@ -22,12 +23,25 @@ public class UIView_Shop : UIView
     [SerializeField] private Button viewDeckButton;
     [SerializeField] private Button nextStageButton;
 
+
+    private int pickUpCardCount = 2;
+    private bool pickUpCardForce = false;
+    private int enforceCardCount = 1;
+    private int deleteCardCount = 1;
+
     private bool EnforcedComplete = false;
     private bool DeletedComplete = false;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
+    private ShopSelectSystem selectSystem;
 
+    [Header("DeckSystem")]
+    [SerializeField] private ShopCardPannel cardPannel;
+    [SerializeField] private ShopDeckSystem deckSystem;
+    [SerializeField] private GameObject pannelContent = null;
+    public GameObject PannelContent { get { return pannelContent; } }
+    public ShopCardPannel CardPannel { get { return cardPannel; } }
 
     public override void Initialize(UIViewContext ctx)
     {
@@ -39,8 +53,16 @@ public class UIView_Shop : UIView
         SafeBind(viewDeckButton, OnClick_ViewDeck);
         SafeBind(nextStageButton, OnClick_NextStage);
 
-        if (!shopPoolingSystem) shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        if (!shopPoolingSystem)
+            shopPoolingSystem = GetComponent<ShopPoolingSystem>();
+        if (!selectSystem)
+            selectSystem = GetComponent<ShopSelectSystem>();
+
         shopPoolingSystem.Init(this, viewCtx.cardLocalizationSystem);
+        selectSystem.Init(this);
+
+        cardPannel?.Init(this);
+        deckSystem?.Init(this);
     }
 
     private void SafeBind(Button btn, UnityEngine.Events.UnityAction action)
@@ -50,6 +72,7 @@ public class UIView_Shop : UIView
             Debug.LogWarning($"{nameof(UIView_Shop)}: Button reference missing for {action.Method.Name}");
             return;
         }
+
         btn.onClick.AddListener(action);
     }
 
@@ -57,6 +80,7 @@ public class UIView_Shop : UIView
         IPlayerData _playerData)
     {
         shopSystemData = _shopSystemData;
+        deckCards = _deckCards;
         playerData = _playerData;
     }
 
@@ -73,13 +97,69 @@ public class UIView_Shop : UIView
 
 
 
+    /////////////// Pannel & Deck
+    public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
+    {
+        if (null == cardPannel)
+            return;
 
+        CallPannel(true);
+        selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
+    }
 
+    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
+    {
+        if (null == shopPoolingSystem || null == pannelContent || null == cardPannel)
+            return;
 
+        int inCount = _inCards.Count;
 
+        if (0 >= inCount)
+            return;
+
+        foreach (CardDataInstance data in _inCards)
+        {
+            cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, new Vector2(5f, 5f)));
+        }
+    }
+
+    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false)
+    {
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = CurrentPannel.Deck;
+        cardPannel.gameObject.SetActive(true);
+        cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
+
+        ActivatePannel(deckCards);
+    }
+
+    public void DeactivatePannel()
+    {
+
+    }
+
+    [Button]
+    private void TestCall_PannelSelectMode()
+    {
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, 2, true);
+    }
 
 
     ////////////// PoolingCard
+
+    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector2 cardSize)
+    {
+        var card = shopPoolingSystem?.RentCard();
+        card.ApplyData(data);
+
+        card.transform.SetParent(attachTransform);
+        card.transform.localScale = cardSize;
+
+        // 알아서 Active On
+        return card;
+    }
 
     public ShopCardInstance RentCard(CardDataInstance data)
     {
@@ -96,35 +176,55 @@ public class UIView_Shop : UIView
     }
 
 
+    ////////////// SelectSystem
+
+    public void ToggleSelect(ShopCardInstance card)
+    {
+        selectSystem.ToggleSelect(card);
+    }
+
+    public void SelectComplete()
+    {
+        // bool 임. 
+        selectSystem.SelectComplete();
+    }
+
+
+
     ////////////// Click
+    ///
     private void OnClick_PickUpCard()
     {
         Debug.Log("[Shop] PickUpCard clicked");
 
         CardPackRerollEvent?.Invoke();
+
+        selectSystem.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce);
     }
 
     private void OnClick_EnforceCard()
     {
-        Debug.Log("[Shop] EnforceCard clicked");
-        // TODO: 강화 로직
+        if (DeletedComplete || EnforcedComplete)
+            return;
 
+        Debug.Log("[Shop] EnforceCard clicked");
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, enforceCardCount, false);
     }
 
     private void OnClick_DeleteCard()
     {
+        if (DeletedComplete || EnforcedComplete)
+            return;
+
         Debug.Log("[Shop] DeleteCard clicked");
-        // TODO: 삭제 로직
-
-
+        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, false);
     }
+
     private void OnClick_ViewDeck()
     {
         Debug.Log("[Shop] ViewDeck clicked");
-        // TODO: 덱 보기 UI 열기
-
-
     }
+
     private void OnClick_NextStage()
     {
         Debug.Log("[Shop] NextStage clicked");
@@ -132,7 +232,10 @@ public class UIView_Shop : UIView
         ShopIsClosedEvent?.Invoke();
     }
 
-
+    public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
+    {
+        Debug.Log(cards[0]?.GetCardData()?.cardName);
+    }
 
     // For PickUpCard
 

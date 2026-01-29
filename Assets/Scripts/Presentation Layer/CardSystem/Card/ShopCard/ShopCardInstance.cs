@@ -5,6 +5,20 @@ public class ShopCardInstance : CardInstance
     private UIView_Shop uIView_Shop;
     public UIView_Shop Shop => uIView_Shop;
 
+    private ShopCardState cardState = ShopCardState.Idle;
+    public ShopCardState GetCardState()
+    {
+        return cardState;
+    }
+    public void SetCardState(ShopCardState newState)
+    {
+        if (cardState == newState)
+            return;
+
+        ShopCardState prev = cardState;
+        cardState = newState;
+        OnCardStateChanged(prev, newState);
+    }
 
     public ShopCardMotion Motion { get; private set; }
     public ShopCardVisual Visual { get; private set; }
@@ -29,5 +43,19 @@ public class ShopCardInstance : CardInstance
     public void SetVisible(bool visible)
     {
         Visual?.SetVisible(visible);
+    }
+
+    private void OnCardStateChanged(ShopCardState prev, ShopCardState next)
+    {
+        switch (next)
+        {
+            case ShopCardState.Idle:
+                Motion?.ToIdle();
+                break;
+
+            case ShopCardState.Select:
+                Motion?.ToSelect();
+                break;
+        }
     }
 }

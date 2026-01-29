@@ -59,6 +59,9 @@ public class CardInstance : MonoBehaviour
     private float aoBaseAlpha = 1f;
     private Color glowBaseColor;
 
+    private readonly Color enforceTextColor = new Color32(35, 255, 30, 255);
+    private readonly Color normalTextColor = new Color32(0, 0, 0, 255);
+
     // 데이터
     private CardDataInstance cardData;
     public CardDataInstance CardData => cardData;
@@ -158,16 +161,27 @@ public class CardInstance : MonoBehaviour
     private void CardNameAndDescriptionChange(CardDataInstance dataInstance)
     {
         if (!cardName) return;
-        cardName.alpha = 1f;
 
         CardData cardData = dataInstance.GetCardData();
 
         // 강화됨
         if (dataInstance.bUpgrade == true)
+        {
+            cardName.color = enforceTextColor;
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);
+        }
         // 강화안됨
         else
+        {
+            cardName.color = normalTextColor;
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
+        }
+    }
+
+    public void UpdateForEnforce()
+    {
+        // 연출은 나중에.
+        CardNameAndDescriptionChange(cardData);
     }
 
     // For Dissolve

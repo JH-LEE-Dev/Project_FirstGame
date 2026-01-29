@@ -18,9 +18,6 @@ public class ShopCardMotion : MonoBehaviour
     public void AllKillTweens(bool bRestoreScale = true)
     {
         if (bRestoreScale) transform.localScale = originScale;
-
-
-
     }
 
     private void Update()
@@ -28,6 +25,23 @@ public class ShopCardMotion : MonoBehaviour
 
     }
 
+    public void ToIdle()
+    {
 
+    }
 
+    public void ToSelect()
+    {
+
+    }
+
+    public void HoverOn()
+    {
+
+    }
+
+    public void HoverOff()
+    {
+
+    }
 }
