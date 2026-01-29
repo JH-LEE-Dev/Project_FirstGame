@@ -22,6 +22,7 @@ public class ShopSystem
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopOpened);
         signalHub.Subscribe<CardPackRerollSignal>(CardPackReroll);
         signalHub.Subscribe<ShopIsClosedSignal>(ShopIsClosed);
+        signalHub.Subscribe<ShopOutputSignal>(ShopOutput);
     }
 
     private void UnSubscribeSignals()
@@ -29,6 +30,7 @@ public class ShopSystem
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopOpened);
         signalHub.UnSubscribe<CardPackRerollSignal>(CardPackReroll);
         signalHub.UnSubscribe<ShopIsClosedSignal>(ShopIsClosed);
+        signalHub.UnSubscribe<ShopOutputSignal>(ShopOutput);
     }
 
     private void BindEvents()
@@ -66,5 +68,10 @@ public class ShopSystem
     private void ShopOpened(ShopTimeStartedSignal shopOpenedSignal)
     {
         shopManager.OpenShop();
+    }
+
+    private void ShopOutput(ShopOutputSignal shopOutputSignal)
+    {
+        shopManager.AnalysisShopBehavior(shopOutputSignal.cards, shopOutputSignal.behaviorType);
     }
 }

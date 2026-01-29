@@ -78,14 +78,42 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        for (int i = 0; i < initialDeckCnt - 1; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             CardDataInstance card = pool.Get();
             card.bPermanent = true;
             permanentDeckPile.Add(card);
         }
 
-        cardData = cardDataBase.GetCardData(17);
+        cardData = cardDataBase.GetCardData(1);
+        if (cardData == null)
+            return;
+
+        pool = cardPools[cardData.id];
+
+        for (int i = 0; i < 3; ++i)
+        {
+            CardDataInstance card = pool.Get();
+            card.bPermanent = true;
+            permanentDeckPile.Add(card);
+        }
+
+
+        cardData = cardDataBase.GetCardData(10);
+        if (cardData == null)
+            return;
+
+        pool = cardPools[cardData.id];
+
+        for (int i = 0; i < 3; ++i)
+        {
+            CardDataInstance card = pool.Get();
+            card.bPermanent = true;
+            permanentDeckPile.Add(card);
+        }
+
+
+        cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
@@ -413,5 +441,36 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, cards);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// ±¸Á¶ ¹Ù²Ü °Í.
+    /// </summary>
+    public void AddCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            permanentDeckPile.Add(_cards[i]);
+    }
+
+    public void DeleteCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            permanentDeckPile.Remove(_cards[i]);
+    }
+
+    public void UpgradeCards_Temp(List<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < _cards.Count; ++i)
+            _cards[i].bUpgrade = true;
     }
 }
