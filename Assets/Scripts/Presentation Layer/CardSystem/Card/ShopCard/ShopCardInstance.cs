@@ -10,9 +10,14 @@ public class ShopCardInstance : CardInstance
     {
         return cardState;
     }
-    public void SetCardState(ShopCardState state)
+    public void SetCardState(ShopCardState newState)
     {
-        cardState = state;
+        if (cardState == newState)
+            return;
+
+        ShopCardState prev = cardState;
+        cardState = newState;
+        OnCardStateChanged(prev, newState);
     }
 
     public ShopCardMotion Motion { get; private set; }
@@ -38,5 +43,19 @@ public class ShopCardInstance : CardInstance
     public void SetVisible(bool visible)
     {
         Visual?.SetVisible(visible);
+    }
+
+    private void OnCardStateChanged(ShopCardState prev, ShopCardState next)
+    {
+        switch (next)
+        {
+            case ShopCardState.Idle:
+                Motion?.ToIdle();
+                break;
+
+            case ShopCardState.Select:
+                Motion?.ToSelect();
+                break;
+        }
     }
 }
