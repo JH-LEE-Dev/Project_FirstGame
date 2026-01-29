@@ -671,7 +671,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 470}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6070671040796565214
@@ -764,7 +764,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -860, y: 0}
+  m_AnchoredPosition: {x: -840, y: 0}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &372857597970689567
@@ -1034,6 +1034,7 @@ MonoBehaviour:
   cardUIPrefab: {fileID: 5863989176703220490, guid: a1372fd0e5f97c247a2a0bd87210d898, type: 3}
   dissolveTemplate: {fileID: 2100000, guid: 5a0e9086bd6bbf245bd506367fc008db, type: 2}
   cardPool: []
+  CardPool: []
 --- !u!1 &4699137084814940110
 GameObject:
   m_ObjectHideFlags: 0

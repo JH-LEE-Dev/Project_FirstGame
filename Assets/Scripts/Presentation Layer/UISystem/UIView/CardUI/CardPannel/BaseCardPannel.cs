@@ -57,36 +57,6 @@ public abstract class BaseCardPannel : MonoBehaviour
         }
     }
 
-    public virtual void ToggleSelect(MainCardInstance card)
-    {
-        if (CardState.Selecting == card.cardState)
-        {
-            selectCards.Remove(card);
-            card.SetUIState(CardState.Hidden);
-            card.OtherMotion.OnClick(false);
-
-            if (maxSelectCardCnt > selectCards.Count && selectForcing)
-            {
-                selectButton?.SetState(ButtonInstance.VisualState.VisibleDisabled);
-            }
-
-            return;
-        }
-
-        if (maxSelectCardCnt <= selectCards.Count)
-            return;
-
-        card.SetUIState(CardState.Selecting);
-        card.OtherMotion.OnClick(true);
-
-        selectCards.Add(card);
-
-        if (maxSelectCardCnt <= selectCards.Count && selectForcing)
-        {
-            selectButton?.SetState(ButtonInstance.VisualState.VisibleEnabled);
-        }
-    }
-
     protected abstract void CompleteSelectedCards();
 
     protected virtual void Awake()
@@ -130,7 +100,7 @@ public abstract class BaseCardPannel : MonoBehaviour
         }
     }
 
-    protected void DeActivatePannel()
+    protected virtual void DeActivatePannel()
     {
         gameObject.SetActive(false);
         pannelScroll.verticalNormalizedPosition = 1f;

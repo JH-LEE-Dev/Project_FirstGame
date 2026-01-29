@@ -80,21 +80,15 @@ public class UIView_Shop : UIView
 
 
     /////////////// Pannel & Deck
-    public void StartCardSelectModefromPannel(int _selectCount, bool _bSelectforcing)
+    public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
     {
         CallPannel(true);
-        cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
-    }
-
-
-    public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
-    {
-
+        cardPannel?.StartSelectMode(_type, _selectCount, _bSelectforcing);
     }
 
     private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
     {
-        if (null == shopPoolingSystem || null == pannelContent)
+        if (null == shopPoolingSystem || null == pannelContent || null == cardPannel)
             return;
 
         int inCount = _inCards.Count;
@@ -104,34 +98,31 @@ public class UIView_Shop : UIView
 
         foreach (CardDataInstance data in _inCards)
         {
-            RentCard(data, pannelContent.transform, new Vector2(5f, 5f));
+            cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, new Vector2(5f, 5f)));
         }
     }
 
-    public void CallPannel(bool bSelectMode = false)
+    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false)
     {
         if (null == cardPannel)
             return;
 
         cardPannel.CurrPannelType = CurrentPannel.Deck;
         cardPannel.gameObject.SetActive(true);
-        cardPannel.SetupSelectMode(bSelectMode);
+        cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 
         ActivatePannel(deckCards);
     }
 
-    public void ForceDeActivatePannelSelf(CurrentPannel callType)
+    public void DeactivatePannel()
     {
-        if (null == cardPannel || callType != cardPannel.CurrPannelType)
-            return;
 
-        cardPannel.gameObject.SetActive(false);
     }
 
     [Button]
     private void TestCall_PannelSelectMode()
     {
-        StartCardSelectModefromPannel(3, true);
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, 2, true);
     }
 
 
@@ -148,6 +139,7 @@ public class UIView_Shop : UIView
         // 알아서 Active On
         return card;
     }
+
     public ShopCardInstance RentCard(CardDataInstance data)
     {
         var card = shopPoolingSystem?.RentCard();
@@ -161,7 +153,6 @@ public class UIView_Shop : UIView
         // 알아서 Active Off, Data 초기화
         shopPoolingSystem?.ReturnCard(card);
     }
-
 
     ////////////// Click
     ///
@@ -178,16 +169,13 @@ public class UIView_Shop : UIView
     private void OnClick_EnforceCard()
     {
         Debug.Log("[Shop] EnforceCard clicked");
-        // TODO: 강화 로직
-
+        StartCardSelectModefromPannel(ShopBehaviorType.Enforce, 1, true);
     }
 
     private void OnClick_DeleteCard()
     {
         Debug.Log("[Shop] DeleteCard clicked");
-        // TODO: 삭제 로직
-
-
+        StartCardSelectModefromPannel(ShopBehaviorType.Delete, 1, true);
     }
 
     private void OnClick_ViewDeck()
@@ -197,6 +185,7 @@ public class UIView_Shop : UIView
 
 
     }
+
     private void OnClick_NextStage()
     {
         Debug.Log("[Shop] NextStage clicked");
