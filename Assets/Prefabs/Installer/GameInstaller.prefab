@@ -5548,7 +5548,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   cardPileDrawAmount: 5
-  initialDeckCnt: 10
 --- !u!114 &-1934595178798189937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5615,8 +5614,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 20b1588303c208d4483ca69df4d59dff, type: 2}
   - {fileID: 11400000, guid: 3a7b1c38d74517c4593779d0ea0c28c5, type: 2}
   - {fileID: 11400000, guid: ce22ebc96e57d5c43826135241ef4851, type: 2}
+  - {fileID: 11400000, guid: fc6bf7e2d9b8c4d48b7802763993c3be, type: 2}
   cardDataControlSystemActionCommands:
   - {fileID: 11400000, guid: c1b4736c1b319f74eaeacf24206ee4b7, type: 2}
+  - {fileID: 11400000, guid: 87600f64181c09145b2d5784bc686b61, type: 2}
 --- !u!114 &4970203025210532969
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ public interface ICardLogicSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetGravePile();
     void StartCardPileDraw();
     void DrawAgain(int drawAmount);
-    bool DeckConditionCheck(int cardID);
     void GraveCardsToHand(ReadOnlySpan<CardDataInstance> graveToDeckCards);
     void CardsToGrave(ReadOnlySpan<CardDataInstance> cards);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cards);
@@ -21,4 +20,6 @@ public interface ICardLogicSystemActionCommandHandler : ICommandHandler
     void CardsToHand(ReadOnlySpan<CardDataInstance> cards);
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards);
     void HandToGrave();
+    void AddCardsToDeck(ReadOnlySpan<CardDataInstance> _cards);
+    void DeleteCardsFromDeck(ReadOnlySpan<CardDataInstance> _cards);
 }

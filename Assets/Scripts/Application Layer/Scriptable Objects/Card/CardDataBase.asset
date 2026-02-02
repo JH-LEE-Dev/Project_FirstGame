@@ -170,7 +170,7 @@ MonoBehaviour:
     cardLogicSystemEffects: 
     cardDataControlSystemEffects: 
     cardStatusEffects: 
-    cardSlotSystemEffects: 01000000
+    cardSlotSystemEffects: 00000000
     complexSystemEffects: 
     selectionSystemEffects: 
   - id: 10

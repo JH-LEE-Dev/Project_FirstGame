@@ -26,7 +26,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int cardPileDrawAmount = 5;
-    [SerializeField] private int initialDeckCnt = 40;
+    //[SerializeField] private int initialDeckCnt = 40;
 
     private CardSystemContextType cardSystemContext;
 
@@ -112,7 +112,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             card.bPermanent = true;
             permanentDeckPile.Add(card);
         }
-
 
         cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
@@ -205,7 +204,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
-            GraveToDeck(restDrawCnt);
+            GraveToDeck();
             CardPileDraw(restDrawCnt, false);
         }
 
@@ -220,6 +219,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     private void CardAdditionalPileDraw(int amount)
     {
+        Debug.Log("add");
         CardPileDraw(amount, true);
     }
 
@@ -258,7 +258,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext);
     }
 
-    private void GraveToDeck(int amount)
+    private void GraveToDeck()
     {
         if (gravePile.Count == 0)
         {
@@ -266,10 +266,10 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             return;
         }
 
-        using var rentalBuffer = new RentalScope<CardDataInstance>(amount);
+        using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-        for (int i = 0; i < amount; ++i)
+        for (int i = 0; i < gravePile.Count; ++i)
         {
             var card = gravePile[i];
             writeBuffer[i] = card;
@@ -277,7 +277,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             gravePile.Remove(card);
         }
 
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, amount));
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, gravePile.Count));
 
         rentalBuffer.Dispose();
     }
@@ -352,17 +352,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     public void DrawAgain(int drawAmount)
     {
         CardAdditionalPileDraw(drawAmount);
-    }
-
-    public bool DeckConditionCheck(int cardID)
-    {
-        for (int i = 0; i < deckPile.Count; ++i)
-        {
-            if (deckPile[i].GetCardData().id != cardID)
-                return false;
-        }
-
-        return true;
     }
 
     public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards)
@@ -451,36 +440,17 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, cards);
     }
 
-
-
-
-
-
-
-
-
-
-
-    /// <summary>
-    /// ±¸Á¶ ¹Ù²Ü °Í.
-    /// </summary>
-    public void AddCards_Temp(List<ICardDataInstanceProvider> _cards)
+    public void AddCardsToDeck(ReadOnlySpan<CardDataInstance> _cards)
     {
-        for (int i = 0; i < _cards.Count; ++i)
+        for (int i = 0; i < _cards.Length; ++i)
         {
             permanentDeckPile.Add(_cards[i] as CardDataInstance);
         }
     }
 
-    public void DeleteCards_Temp(List<ICardDataInstanceProvider> _cards)
+    public void DeleteCardsFromDeck(ReadOnlySpan<CardDataInstance> _cards)
     {
-        for (int i = 0; i < _cards.Count; ++i)
+        for (int i = 0; i < _cards.Length; ++i)
             permanentDeckPile.Remove(_cards[i] as CardDataInstance);
-    }
-
-    public void UpgradeCards_Temp(List<ICardDataInstanceProvider> _cards)
-    {
-        for (int i = 0; i < _cards.Count; ++i)
-            (_cards[i] as CardDataInstance).SetPermanentlyUpgrade(true);
     }
 }

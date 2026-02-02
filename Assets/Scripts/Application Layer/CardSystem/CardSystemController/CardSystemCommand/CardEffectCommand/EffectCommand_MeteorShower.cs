@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -14,9 +15,11 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
+        var deckPile = complexSystemActionCommandHandler.GetDeckPile();
+
         if (nestingCnt != 0)
         {
-            if (complexSystemActionCommandHandler.DeckConditionCheck(conditionCheckCardId))
+            if (ConditionCheck(deckPile))
             {
                 complexSystemActionCommandHandler.ApplyAttackModifier(bonusAttack * nestingCnt * valueModifier);
                 complexSystemActionCommandHandler.ApplyAttackCntModifier(attackCnt * nestingCnt * valueModifier);
@@ -25,7 +28,7 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
         if (upgradeNestingCnt != 0)
         {
-            if (complexSystemActionCommandHandler.DeckConditionCheck(upgradedConditionCheckCardId))
+            if (ConditionCheck(deckPile))
             {
                 complexSystemActionCommandHandler.ApplyAttackModifier(upgradedBonusAttack * upgradeNestingCnt * valueModifier);
                 complexSystemActionCommandHandler.ApplyAttackCntModifier(upgradedAttackCnt * upgradeNestingCnt * valueModifier);
@@ -33,5 +36,17 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
         }
 
         ResetCommandData();
+    }
+
+    private bool ConditionCheck(IReadOnlyList<CardDataInstance> _cards)
+    {
+        for(int i = 0;i< _cards.Count;++i)
+        {
+            Debug.Log(attackCnt);
+            if (_cards[i].GetCardData().id != (int)CardName.MeteorShower)
+                return false;
+        }
+
+        return true;
     }
 }

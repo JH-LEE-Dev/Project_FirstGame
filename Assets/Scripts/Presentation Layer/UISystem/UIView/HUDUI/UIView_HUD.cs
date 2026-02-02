@@ -5,6 +5,7 @@ using TMPro;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class UIView_HUD : UIView
 {
@@ -183,7 +184,7 @@ public class UIView_HUD : UIView
 
         if (0f < prevShield)
         {
-            if (1f > shieldProgress)
+            if (0f >= currShield && 1f > shieldProgress)
             {
                 Action latePlay = () =>
                 {
@@ -193,7 +194,7 @@ public class UIView_HUD : UIView
                 hpBar.OnShieldHit(0f, latePlay);
             }
 
-            else if (1f <= shieldProgress)
+            else if (0f < currShield && 1f <= shieldProgress)
             {
                 float total = (currShield + currHp);
                 float hpRatio = currHp / total;
@@ -201,6 +202,9 @@ public class UIView_HUD : UIView
                 hpBar.DirectShieldSet(1f);
                 hpBar.CalcMain(hpRatio);
             }
+
+            else
+                hpBar.OnShieldHit(shieldProgress);
         }
 
         else
@@ -208,8 +212,6 @@ public class UIView_HUD : UIView
             hpBar.DirectShieldSet(0f);
             hpBar.OnHit(hpProgress);
         }
-
-        // 쉴드를 타격할 지, HP를 타격할 지 구분해서 날려야 할듯
 
         if (null != hpText)
             hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: playerDamageNumPool.Pool.Get());
@@ -269,18 +271,29 @@ public class UIView_HUD : UIView
 
         float shieldProgress = total / maxHp;
 
-        if (1f < shieldProgress)
+        if (0f < currShield && 1f < shieldProgress)
         {
             float hpRatio = currHp / total;
 
             hpBar.DirectShieldSet(1f);
             hpBar.CalcMain(hpRatio);
         }
-        else
+        else if (0f < currShield)
         {
             hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
         }
+        else
+        {
+            float hpRatio = Mathf.Clamp(currHp / maxHp, 0f, 1f);
+
+            if (1f <= hpRatio)
+                hpBar.CalcMain(hpRatio);
+            else
+                hpBar.CalcMain(hpRatio, ShieldZero);
+        }
     }
+
+    public void ShieldZero() => hpBar?.CalcShield(0f);
 
     private void ShieldTextUpdate(float _amount)
     {
@@ -292,7 +305,8 @@ public class UIView_HUD : UIView
 
     private void ResetShieldText()
     {
-        hpText?.CalcShield(0f, 0f);
+        float prevShield = playerData.GetPrevShield();
+        hpText?.CalcShield(prevShield, 0f);
     }
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)

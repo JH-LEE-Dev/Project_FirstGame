@@ -5,6 +5,7 @@ using System;
 using UnitLogicSystemSignals;
 using CardSystemUISignal;
 using WaveSystemSignals;
+using ShopSystemUISignals;
 
 public class CardSystem
 {
@@ -14,10 +15,12 @@ public class CardSystem
     private ComplexCardEffectResolver complexCardEffectResolver;
     private CardSelectionManager cardSelectionManager;
     private CardDataControlManager cardDataControlManager;
+    private ShopBehaviorHandler shopBehaviorHandler;
 
     public void Initialize(SignalHub _signalHub, CardManager _cardManager,
         CardSystemController _cardSystemController,CardSelectionManager _cardSelectionManager,
-        ComplexCardEffectResolver _complexCardEffectResolver, CardDataControlManager _cardDataControlManager)
+        ComplexCardEffectResolver _complexCardEffectResolver, CardDataControlManager _cardDataControlManager,
+        ShopBehaviorHandler _shopBehaviorHandler)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
@@ -25,6 +28,7 @@ public class CardSystem
         cardSelectionManager = _cardSelectionManager;
         complexCardEffectResolver = _complexCardEffectResolver;
         cardDataControlManager =_cardDataControlManager;
+        shopBehaviorHandler = _shopBehaviorHandler;
 
         SubscribeEvents();
         BindEvents();
@@ -41,6 +45,7 @@ public class CardSystem
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
         signalHub.Subscribe<WaveEndSignal>(WaveEnd);
         signalHub.Subscribe<UICardSelectionEndSignal>(CardSelectionEnd);
+        signalHub.Subscribe<ShopOutputSignal>(HandleShopOutput);
     }
 
     private void UnSubscribeEvents()
@@ -54,6 +59,7 @@ public class CardSystem
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
         signalHub.UnSubscribe<WaveEndSignal>(WaveEnd);
         signalHub.UnSubscribe<UICardSelectionEndSignal>(CardSelectionEnd);
+        signalHub.UnSubscribe<ShopOutputSignal>(HandleShopOutput);
     }
 
     private void BindEvents()
@@ -223,5 +229,10 @@ public class CardSystem
     private void WaveEnd(WaveEndSignal waveEndSignal)
     {
         cardSystemController.PlayerTurnFinished();
+    }
+
+    private void HandleShopOutput(ShopOutputSignal shopOutputSignal)
+    {
+        shopBehaviorHandler.AnalysisShopBehavior(shopOutputSignal.cards, shopOutputSignal.behaviorType);
     }
 }

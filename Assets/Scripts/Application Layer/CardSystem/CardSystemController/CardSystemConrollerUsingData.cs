@@ -97,6 +97,7 @@ public enum CardLogicSystemActionType
     GraveCardsToDeck,
     GraveCardsToHand,
     HandCardsToGrave,
+    DuplicateCardsToGrave,
     MAX
 }
 
@@ -146,6 +147,7 @@ public enum CardSystemActionTimingType
 public enum CardDataControlSystemActionType
 {
     CardsUpgraded,
+    CardsPermenantlyUpgraded,
     MAX,
 }
 

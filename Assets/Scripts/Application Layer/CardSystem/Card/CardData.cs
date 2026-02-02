@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 [System.Serializable]
 public class CardData
@@ -16,7 +15,8 @@ public class CardData
     public UsingType usingType;
     public CardEffectPriority priority = CardEffectPriority.Normal;
     public bool bUpgradable = false;
-
+    [Space]
+    [Header("Card Effects")]
     public List<CardLogicSystemEffectType> cardLogicSystemEffects;
     public List<CardDataControlSystemEffectType> cardDataControlSystemEffects;
     public List<CardStatusEffectType> cardStatusEffects;

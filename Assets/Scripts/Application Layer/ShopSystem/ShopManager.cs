@@ -87,22 +87,4 @@ public class ShopManager : MonoBehaviour, IShopSystemData
             cardMerchandiseData.Add(cardLogicSystemProvider.CreateCard(cardData.id));
         }
     }
-
-    public void AnalysisShopBehavior(List<ICardDataInstanceProvider> _cards,ShopBehaviorType _shopBehaviorType)
-    {
-        if(_shopBehaviorType == ShopBehaviorType.PickUp)
-        {
-            cardLogicSystemProvider.AddCards_Temp(_cards);
-        }
-
-        if (_shopBehaviorType == ShopBehaviorType.Upgrade)
-        {
-            cardLogicSystemProvider.UpgradeCards_Temp(_cards);
-        }
-
-        if (_shopBehaviorType == ShopBehaviorType.Delete)
-        {
-            cardLogicSystemProvider.DeleteCards_Temp(_cards);
-        }
-    }
 }

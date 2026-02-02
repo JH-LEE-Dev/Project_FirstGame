@@ -32,7 +32,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                     writeBuffer_Upgrade[i] = handPile[i];
                 }
 
-                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade);
+                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false);
             }
         }
 
@@ -43,7 +43,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                 writeBuffer_Upgrade[i] = handPile[i];
             }
 
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false);
         }
 
         rentalBuffer_Upgrade.Dispose();
