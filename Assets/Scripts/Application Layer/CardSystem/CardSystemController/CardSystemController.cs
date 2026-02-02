@@ -443,28 +443,15 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 {
                     writeBuffer_ToGrave[toGraveCnt] = bulletCardSlot[i][j];
                     ++toGraveCnt;
-
-                    if (bulletCardSlot[i][j].GetCardData().id == (int)(CardName.SpaceShuttle))
-                        Debug.Log("SHIT_1");
                 }
                 else
                 {
                     writeBuffer_ToExtinction[toExtinctionCnt] = bulletCardSlot[i][j];
                     ++toExtinctionCnt;
-
-
-                    if (bulletCardSlot[i][j].GetCardData().id == (int)(CardName.SpaceShuttle))
-                        Debug.Log("SHIT_2");
                 }
 
-                //HandleCardClearedBehavior(bulletCardSlot[i][j]);
+                HandleCardClearedBehavior(bulletCardSlot[i][j]);
             }
-        }
-
-        for (int i = 0; i < toGraveCnt; ++i)
-        {
-            if (writeBuffer_ToGrave[i].GetCardData().id == (int)(CardName.SpaceShuttle))
-                Debug.Log("SHIT_3");
         }
 
         if (toExtinctionCnt != 0)
@@ -478,58 +465,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardSlotManager.ClearAllBulletCard();
         CardActionEndScopeEvent?.Invoke();
     }
-
-    //public void ClearAllBulletCard()
-    //{
-    //    var bulletCardSlot = cardSlotManager.GetCardSlot();
-
-    //    using var rentalBuffer_ToGrave = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
-    //    Span<CardDataInstance> writeBuffer_ToGrave = rentalBuffer_ToGrave.Span;
-
-    //    int toGraveCnt = 0;
-    //    int toExtinctionCnt = 0;
-
-    //    for (int i = 0; i < bulletCardSlot.Count; ++i)
-    //    {
-    //        for (int j = 0; j < bulletCardSlot[i].Count; ++j)
-    //        {
-    //            if (bulletCardSlot[i][j].GetCardData().elementType != ElementType.Extinction)
-    //            {
-    //                writeBuffer_ToGrave[toGraveCnt] = bulletCardSlot[i][j];
-    //                ++toGraveCnt;
-    //            }
-    //        }
-    //    }
-
-    //    if (toGraveCnt != 0)
-    //        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.SlotCardsToGrave, writeBuffer_ToGrave.Slice(0, toGraveCnt));
-
-    //    rentalBuffer_ToGrave.Dispose();
-
-    //    using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
-    //    Span<CardDataInstance> writeBuffer_ToExtinction = rentalBuffer_Extinction.Span;
-
-
-    //    for (int i = 0; i < bulletCardSlot.Count; ++i)
-    //    {
-    //        for (int j = 0; j < bulletCardSlot[i].Count; ++j)
-    //        {
-    //            if (bulletCardSlot[i][j].GetCardData().elementType == ElementType.Extinction)
-    //            {
-    //                writeBuffer_ToExtinction[toExtinctionCnt] = bulletCardSlot[i][j];
-    //                ++toExtinctionCnt;
-    //            }
-    //        }
-    //    }
-
-    //    if (toExtinctionCnt != 0)
-    //        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.SlotCardsToExtinction, writeBuffer_ToExtinction.Slice(0, toExtinctionCnt));
-
-    //    rentalBuffer_Extinction.Dispose();
-
-    //    cardSlotManager.ClearAllBulletCard();
-    //    CardActionEndScopeEvent?.Invoke();
-    //}
 
     private void HandleCardClearedBehavior(CardDataInstance _card)
     {
