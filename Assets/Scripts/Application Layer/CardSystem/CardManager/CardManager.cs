@@ -100,7 +100,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
 
-        cardData = cardDataBase.GetCardData(10);
+       // cardData = cardDataBase.GetCardData(10);
+        cardData = cardDataBase.GetCardData((int)CardName.SpaceShuttle);
         if (cardData == null)
             return;
 

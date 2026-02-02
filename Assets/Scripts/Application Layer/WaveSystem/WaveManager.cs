@@ -50,6 +50,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         signalHub.Subscribe<StartSpawnWaveSignal>(SpawnWave);
         signalHub.Subscribe<EnemyTurnStartSignal>(StartEnemyMoveTurn);
         signalHub.Subscribe<EnemyIsKilledSignal>(EnemyIsKilled);
+        signalHub.Subscribe<EnemyIsDeadSignal>(EnemyIsDead);
     }
 
     private void UnSubscribeEvents()
@@ -57,6 +58,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         signalHub.UnSubscribe<StartSpawnWaveSignal>(SpawnWave);
         signalHub.UnSubscribe<EnemyTurnStartSignal>(StartEnemyMoveTurn);
         signalHub.UnSubscribe<EnemyIsKilledSignal>(EnemyIsKilled);
+        signalHub.UnSubscribe<EnemyIsDeadSignal>(EnemyIsDead);
     }
 
     private void OnDestroy()
@@ -123,6 +125,16 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
             bIsWaveEnded = true;
             return;
         }
+
+        if (currentEnemyCount <= currentEnemyThreshold)
+        {
+            SpawnAdditionalWave();
+        }
+    }
+
+    private void EnemyIsDead(EnemyIsDeadSignal enemyIsDeadSignal)
+    {
+        --currentEnemyCount;
 
         if (currentEnemyCount <= currentEnemyThreshold)
         {
