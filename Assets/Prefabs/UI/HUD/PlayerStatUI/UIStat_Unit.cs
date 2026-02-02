@@ -13,6 +13,7 @@ public class UIStat_Unit : MonoBehaviour
 
     private float prevValue;
     private float targetValue;
+    private float basicValue;
 
     private Sequence animSeq;
 
@@ -26,7 +27,7 @@ public class UIStat_Unit : MonoBehaviour
         iconImage.sprite = _icon;
 
         titleStr = title;
-        prevValue = value;
+        basicValue = prevValue = value;
 
         mainText.text = title + value.ToString("0.#");
     }
@@ -41,8 +42,15 @@ public class UIStat_Unit : MonoBehaviour
         targetValue = _current;
         animSeq.Append(DOVirtual.Float(prevValue, _current, duration, UpdateValueChange));
 
+        // 상승
         if (prevValue < targetValue)
             animSeq.Join(mainText.DOColor(Color.green, duration));
+
+        // 기본 값으로 복귀
+        else if (basicValue > targetValue)
+            animSeq.Join(mainText.DOColor(Color.red, duration));
+
+        // 디버프
         else
             animSeq.Join(mainText.DOColor(Color.white, duration));
 
