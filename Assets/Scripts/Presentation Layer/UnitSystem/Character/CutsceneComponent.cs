@@ -98,7 +98,7 @@ public class CutsceneComponent : MonoBehaviour
     }
     public void TurnEnd()
     {
-        if (bCutscene) return;
+        //if (bCutscene) return;
 
         if (character == null)
         {
