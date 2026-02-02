@@ -54,7 +54,7 @@ public class EMoveComponent : MoveComponent
     {
         base.FixedUpdate();
 
-        if (bAccelerate && bDead == false)
+        if (bAccelerate && ctx.unit.IsUnitDead() == false)
             Accelerate(); // 지구로 돌진할 때 호출되는 함수임.
     }
 

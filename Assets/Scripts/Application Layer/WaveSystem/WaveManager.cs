@@ -85,6 +85,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     public void SpawnAdditionalWave()
     {
         signalHub.Publish(new SpawnWaveSignal(spawnEnemyCnt));
+        currentEnemyCount += spawnEnemyCnt;
     }
 
     public void StartEnemyMoveTurn(EnemyTurnStartSignal enemyTurnStartSignal)
