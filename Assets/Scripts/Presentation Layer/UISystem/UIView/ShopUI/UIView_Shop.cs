@@ -171,8 +171,8 @@ public class UIView_Shop : UIView
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
-        card.Motion.SetOriginScale(cardSize);
-        // ¾Ë¾Æ¼­ Active On
+        card.Motion.SetScale(cardSize);
+
         return card;
     }
 
