@@ -119,7 +119,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         pool = cardPools[cardData.id];
 
-        for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             CardDataInstance card = pool.Get();
             card.bPermanent = true;
