@@ -38,6 +38,9 @@ public class UIView_HUD : UIView
     [Header("StarlightUI")]
     [SerializeField] private StarlightUI starlight;
 
+    [Header("CharacterStatUI")]
+    [SerializeField] private UIStat_Player characterStatUI;
+
 
     private bool WaveStartFirstTime = true;
 
@@ -61,6 +64,7 @@ public class UIView_HUD : UIView
         characterData = _characterData;
 
         IntializeChildrenHUD();
+        Init_CharacterStat();
     }
 
     protected override void OnShow()
@@ -149,7 +153,7 @@ public class UIView_HUD : UIView
 
     public void CharacterStatChanged()
     {
-
+        CharacterStatUpdate();
     }
 
     public void CardUseTimeStarted()
@@ -317,6 +321,34 @@ public class UIView_HUD : UIView
     public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
     public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
 
+    private void CharacterStatUpdate()
+    {
+        if (null == characterStatUI)
+            return;
+
+        ICharacterStatProvider stat = characterData.GetStatProvider();
+
+        // 스탯 조정 됐을 때 ( 원래대로 돌아갈 때 / 변화를 가질 때 )
+        characterStatUI.ChangeValue(PlayerStatType.AttackCount, stat.attackCnt);
+        characterStatUI.ChangeValue(PlayerStatType.AttackRange, stat.attackRange);
+        characterStatUI.ChangeValue(PlayerStatType.CriticalChance, stat.criticalChance);
+        characterStatUI.ChangeValue(PlayerStatType.AttackDamage, stat.attack);
+        characterStatUI.ChangeValue(PlayerStatType.WeaknessTurnCount, stat.weaknessTurnCnt);
+    }
+
+    private void Init_CharacterStat()
+    {
+        if (null == characterStatUI)
+            return;
+
+        ICharacterStatProvider stat = characterData.GetStatProvider();
+
+        characterStatUI.Setup(PlayerStatType.AttackCount, "공격 횟수:", stat.attackCnt);
+        characterStatUI.Setup(PlayerStatType.AttackRange, "공격 범위:", stat.attackRange);
+        characterStatUI.Setup(PlayerStatType.CriticalChance, "치명타 확률:", stat.criticalChance);
+        characterStatUI.Setup(PlayerStatType.AttackDamage, "공격력:", stat.attack);
+        characterStatUI.Setup(PlayerStatType.WeaknessTurnCount, "적 약화 디버프 횟수:", stat.weaknessTurnCnt);
+    }
 
     // For StarlightUI
 

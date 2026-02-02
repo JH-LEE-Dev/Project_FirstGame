@@ -111,3 +111,11 @@ public enum ShopCardState
     Select,
 }
 
+public enum PlayerStatType
+{
+    AttackCount,
+    AttackRange,
+    CriticalChance,
+    AttackDamage,
+    WeaknessTurnCount,
+}

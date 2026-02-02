@@ -4,7 +4,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 {
     public int attackCnt { get; private set; }
     public float attackRange { get; private set; }
-    public float criticalChange { get; private set; }
+    public float criticalChance { get; private set; }
     public float attack { get; private set; }
     public int weaknessTurnCnt { get; private set; }
 
@@ -17,7 +17,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     {
         attackCnt = initialAttackCnt;
         attack = initialAttack;
-        criticalChange = initialCriticalChange;
+        criticalChance = initialCriticalChange;
         weaknessTurnCnt = 0;
         attackRange = initialAttackRange;
     }
@@ -34,7 +34,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 
     public void ApplyCriticalChanceModifier(int bonusCriticalChance)
     {
-        criticalChange += bonusCriticalChance;
+        criticalChance += bonusCriticalChance;
     }
 
     public void ApplyAttackCntModifier(int bonusCnt)
@@ -51,7 +51,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     {
         attack = initialAttack;
         attackRange = initialAttackRange;
-        criticalChange = initialCriticalChange;
+        criticalChance = initialCriticalChange;
         attackCnt = initialAttackCnt;
         weaknessTurnCnt = 0;
     }

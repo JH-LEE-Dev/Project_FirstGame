@@ -156,7 +156,7 @@ public class Bullet : MonoBehaviour
 
         float totalDamage = characterStatProvider.attack;
 
-        if (critical < characterStatProvider.criticalChange)
+        if (critical < characterStatProvider.criticalChance)
         {
             bCritical = true;
             totalDamage = characterStatProvider.attack * 2;
