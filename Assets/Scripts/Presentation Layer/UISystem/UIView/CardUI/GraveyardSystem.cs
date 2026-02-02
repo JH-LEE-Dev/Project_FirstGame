@@ -283,7 +283,7 @@ public class GraveyardSystem : MonoBehaviour
                 continue;
 
             Vector3[] pathPoints = cardSystem.PathSystem?.GetDragPath(performer, 
-                transform.position, cardSystem.GetHandTargetEndPos(i), drawDragPower, DragDir.UP);
+                transform.position, cardSystem.GetHandTargetEndPos(i), drawDragPower, DragDir.DOWN);
 
             script.CardDataInstance = dataList[i];
             script.PlayingEventforGraveToHands(i, currentDrawCount - 1, drawDelay, drawDuration, drawEase, pathPoints);
