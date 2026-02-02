@@ -205,7 +205,9 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         if (deckPile.Count == 0 && gravePile.Count != 0 && restDrawCnt != 0)
         {
             GraveToDeck();
-            CardPileDraw(restDrawCnt, false);
+
+            if (deckPile.Count != 0)
+                CardPileDraw(restDrawCnt, false);
         }
 
         //Àý´ë ÀØÀ¸¸é ¾ÈµÊ!
@@ -450,6 +452,11 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     public void DeleteCardsFromDeck(ReadOnlySpan<CardDataInstance> _cards)
     {
         for (int i = 0; i < _cards.Length; ++i)
-            permanentDeckPile.Remove(_cards[i] as CardDataInstance);
+        {
+            CardDataInstance card = _cards[i] as CardDataInstance;
+
+            cardPools[card.GetCardData().id].Release(card);
+            permanentDeckPile.Remove(card);
+        }
     }
 }
