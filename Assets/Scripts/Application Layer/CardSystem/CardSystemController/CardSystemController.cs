@@ -98,8 +98,16 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void PlayerTurnFinished()
     {
+        ResetAllCommands();
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.HandCardsToGrave);
         CardActionEndScopeEvent?.Invoke();
+    }
+
+    private void ResetAllCommands()
+    {
+        cardEffect_AfterAttack.Clear();
+        cardEffect_BeforeAttack.Clear();
+        cardEffect_BeforeTurn.Clear();
     }
 
     private void DispatchCardSystemActionCommand_BeforeTurn()
@@ -207,7 +215,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         CardDataControlSystemCommandDispatchEvent?.Invoke(cardDataControlSystemActionCommand);
     }
-
 
     private void CardUsed(CardDataInstance usedCard)
     {
@@ -399,6 +406,18 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void DiscardBulletCard(int slotIdx)
     {
+        var cards = cardSlotManager.GetBulletCardSpecificSlot(slotIdx);
+
+        using var rentalBuffer = new RentalScope<CardDataInstance>(cards.Count);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        for(int i =0;i<cards.Count;++i)
+        {
+            writeBuffer[i] = cards[i];
+        }
+
+        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer);
+
         cardSlotManager.DiscardBulletCard(slotIdx);
     }
 

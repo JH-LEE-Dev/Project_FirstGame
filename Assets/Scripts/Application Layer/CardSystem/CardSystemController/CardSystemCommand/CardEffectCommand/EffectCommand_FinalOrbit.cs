@@ -34,8 +34,10 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
 
         for (int i = 0; i < handPile.Count; ++i)
         {
-            if (handPile[i].GetCardData().usingType == UsingType.Nesting &&
-                handPile[i].GetCardData().cardType == CardType.Bullet)
+            CardData cardData = handPile[i].GetCardData();
+
+            if (cardData.usingType == UsingType.Nesting &&
+                cardData.cardType == CardType.Bullet)
             {
                 writeBuffer_Using[usingCnt] = handPile[i];
                 ++usingCnt;
@@ -53,8 +55,8 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
             }
         }
 
-        complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt));
         complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt));
+        complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt));
 
         complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
         writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);

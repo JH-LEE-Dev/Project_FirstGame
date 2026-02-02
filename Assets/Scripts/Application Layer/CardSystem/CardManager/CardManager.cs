@@ -100,8 +100,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
 
-       // cardData = cardDataBase.GetCardData(10);
-        cardData = cardDataBase.GetCardData((int)CardName.SpaceShuttle);
+        cardData = cardDataBase.GetCardData(10);
         if (cardData == null)
             return;
 
@@ -114,7 +113,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             permanentDeckPile.Add(card);
         }
 
-        cardData = cardDataBase.GetCardData(3);
+        cardData = cardDataBase.GetCardData((int)CardName.FinalOrbit);
         if (cardData == null)
             return;
 
@@ -220,7 +219,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     private void CardAdditionalPileDraw(int amount)
     {
-        Debug.Log("add");
         CardPileDraw(amount, true);
     }
 
