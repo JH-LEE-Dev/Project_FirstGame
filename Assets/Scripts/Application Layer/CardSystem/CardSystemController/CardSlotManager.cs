@@ -78,6 +78,11 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         prevBulletCardSlot[slotIdx].Clear();
     }
 
+    public List<CardDataInstance> GetBulletCardSpecificSlot(int idx)
+    {
+        return bulletCardSlot[idx];
+    }
+
     public int GetPrevUsedBulletCardCnt()
     {
         return prevUsedBulletCardCnt;

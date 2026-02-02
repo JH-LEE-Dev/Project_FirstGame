@@ -5615,6 +5615,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a7b1c38d74517c4593779d0ea0c28c5, type: 2}
   - {fileID: 11400000, guid: ce22ebc96e57d5c43826135241ef4851, type: 2}
   - {fileID: 11400000, guid: fc6bf7e2d9b8c4d48b7802763993c3be, type: 2}
+  - {fileID: 11400000, guid: 6526a5cebcb00cd458127b74ac06b3f7, type: 2}
   cardDataControlSystemActionCommands:
   - {fileID: 11400000, guid: c1b4736c1b319f74eaeacf24206ee4b7, type: 2}
   - {fileID: 11400000, guid: 87600f64181c09145b2d5784bc686b61, type: 2}

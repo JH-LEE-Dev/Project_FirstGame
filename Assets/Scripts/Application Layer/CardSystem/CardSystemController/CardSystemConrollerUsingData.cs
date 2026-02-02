@@ -98,6 +98,7 @@ public enum CardLogicSystemActionType
     GraveCardsToHand,
     HandCardsToGrave,
     DuplicateCardsToGrave,
+    CardsToHand,
     MAX
 }
 
