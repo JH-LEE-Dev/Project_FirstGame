@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -9,6 +10,7 @@ public class UIView_HUD : UIView
 {
     //외부 데이터
     IPlayerData playerData;
+    ICharacterData characterData;
     IWaveSystemData waveSystemData;
 
     [Header("UI References")]
@@ -52,10 +54,11 @@ public class UIView_HUD : UIView
         
     }
 
-    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData)
+    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData,ICharacterData _characterData)
     {
         waveSystemData = _waveSystemData;
         playerData = _playerData;
+        characterData = _characterData;
 
         IntializeChildrenHUD();
     }
@@ -142,6 +145,11 @@ public class UIView_HUD : UIView
     {
         HP_BarShieldCalc();
         ResetShieldText();
+    }
+
+    public void CharacterStatChanged()
+    {
+
     }
 
     public void CardUseTimeStarted()
