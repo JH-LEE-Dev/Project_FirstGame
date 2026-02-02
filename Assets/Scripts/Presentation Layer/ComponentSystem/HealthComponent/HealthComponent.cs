@@ -86,7 +86,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
 
         currentHealth -= damage;
 
-        if (currentHealth < 0)
+        if (currentHealth <= 0)
         {
             UnitIsDeadEvent?.Invoke();
             currentHealth = 0;

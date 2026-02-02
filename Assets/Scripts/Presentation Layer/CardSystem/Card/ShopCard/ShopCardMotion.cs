@@ -76,7 +76,8 @@ public class ShopCardMotion : MonoBehaviour
 
         AllKillTweens();
 
-        Vector3 targetScale = originScale * 2f;
+        transform.localScale = originScale * 0.5f;
+        Vector3 targetScale = originScale;
 
         moveTween = rt
                 .DOAnchorPos(targetAnchoredPos, Mathf.Max(0.01f, duration))
