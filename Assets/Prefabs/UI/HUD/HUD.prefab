@@ -1374,7 +1374,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697811646323639135, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_Name
-      value: CriticalChance
+      value: Stat_03
       objectReference: {fileID: 0}
     - target: {fileID: 8772487624255168067, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1503,7 +1503,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697811646323639135, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_Name
-      value: AttackDamage
+      value: Stat_04
       objectReference: {fileID: 0}
     - target: {fileID: 8772487624255168067, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1632,7 +1632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697811646323639135, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_Name
-      value: AttackRange
+      value: Stat_02
       objectReference: {fileID: 0}
     - target: {fileID: 8772487624255168067, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1761,7 +1761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697811646323639135, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_Name
-      value: AttackCount
+      value: Stat_01
       objectReference: {fileID: 0}
     - target: {fileID: 8772487624255168067, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2068,7 +2068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697811646323639135, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_Name
-      value: WeaknessTurnCnt
+      value: Stat_05
       objectReference: {fileID: 0}
     - target: {fileID: 8772487624255168067, guid: aa8fa8e6f31adba4c890591d7dd1139c, type: 3}
       propertyPath: m_AnchoredPosition.y
