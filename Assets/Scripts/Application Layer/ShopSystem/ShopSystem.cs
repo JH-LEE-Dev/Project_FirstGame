@@ -1,4 +1,5 @@
 using GameControlSignals;
+using System.Collections.Generic;
 using ShopSystemSignals;
 using ShopSystemUISignals;
 
@@ -72,6 +73,6 @@ public class ShopSystem
 
     private void ShopOutput(ShopOutputSignal shopOutputSignal)
     {
-        shopManager.AnalysisShopBehavior(shopOutputSignal.cards, shopOutputSignal.behaviorType);
+
     }
 }

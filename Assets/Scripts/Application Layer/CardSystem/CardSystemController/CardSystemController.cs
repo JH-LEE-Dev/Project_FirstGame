@@ -429,6 +429,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                     writeBuffer_ToExtinction[toExtinctionCnt] = bulletCardSlot[i][j];
                     ++toExtinctionCnt;
                 }
+
+                HandleCardClearedBehavior(bulletCardSlot[i][j]);
             }
         }
 
@@ -444,6 +446,21 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardActionEndScopeEvent?.Invoke();
     }
 
+    private void HandleCardClearedBehavior(CardDataInstance _card)
+    {
+        if(_card.GetCardData().id == (int)CardName.Distortion)
+        {
+            using var rentalBuffer_Duplicated = new RentalScope<CardDataInstance>(1);
+            Span<CardDataInstance> writeBuffer_Duplicated = rentalBuffer_Duplicated.Span;
+
+            writeBuffer_Duplicated[0] = _card;
+
+            DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.DuplicateCardsToGrave, writeBuffer_Duplicated.Slice(0, 1));
+
+            rentalBuffer_Duplicated.Dispose();
+        }
+    }
+
     public void GameStarted()
     {
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.ResetCardPiles);
@@ -453,7 +470,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     //무한 루프 방어 코드 필요. - 도메인 로직이 이를 방어하지만 아키텍쳐에서 방어되지는 않음.
     public void UseCardsAndExtinguishAll(ReadOnlySpan<CardDataInstance> usingCards)
     {
-        if (usingCards == null || usingCards[0] == null)
+        if (usingCards == null || usingCards.Length == 0)
             return;
 
         for (int i = 0; i < usingCards.Length; ++i)

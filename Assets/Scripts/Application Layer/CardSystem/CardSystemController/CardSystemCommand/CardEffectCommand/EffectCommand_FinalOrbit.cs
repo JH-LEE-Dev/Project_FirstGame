@@ -54,11 +54,13 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
         }
 
         complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt));
-
-        complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt));
+        complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt));
 
         complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
-            writeBuffer_Upgrade.Slice(0, upgradeCnt),CardSystemContextType.UpgradeCardsFromHand);
+        writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);
+        complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt));
+
+
 
         rentalBuffer_Using.Dispose();
         rentalBuffer_Extinction.Dispose();

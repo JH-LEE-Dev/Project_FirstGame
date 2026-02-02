@@ -41,6 +41,7 @@ public class Enemy : Unit, IEnemyData
     {
         col.gameObject.SetActive(true);
         sr.gameObject.SetActive(true);
+        bDead = false;
     }
 
     public void DeActivateEnemy()
@@ -52,11 +53,8 @@ public class Enemy : Unit, IEnemyData
 
     public void Activate(Vector3 spawnPos)
     {
-        bDead = false;
-        gameObject.SetActive(true);
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();
-        col.enabled = true;
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
@@ -108,7 +106,8 @@ public class Enemy : Unit, IEnemyData
         EnemyIsKilledEvent?.Invoke(this,enemyTypeData);
 
         sr.gameObject.SetActive(false);
-        col.enabled = false;
+        col.gameObject.SetActive(false);
+
         vfxDeadImpact.Play(true);
     }
 
