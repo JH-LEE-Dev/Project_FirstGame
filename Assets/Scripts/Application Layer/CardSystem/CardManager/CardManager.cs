@@ -113,7 +113,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             permanentDeckPile.Add(card);
         }
 
-        cardData = cardDataBase.GetCardData((int)CardName.FinalOrbit);
+        cardData = cardDataBase.GetCardData((int)CardName.SpaceShuttle);
         if (cardData == null)
             return;
 
