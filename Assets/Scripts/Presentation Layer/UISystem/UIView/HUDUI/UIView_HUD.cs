@@ -119,13 +119,14 @@ public class UIView_HUD : UIView
 
     public void EnemyIsDead(Vector2 deadPosition)
     {
-        //Target_BarUpdate(deadPosition);
+        
     }
 
     public void EnemyIsKilled(Vector2 deadPosition)
     {
         Target_BarUpdate(deadPosition);
     }
+
     public void PlayerGetShield(float amount)
     {
         HP_BarShieldCalc();
@@ -136,6 +137,13 @@ public class UIView_HUD : UIView
     {
 
     }
+
+    public void ResetPlayerShield()
+    {
+        HP_BarShieldCalc();
+        ResetShieldText();
+    }
+
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";
@@ -269,6 +277,11 @@ public class UIView_HUD : UIView
         float prevShield = currentShield - _amount;
 
         hpText?.CalcShield(prevShield, currentShield);
+    }
+
+    private void ResetShieldText()
+    {
+        hpText?.CalcShield(0f, 0f);
     }
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)

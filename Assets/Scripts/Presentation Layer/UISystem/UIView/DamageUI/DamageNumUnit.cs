@@ -80,6 +80,14 @@ public class DamageNumUnit : MonoBehaviour
         OnDamageNumber();
     }
 
+    public void OnDamageColor(Color _critColor)
+    {
+        if (null == text)
+            return;
+
+        text.color = _critColor;
+    }
+
     private void OnDamageNumber()
     {
         CancelPrevMotion(visualSeq);
