@@ -47,6 +47,10 @@ public class UIView_Shop : UIView
     public GameObject PannelContent { get { return pannelContent; } }
     public ShopCardPannel CardPannel { get { return cardPannel; } }
 
+    ///////// Basic Values
+    private Vector3 pannelCardScale = new Vector3(5f, 5f, 1f);
+
+
     public override void Initialize(UIViewContext ctx)
     {
         base.Initialize(ctx);
@@ -125,7 +129,7 @@ public class UIView_Shop : UIView
 
         foreach (CardDataInstance data in _inCards)
         {
-            cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, new Vector2(5f, 5f)));
+            cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, pannelCardScale));
         }
     }
 
@@ -155,24 +159,24 @@ public class UIView_Shop : UIView
 
     ////////////// PoolingCard
 
-    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector2 cardSize)
+    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector3 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
 
         card.transform.SetParent(attachTransform);
-        card.Motion.SetOriginScale(cardSize);
+        card.Motion.SetScale(cardSize);
 
         // 알아서 Active On
         return card;
     }
 
-    public ShopCardInstance RentCard(CardDataInstance data, Vector2 cardSize)
+    public ShopCardInstance RentCard(CardDataInstance data, Vector3 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
         card.Motion.SetOriginScale(cardSize);
-        // 알아서 Active On
+
         return card;
     }
 

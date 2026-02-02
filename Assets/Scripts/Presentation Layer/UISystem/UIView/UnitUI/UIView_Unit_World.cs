@@ -118,9 +118,8 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem?.UnEquipBulletCardForShoot();
     }
 
-    public void EnemyTakeDamage(IEnemyData _enemyData,float _damage,bool bCritical)
+    public void EnemyTakeDamage(IEnemyData _enemyData, float _damage, bool bCritical)
     {
-        Debug.Log("적이 데미지를 입었습니다.");
-        damageNumberSystem?.SpawnBasicDamageNumber(_damage, _enemyData.GetTransform().position);
+        damageNumberSystem?.SpawnBasicDamageNumber(_damage, bCritical, _enemyData.GetTransform().position);
     }
 }

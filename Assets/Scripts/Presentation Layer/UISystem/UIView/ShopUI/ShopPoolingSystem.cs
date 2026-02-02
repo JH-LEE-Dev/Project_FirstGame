@@ -47,16 +47,18 @@ public class ShopPoolingSystem : MonoBehaviour
         card.gameObject.SetActive(true);
         return card;
     }
+
     // Ä«µå ¹Ý³³
     public void ReturnCard(ShopCardInstance card)
     {
-        if (card == null) return;
+        if (card == null) 
+            return;
 
         card.Clear();
-        card.gameObject.SetActive(false);
 
         card.transform.SetParent(transform);
         card.Motion.AllKillTweens(true);
+        card.gameObject.SetActive(false);
 
         cardPool.Add(card);
     }

@@ -9,7 +9,6 @@ public class UIView_HUD : UIView
 {
     //외부 데이터
     IPlayerData playerData;
-    ICharacterData characterData;
     IWaveSystemData waveSystemData;
 
     [Header("UI References")]
@@ -53,11 +52,10 @@ public class UIView_HUD : UIView
         
     }
 
-    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData,ICharacterData _characterData)
+    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData)
     {
         waveSystemData = _waveSystemData;
         playerData = _playerData;
-        characterData = _characterData;
 
         IntializeChildrenHUD();
     }
@@ -74,7 +72,6 @@ public class UIView_HUD : UIView
 
     private void OnClickClose()
     {
-
     }
 
     public void RenderUI()
@@ -122,7 +119,7 @@ public class UIView_HUD : UIView
 
     public void EnemyIsDead(Vector2 deadPosition)
     {
-        //Target_BarUpdate(deadPosition);
+        
     }
 
     public void EnemyIsKilled(Vector2 deadPosition)
@@ -139,6 +136,12 @@ public class UIView_HUD : UIView
     public void PlayerGetHP(float amount)
     {
 
+    }
+
+    public void ResetPlayerShield()
+    {
+        HP_BarShieldCalc();
+        ResetShieldText();
     }
 
     public void CardUseTimeStarted()
@@ -236,7 +239,6 @@ public class UIView_HUD : UIView
             return;
 
         targetBar.OnFill(vfx.savedCurrentProgress);
-        Debug.Log(vfx.savedCurrentProgress);
 
         targetGageText?.DataUpdate(vfx.savedCurrentKillCnt, vfx.savedEnemyMaxCnt);
         StartCoroutine(ReleaseEffect(vfx));
@@ -274,6 +276,11 @@ public class UIView_HUD : UIView
         float prevShield = currentShield - _amount;
 
         hpText?.CalcShield(prevShield, currentShield);
+    }
+
+    private void ResetShieldText()
+    {
+        hpText?.CalcShield(0f, 0f);
     }
 
     private IEnumerator ReleaseEffect(VFX_TargetBarStar target)
@@ -328,10 +335,5 @@ public class UIView_HUD : UIView
     {
         if (!starlight) return -1;
         return starlight.GetStarlight();
-    }
-
-    public void CharacterStatChanged()
-    {
-
     }
 }

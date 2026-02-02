@@ -20,7 +20,7 @@ public class DamageNumberSystem : MonoBehaviour
     public void Init(UIView_HUD _hud) => owner = _hud;
     public void ReleaseUnit(GameObject obj) => damagePool?.Pool?.Release(obj);
 
-    public void SpawnBasicDamageNumber(float _damage, Vector3 _startWorldPos)
+    public void SpawnBasicDamageNumber(float _damage, bool bCritical, Vector3 _startWorldPos)
     {
         GameObject performer = damagePool.Pool.Get();
         performer.SetActive(true);
@@ -31,6 +31,11 @@ public class DamageNumberSystem : MonoBehaviour
         DamageNumUnit script = performer.GetComponent<DamageNumUnit>();
         if (null == script)
             return;
+
+        if (bCritical)
+            script.OnDamageColor(critDamageColor);
+        else
+            script.OnDamageColor(noramlDamageColor);
 
         script.SetupUnitValue(UnitValue, this);
         script.BasicSpawnUnit(_damage, _startWorldPos);
@@ -51,6 +56,6 @@ public class DamageNumberSystem : MonoBehaviour
     [Button]
     private void BasicTestButton()
     {
-        SpawnBasicDamageNumber(200, Vector3.zero);
+        SpawnBasicDamageNumber(200, true, Vector3.zero);
     }
 }
