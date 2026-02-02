@@ -8,14 +8,14 @@ public class UIView_Shop : UIView
 {
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
-    public event Action<List<CardDataInstance>,ShopBehaviorType> ShopUIOutputEvent;
+    public event Action<List<ICardDataInstanceProvider>,ShopBehaviorType> ShopUIOutputEvent;
 
     //외부 의존성
     private IShopSystemData shopSystemData;
     private IPlayerData playerData;
 
     //현재 게임 시스템의 카드 정보.
-    IReadOnlyList<CardDataInstance> deckCards;
+    IReadOnlyList<ICardDataInstanceProvider> deckCards;
 
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
@@ -86,7 +86,7 @@ public class UIView_Shop : UIView
         btn.onClick.AddListener(action);
     }
 
-    public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<CardDataInstance> _deckCards,
+    public void DataInjection(IShopSystemData _shopSystemData, IReadOnlyList<ICardDataInstanceProvider> _deckCards,
         IPlayerData _playerData)
     {
         shopSystemData = _shopSystemData;
@@ -117,7 +117,7 @@ public class UIView_Shop : UIView
         selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
     }
 
-    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
+    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
     {
         if (null == shopPoolingSystem || null == pannelContent || null == cardPannel)
             return;
@@ -127,7 +127,7 @@ public class UIView_Shop : UIView
         if (0 >= inCount)
             return;
 
-        foreach (CardDataInstance data in _inCards)
+        foreach (ICardDataInstanceProvider data in _inCards)
         {
             cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, pannelCardScale));
         }
@@ -159,7 +159,7 @@ public class UIView_Shop : UIView
 
     ////////////// PoolingCard
 
-    public ShopCardInstance RentCard(CardDataInstance data, Transform attachTransform, Vector3 cardSize)
+    public ShopCardInstance RentCard(ICardDataInstanceProvider data, Transform attachTransform, Vector3 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
@@ -171,7 +171,7 @@ public class UIView_Shop : UIView
         return card;
     }
 
-    public ShopCardInstance RentCard(CardDataInstance data, Vector3 cardSize)
+    public ShopCardInstance RentCard(ICardDataInstanceProvider data, Vector3 cardSize)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
@@ -180,7 +180,7 @@ public class UIView_Shop : UIView
         return card;
     }
 
-    public ShopCardInstance RentCard(CardDataInstance data)
+    public ShopCardInstance RentCard(ICardDataInstanceProvider data)
     {
         var card = shopPoolingSystem?.RentCard();
         card.ApplyData(data);
@@ -252,7 +252,7 @@ public class UIView_Shop : UIView
         ShopIsClosedEvent?.Invoke();
     }
 
-    public void OutputSelectedCards(List<CardDataInstance> cards, ShopBehaviorType type)
+    public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
     {
         foreach(var c in cards)
         {

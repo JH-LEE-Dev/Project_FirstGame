@@ -14,10 +14,10 @@ public class UIView_CardSystem : UIView
     /// </summary>
     //외부 방송 이벤트
     public event Action<int> UICommandCompleteEvent;
-    public event Action<CardDataInstance> TryCardUseEvent;
+    public event Action<ICardDataInstanceProvider> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
-    public event Action<int, CardDataInstance> CardEquippedEvent;
-    public event Action<List<CardDataInstance>, CardSelectionModeData> CardSelectionEndEvent;
+    public event Action<int, ICardDataInstanceProvider> CardEquippedEvent;
+    public event Action<List<ICardDataInstanceProvider>, CardSelectionModeData> CardSelectionEndEvent;
 
     //UI Job Action Binding
     public delegate float UIActionHandler(CardUIActionData cardUIActionData);
@@ -43,10 +43,10 @@ public class UIView_CardSystem : UIView
 
 
     //현재 게임 시스템의 카드 정보.
-    IReadOnlyList<CardDataInstance> deckCards;
-    IReadOnlyList<CardDataInstance> handCards;
-    IReadOnlyList<CardDataInstance> graveCards;
-    IReadOnlyList<CardDataInstance> extinctionCards;
+    IReadOnlyList<ICardDataInstanceProvider> deckCards;
+    IReadOnlyList<ICardDataInstanceProvider> handCards;
+    IReadOnlyList<ICardDataInstanceProvider> graveCards;
+    IReadOnlyList<ICardDataInstanceProvider> extinctionCards;
 
 
     [Header("UI References")]
@@ -141,8 +141,8 @@ public class UIView_CardSystem : UIView
         base.Awake();
     }
 
-    public void DataInjection(IReadOnlyList<CardDataInstance> _deckCards, IReadOnlyList<CardDataInstance> _handCards,
-        IReadOnlyList<CardDataInstance> _graveCards,IReadOnlyList<CardDataInstance> _extinctionCards)
+    public void DataInjection(IReadOnlyList<ICardDataInstanceProvider> _deckCards, IReadOnlyList<ICardDataInstanceProvider> _handCards,
+        IReadOnlyList<ICardDataInstanceProvider> _graveCards,IReadOnlyList<ICardDataInstanceProvider> _extinctionCards)
     {
         deckCards = _deckCards;
         handCards = _handCards;
@@ -489,7 +489,7 @@ public class UIView_CardSystem : UIView
     }
 
     // 불릿 카드 사용했을때, 호출되는 함수
-    public void EquipBulletCard(int _index, CardDataInstance _data = null)
+    public void EquipBulletCard(int _index, ICardDataInstanceProvider _data = null)
     {
         CardEquippedEvent?.Invoke(_index, _data);
     }
@@ -501,7 +501,7 @@ public class UIView_CardSystem : UIView
     }
 
     // 옵션 등으로 강제로 카드를 추가하는 함수
-    public void MakeCardInHand(CardDataInstance _cardData)
+    public void MakeCardInHand(ICardDataInstanceProvider _cardData)
     {
         int cnt = handSystem.GetCurrentHandCardCount();
 
@@ -535,7 +535,7 @@ public class UIView_CardSystem : UIView
         }
     }
 
-    public void EndCardSelectMode(List<CardDataInstance> _cards)
+    public void EndCardSelectMode(List<ICardDataInstanceProvider> _cards)
     {
         dimOverlay.SetDimOverlayActive(false);
 
@@ -573,7 +573,7 @@ public class UIView_CardSystem : UIView
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }
 
-    public void EndCardSelectModefromPannel(List<CardDataInstance> _cards)
+    public void EndCardSelectModefromPannel(List<ICardDataInstanceProvider> _cards)
     {
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
@@ -604,7 +604,7 @@ public class UIView_CardSystem : UIView
     }
 
 
-    public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
+    public void ReturnCard(List<ICardDataInstanceProvider> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
     {
         handSystem.ReturnCard(cardDataList, type, delay);
     }
@@ -627,7 +627,7 @@ public class UIView_CardSystem : UIView
     }
 
 
-    private void ActivatePannel(IReadOnlyList<CardDataInstance> _inCards)
+    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -686,7 +686,7 @@ public class UIView_CardSystem : UIView
         cardPannel.gameObject.SetActive(false);
     }
 
-    public void CallOneCardDrawedBlock(int currIdx, int _lastIdx, Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    public void CallOneCardDrawedBlock(int currIdx, int _lastIdx, Vector3 _endPos, ICardDataInstanceProvider _data, GameObject _performer)
     {
         if (currIdx == _lastIdx)
             WorkingBlock = false;
@@ -695,7 +695,7 @@ public class UIView_CardSystem : UIView
         poolingSystem?.StarEffects?.Release(_performer);
     }
 
-    public void CallOneCardDrawed(Vector3 _endPos, CardDataInstance _data, GameObject _performer)
+    public void CallOneCardDrawed(Vector3 _endPos, ICardDataInstanceProvider _data, GameObject _performer)
     {
         handSystem?.ProcessDraw(_endPos, _data);
         poolingSystem?.StarEffects?.Release(_performer);
@@ -715,7 +715,7 @@ public class UIView_CardSystem : UIView
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
     public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
 
-    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, CardDataInstance _data = null)
+    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, ICardDataInstanceProvider _data = null)
     {
         GameObject star = GetStarPerformerFromPool(_startWorldPos);
         VFX_CardStar vfx = star?.GetComponent<VFX_CardStar>();
@@ -803,7 +803,7 @@ public class UIView_CardSystem : UIView
         extinctionSystem?.SetCount(extinctionCards.Count);
     }
 
-    private void DrawingCards(List<CardDataInstance> _datas)
+    private void DrawingCards(List<ICardDataInstanceProvider> _datas)
     {
         if (null == deckSystem || 0 >= _datas.Count)
             return;

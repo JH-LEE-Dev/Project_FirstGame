@@ -19,7 +19,7 @@ public abstract class BaseCardPannel : MonoBehaviour
     protected int maxSelectCardCnt = 0;
 
     protected List<MainCardInstance> selectCards = new List<MainCardInstance>(10);
-    protected List<CardDataInstance> selectDatas = new List<CardDataInstance>(10);
+    protected List<ICardDataInstanceProvider> selectDatas = new List<ICardDataInstanceProvider>(10);
 
     public CurrentPannel CurrPannelType
     {

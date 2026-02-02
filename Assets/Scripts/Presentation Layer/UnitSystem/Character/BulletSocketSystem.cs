@@ -135,7 +135,7 @@ public class BulletSocketSystem : MonoBehaviour
 
     //////////////////////////////////////////////// 카드 장착 및 해제
 
-    public void EquipBulletCard(int _index, CardDataInstance _data = null)
+    public void EquipBulletCard(int _index, ICardDataInstanceProvider _data = null)
     {
         CardData data = _data?.GetCardData();
 

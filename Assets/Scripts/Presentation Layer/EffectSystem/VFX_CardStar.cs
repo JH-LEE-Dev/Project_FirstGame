@@ -17,8 +17,8 @@ public class VFX_CardStar : MonoBehaviour
     private Vector3 targetPos = Vector3.zero;
     public Vector3 TargetPos => targetPos;
 
-    private CardDataInstance cardDataInstance = null;
-    public CardDataInstance CardDataInstance 
+    private ICardDataInstanceProvider cardDataInstance = null;
+    public ICardDataInstanceProvider CardDataInstance 
     { 
         get { return cardDataInstance; } 
         set { cardDataInstance = value; } 

@@ -27,7 +27,7 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         command.Execute(this);
     }
 
-    public void CardSelectionEnd(CardSelectionModeData _data, List<CardDataInstance> _cards)
+    public void CardSelectionEnd(CardSelectionModeData _data, List<ICardDataInstanceProvider> _cards)
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(_cards.Count);
 
@@ -36,7 +36,7 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         for (int i = 0; i < _cards.Count; ++i)
         {
             if (_cards[i] != null)
-                writeBuffer[i] = _cards[i];
+                writeBuffer[i] = _cards[i] as CardDataInstance;
         }
 
         if (_data.selectionMode == CardSelectionMode.DuplicateCardsToDeck)

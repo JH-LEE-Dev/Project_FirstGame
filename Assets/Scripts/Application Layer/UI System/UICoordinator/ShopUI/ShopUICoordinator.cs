@@ -4,7 +4,7 @@ using UnitSpawnSystemSignals;
 
 public class ShopUICoordinator
 {
-    public event Action<List<CardDataInstance>, ShopBehaviorType> ShopOutputEvent;
+    public event Action<List<ICardDataInstanceProvider>, ShopBehaviorType> ShopOutputEvent;
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
 
@@ -60,7 +60,7 @@ public class ShopUICoordinator
         CardPackRerollEvent?.Invoke();
     }
 
-    private void ShopOutput(List<CardDataInstance> _cards, ShopBehaviorType _type)
+    private void ShopOutput(List<ICardDataInstanceProvider> _cards, ShopBehaviorType _type)
     {
         ShopOutputEvent?.Invoke(_cards, _type);
     }

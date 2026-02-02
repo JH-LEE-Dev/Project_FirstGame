@@ -51,7 +51,7 @@ public class PickUpSystem : MonoBehaviour
     }
 
 
-    public void PickUpCardMode(IReadOnlyList<CardDataInstance> datas)
+    public void PickUpCardMode(IReadOnlyList<ICardDataInstanceProvider> datas)
     {
         gameObject.SetActive(true);
         state = State.WaitingOpen;

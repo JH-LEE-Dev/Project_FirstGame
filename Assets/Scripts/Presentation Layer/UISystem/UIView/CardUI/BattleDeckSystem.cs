@@ -36,7 +36,7 @@ public class BattleDeckSystem : BaseDeckSystem
         cardSystem = _cardSystem;
     }
 
-    public void CardDrawEffect(List<CardDataInstance> dataList)
+    public void CardDrawEffect(List<ICardDataInstanceProvider> dataList)
     {
         if (null == cardSystem)
             return;

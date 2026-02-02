@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class CardUICoordinator
 {
-    public event Action<int, CardDataInstance> CardEquippedEvent;
-    public event Action<CardDataInstance> TryCardUseEvent;
+    public event Action<int, ICardDataInstanceProvider> CardEquippedEvent;
+    public event Action<ICardDataInstanceProvider> TryCardUseEvent;
     public event Action CardUsingFinishedEvent;
     public event Action<int> UICommandCompleteEvent;
-    public event Action<CardSelectionModeData, List<CardDataInstance>> CardSelectionEndEvent;
+    public event Action<CardSelectionModeData, List<ICardDataInstanceProvider>> CardSelectionEndEvent;
 
     private UIView_CardSystem cardUISystem;
 
@@ -60,7 +60,7 @@ public class CardUICoordinator
         cardUISystem.CardSelectionEndEvent -= CardSelectionEnd;
     }
 
-    public void TryCardUse(CardDataInstance usedCard)
+    public void TryCardUse(ICardDataInstanceProvider usedCard)
     {
         TryCardUseEvent?.Invoke(usedCard);
     }
@@ -95,7 +95,7 @@ public class CardUICoordinator
         cardUISystem.PlayerTurnStarted();
     }
 
-    private void CardEquipped(int slotIdx, CardDataInstance equippedCard)
+    private void CardEquipped(int slotIdx, ICardDataInstanceProvider equippedCard)
     {
         CardEquippedEvent?.Invoke(slotIdx, equippedCard);
     }
@@ -115,7 +115,7 @@ public class CardUICoordinator
         cardUISystem.StartCardSelectMode(data, data.amount, true);
     }
 
-    private void CardSelectionEnd(List<CardDataInstance> _cards,CardSelectionModeData data)
+    private void CardSelectionEnd(List<ICardDataInstanceProvider> _cards,CardSelectionModeData data)
     {
         CardSelectionEndEvent?.Invoke(data, _cards);
     }

@@ -107,7 +107,7 @@ public class HandSystem : MonoBehaviour
     }
 
     // 카드 드로우 (풀링 빌리기)
-    public void ProcessDraw(Vector3 _cardSpawnPos, CardDataInstance _cardData)
+    public void ProcessDraw(Vector3 _cardSpawnPos, ICardDataInstanceProvider _cardData)
     {
         var card = cardSystem.RentHandCard();
         if (card == null) return;
@@ -451,7 +451,7 @@ public class HandSystem : MonoBehaviour
         hoveredCard = null;
 
         int n = Mathf.Max(0, selectCount);
-        List<CardDataInstance> available = new();
+        List<ICardDataInstanceProvider> available = new();
 
         foreach (var c in cards)
         {
@@ -522,7 +522,7 @@ public class HandSystem : MonoBehaviour
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
 
-        List<CardDataInstance> selected = GetSelectedCards();
+        List<ICardDataInstanceProvider> selected = GetSelectedCards();
         cardSystem.EndCardSelectMode(selected);
 
         // 버튼 및 텍스트 비활성
@@ -569,9 +569,9 @@ public class HandSystem : MonoBehaviour
         wave?.Rebuild();
     }
 
-    private List<CardDataInstance> GetSelectedCards()
+    private List<ICardDataInstanceProvider> GetSelectedCards()
     {
-        List<CardDataInstance> selected = new();
+        List<ICardDataInstanceProvider> selected = new();
         foreach (var c in cards)
         {
             if (c != null && c.cardState == CardState.Selecting)
@@ -584,11 +584,11 @@ public class HandSystem : MonoBehaviour
 
     /////////////////////// For Upgrade
 
-    public void UpgradeCard(List<CardDataInstance> datas)
+    public void UpgradeCard(List<ICardDataInstanceProvider> datas)
     {
         if (datas == null || datas.Count == 0) return;
 
-        HashSet<CardDataInstance> dataSet = new HashSet<CardDataInstance>(datas);
+        HashSet<ICardDataInstanceProvider> dataSet = new HashSet<ICardDataInstanceProvider>(datas);
         foreach (var card in cards)
         {
             if (card == null) continue;
@@ -668,11 +668,11 @@ public class HandSystem : MonoBehaviour
     }
 
     // List에 있는것들 연출.
-    public void ReturnCard(List<CardDataInstance> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
+    public void ReturnCard(List<ICardDataInstanceProvider> cardDataList, CardReturnType type = CardReturnType.Temp, float delay = 0f)
     {
         if (cardDataList == null || cardDataList.Count == 0) return;
 
-        var targetSet = new HashSet<CardDataInstance>(cardDataList);
+        var targetSet = new HashSet<ICardDataInstanceProvider>(cardDataList);
 
         for (int i = cards.Count - 1; i >= 0; i--)
         {

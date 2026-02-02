@@ -27,9 +27,9 @@ public class UICommandFactory_CardSystem : UICommandFactory
         );
 
     // CardDataInstance 리스트 풀 (실제 카드 알맹이 담는 용도)
-    private ObjectPool<List<CardDataInstance>> cardListPool =
-        new ObjectPool<List<CardDataInstance>>(
-            createFunc: () => new List<CardDataInstance>(cardListSize),
+    private ObjectPool<List<ICardDataInstanceProvider>> cardListPool =
+        new ObjectPool<List<ICardDataInstanceProvider>>(
+            createFunc: () => new List<ICardDataInstanceProvider>(cardListSize),
             actionOnGet: (list) => list.Clear(),
             actionOnRelease: (list) => list.Clear(),
             collectionCheck: true,

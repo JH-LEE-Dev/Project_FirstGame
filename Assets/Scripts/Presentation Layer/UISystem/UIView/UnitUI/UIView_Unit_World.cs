@@ -101,7 +101,7 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem?.SetCount(_count);
     }
 
-    public void EquipBulletCard(int _index, CardDataInstance _data = null)
+    public void EquipBulletCard(int _index, ICardDataInstanceProvider _data = null)
     {
         bulletsocketSystem?.EquipBulletCard(_index, _data);
     }

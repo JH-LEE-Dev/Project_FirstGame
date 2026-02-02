@@ -63,8 +63,8 @@ public class CardInstance : MonoBehaviour
     private readonly Color normalTextColor = new Color32(0, 0, 0, 255);
 
     // µ¥ÀÌÅÍ
-    private CardDataInstance cardData;
-    public CardDataInstance CardData => cardData;
+    private ICardDataInstanceProvider cardData;
+    public ICardDataInstanceProvider CardData => cardData;
 
 
     private void Awake()
@@ -88,7 +88,7 @@ public class CardInstance : MonoBehaviour
     }
 
     // ¿Ê ÀÔÈ÷±â
-    public void ApplyData(CardDataInstance dataInstance)
+    public void ApplyData(ICardDataInstanceProvider dataInstance)
     {
         if (dataInstance == null) return;
 
@@ -158,14 +158,14 @@ public class CardInstance : MonoBehaviour
         }
     }
 
-    private void CardNameAndDescriptionChange(CardDataInstance dataInstance)
+    private void CardNameAndDescriptionChange(ICardDataInstanceProvider dataInstance)
     {
         if (!cardName) return;
 
         CardData cardData = dataInstance.GetCardData();
 
         // °­È­µÊ
-        if (dataInstance.bUpgrade == true)
+        if (dataInstance.IsUpgraded() == true)
         {
             cardName.color = enforceTextColor;
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);

@@ -23,7 +23,7 @@ public struct CardUIActionData
 {
     public CardUIActionType uiActionType;
     public CardSystemContextType cardSystemContextType;
-    public List<CardDataInstance> cards;
+    public List<ICardDataInstanceProvider> cards;
 }
 
 public struct CardUIActionBatch

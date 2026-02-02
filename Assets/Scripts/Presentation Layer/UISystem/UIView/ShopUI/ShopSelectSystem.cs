@@ -70,7 +70,7 @@ public class ShopSelectSystem : MonoBehaviour
             return false;
         }
 
-        var cardDatas = new List<CardDataInstance>(selected.Count);
+        var cardDatas = new List<ICardDataInstanceProvider>(selected.Count);
         foreach (var c in selected)
         {
             if (c == null) continue;

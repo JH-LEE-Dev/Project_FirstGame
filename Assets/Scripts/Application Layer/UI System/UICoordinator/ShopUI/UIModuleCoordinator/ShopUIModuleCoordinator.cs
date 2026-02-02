@@ -66,7 +66,7 @@ public class ShopUIModuleCoordinator
         signalHub.Publish(new CardPackRerollSignal());
     }
 
-    private void ShopOutput(List<CardDataInstance> _cards,ShopBehaviorType _shopBehaviorType)
+    private void ShopOutput(List<ICardDataInstanceProvider> _cards,ShopBehaviorType _shopBehaviorType)
     {
         signalHub.Publish(new ShopOutputSignal(_cards,_shopBehaviorType));
     }

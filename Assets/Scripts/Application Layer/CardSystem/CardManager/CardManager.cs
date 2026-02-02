@@ -314,6 +314,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         for (int i = 0; i < permanentDeckPile.Count; ++i)
         {
+            permanentDeckPile[i].SetUpgrade(false);
             deckPile.Add(permanentDeckPile[i]);
         }
     }
@@ -463,21 +464,23 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     /// <summary>
     /// ±¸Á¶ ¹Ù²Ü °Í.
     /// </summary>
-    public void AddCards_Temp(List<CardDataInstance> _cards)
+    public void AddCards_Temp(List<ICardDataInstanceProvider> _cards)
     {
         for (int i = 0; i < _cards.Count; ++i)
-            permanentDeckPile.Add(_cards[i]);
+        {
+            permanentDeckPile.Add(_cards[i] as CardDataInstance);
+        }
     }
 
-    public void DeleteCards_Temp(List<CardDataInstance> _cards)
+    public void DeleteCards_Temp(List<ICardDataInstanceProvider> _cards)
     {
         for (int i = 0; i < _cards.Count; ++i)
-            permanentDeckPile.Remove(_cards[i]);
+            permanentDeckPile.Remove(_cards[i] as CardDataInstance);
     }
 
-    public void UpgradeCards_Temp(List<CardDataInstance> _cards)
+    public void UpgradeCards_Temp(List<ICardDataInstanceProvider> _cards)
     {
         for (int i = 0; i < _cards.Count; ++i)
-            _cards[i].bUpgrade = true;
+            (_cards[i] as CardDataInstance).SetPermanentlyUpgrade(true);
     }
 }

@@ -17,7 +17,7 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlSystemActio
     {
         for(int i = 0;i < cards.Length;++i)
         {
-            cards[i].bUpgrade = true;
+            cards[i].SetUpgrade(true);
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsUpgraded, cardSystemContext, cards);

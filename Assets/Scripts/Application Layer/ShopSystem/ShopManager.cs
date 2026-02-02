@@ -4,7 +4,7 @@ using System;
 
 public class ShopManager : MonoBehaviour, IShopSystemData
 {
-    IReadOnlyList<CardDataInstance> IShopSystemData.cardMerchandiseData => cardMerchandiseData;
+    IReadOnlyList<ICardDataInstanceProvider> IShopSystemData.cardMerchandiseData => cardMerchandiseData;
 
     //외부 의존성
     private ICardLogicSystemProvider cardLogicSystemProvider;
@@ -88,7 +88,7 @@ public class ShopManager : MonoBehaviour, IShopSystemData
         }
     }
 
-    public void AnalysisShopBehavior(List<CardDataInstance> _cards,ShopBehaviorType _shopBehaviorType)
+    public void AnalysisShopBehavior(List<ICardDataInstanceProvider> _cards,ShopBehaviorType _shopBehaviorType)
     {
         if(_shopBehaviorType == ShopBehaviorType.PickUp)
         {

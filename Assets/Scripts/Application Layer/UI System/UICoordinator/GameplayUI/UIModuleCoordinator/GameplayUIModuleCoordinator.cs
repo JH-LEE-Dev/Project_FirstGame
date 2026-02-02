@@ -141,7 +141,7 @@ public class GameplayUIModuleCoordinator
         cardUICoordinator.UnEquipBulletCard(slotIdx);
     }
 
-    public void TryCardUse(CardDataInstance usedCard)
+    public void TryCardUse(ICardDataInstanceProvider usedCard)
     {
         signalHub.Publish(new TryCardUseSignal(usedCard));
     }
@@ -238,7 +238,7 @@ public class GameplayUIModuleCoordinator
         cardUICoordinator.CardSelectionModeStarted(cardSelectionModeStartSignal.data);
     }
 
-    private void CardSelectionEnd(CardSelectionModeData _data,List<CardDataInstance> _cards)
+    private void CardSelectionEnd(CardSelectionModeData _data,List<ICardDataInstanceProvider> _cards)
     {
         signalHub.Publish(new UICardSelectionEndSignal(_data, _cards));
     }

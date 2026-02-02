@@ -218,7 +218,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
-            if (usedCard.bUpgrade)
+            if (usedCard.IsUpgraded())
                 OrganizeCardEffectCommand(usedCard, 0, 1);
             else
                 OrganizeCardEffectCommand(usedCard, 1);
@@ -264,7 +264,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                if (bulletCardSlot[i][j].bUpgrade)
+                if (bulletCardSlot[i][j].IsUpgraded())
                     ++upgradeNestingCnt;
             }
 
@@ -357,15 +357,18 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
-    public CardUsedResult TryCardUse(CardDataInstance usedCard)
+    public CardUsedResult TryCardUse(ICardDataInstanceProvider usedCard)
     {
+        if (usedCard is CardDataInstance card == false)
+            return default;
+
         CardUsedResult result;
 
         CardData usedCardData = usedCard.GetCardData();
 
         if (usedCardData.cardType == CardType.Bullet)
         {
-            BulletCardUsedResult bulletCardUseResult = cardSlotManager.InsertCardToSlot(usedCard);
+            BulletCardUsedResult bulletCardUseResult = cardSlotManager.InsertCardToSlot(card);
 
             if (bulletCardUseResult.bVerified == false)
             {
@@ -377,18 +380,18 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             {
                 result.bVerified = true;
                 result.slotIdx = bulletCardUseResult.slotIdx;
-                result.usedCard = usedCard;
+                result.usedCard = card;
 
-                CardUsed(usedCard);
+                CardUsed(card);
             }
         }
         else
         {
-            CardUsed(usedCard);
+            CardUsed(card);
 
             result.bVerified = true;
             result.slotIdx = -1;
-            result.usedCard = usedCard;
+            result.usedCard = card;
         }
 
         return result;
@@ -467,7 +470,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         int currentNestingCnt = 1;
         int currentUpgradeNestingCnt = 0;
 
-        if (currentCard.bUpgrade)
+        if (currentCard.IsUpgraded())
             ++currentUpgradeNestingCnt;
 
         for (int i = 1; i < usedCardPile.Count; ++i)
@@ -476,7 +479,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             {
                 if (currentCard.GetCardData().id == usedCardPile[i].GetCardData().id)
                 {
-                    if (usedCardPile[i].bUpgrade)
+                    if (usedCardPile[i].IsUpgraded())
                         ++currentUpgradeNestingCnt;
                     else
                         ++currentNestingCnt;
@@ -487,7 +490,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                     currentCard = usedCardPile[i];
                     OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
 
-                    if (usedCardPile[i].bUpgrade)
+                    if (usedCardPile[i].IsUpgraded())
                         currentUpgradeNestingCnt = 1;
                     else
                         currentNestingCnt = 1;

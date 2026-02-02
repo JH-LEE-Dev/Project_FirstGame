@@ -14,9 +14,9 @@ namespace CardSystemUISignal
     public struct CardUsingFinishedSignal { }
     public struct TryCardUseSignal
     {
-        public readonly CardDataInstance usedCard;
+        public readonly ICardDataInstanceProvider usedCard;
 
-        public TryCardUseSignal(CardDataInstance _usedCard)
+        public TryCardUseSignal(ICardDataInstanceProvider _usedCard)
         {
             usedCard = _usedCard;
         }
@@ -33,9 +33,9 @@ namespace CardSystemUISignal
     public struct UICardSelectionEndSignal
     {
         public CardSelectionModeData data;
-        public List<CardDataInstance> cards;
+        public List<ICardDataInstanceProvider> cards;
 
-        public UICardSelectionEndSignal(CardSelectionModeData _data,List<CardDataInstance> _cards)
+        public UICardSelectionEndSignal(CardSelectionModeData _data,List<ICardDataInstanceProvider> _cards)
         {
             data = _data;
             cards = _cards;

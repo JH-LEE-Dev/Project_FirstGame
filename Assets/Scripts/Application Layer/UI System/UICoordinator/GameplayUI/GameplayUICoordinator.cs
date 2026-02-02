@@ -117,7 +117,7 @@ public class GameplayUICoordinator
         unitWorldUISystem.SetBulletSocketCount(cnt);
     }
 
-    public void EquipBulletCard(int slotIdx,CardDataInstance equippedCard)
+    public void EquipBulletCard(int slotIdx, ICardDataInstanceProvider equippedCard)
     {
         unitWorldUISystem.EquipBulletCard(slotIdx, equippedCard);
     }

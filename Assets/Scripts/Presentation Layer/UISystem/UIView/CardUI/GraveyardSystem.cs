@@ -267,7 +267,7 @@ public class GraveyardSystem : MonoBehaviour
             .SetEase(Ease.OutCubic));
     }
 
-    public void CardDrawToHands(List<CardDataInstance> dataList)
+    public void CardDrawToHands(List<ICardDataInstanceProvider> dataList)
     {
         if (null == cardSystem)
             return;
