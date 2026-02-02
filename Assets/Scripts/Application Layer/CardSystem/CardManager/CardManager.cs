@@ -263,7 +263,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     {
         if (gravePile.Count == 0)
         {
-            Debug.Log("묘지에 더 이상 카드가 없습니다. 씌발");
+            Debug.Log("묘지에 더 이상 카드가 없습니다.");
             return;
         }
 

@@ -30,7 +30,6 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
     public void CardSelectionEnd(CardSelectionModeData _data, List<ICardDataInstanceProvider> _cards)
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(_cards.Count);
-
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < _cards.Count; ++i)

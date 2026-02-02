@@ -9,7 +9,6 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        Debug.Log("1");
         var bulletCards = complexSystemActionCommandHandler.GetCurrentBulletCards();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
@@ -54,6 +53,8 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             if (modifiedCnt != 0)
                 complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
         }
+
+        rentalBuffer.Dispose();
 
         ResetCommandData();
     }

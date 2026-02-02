@@ -34,6 +34,7 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
         }
 
         complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt));
+
         rentalBuffer.Dispose();
 
         ResetCommandData();

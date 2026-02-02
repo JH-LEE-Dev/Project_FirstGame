@@ -58,7 +58,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
         result.bVerified = false;
         result.slotIdx = -1;
-        Debug.Log("Ä«µå ½½·ÔÀÌ ±×µæ Ã¡½À´Ï´Ù.");
+        Debug.Log("Ä«µå ½½·ÔÀÌ °¡µæ Ã¡½À´Ï´Ù.");
 
         return result;
     }
