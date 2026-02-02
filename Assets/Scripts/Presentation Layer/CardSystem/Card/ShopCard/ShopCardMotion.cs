@@ -11,6 +11,7 @@ public class ShopCardMotion : MonoBehaviour
     private Vector2 originSizeDelta;
     private Vector2 originAnchorMax;
     private Vector2 originAnchorMin;
+    private Vector3 saveScale;
 
     private Tween moveTween;
     private Tween scaleTween;
@@ -30,12 +31,12 @@ public class ShopCardMotion : MonoBehaviour
 
     public void SetOriginScale(Vector3 _originScale)
     {
-        originScale = transform.localScale = _originScale;
+        saveScale = originScale = transform.localScale = _originScale;
     }
 
     public void SetScale(Vector3 _scale)
     {
-        transform.localScale = _scale;
+        saveScale = transform.localScale = _scale;
     }
 
     public void AllKillTweens(bool bResetToOrigin = true)
@@ -67,12 +68,12 @@ public class ShopCardMotion : MonoBehaviour
 
     public void ToIdle()
     {
-        transform.localScale = originScale;
+        transform.localScale = saveScale;
     }
 
     public void ToSelect()
     {
-        Vector3 targetScale = originScale * 1.3f;
+        Vector3 targetScale = saveScale * 1.3f;
         transform.localScale = targetScale;
     }
 
