@@ -27,6 +27,12 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
         prevShield = 0;
     }
 
+    public void ResetShield()
+    {
+        currentShield = 0;
+        prevShield = 0;
+    }
+
     protected override void OnDestroy()
     {
         UnitIsDeadEvent = null;

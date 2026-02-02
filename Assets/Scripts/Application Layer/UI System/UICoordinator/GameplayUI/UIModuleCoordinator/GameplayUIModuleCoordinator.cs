@@ -55,6 +55,8 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.Subscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
         signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
+        signalHub.Subscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
+        signalHub.Subscribe<CharacterStatChangedSignal>(CharacterStatChanged);
     }
 
     private void UnSubscribeEvents()
@@ -82,6 +84,8 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<EnemyTakeDamageSignal>(EnemyTakeDamage);
         signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
+        signalHub.UnSubscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
+        signalHub.UnSubscribe<CharacterStatChangedSignal>(CharacterStatChanged);
     }
 
     public void BindEvents()
@@ -248,5 +252,15 @@ public class GameplayUIModuleCoordinator
     private void EnemyIsKilled(WaveProgressUpdatedSignal waveProgressUpdatedSignal)
     {
         gameplayUICoordinator.EnemyIsKilled(waveProgressUpdatedSignal.enemyData);
+    }
+
+    private void ResetPlayerShield(ResetPlayerShieldSignal resetPlayerShield)
+    {
+        gameplayUICoordinator.ResetPlayerShield();
+    }
+
+    private void CharacterStatChanged(CharacterStatChangedSignal characterStatChangedSignal)
+    {
+        gameplayUICoordinator.CharacterStatChanged();
     }
 }

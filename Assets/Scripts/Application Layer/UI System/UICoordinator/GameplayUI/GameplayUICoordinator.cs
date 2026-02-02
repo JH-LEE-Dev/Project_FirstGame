@@ -151,4 +151,14 @@ public class GameplayUICoordinator
     {
         hudUISystem.EnemyIsKilled(_enemyData.GetTransform().position);
     }
+
+    public void ResetPlayerShield()
+    {
+        hudUISystem.ResetPlayerShield();
+    }
+
+    public void CharacterStatChanged()
+    {
+        hudUISystem.CharacterStatChanged();
+    }
 }

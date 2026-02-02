@@ -10,4 +10,6 @@ public interface ICombatEffectReceiver
     void ApplyCriticalChanceModifier(int bonusChance);
 
     void ApplyWeaknessModifier(int turnCnt);
+
+    void ApplyAttackCntModifier(int cnt);
 }

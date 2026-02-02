@@ -72,6 +72,11 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
         healthComponent.ResetHealthComponent();
     }
 
+    public void ResetShield()
+    {
+        healthComponent.ResetShield();
+    }
+
     public void EarnMoney(int amount)
     {
         money += amount;

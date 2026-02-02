@@ -96,6 +96,12 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         prevUsedCardCnt = 0;
     }
 
+    public void PlayerTurnFinished()
+    {
+        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.HandCardsToGrave);
+        CardActionEndScopeEvent?.Invoke();
+    }
+
     private void DispatchCardSystemActionCommand_BeforeTurn()
     {
         for (int i = 0; i < cardLogicSystemActionCommands.Count; ++i)

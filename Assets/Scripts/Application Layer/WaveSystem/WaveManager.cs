@@ -87,17 +87,17 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
 
     public void StartEnemyMoveTurn(EnemyTurnStartSignal enemyTurnStartSignal)
     {
-        StartCoroutine(MoveTurnCoroutine());
+        if (bIsWaveEnded == false)
+            StartCoroutine(MoveTurnCoroutine());
+        else
+            signalHub.Publish(new AllEnemyDeadSignal());
     }
 
     private IEnumerator WaveMoveEnd()
     {
         yield return new WaitForSeconds(MoveTurnDelay);
 
-        if (bIsWaveEnded == false)
-            signalHub.Publish(new WaveMoveEndSignal());
-        else
-            signalHub.Publish(new AllEnemyDeadSignal());
+        signalHub.Publish(new WaveMoveEndSignal());
     }
 
     private IEnumerator MoveTurnCoroutine()

@@ -9,6 +9,7 @@ public class UIView_HUD : UIView
 {
     //외부 데이터
     IPlayerData playerData;
+    ICharacterData characterData;
     IWaveSystemData waveSystemData;
 
     [Header("UI References")]
@@ -52,10 +53,11 @@ public class UIView_HUD : UIView
         
     }
 
-    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData)
+    public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData,ICharacterData _characterData)
     {
         waveSystemData = _waveSystemData;
         playerData = _playerData;
+        characterData = _characterData;
 
         IntializeChildrenHUD();
     }
@@ -72,6 +74,7 @@ public class UIView_HUD : UIView
 
     private void OnClickClose()
     {
+
     }
 
     public void RenderUI()
@@ -126,6 +129,7 @@ public class UIView_HUD : UIView
     {
         Target_BarUpdate(deadPosition);
     }
+
     public void PlayerGetShield(float amount)
     {
         HP_BarShieldCalc();
@@ -136,6 +140,7 @@ public class UIView_HUD : UIView
     {
 
     }
+
     public void CardUseTimeStarted()
     {
         turnProcessIndicatorText.text = "Card Using Time";
@@ -323,5 +328,10 @@ public class UIView_HUD : UIView
     {
         if (!starlight) return -1;
         return starlight.GetStarlight();
+    }
+
+    public void CharacterStatChanged()
+    {
+
     }
 }

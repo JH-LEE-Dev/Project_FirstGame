@@ -254,6 +254,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
         handPile.Clear();
+
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext);
     }
 
     private void GraveToDeck(int amount)
@@ -349,13 +351,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     public void DrawAgain(int drawAmount)
     {
         CardAdditionalPileDraw(drawAmount);
-    }
-
-    public void PlayerTurnFinished()
-    {
-        HandToGrave();
-
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext);
     }
 
     public bool DeckConditionCheck(int cardID)

@@ -9,12 +9,12 @@ public class Bullet : MonoBehaviour
 {
     public event Action BulletEffectIsFinishedEvent;
 
+    //외부 의존성
+    ICharacterStatProvider characterStatProvider;
+
     //statComponent로 기능 분리할 것.
     [SerializeField] float speed = 1f;
     [SerializeField] float knockBackPower = 1f;
-    [SerializeField] float range = 1f;
-    [SerializeField] float attack = 1f;
-    [SerializeField] int criticalChance = 10;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask outOfRangeMask;
 
@@ -29,12 +29,9 @@ public class Bullet : MonoBehaviour
 
     private bool bFired = false;
 
-    private float attackModifier = 0;
-    private float rangeModifier = 0;
-    private int criticalChanceModifier = 0;
-    private int weaknessModifier = 0;
-
     private Collider2D directHitObject;
+
+    private float range = 0f;
 
     private void Awake()
     {
@@ -44,6 +41,11 @@ public class Bullet : MonoBehaviour
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;
         range = explosionRangeCollider.radius;
+    }
+
+    public void Initialize(ICharacterStatProvider _characterStatProvider)
+    {
+        characterStatProvider = _characterStatProvider;
     }
 
     private void OnDestroy()
@@ -90,11 +92,13 @@ public class Bullet : MonoBehaviour
         {
             ApplyDamage(hit.collider);
             bFired = false;
+
             Sound.Play("Impact", transform.position);
-            sr.gameObject.SetActive(false);
+            DeActivateBullet();
 
             CheckExplosion();
-            ResetModifier();
+
+            BulletEffectIsFinished();
 
             return true;
         }
@@ -105,7 +109,7 @@ public class Bullet : MonoBehaviour
     private void CheckExplosion()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position,
-            explosionRangeCollider.radius, targetMask);
+            range + range * characterStatProvider.attackRange, targetMask);
 
         foreach (var enemy in hitEnemies)
         {
@@ -127,9 +131,9 @@ public class Bullet : MonoBehaviour
 
         if (hit.collider != null)
         {
-            sr.gameObject.SetActive(false);
+            DeActivateBullet();
             bFired = false;
-            BulletEffectIsFinishedEvent?.Invoke();
+            BulletEffectIsFinished();
 
             return true;
         }
@@ -150,18 +154,18 @@ public class Bullet : MonoBehaviour
 
         int critical = UnityEngine.Random.Range(0, 100);
 
-        float totalDamage = attack;
+        float totalDamage = characterStatProvider.attack;
 
-        if (critical < criticalChance + criticalChanceModifier)
+        if (critical < characterStatProvider.criticalChange)
         {
             bCritical = true;
-            totalDamage = attack * 2;
+            totalDamage = characterStatProvider.attack * 2;
         }
 
         if (hit != null)
         {
-            hit.TakeDamage(totalDamage + attackModifier, bCritical);
-            hit.ApplyWeakness(weaknessModifier);
+            hit.TakeDamage(totalDamage, bCritical);
+            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             ApplyKnockBack(hit, other.transform.position);
         }
     }
@@ -175,8 +179,7 @@ public class Bullet : MonoBehaviour
 
     public void Fire(Vector2 dir)
     {
-        sr.gameObject.SetActive(true);
-        effectComponent.gameObject.SetActive(true);
+        ActivateBullet();
 
         bFired = true;
 
@@ -188,42 +191,26 @@ public class Bullet : MonoBehaviour
         prevPosition = transform.position;
     }
 
-    public void ApplyAttackModifier(float bonusDamage)
-    {
-        attackModifier += bonusDamage;
-    }
-
-    public void ApplyRangeModifier(float bonusRange)
-    {
-        bonusRange = range * bonusRange;
-
-        rangeModifier += bonusRange;
-    }
-
-    public void ApplyCriticalChangeModifier(int bonusChance)
-    {
-        criticalChanceModifier += bonusChance;
-    }
-
-    public void ApplyWeaknessModifier(int turnCnt)
-    {
-        weaknessModifier = turnCnt;
-    }
-
     public void BulletEffectIsFinished()
     {
         BulletEffectIsFinishedEvent?.Invoke();
-
-        ResetModifier();
     }
 
-    public void ResetModifier()
+    private void DeActivateBullet()
     {
-        attackModifier = 0;
-        rangeModifier = 0;
-        criticalChanceModifier = 0;
-        weaknessModifier = 0;
+        sr.gameObject.SetActive(false);
+        effectComponent.gameObject.SetActive(false);
 
-        explosionRangeCollider.radius = range;
+        circleCollider.enabled = false;
+        explosionRangeCollider.enabled = false;
+    }
+
+    private void ActivateBullet()
+    {
+        sr.gameObject.SetActive(true);
+        effectComponent.gameObject.SetActive(true);
+
+        circleCollider.enabled = true;
+        explosionRangeCollider.enabled = true;
     }
 }

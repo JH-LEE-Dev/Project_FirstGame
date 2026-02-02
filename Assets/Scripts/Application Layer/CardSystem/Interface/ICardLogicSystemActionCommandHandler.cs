@@ -20,4 +20,5 @@ public interface ICardLogicSystemActionCommandHandler : ICommandHandler
     void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards);
     void CardsToHand(ReadOnlySpan<CardDataInstance> cards);
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards);
+    void HandToGrave();
 }

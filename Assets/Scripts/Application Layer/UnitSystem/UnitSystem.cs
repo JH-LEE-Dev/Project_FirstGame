@@ -58,6 +58,9 @@ public class UnitSystem
 
         unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
         unitLogicSystem.EnemyIsKilledEvent += EnemyIsKilled;
+
+        unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
+        unitLogicSystem.CharacterStatChangedEvent += CharacterStatChanged;
     }
 
     private void ReleaseEvents()
@@ -83,6 +86,8 @@ public class UnitSystem
         unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
 
         unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
+
+        unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
     }
 
     private void SubscribeEvents()
@@ -97,7 +102,7 @@ public class UnitSystem
         signalHub.Subscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
-        signalHub.Subscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
+        signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
     }
 
     private void UnSubscribeEvents()
@@ -110,7 +115,7 @@ public class UnitSystem
         signalHub.UnSubscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
-        signalHub.UnSubscribe<WaveStartSignal>(unitLogicSystem.ResetPlayer);
+        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -157,5 +162,16 @@ public class UnitSystem
     {
         ReleaseEvents();
         UnSubscribeEvents();
+    }
+
+    public void PlayerTurnStart(PlayerTurnStartSignal playerTurnStartSignal)
+    {
+        unitLogicSystem.ResetPlayerShield();
+        signalHub.Publish(new ResetPlayerShieldSignal());
+    }
+
+    private void CharacterStatChanged()
+    {
+        signalHub.Publish(new CharacterStatChangedSignal());
     }
 }

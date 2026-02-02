@@ -63,8 +63,8 @@
     {
       "id" : 10,
       "name": "치명타",
-      "description": "치명타 확률 +10%",
-      "upgradedDescription" : "치명타 확률 +20%"
+      "description": "치명타 확률 +20%",
+      "upgradedDescription" : "치명타 확률 +40%"
     },
      {
       "id" : 11,

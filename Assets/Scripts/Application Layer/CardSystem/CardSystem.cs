@@ -4,6 +4,7 @@ using GameControlSignals;
 using System;
 using UnitLogicSystemSignals;
 using CardSystemUISignal;
+using WaveSystemSignals;
 
 public class CardSystem
 {
@@ -38,6 +39,7 @@ public class CardSystem
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
+        signalHub.Subscribe<WaveEndSignal>(WaveEnd);
         signalHub.Subscribe<UICardSelectionEndSignal>(CardSelectionEnd);
     }
 
@@ -50,6 +52,7 @@ public class CardSystem
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
+        signalHub.UnSubscribe<WaveEndSignal>(WaveEnd);
         signalHub.UnSubscribe<UICardSelectionEndSignal>(CardSelectionEnd);
     }
 
@@ -137,7 +140,7 @@ public class CardSystem
 
     private void PlayerTurnFinished(PlayerAttackFinishedSignal playerAttackFinishedSignal)
     {
-        cardManager.PlayerTurnFinished();
+        cardSystemController.PlayerTurnFinished();
     }
 
     private void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
@@ -215,5 +218,10 @@ public class CardSystem
     private void CardSelectionModeStart(CardSelectionModeData data)
     {
         signalHub.Publish(new CardSelectionModeStartSignal(data));
+    }
+
+    private void WaveEnd(WaveEndSignal waveEndSignal)
+    {
+        cardSystemController.PlayerTurnFinished();
     }
 }

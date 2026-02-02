@@ -24,6 +24,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action<float> PlayerGetShieldEvent;
     public event Action<float> PlayerGetHPEvent;
     public event Action<IEnemyData, float,bool> EnemyTakeDamageEvent;
+    public event Action CharacterStatChangedEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -82,7 +83,6 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     private void ReleaseEvent_Player()
     {
         playerUnit.TakeDamageEvent -= PlayerTakeDamage;
-        playerUnit.TakeDamageEvent += PlayerTakeDamage;
     }
 
     private void BindEvent_Character()
@@ -92,6 +92,9 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
         characterUnit.PlayerAttackEvent -= PlayerAttacked;
         characterUnit.PlayerAttackEvent += PlayerAttacked;
+
+        characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
+        characterUnit.CharacterStatChangedEvent += CharacterStatChanged;
     }
 
     private void ReleaseEvent_Character()
@@ -99,6 +102,8 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         characterUnit.PlayerAttackFinishedEvent -= PlayerTurnFinished;
 
         characterUnit.PlayerAttackEvent -= PlayerAttacked;
+
+        characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
     }
 
     private void BindEvent_Enemy()
@@ -188,6 +193,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void ApplyAttackModifier(float bonusDamage)
     {
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
+        CharacterStatChanged();
     }
 
     public void PlayerTakeDamage(float damage)
@@ -203,11 +209,13 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void ApplyRangeModifier(float bonusRange)
     {
         characterUnit.combatEffectReceiver.ApplyRangeModifier(bonusRange);
+        CharacterStatChanged();
     }
 
     public void ApplyAttackCntModifier(int cnt)
     {
-        characterUnit.ApplyAttackCntModifier(cnt);
+        characterUnit.combatEffectReceiver.ApplyAttackCntModifier(cnt);
+        CharacterStatChanged();
     }
 
     public void HPDecrease(float amount)
@@ -218,11 +226,13 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void ApplyCriticalChanceModifier(int chance)
     {
         characterUnit.combatEffectReceiver.ApplyCriticalChanceModifier(chance);
+        CharacterStatChanged();
     }
 
     public void ApplyWeaknessModifier(int turnCnt)
     {
         characterUnit.combatEffectReceiver.ApplyWeaknessModifier(turnCnt);
+        CharacterStatChanged();
     }
 
     public void HPIncrease(float amount)
@@ -231,13 +241,18 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         PlayerGetHPEvent?.Invoke(amount);
     }
 
-    public void ResetPlayer(WaveStartSignal waveStartSignal)
-    {
-        playerUnit.ResetPlayer();
-    }
-
     private void EnemyTakeDamage(IEnemyData enemyData, float damage,bool bCritical)
     {
         EnemyTakeDamageEvent?.Invoke(enemyData, damage, bCritical);
+    }
+
+    public void ResetPlayerShield()
+    {
+        playerUnit.ResetShield();
+    }
+
+    private void CharacterStatChanged()
+    {
+        CharacterStatChangedEvent?.Invoke();
     }
 }

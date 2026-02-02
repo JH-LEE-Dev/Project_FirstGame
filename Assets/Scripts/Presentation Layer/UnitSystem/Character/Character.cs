@@ -7,10 +7,11 @@ public class Character : Unit, ICharacterData
     /// <summary>
     /// 시스템 속성 존.----------------------------------
     /// </summary>
-    public ICombatEffectReceiver combatEffectReceiver => combatComponent;
+    public ICombatEffectReceiver combatEffectReceiver => statComponent;
 
     public event Action PlayerAttackEvent;
     public event Action PlayerAttackFinishedEvent;
+    public event Action CharacterStatChangedEvent;
 
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;
@@ -21,12 +22,11 @@ public class Character : Unit, ICharacterData
     private PMoveComponent moveComponent;
     private PCombatComponent combatComponent;
     private CutsceneComponent cutsceneComponent;
+    private PStatComponent statComponent;
 
     [Header("aim Object")]
     private LineRenderer lineRenderer;
     [SerializeField] private float aimLength = 10f;
-
-    private int attackCnt = 1;
 
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
@@ -55,11 +55,13 @@ public class Character : Unit, ICharacterData
         moveComponent = GetComponent<PMoveComponent>();
         cutsceneComponent = GetComponent<CutsceneComponent>();
         visualComponentCoordinator = new PVisualComponentCoordinator();
+        statComponent = GetComponent<PStatComponent>();
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
+        statComponent.Initialize();
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
-        combatComponent.Initialize(ctx, visualComponentCoordinator);
+        combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
 
         lineRenderer = GetComponent<LineRenderer>();
@@ -129,11 +131,6 @@ public class Character : Unit, ICharacterData
     {
         lineRenderer.enabled = false;
         bCanAction = false;
-    }
-
-    public void ApplyAttackCntModifier(int bonusAttackCnt)
-    {
-        attackCnt += bonusAttackCnt;
     }
 
     /// <summary>
@@ -216,12 +213,13 @@ public class Character : Unit, ICharacterData
     //그리고 이 신호를 상위 모듈로 전파함.
     private void PlayerAttackFinished()
     {
-        --attackCnt;
+        statComponent.DecreaseAttackCnt();
 
-        if (attackCnt == 0)
+        if (statComponent.attackCnt == 0)
         {
-            attackCnt = 1;
             PlayerAttackFinishedEvent?.Invoke();
+            statComponent.ResetStat();
+            CharacterStatChangedEvent?.Invoke();
         }
         else
         {
@@ -265,5 +263,10 @@ public class Character : Unit, ICharacterData
     public void PlayerAttackTurnStarted()
     {
         PlayCutscene(CutsceneSignal.TurnEnd_Start);
+    }
+
+    public ICharacterStatProvider GetStatProvider()
+    {
+        return statComponent;
     }
 }

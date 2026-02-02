@@ -69,4 +69,6 @@ namespace UnitLogicSystemSignals
             enemyData = _enemyData;
         }
     }
+    public struct ResetPlayerShieldSignal { }
+    public struct CharacterStatChangedSignal { }
 }

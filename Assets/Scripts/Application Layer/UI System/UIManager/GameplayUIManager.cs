@@ -24,7 +24,7 @@ public class GameplayUIManager : UIManager
             cardUI.DataInjection(cardSystemData.deckCards, cardSystemData.handCards, cardSystemData.graveCards,cardSystemData.extinctionCards);
 
         if (view is UIView_HUD hudUI)
-            hudUI.DataInjection(waveSystemData,unitSpawnSystemData.playerData);
+            hudUI.DataInjection(waveSystemData,unitSpawnSystemData.playerData,unitSpawnSystemData.characterData);
 
         if (view is UIView_Unit_World unitWorldUI)
             unitWorldUI.DataInjection(unitSpawnSystemData.characterData);

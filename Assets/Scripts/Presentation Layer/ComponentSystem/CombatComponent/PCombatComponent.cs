@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-public class PCombatComponent : CombatComponent, ICombatEffectReceiver
+public class PCombatComponent : CombatComponent
 {
     /// <summary>
     /// 시스템 속성 존. -----------------------------------------
     /// </summary>
 
     public event Action BulletEffectIsFinishedEvent;
+
+    //외부 의존성
+    ICharacterStatProvider characterStatProvider;
 
     [SerializeField] private Bullet bulletPrefab;
     private Bullet bulletObject;
@@ -31,15 +34,23 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
     /// <summary>
     /// 시스템 코드 존. ---------------------------------------------
     /// </summary>
+    
+    public void Initialize(UnitContext _ctx, ICombatSignalHandler _combatSignalHandler, ICharacterStatProvider _characterStatProvider)
+    {
+        base.Initialize(_ctx, _combatSignalHandler);
+
+        characterStatProvider = _characterStatProvider;
+
+        bulletObject = Instantiate(bulletPrefab, transform);
+        bulletObject.gameObject.SetActive(false);
+        bulletObject.Initialize(characterStatProvider);
+
+        BindEvent();
+    }
 
 
     protected override void Awake()
     {
-        //총알 오브젝트 생성.
-        bulletObject = Instantiate(bulletPrefab,transform);
-        bulletObject.gameObject.SetActive(false);
-
-        BindEvent();
     }
 
     private void BindEvent()
@@ -71,21 +82,6 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
         BulletEffectIsFinishedEvent?.Invoke();
     }
 
-    public void ApplyAttackModifier(float bonusDamage)
-    {
-        bulletObject.ApplyAttackModifier(bonusDamage);
-    }
-
-    public void ApplyRangeModifier(float bonusRange)
-    {
-        bulletObject.ApplyRangeModifier(bonusRange);
-    }
-
-    public void ApplyCriticalChanceModifier(int  bonusCriticalChance)
-    {
-        bulletObject.ApplyCriticalChangeModifier(bonusCriticalChance);
-    }
-
     /// <summary>
     /// 구현 코드 존. ----------------------------------------------------
     /// </summary>
@@ -103,10 +99,5 @@ public class PCombatComponent : CombatComponent, ICombatEffectReceiver
     protected override void Start()
     {
 
-    }
-
-    public void ApplyWeaknessModifier(int turnCnt)
-    {
-        
     }
 }
