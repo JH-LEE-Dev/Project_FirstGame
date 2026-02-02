@@ -98,12 +98,11 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void PlayerTurnFinished()
     {
-        ResetAllCommands();
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.HandCardsToGrave);
         CardActionEndScopeEvent?.Invoke();
     }
 
-    private void ResetAllCommands()
+    public void ResetAllCommands()
     {
         cardEffect_AfterAttack.Clear();
         cardEffect_BeforeAttack.Clear();

@@ -229,6 +229,7 @@ public class CardSystem
     private void WaveEnd(WaveEndSignal waveEndSignal)
     {
         cardSystemController.PlayerTurnFinished();
+        cardSystemController.ResetAllCommands();
     }
 
     private void HandleShopOutput(ShopOutputSignal shopOutputSignal)
