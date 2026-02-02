@@ -239,7 +239,6 @@ public class UIView_HUD : UIView
             return;
 
         targetBar.OnFill(vfx.savedCurrentProgress);
-        //Debug.Log(vfx.savedCurrentProgress);
 
         targetGageText?.DataUpdate(vfx.savedCurrentKillCnt, vfx.savedEnemyMaxCnt);
         StartCoroutine(ReleaseEffect(vfx));

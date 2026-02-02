@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class VFX_TargetBarStar : MonoBehaviour
@@ -31,7 +31,7 @@ public class VFX_TargetBarStar : MonoBehaviour
         mainRect = GetComponent<RectTransform>();
         particles = GetComponentsInChildren<ParticleSystem>();
 
-        foreach(ParticleSystem vfx in particles)
+        foreach (ParticleSystem vfx in particles)
         {
             if (vfx)
             {
@@ -141,5 +141,6 @@ public class VFX_TargetBarStar : MonoBehaviour
 
         callbackEvent?.Invoke(this);
         callbackEvent = null;
+        visualRect.gameObject.SetActive(false);
     }
 }

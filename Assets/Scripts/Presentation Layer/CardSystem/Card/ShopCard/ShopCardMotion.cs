@@ -7,6 +7,10 @@ public class ShopCardMotion : MonoBehaviour
     private RectTransform rt;
 
     private Vector3 originScale;
+    private Vector3 originPos;
+    private Vector2 originSizeDelta;
+    private Vector2 originAnchorMax;
+    private Vector2 originAnchorMin;
 
     private Tween moveTween;
     private Tween scaleTween;
@@ -15,7 +19,13 @@ public class ShopCardMotion : MonoBehaviour
     {
         owner = card;
         rt = GetComponent<RectTransform>();
+
         originScale = transform.localScale;
+        originPos = transform.localPosition;
+
+        originSizeDelta = rt.sizeDelta;
+        originAnchorMax = rt.anchorMax;
+        originAnchorMin = rt.anchorMin;
     }
 
     public void SetOriginScale(Vector3 _originScale)
@@ -23,19 +33,25 @@ public class ShopCardMotion : MonoBehaviour
         originScale = transform.localScale = _originScale;
     }
 
-    public void SetScale(Vector3 _originScale)
+    public void SetScale(Vector3 _scale)
     {
-        transform.localScale = _originScale;
+        transform.localScale = _scale;
     }
 
-    public void ResetToOriginal()
+    public void AllKillTweens(bool bResetToOrigin = true)
     {
-        transform.localScale = originScale;
-    }
+        if (bResetToOrigin)
+        {
+            if (null != rt)
+            {
+                rt.sizeDelta = originSizeDelta;
+                rt.anchorMax = originAnchorMax;
+                rt.anchorMin = originAnchorMin;
+            }
 
-    public void AllKillTweens(bool bRestoreScale = true)
-    {
-        if (bRestoreScale) transform.localScale = originScale;
+            transform.localScale = originScale;
+            transform.localPosition = originPos;
+        }
 
         moveTween?.Kill();
         moveTween = null;
