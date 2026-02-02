@@ -27,6 +27,7 @@ public class GameInstaller : MonoBehaviour
     private ShopSystem shopSystem;
     private ShopManager shopManager;
     private CardDataControlManager cardDataControlManager;  
+    private ShopBehaviorHandler shopBehaviorHandler;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -56,6 +57,7 @@ public class GameInstaller : MonoBehaviour
         shopManager = GetComponent<ShopManager>();
         cardLocalizationSystem = _cardLocalizationSystem;
         cardDataControlManager = GetComponent<CardDataControlManager>();
+        shopBehaviorHandler = new ShopBehaviorHandler();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -68,7 +70,9 @@ public class GameInstaller : MonoBehaviour
         cardDataControlManager.Initialize();
         cardManager.Initialize();
         cardSystemController.Initialize();
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver, cardDataControlManager);
+        shopBehaviorHandler.Initialize(cardManager);
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver, cardDataControlManager,
+            shopBehaviorHandler);
 
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager, cardDataControlManager);
 

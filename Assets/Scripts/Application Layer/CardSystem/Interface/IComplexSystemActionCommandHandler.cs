@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public interface IComplexSystemActionCommandHandler : ICommandHandler
 {
-    bool DeckConditionCheck(int cardId);
-
     void ApplyAttackCntModifier(int attckCnt);
 
     IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards();
@@ -26,6 +24,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount);
     void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards,CardSystemContextType _cardSystemContextType);
     void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType);
-    void UpgradeCards(ReadOnlySpan<CardDataInstance> cards);
+    void UpgradeCards(ReadOnlySpan<CardDataInstance> cards,bool bPermenant);
     void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier);
+    void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards);
 }

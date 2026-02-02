@@ -9,10 +9,10 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
     protected override void Execute(ICardLogicSystemActionCommandHandler cardLogicSystemActionCommandHandler)
     {
         if (nestingCnt != 0)
-            cardLogicSystemActionCommandHandler.DrawAgain(drawAmount * nestingCnt*valueModifier);
+            cardLogicSystemActionCommandHandler.DrawAgain(drawAmount * nestingCnt * valueModifier);
 
-        if(upgradeNestingCnt != 0)
-            cardLogicSystemActionCommandHandler.DrawAgain(upgradedDrawAmount * upgradeNestingCnt*valueModifier);
+        if (upgradeNestingCnt != 0)
+            cardLogicSystemActionCommandHandler.DrawAgain(upgradedDrawAmount * upgradeNestingCnt * valueModifier);
 
         ResetCommandData();
     }

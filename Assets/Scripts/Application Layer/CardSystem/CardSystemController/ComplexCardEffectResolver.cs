@@ -45,11 +45,6 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyAttackCntModifier(attckCnt);
     }
 
-    public bool DeckConditionCheck(int cardId)
-    {
-        return cardSystemActionCommandHandler.DeckConditionCheck(cardId);
-    }
-
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards()
     {
         return slotSystemActionCommandHandler.GetPrevUsedBulletCard();
@@ -130,9 +125,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler.RequestCardDataControlSystemActionCommand(cardDataControlSystemActionType, _cards, _cardSystemContextType);
     }
 
-    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards)
+    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards,bool bPermenant)
     {
-        cardDataControlActionCommandHandler.UpgradeCards(cards);
+        cardDataControlActionCommandHandler.UpgradeCards(cards, bPermenant);
     }
 
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
@@ -143,5 +138,10 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
     {
         cardDataControlActionCommandHandler.ApplyValueModifier(cards, valueModifier);
+    }
+
+    public void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards)
+    {
+        cardSystemActionCommandHandler.CardsRemoveFromHand(cards);
     }
 }

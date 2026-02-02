@@ -23,10 +23,10 @@ public abstract class CardEffectCommand : CardSystemCommand
 
     public void ResetCommandData()
     {
-        nestingCnt = 0;
-        upgradeNestingCnt = 0;
-        valueModifier = 1;
-        cardSystemContextType = CardSystemContextType.MAX;
+        //nestingCnt = 0;
+        //upgradeNestingCnt = 0;
+        //valueModifier = 1;
+        //cardSystemContextType = CardSystemContextType.MAX;
     }
 }
 

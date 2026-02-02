@@ -13,11 +13,14 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlSystemActio
         cardSystemEventInvoker = new CardSystemEventInvoker();
     }
 
-    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards)
+    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant)
     {
-        for(int i = 0;i < cards.Length;++i)
+        for (int i = 0; i < cards.Length; ++i)
         {
-            cards[i].SetUpgrade(true);
+            if (bPermenant == false)
+                cards[i].SetUpgrade(true);
+            else
+                cards[i].SetPermanentlyUpgrade(true);
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsUpgraded, cardSystemContext, cards);
@@ -29,7 +32,7 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlSystemActio
         actionCommand.Execute(this);
     }
 
-    public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards,int valueModifier)
+    public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
     {
         for (int i = 0; i < cards.Length; ++i)
         {
