@@ -3,7 +3,6 @@ using UnityEngine;
 public class EntityComponent : MonoBehaviour
 {
     protected UnitContext ctx;
-    protected bool bDead = false;
 
     protected void Initialize(UnitContext _ctx)
     {

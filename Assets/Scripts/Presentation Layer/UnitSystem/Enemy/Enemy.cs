@@ -39,15 +39,16 @@ public class Enemy : Unit, IEnemyData
 
     public void ActivateEnemy()
     {
-        col.gameObject.SetActive(true);
-        sr.gameObject.SetActive(true);
+        col.enabled = true;
+        sr.enabled = true;
         bDead = false;
     }
 
     public void DeActivateEnemy()
     {
-        col.gameObject.SetActive(false);
-        sr.gameObject.SetActive(false);
+        col.enabled = false;
+        sr.enabled = false;
+        bDead = true;
         healthComponent.ResetHealthComponent();
     }
 
@@ -105,8 +106,8 @@ public class Enemy : Unit, IEnemyData
     {
         EnemyIsKilledEvent?.Invoke(this,enemyTypeData);
 
-        sr.gameObject.SetActive(false);
-        col.gameObject.SetActive(false);
+        sr.enabled = false;
+        col.enabled = false;
 
         vfxDeadImpact.Play(true);
     }
@@ -176,7 +177,7 @@ public class Enemy : Unit, IEnemyData
     //지구에 충돌했을 때 호출됨.
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.isTrigger)
+        if (!other.isTrigger || bDead)
             return;
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Earth"))

@@ -100,7 +100,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
 
-        cardData = cardDataBase.GetCardData(10);
+       // cardData = cardDataBase.GetCardData(10);
+        cardData = cardDataBase.GetCardData((int)CardName.SpaceShuttle);
         if (cardData == null)
             return;
 
@@ -274,10 +275,10 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             var card = gravePile[i];
             writeBuffer[i] = card;
             deckPile.Add(card);
-            gravePile.Remove(card);
         }
 
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, gravePile.Count));
+        gravePile.Clear();
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer);
 
         rentalBuffer.Dispose();
     }

@@ -10,8 +10,6 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
     [SerializeField] private int bonusAttack = 0;
     [SerializeField] private int upgradedAttackCnt = 0;
     [SerializeField] private int upgradedBonusAttack = 0;
-    [SerializeField] private int conditionCheckCardId = 0;
-    [SerializeField] private int upgradedConditionCheckCardId = 0;
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {

@@ -103,6 +103,7 @@ public class UnitSystem
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
+        signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
     }
 
     private void UnSubscribeEvents()
@@ -116,6 +117,7 @@ public class UnitSystem
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
+        signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -173,5 +175,11 @@ public class UnitSystem
     private void CharacterStatChanged()
     {
         signalHub.Publish(new CharacterStatChangedSignal());
+    }
+
+    private void ShopTimeStarted(ShopTimeStartedSignal shopTimeStartedSignal)
+    {
+        unitLogicSystem.ResetPlayerShield();
+        signalHub.Publish(new ResetPlayerShieldSignal());
     }
 }

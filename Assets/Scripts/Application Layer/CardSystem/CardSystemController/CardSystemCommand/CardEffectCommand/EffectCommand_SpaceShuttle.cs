@@ -27,8 +27,8 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
             {
                 if (prevUsedBulletCards[i][j].GetCardData().elementType == ElementType.Rotation)
                 {
+                    writeBuffer[bufferCnt] = prevUsedBulletCards[i][j];
                     ++bufferCnt;
-                    writeBuffer[i] = prevUsedBulletCards[i][j];
                 }
             }
         }

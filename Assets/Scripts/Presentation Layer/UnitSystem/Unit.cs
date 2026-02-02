@@ -51,13 +51,11 @@ public class Unit : MonoBehaviour, IDamageable
     private void ReleaseEvent()
     {
         healthComponent.UnitIsDeadEvent -= HandleDead;
-        UnitIsDeadEvent = null;
     }
 
     protected virtual void HandleDead()
     {
         bDead = true;
-        UnitIsDead();
     }
 
     protected virtual void OnDestroy()
@@ -68,6 +66,7 @@ public class Unit : MonoBehaviour, IDamageable
 
     protected void UnitIsDead()
     {
+        bDead = true;
         UnitIsDeadEvent?.Invoke(this);
     }
 
@@ -82,7 +81,10 @@ public class Unit : MonoBehaviour, IDamageable
         bCanAction = false;
     }
 
-
+    public bool IsUnitDead()
+    {
+        return bDead;
+    }
 
 
 
