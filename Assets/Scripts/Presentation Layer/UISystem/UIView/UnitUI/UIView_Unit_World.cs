@@ -95,7 +95,25 @@ public class UIView_Unit_World : UIView
     }
 
 
-    // 인게임 중에, 플레이어의 카드 슬롯 개수를 변경해주는 함수. 아직은 필요가 없다.
+    [Button]
+    public void Test2()
+    {
+        SetBulletSocketCount(2);
+    }
+    [Button]
+    public void Test3()
+    {
+        SetBulletSocketCount(3);
+    }
+
+    [Button]
+    public void Test4()
+    {
+        SetBulletSocketCount(4);
+    }
+
+
+
     public void SetBulletSocketCount(int _count)
     {
         bulletsocketSystem?.SetCount(_count);
