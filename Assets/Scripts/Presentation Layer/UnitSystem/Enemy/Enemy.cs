@@ -44,12 +44,6 @@ public class Enemy : Unit, IEnemyData
 
     private void SetEnemyState(bool boolean)
     {
-        if (rb.bodyType != RigidbodyType2D.Static)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-        }
-
         bAccelerate = false;
 
         if (moveComponent != null)
@@ -62,11 +56,24 @@ public class Enemy : Unit, IEnemyData
 
         if (boolean == false)
         {
+            if (rb.bodyType != RigidbodyType2D.Static)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+
             rb.bodyType = RigidbodyType2D.Static;
         }
         else
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
+
+            if (rb.bodyType != RigidbodyType2D.Static)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+
         }
     }
 
