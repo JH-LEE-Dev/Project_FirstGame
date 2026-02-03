@@ -138,7 +138,7 @@ public class BulletSocketSystem : MonoBehaviour
 
     public void EquipBulletCard(int _index, ICardDataInstanceProvider _data = null)
     {
-        CardData data = _data?.GetCardData();
+        ICardDataProvider data = _data?.GetCardDataProvider();
         
         // 카드 옷 입히기
         SocketCardInstance targetCardInstance = cards[_index];

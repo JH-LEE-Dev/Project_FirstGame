@@ -29,6 +29,12 @@ public class CardDataInstance : ICardDataInstanceProvider
         // ¿¹: cost, cooldown, tempModifier µî
     }
 
+    public ICardDataProvider GetCardDataProvider()
+    {
+        return cardData;
+    }
+
+
     public CardData GetCardData()
     {
         return cardData;

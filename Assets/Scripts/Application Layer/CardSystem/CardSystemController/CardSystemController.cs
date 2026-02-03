@@ -443,7 +443,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         CardUsedResult result;
 
-        CardData usedCardData = usedCard.GetCardData();
+        ICardDataProvider usedCardData = usedCard.GetCardDataProvider();
 
         if (usedCardData.cardType == CardType.Bullet)
         {
@@ -622,6 +622,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         for (int i = 0; i < cards.Length; ++i)
         {
             var command = cards[i].GetCardData().HandPileExistEffect;
+
+            if (command == null)
+                continue;
 
             if (cards[i].IsUpgraded())
                 command.InitializeCommand(0, 1, 1);

@@ -192,7 +192,7 @@ public class HandSystem : MonoBehaviour
         computeArc();
         ComputeSelectedPositions();
 
-        CardType type = _card.CardData.GetCardData().cardType;
+        CardType type = _card.CardData.GetCardDataProvider().cardType;
 
         // 장착 연출하러 고고씽
         if (type == CardType.Bullet) EquipBullet(_card, socketIndex, transform);

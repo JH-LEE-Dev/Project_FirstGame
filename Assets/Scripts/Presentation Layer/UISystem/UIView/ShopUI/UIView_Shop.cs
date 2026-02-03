@@ -257,7 +257,7 @@ public class UIView_Shop : UIView
     {
         foreach(var c in cards)
         {
-            Debug.Log(c.GetCardData().cardName);
+            Debug.Log(c.GetCardDataProvider().cardName);
         }
 
         ShopUIOutputEvent?.Invoke(cards, type);

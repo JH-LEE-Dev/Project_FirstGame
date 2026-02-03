@@ -99,7 +99,7 @@ public class CardInstance : MonoBehaviour
         ResetVisual();
 
         cardData = dataInstance;
-        CardData data = cardData.GetCardData();
+        ICardDataProvider data = cardData.GetCardDataProvider();
 
         CardImageChange(data.cardImage);
         CardFrameChange(data.cardType);
@@ -174,7 +174,7 @@ public class CardInstance : MonoBehaviour
     {
         if (!cardName) return;
 
-        CardData cardData = dataInstance.GetCardData();
+        ICardDataProvider cardData = dataInstance.GetCardDataProvider();
 
         // °­È­µÊ
         if (dataInstance.IsUpgraded() == true)
