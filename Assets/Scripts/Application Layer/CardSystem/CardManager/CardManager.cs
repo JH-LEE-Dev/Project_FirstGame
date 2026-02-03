@@ -12,11 +12,11 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     private Dictionary<int, ObjectPool<CardDataInstance>> cardPools
     = new Dictionary<int, ObjectPool<CardDataInstance>>();
 
-    private List<CardDataInstance> deckPile = new List<CardDataInstance>(50);
-    private List<CardDataInstance> permanentDeckPile = new List<CardDataInstance>(50);
-    private List<CardDataInstance> handPile = new List<CardDataInstance>(20);
-    private List<CardDataInstance> gravePile = new List<CardDataInstance>(50);
-    private List<CardDataInstance> extinctionPile = new List<CardDataInstance>(50);
+    private List<CardDataInstance> deckPile = new List<CardDataInstance>(SYSTEM_VAR.limitDeckPileCount);
+    private List<CardDataInstance> permanentDeckPile = new List<CardDataInstance>(SYSTEM_VAR.limitDeckPileCount);
+    private List<CardDataInstance> handPile = new List<CardDataInstance>(SYSTEM_VAR.maxHandPileCount);
+    private List<CardDataInstance> gravePile = new List<CardDataInstance>(SYSTEM_VAR.limitDeckPileCount);
+    private List<CardDataInstance> extinctionPile = new List<CardDataInstance>(SYSTEM_VAR.limitDeckPileCount);
 
     IReadOnlyList<CardDataInstance> ICardSystemData.permenantDeckCards => permanentDeckPile;
     IReadOnlyList<CardDataInstance> ICardSystemData.deckCards => deckPile;
@@ -24,6 +24,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     IReadOnlyList<CardDataInstance> ICardSystemData.graveCards => gravePile;
     IReadOnlyList<CardDataInstance> ICardSystemData.extinctionCards => extinctionPile;
 
+    [SerializeField] private CardDeckDataBase cardDeckDataBase;
     [SerializeField] private CardDataBase cardDataBase;
     [SerializeField] private int cardPileDrawAmount = 5;
     //[SerializeField] private int initialDeckCnt = 40;
@@ -63,8 +64,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
                 },
                 actionOnDestroy: null,
                 collectionCheck: false,
-                defaultCapacity: 40,
-                maxSize: 40
+                defaultCapacity: SYSTEM_VAR.maxDeckPileCount,
+                maxSize: SYSTEM_VAR.limitDeckPileCount
             );
 
             cardPools.Add(cardData.id, pool);
@@ -73,70 +74,34 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public void Start()
     {
-        CardData cardData = cardDataBase.GetCardData(0);
-        if (cardData == null)
-            return;
+        int totalCnt = 0;
 
-        ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 5; ++i)
+        for(int i = 0;i< cardDeckDataBase.cardPileData.Count;++i)
         {
-            CardDataInstance card = pool.Get();
-            card.bPermanent = true;
-            permanentDeckPile.Add(card);
+            totalCnt += cardDeckDataBase.cardPileData[i].cnt;
+        }
+        if(totalCnt >= SYSTEM_VAR.maxDeckPileCount)
+        {
+            Debug.LogWarning("덱에 최대 30장의 카드만 넣을 수 있습니다.");
+            return;
         }
 
-        cardData = cardDataBase.GetCardData(1);
-        if (cardData == null)
-            return;
-
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < cardDeckDataBase.cardPileData.Count; ++i)
         {
-            CardDataInstance card = pool.Get();
-            card.bPermanent = true;
-            permanentDeckPile.Add(card);
-        }
+            var data = cardDeckDataBase.cardPileData[i];
 
+            CardData cardData = cardDataBase.GetCardData((int)data.cardName);
+            if (cardData == null)
+                return;
 
-        cardData = cardDataBase.GetCardData(10);
-        if (cardData == null)
-            return;
+            ObjectPool<CardDataInstance> pool = cardPools[cardData.id];
 
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 3; ++i)
-        {
-            CardDataInstance card = pool.Get();
-            card.bPermanent = true;
-            permanentDeckPile.Add(card);
-        }
-
-        cardData = cardDataBase.GetCardData(3);
-        if (cardData == null)
-            return;
-
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 1; ++i)
-        {
-            CardDataInstance card = pool.Get();
-            card.bPermanent = true;
-            permanentDeckPile.Add(card);
-        }
-
-        cardData = cardDataBase.GetCardData((int)CardName.Recompense);
-        if (cardData == null)
-            return;
-
-        pool = cardPools[cardData.id];
-
-        for (int i = 0; i < 3; ++i)
-        {
-            CardDataInstance card = pool.Get();
-            card.bPermanent = true;
-            permanentDeckPile.Add(card);
+            for (int j = 0; j < data.cnt; ++j)
+            {
+                CardDataInstance card = pool.Get();
+                card.bPermanent = true;
+                permanentDeckPile.Add(card);
+            }
         }
     }
 
@@ -455,6 +420,12 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public void AddCardsToDeck(ReadOnlySpan<CardDataInstance> _cards)
     {
+        if(permanentDeckPile.Count + _cards.Length > SYSTEM_VAR.maxDeckPileCount)
+        {
+            Debug.LogWarning("덱에 최대 30장의 카드만 넣을 수 있습니다.");
+            return;
+        }
+
         for (int i = 0; i < _cards.Length; ++i)
         {
             permanentDeckPile.Add(_cards[i] as CardDataInstance);

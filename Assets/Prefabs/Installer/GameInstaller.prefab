@@ -5546,6 +5546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa3e1cb51f38f38408c3a9d4561797a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
+  cardDeckDataBase: {fileID: 11400000, guid: eb9f2f3f243991e4c9e557618dd3a3f7, type: 2}
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   cardPileDrawAmount: 5
 --- !u!114 &-1934595178798189937
