@@ -73,6 +73,11 @@ public class EMoveComponent : MoveComponent
         bAccelerate = boolean;
     }
 
+    public bool IsAccelerate()
+    {
+        return bAccelerate;
+    }
+
     public virtual void ApplyImpulse()
     {
         moveStrategy.Move_Impulse(moveDirection, impulsePower);

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDatabase
   waveData:
   - waveIdx: 0
-    spawnEnemyCnt: 2
-    InitialEnemyCnt: 3
-    currentEnemyThreshold: 1
+    spawnEnemyCnt: 10
+    InitialEnemyCnt: 10
+    currentEnemyThreshold: 10
     numberOfEnemiesToKill: 5
   - waveIdx: 1
     spawnEnemyCnt: 4

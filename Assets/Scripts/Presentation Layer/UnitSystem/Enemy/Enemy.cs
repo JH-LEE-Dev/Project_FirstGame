@@ -33,6 +33,9 @@ public class Enemy : Unit, IEnemyData
 
     private float activateDelay = 1f;
 
+    private float initialDamping = 5f; // 원래 마찰력 저장용
+    private float initialAngularDamping = 1.5f; // 원래 마찰력 저장용
+
     /// <summary>
     /// 시스템 코드 존. -------------------------------------
     /// </summary>
@@ -104,6 +107,9 @@ public class Enemy : Unit, IEnemyData
         bAccelerate = false;
         if (moveComponent != null)
             moveComponent.SetAccelerate(bAccelerate);
+
+        rb.linearDamping = initialDamping;
+        rb.angularDamping = initialAngularDamping;
 
         StartCoroutine(SetEnemyState_Delayed(true));
     }
@@ -221,11 +227,6 @@ public class Enemy : Unit, IEnemyData
         targetDir.Normalize();
 
         moveComponent.SetMoveDirection(targetDir);
-    }
-
-    public void ApplyImpulse()
-    {
-        moveComponent.ApplyImpulse();
     }
 
     //지구에 충돌했을 때 호출됨.
