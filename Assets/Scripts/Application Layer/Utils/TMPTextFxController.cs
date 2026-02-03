@@ -62,6 +62,10 @@ public class TMPTextFxController : MonoBehaviour
     {
         if (!tmp) return;
 
+        // 폰트 크기 설정
+        taggedText = ApplyLeadingFontSizeHeader(taggedText);
+
+        // 커스텀 태그 파싱
         ParseTagsAndSetText(taggedText);
         tmp.ForceMeshUpdate();
     }
@@ -71,6 +75,26 @@ public class TMPTextFxController : MonoBehaviour
         ranges.Clear();
     }
 
+    // Font Size
+    private string ApplyLeadingFontSizeHeader(string src)
+    {
+        if (string.IsNullOrEmpty(src))
+            return src;
+
+        if (src[0] != '<')
+            return src;
+
+        int close = src.IndexOf('>', 1);
+        if (close < 0)
+            return src;
+
+        string numStr = src.Substring(1, close - 1);
+        if (!int.TryParse(numStr, out int size))
+            return src;
+
+        tmp.fontSize = size;
+        return src.Substring(close + 1);
+    }
 
     // Parsing
     private void ParseTagsAndSetText(string src)
