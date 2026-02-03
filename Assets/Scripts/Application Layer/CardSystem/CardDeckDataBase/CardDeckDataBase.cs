@@ -19,4 +19,5 @@ public struct CardPileData
 {
     public CardName cardName;
     public int cnt;
+    public bool bUpgraded;
 }

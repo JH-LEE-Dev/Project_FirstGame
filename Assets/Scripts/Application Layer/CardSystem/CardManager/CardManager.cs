@@ -100,6 +100,10 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             {
                 CardDataInstance card = pool.Get();
                 card.bPermanent = true;
+
+                if (data.bUpgraded)
+                    card.SetPermanentlyUpgrade(true);
+
                 permanentDeckPile.Add(card);
             }
         }
