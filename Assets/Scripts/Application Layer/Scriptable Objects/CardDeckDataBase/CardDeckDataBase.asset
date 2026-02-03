@@ -17,3 +17,5 @@ MonoBehaviour:
     cnt: 5
   - cardName: 1
     cnt: 5
+  - cardName: 6
+    cnt: 1

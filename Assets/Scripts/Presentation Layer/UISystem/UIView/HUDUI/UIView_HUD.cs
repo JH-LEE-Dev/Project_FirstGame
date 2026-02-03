@@ -332,7 +332,14 @@ public class UIView_HUD : UIView
         WaveStartFirstTime = false;
     }
 
-    public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
+    public void ReturnDamageText(GameObject target)
+    {
+        if(target.activeSelf)
+        {
+            playerDamageNumPool?.Pool.Release(target);
+        }
+    }
+
     public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
 
     private void CharacterStatUpdate()
