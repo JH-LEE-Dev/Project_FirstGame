@@ -1,9 +1,10 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Pluto")]
-public class EffectCommand_Pluto : CardEffectCommand<ICardLogicSystemActionCommandHandler>
+public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -12,9 +13,9 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardLogicSystemActionComma
         cardSystemContextType = CardSystemContextType.ExtinctionCardsToDeck;
     }
 
-    protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        IReadOnlyList<CardDataInstance> extinctionPile = cardSystemActionCommandHandler.GetExtinctionPile();
+        IReadOnlyList<CardDataInstance> extinctionPile = complexSystemActionCommandHandler.GetExtinctionPile();
 
         if (extinctionPile.Count == 0)
             return;
@@ -22,11 +23,17 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardLogicSystemActionComma
         using var rentalBuffer = new RentalScope<CardDataInstance>(1);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-        int randomIdx = UnityEngine.Random.Range(0, extinctionPile.Count - 1);
+        if (extinctionPile.Count > 1)
+            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction, CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier);
+        else
+        {
+            for (int i = 0; i < extinctionPile.Count; ++i)
+            {
+                writeBuffer[i] = extinctionPile[i];
+            }
 
-        writeBuffer[0] = extinctionPile[randomIdx];
-
-        cardSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer);
+            complexSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer);
+        }
 
         ResetCommandData();
     }

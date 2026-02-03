@@ -28,6 +28,7 @@ public class GameInstaller : MonoBehaviour
     private ShopManager shopManager;
     private CardDataControlManager cardDataControlManager;  
     private ShopBehaviorHandler shopBehaviorHandler;
+    private CardFlowDataManager cardFlowDataManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -58,6 +59,7 @@ public class GameInstaller : MonoBehaviour
         cardLocalizationSystem = _cardLocalizationSystem;
         cardDataControlManager = GetComponent<CardDataControlManager>();
         shopBehaviorHandler = new ShopBehaviorHandler();
+        cardFlowDataManager = new CardFlowDataManager();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -67,14 +69,16 @@ public class GameInstaller : MonoBehaviour
         unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
         unitLogicSystem.Initialize();
 
+        cardFlowDataManager.Initialize();
         cardDataControlManager.Initialize();
         cardManager.Initialize();
         cardSystemController.Initialize();
         shopBehaviorHandler.Initialize(cardManager);
         cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver, cardDataControlManager,
-            shopBehaviorHandler);
+            shopBehaviorHandler,cardFlowDataManager);
 
-        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(), cardSystemController,cardSelectionManager, cardDataControlManager);
+        complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(),
+            cardSystemController,cardSelectionManager, cardDataControlManager,cardFlowDataManager);
 
         gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager,cardLocalizationSystem,unitSpawner);
         shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager,cardLocalizationSystem,cardManager,unitSpawner);

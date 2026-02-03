@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardDataControlSystemAction/UpgradeCards")]
-public class ActionCommand_UpgradeCards : CardSystemActionCommand<ICardDataControlSystemActionCommandHandler>
+public class ActionCommand_UpgradeCards : CardSystemActionCommand<ICardDataControlActionCommandHandler>
 {
     [SerializeField] bool bPermanent = false;
 
-    protected override void Execute(ICardDataControlSystemActionCommandHandler cardDataControlSystemActionCommandHandler)
+    protected override void Execute(ICardDataControlActionCommandHandler cardDataControlSystemActionCommandHandler)
     {
         cardDataControlSystemActionCommandHandler.UpgradeCards(cards.AsSpan<CardDataInstance>().Slice(0, cnt), bPermanent);
     }
