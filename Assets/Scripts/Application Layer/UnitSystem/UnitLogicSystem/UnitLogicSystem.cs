@@ -167,7 +167,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         }
     }
 
-    public void CardDrawed(CardDrawStartSignal cardDrawStartSignal)
+    public void CardUsePhaseStarted(CardUsePhaseStarted cardUsePhaseStarted)
     {
         characterUnit.PlayerTurnStarted();
     }
