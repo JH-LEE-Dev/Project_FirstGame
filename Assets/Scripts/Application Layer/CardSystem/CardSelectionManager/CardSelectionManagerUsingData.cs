@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 public enum CardSelectionMode
 {
@@ -26,11 +27,14 @@ public struct CardSelectionModeData
     public SelectCardPileType selectCardPileType;
     public CardSelectionMode selectionMode;
     public int amount;
+    public List<CardName> forbiddenCards;
 
-    public CardSelectionModeData(SelectCardPileType _selectCardPileType, CardSelectionMode _selectionMode, int _amount)
+    public CardSelectionModeData(SelectCardPileType _selectCardPileType, CardSelectionMode _selectionMode, int _amount,
+        List<CardName> _forbiddenCards)
     {
         selectCardPileType = _selectCardPileType;   
         selectionMode = _selectionMode;
         amount = _amount;
+        forbiddenCards = _forbiddenCards;
     }
 }

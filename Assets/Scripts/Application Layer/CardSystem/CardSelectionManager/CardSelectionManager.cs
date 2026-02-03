@@ -13,11 +13,11 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
     private CardSelectionMode cardSelectionMode;
     private SelectCardPileType selectCardPileType;
 
-    public void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount)
+    public void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount,List<CardName> _forbiddenCards)
     {
         selectCardPileType = _selectCardPileType;
         cardSelectionMode = _cardSelectionMode;
-        CardSelectionModeData data = new CardSelectionModeData(selectCardPileType,cardSelectionMode, amount);
+        CardSelectionModeData data = new CardSelectionModeData(selectCardPileType,cardSelectionMode, amount, _forbiddenCards);
 
         CardSelectionStartEvent?.Invoke(data);
     }

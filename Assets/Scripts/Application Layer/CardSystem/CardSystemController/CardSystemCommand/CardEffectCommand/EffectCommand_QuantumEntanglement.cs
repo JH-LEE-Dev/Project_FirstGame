@@ -8,6 +8,16 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
     [SerializeField] int duplicateAmount = 1;
     [SerializeField] int upgradedDuplicateAmount = 1;
 
+    private List<CardName> forbiddenCards = new List<CardName>(5);
+
+    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    {
+        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+
+        if (forbiddenCards.Count == 0)
+            forbiddenCards.Add(CardName.QuantumEntanglement);
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();

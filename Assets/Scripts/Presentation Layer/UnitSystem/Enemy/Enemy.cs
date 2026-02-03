@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using WaveSystemSignals;
+
 
 public class Enemy : Unit, IEnemyData
 {
@@ -27,6 +30,8 @@ public class Enemy : Unit, IEnemyData
     [SerializeField] private ParticleSystem vfxDeadImpact;
 
     bool bInitialized = false;
+
+    private float activateDelay = 1f;
 
     /// <summary>
     /// 시스템 코드 존. -------------------------------------
@@ -67,7 +72,14 @@ public class Enemy : Unit, IEnemyData
 
     public void ActivateEnemy()
     {
-        SetEnemyState(true);
+        StartCoroutine(SetEnemyState_Delayed(true));
+    }
+
+    public IEnumerator SetEnemyState_Delayed(bool boolean)
+    {
+        yield return new WaitForSeconds(activateDelay);
+
+        SetEnemyState(boolean);
     }
 
     public void DeActivateEnemy()
