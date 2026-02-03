@@ -1,7 +1,8 @@
 
 namespace CardSystemSignals
 { 
-    public struct CardDrawFinishedSignal { }
+    public struct CardUsePhaseStarted { }
+    public struct PlayerTurnFinishedSignal { }
     public struct CardUsedSignal
     {
         public bool bVerified;
@@ -42,8 +43,6 @@ namespace CardSystemSignals
             cnt = _cnt;
         }
     }
-    //Scope
-    public struct CardActionScopeSignal  { }
     public struct CardSelectionModeStartSignal
     {
         public CardSelectionModeData data;
@@ -52,6 +51,8 @@ namespace CardSystemSignals
             data = _data;
         }
     }
+    //Scope
+    public struct CardActionScopeSignal  { }
 }
 
 namespace CardEffectSystemSignal

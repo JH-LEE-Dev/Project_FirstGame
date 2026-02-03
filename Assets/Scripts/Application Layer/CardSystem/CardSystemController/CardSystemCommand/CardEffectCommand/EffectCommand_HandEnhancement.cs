@@ -24,7 +24,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         if (nestingCnt != 0)
         {
             if(complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand, upgradeAmount * nestingCnt * valueModifier);
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
+                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType);
             else
             {
                 for (int i = 0; i < handPile.Count; ++i)
@@ -32,7 +33,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                     writeBuffer_Upgrade[i] = handPile[i];
                 }
 
-                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false);
+                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false, cardSystemContextType);
             }
         }
 
@@ -43,7 +44,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                 writeBuffer_Upgrade[i] = handPile[i];
             }
 
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false, cardSystemContextType);
         }
 
         ResetCommandData();

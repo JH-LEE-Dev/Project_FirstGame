@@ -10,7 +10,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
         IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommand.GetGravePile();
 
         if (gravePile.Count > 1)
-            complexSystemActionCommand.StartCardSelectionMode(SelectCardPileType.Grave, CardSelectionMode.GraveCardsToDeck, 1);
+            complexSystemActionCommand.StartCardSelectionMode(SelectCardPileType.Grave, CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType);
         else
         {
             using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -21,7 +21,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
                 writeBuffer[i] = gravePile[i];
             }
 
-            complexSystemActionCommand.GraveCardsToDeck(writeBuffer);
+            complexSystemActionCommand.GraveCardsToDeck(writeBuffer, cardSystemContextType);
         }
 
         ResetCommandData();

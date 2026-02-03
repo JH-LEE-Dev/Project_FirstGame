@@ -1,0 +1,67 @@
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Command/CardEffect/HandPileExistCommand/Bullet/MeteorShower")]
+public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemActionCommandHandler>
+{
+    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    {
+        var handPile = complexSystemActionCommand.GetHandPile();
+
+        var bulletCardSlot = complexSystemActionCommand.GetCurrentBulletCards();
+
+        bool bCondition_1 = false;
+        for(int i = 0;i<bulletCardSlot.Count;++i)
+        {
+            if (bulletCardSlot[i].Count != 0)
+            {
+                bCondition_1 = true; break;
+            }    
+        }
+
+        if (bCondition_1 == false)
+            return;
+
+        if (handPile.Count == 0)
+            return;
+
+        if (nestingCnt != 0)
+        {
+            bool bCondition = true;
+
+            for (int i = 0; i < 1; ++i)
+            {
+                if (handPile[i].GetCardData().id != (int)CardName.MeteorShower)
+                {
+                    bCondition = false;
+                    break;
+                }
+            }
+
+            if(bCondition)
+            {
+                complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, cardSystemContextType);
+            }
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            bool bCondition = true;
+
+            for (int i = 0; i < handPile.Count; ++i)
+            {
+                if (handPile[i].GetCardData().id != (int)CardName.MeteorShower)
+                {
+                    bCondition = false;
+                    break;
+                }
+            }
+
+            if (bCondition)
+            {
+                complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, cardSystemContextType);
+            }
+        }
+
+        ResetCommandData();
+    }
+}

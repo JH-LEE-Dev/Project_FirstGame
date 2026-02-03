@@ -59,17 +59,12 @@ public class GameplayUICoordinator
     public void EnemyTurnStarted()
     {
         hudUISystem.EnemyTurnStarted();
-        gameplayUISystem.EnemyTurnStarted();
     }
 
     public void PlayerAttacked()
     {
         unitWorldUISystem.UnEquipBulletCardForShoot();
-    }
-
-    public void CardUseTimeStarted()
-    {
-        hudUISystem.CardUseTimeStarted();
+        gameplayUISystem.PlayerAttackFinished();
     }
 
     public void CardUsingFinished()

@@ -5621,6 +5621,8 @@ MonoBehaviour:
   cardDataControlSystemActionCommands:
   - {fileID: 11400000, guid: c1b4736c1b319f74eaeacf24206ee4b7, type: 2}
   - {fileID: 11400000, guid: 87600f64181c09145b2d5784bc686b61, type: 2}
+  complexSystemActionCommands:
+  - {fileID: 11400000, guid: 7009a8fd4be26434f9e4777095239a1e, type: 2}
 --- !u!114 &4970203025210532969
 MonoBehaviour:
   m_ObjectHideFlags: 0

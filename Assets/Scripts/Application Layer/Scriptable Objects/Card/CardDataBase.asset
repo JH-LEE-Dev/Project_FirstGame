@@ -29,6 +29,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 1
     cardImage: {fileID: 21300000, guid: 78ab533565c658d4e83a0137666d2567, type: 3}
     cardName: 1
@@ -45,6 +46,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 2
     cardImage: {fileID: 21300000, guid: 4f9971ba4406db841b63669e28f6af42, type: 3}
     cardName: 2
@@ -61,6 +63,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 3
     cardImage: {fileID: 21300000, guid: 092df0d800f7ae740880a9e1b2aeacc3, type: 3}
     cardName: 3
@@ -77,6 +80,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 08000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 4
     cardImage: {fileID: 21300000, guid: aa0df5b8762655a428461ed9c13ba9da, type: 3}
     cardName: 4
@@ -93,6 +97,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 00000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 11400000, guid: 9116aa2e1a9fb2f429797b091954cddf, type: 2}
   - id: 5
     cardImage: {fileID: 21300000, guid: d83727b4b31973a409bfacd4121a2744, type: 3}
     cardName: 5
@@ -109,6 +114,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 6
     cardImage: {fileID: 21300000, guid: cd2599286dda0a240b41d900e7364183, type: 3}
     cardName: 6
@@ -125,6 +131,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 7
     cardImage: {fileID: 21300000, guid: 61182b4312c402842a0b1c1c75168ec4, type: 3}
     cardName: 7
@@ -141,6 +148,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 01000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 8
     cardImage: {fileID: 21300000, guid: 7970959484593cc4b8dbd766a08b4f81, type: 3}
     cardName: 8
@@ -157,6 +165,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 02000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 9
     cardImage: {fileID: 21300000, guid: 91969fe26952bca4b90b670b882ff22a, type: 3}
     cardName: 9
@@ -173,6 +182,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 00000000
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 10
     cardImage: {fileID: 21300000, guid: a19226ffbccc02c4292b0929df88ec7b, type: 3}
     cardName: 10
@@ -189,6 +199,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 11
     cardImage: {fileID: 21300000, guid: acb46c465dbf2424aa719a5a9ceb2e71, type: 3}
     cardName: 11
@@ -205,6 +216,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 12
     cardImage: {fileID: 21300000, guid: 4335ca719e7139342b3eecab10c60d55, type: 3}
     cardName: 12
@@ -221,6 +233,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 09000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 13
     cardImage: {fileID: 21300000, guid: b589c2a4a7770a54cb14d27e51f70ce2, type: 3}
     cardName: 13
@@ -237,6 +250,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 14
     cardImage: {fileID: 21300000, guid: 6781248076b5c74488e135a0326218eb, type: 3}
     cardName: 14
@@ -253,6 +267,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 15
     cardImage: {fileID: 21300000, guid: 458fa3e6e4f9bce4394f34f179e49178, type: 3}
     cardName: 15
@@ -269,6 +284,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 03000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 16
     cardImage: {fileID: 21300000, guid: d206bc5909bc0e541a25fd80f4f0e036, type: 3}
     cardName: 16
@@ -285,6 +301,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 05000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 17
     cardImage: {fileID: 21300000, guid: 5cf88fd80895bfa469018ff854a2d43a, type: 3}
     cardName: 17
@@ -301,6 +318,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 04000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 18
     cardImage: {fileID: 21300000, guid: aa17d4ef8d9b1a64e99476d4220d1412, type: 3}
     cardName: 18
@@ -317,6 +335,7 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 06000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}
   - id: 19
     cardImage: {fileID: 21300000, guid: 7b294001e30c95a4f814350c32c92efd, type: 3}
     cardName: 19
@@ -333,3 +352,4 @@ MonoBehaviour:
     cardSlotSystemEffects: 
     complexSystemEffects: 07000000
     selectionSystemEffects: 
+    HandPileExistEffect: {fileID: 0}

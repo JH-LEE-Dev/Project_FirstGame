@@ -103,6 +103,12 @@ public enum CardLogicSystemActionType
     MAX
 }
 
+public enum ComplexSystemActionType
+{
+    HandPileExistEffectExecute,
+}
+
+
 public enum CardLogicSystemEffectType
 {
     FlareAdditionalDraw,
@@ -142,8 +148,9 @@ public enum CardSystemActionTimingType
 {
     BeforeAttack,
     AfterAttack,
-    BeforeTurn,
+    BeforeCardUsingPhase,
     Instant,
+    BeforeTurn,
 }
 
 public enum CardDataControlSystemActionType

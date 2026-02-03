@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public interface ICardLogicSystemActionCommandHandler : ICommandHandler
 {
+    public void SetCardSystemContext(CardSystemContextType cardSystemContextType);
     IReadOnlyList<CardDataInstance> GetHandPile();
     IReadOnlyList<CardDataInstance> GetExtinctionPile();
     IReadOnlyList<CardDataInstance> GetDeckPile();

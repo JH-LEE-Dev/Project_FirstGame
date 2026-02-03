@@ -65,9 +65,9 @@ public class CardUICoordinator
         TryCardUseEvent?.Invoke(usedCard);
     }
 
-    public void CardDrawFinished()
+    public void CardUsePhaseStarted()
     {
-        cardUISystem.CardDrawFinished();
+        cardUISystem.CardUsePhaseStarted();
     }
 
     public void CardUsingFinished()
@@ -118,5 +118,10 @@ public class CardUICoordinator
     private void CardSelectionEnd(List<ICardDataInstanceProvider> _cards,CardSelectionModeData data)
     {
         CardSelectionEndEvent?.Invoke(data, _cards);
+    }
+
+    public void ShopTimeStarted()
+    {
+
     }
 }

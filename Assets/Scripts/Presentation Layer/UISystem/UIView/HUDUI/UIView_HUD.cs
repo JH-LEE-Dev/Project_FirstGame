@@ -157,11 +157,6 @@ public class UIView_HUD : UIView
         CharacterStatUpdate();
     }
 
-    public void CardUseTimeStarted()
-    {
-        turnProcessIndicatorText.text = "Card Using Time";
-    }
-
     public void OnPlayerHit(float damage)
     {
         HP_BarUpdateforDamaged(damage);

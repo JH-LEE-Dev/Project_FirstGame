@@ -15,7 +15,8 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         if (nestingCnt != 0)
         {
             if(handPile.Count > duplicateAmount * nestingCnt * valueModifier)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier);
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
+                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier, cardSystemContextType);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
@@ -33,7 +34,8 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         if (upgradeNestingCnt != 0)
         {
             if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier);
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
+                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier, cardSystemContextType);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);

@@ -15,7 +15,8 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         if (nestingCnt != 0)
         {
             if(gravePile.Count > selectCnt)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave, CardSelectionMode.GraveCardsToHand, selectCnt);
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
+                    CardSelectionMode.GraveCardsToHand, selectCnt, cardSystemContextType);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -26,14 +27,15 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                     writeBuffer[i] = gravePile[i];
                 }
 
-                complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer);
+                complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer, cardSystemContextType);
             }
         }
 
         if (upgradeNestingCnt != 0)
         {
             if (gravePile.Count > upgradedSelectCnt)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave, CardSelectionMode.GraveCardsToHand, upgradedSelectCnt);
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
+                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, cardSystemContextType);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -44,7 +46,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                     writeBuffer[i] = gravePile[i];
                 }
 
-                complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer);
+                complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer, cardSystemContextType);
             }
         }
 
