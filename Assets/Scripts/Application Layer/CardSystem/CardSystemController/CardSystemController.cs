@@ -125,6 +125,16 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardUsePhaseCnt = 1;
 
         PlayerTurnFinishedEvent?.Invoke();
+
+        PostPoneBeforeUsingPhaseCommand();
+    }
+
+    private void PostPoneBeforeUsingPhaseCommand()
+    {
+        for(int i = 0;i< cardEffect_BeforeCardUsingPhase.Count;++i)
+        {
+            cardEffect_BeforeTurn.Add(cardEffect_BeforeCardUsingPhase[i]);
+        }
     }
 
     public void WaveEnded()

@@ -231,7 +231,7 @@ public class Enemy : Unit, IEnemyData
     //지구에 충돌했을 때 호출됨.
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.isTrigger || bDead)
+        if (!other.isTrigger || bDead || rb.simulated == false)
             return;
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Earth"))
@@ -241,6 +241,7 @@ public class Enemy : Unit, IEnemyData
             SetEnemyState(false);
 
             UnitIsDead();
+            transform.position = new Vector2(1000f, 1000f);
 
             gameServiceLocator.PlayCameraShake();
 
