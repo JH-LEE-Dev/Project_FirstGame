@@ -28,6 +28,9 @@ public class CardInstance : MonoBehaviour
 
     protected ICardLocalizationSystem cardLocalizationSystem;
 
+    [SerializeField] private TMPTextFxController fxNameController;
+    [SerializeField] private TMPTextFxController fxDescriptionController;
+
 
     private float GetDissolve01() => dissolve01;
     private void SetDissolve01(float v)
@@ -47,20 +50,17 @@ public class CardInstance : MonoBehaviour
     private readonly Color bulletFrameColor = Hex("#DEAB48", 1f);
     private readonly Color bulletTextFrameColor = Hex("#FAE1AA", 1f);
     private readonly Color bulletGlowColor = new Color32(145, 181, 32, 72);
-    private readonly Color bulletAOColor = Hex("#7B6D21", 0.18f);
+    private readonly Color bulletAOColor = Hex("#7B6D21", 0.15f);
 
     private readonly Color magicFrameColor = Hex("#696EC2", 1f);
     private readonly Color magicTextFrameColor = Hex("#DAD5ED", 1f);
     private readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
-    private readonly Color magicAOColor = Hex("#0025CD", 0.18f);
+    private readonly Color magicAOColor = Hex("#0025CD", 0.15f);
 
     private float nameBaseAlpha = 1f;
     private float descBaseAlpha = 1f;
     private float aoBaseAlpha = 1f;
     private Color glowBaseColor;
-
-    private readonly Color enforceTextColor = new Color32(35, 255, 30, 255);
-    private readonly Color normalTextColor = new Color32(0, 0, 0, 255);
 
     // 데이터
     private ICardDataInstanceProvider cardData;
@@ -79,12 +79,21 @@ public class CardInstance : MonoBehaviour
         cardLocalizationSystem = cls;
     }
 
-    private void CacheBaseIfNeeded()
+    protected void ApplyDissolveMaterialToVisuals()
     {
-        if (cardName) nameBaseAlpha = cardName.alpha;
-        if (cardDescription) descBaseAlpha = cardDescription.alpha;
-        if (CardAO) aoBaseAlpha = CardAO.color.a;
-        if (glowFilter) glowBaseColor = glowFilter.Color;
+        if (dissolveMatInstance == null)
+        {
+            Debug.LogWarning("Dissolve material instance is null");
+            return;
+        }
+
+        // Image들
+        if (cardImage) cardImage.material = dissolveMatInstance;
+        if (cardFrame) cardFrame.material = dissolveMatInstance;
+        if (cardTextFrame) cardTextFrame.material = dissolveMatInstance;
+        if (cardIcon) cardIcon.material = dissolveMatInstance;
+        // 초기값
+        dissolveMatInstance.SetFloat(ProgressID, 1f);
     }
 
     // 옷 입히기
@@ -178,20 +187,14 @@ public class CardInstance : MonoBehaviour
 
         // 강화됨
         if (dataInstance.IsUpgraded() == true)
-        {
-            cardName.color = enforceTextColor;
-            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null,null, cardDescription);
-        }
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, null, cardDescription);
         // 강화안됨
         else
-        {
-            cardName.color = normalTextColor;
-            cardLocalizationSystem.SetCardUIText(cardData.id, cardName,null, cardDescription, null);
-        }
+            cardLocalizationSystem.SetCardUIText(cardData.id, null, cardName, cardDescription, null);
 
-        var fx = GetComponent<TMPTextFxController>();
-        if (fx) fx.SetTaggedText(cardDescription.text);
 
+        if (fxNameController) fxNameController.SetTaggedText(cardName.text);
+        if (fxDescriptionController) fxDescriptionController.SetTaggedText(cardDescription.text);
     }
 
     public void UpdateForEnforce()
@@ -201,24 +204,6 @@ public class CardInstance : MonoBehaviour
     }
 
     // For Dissolve
-
-    protected void ApplyDissolveMaterialToVisuals()
-    {
-        if (dissolveMatInstance == null)
-        {
-            Debug.LogWarning("Dissolve material instance is null");
-            return;
-        }
-
-        // Image들
-        if (cardImage) cardImage.material = dissolveMatInstance;
-        if (cardFrame) cardFrame.material = dissolveMatInstance;
-        if (cardTextFrame) cardTextFrame.material = dissolveMatInstance;
-        if (cardIcon) cardIcon.material = dissolveMatInstance;
-        // 초기값
-        dissolveMatInstance.SetFloat(ProgressID, 1f);
-    }
-
     public void SetDissolveProgress(float t)
     {
         dissolveMatInstance?.SetFloat(ProgressID, t);
@@ -227,6 +212,14 @@ public class CardInstance : MonoBehaviour
     public void ResetDissolve()
     {
         dissolveMatInstance?.SetFloat(ProgressID, 1f);
+    }
+
+    private void CacheBaseIfNeeded()
+    {
+        if (cardName) nameBaseAlpha = cardName.alpha;
+        if (cardDescription) descBaseAlpha = cardDescription.alpha;
+        if (CardAO) aoBaseAlpha = CardAO.color.a;
+        if (glowFilter) glowBaseColor = glowFilter.Color;
     }
 
     public void PlayConsumeExtinction(

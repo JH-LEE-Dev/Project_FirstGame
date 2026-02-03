@@ -581,6 +581,7 @@ GameObject:
   - component: {fileID: 3896604757948162179}
   - component: {fileID: 7831457537719056636}
   - component: {fileID: 44922428512588595}
+  - component: {fileID: 8614084585132809539}
   - component: {fileID: 8612589505394703700}
   m_Layer: 0
   m_Name: Card
@@ -682,6 +683,8 @@ MonoBehaviour:
   cardDescription: {fileID: 4219192507650260008}
   rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
   extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
+  fxNameController: {fileID: 8614084585132809539}
+  fxDescriptionController: {fileID: 8612589505394703700}
 --- !u!114 &7831457537719056636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,6 +705,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5863989176703220490}
   m_CullTransparentMesh: 1
+--- !u!114 &8614084585132809539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
+  tmp: {fileID: 2010789194705691865}
+  useUnscaledTime: 1
+  speed: 1.2
+  charPhase: 0.15
+  updateInterval: 0
 --- !u!114 &8612589505394703700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,7 +1011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16037738, g: 0.12293078, b: 0.08548417, a: 0.14901961}
+  m_Color: {r: 0.16037738, g: 0.12293078, b: 0.08548417, a: 0.13333334}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1073,7 +1093,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bonus Damage
+  m_text: "\uCD94\uAC00 \uBC94\uC704+"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee73945b2e2ca845932bef0889f79e2, type: 2}
   m_sharedMaterial: {fileID: -5988548979307429028, guid: 7ee73945b2e2ca845932bef0889f79e2, type: 2}
