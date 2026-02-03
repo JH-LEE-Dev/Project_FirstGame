@@ -612,6 +612,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public void ApplyCardUsePhaseCntModifier(int cnt)
     {
         cardUsePhaseCnt += cnt;
+
+        if (cardUsePhaseCnt > 2)
+            cardUsePhaseCnt = 2;
     }
 
     public void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards)

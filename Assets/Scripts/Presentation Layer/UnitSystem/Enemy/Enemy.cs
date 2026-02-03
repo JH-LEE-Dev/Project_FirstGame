@@ -73,7 +73,6 @@ public class Enemy : Unit, IEnemyData
                 rb.linearVelocity = Vector2.zero;
                 rb.angularVelocity = 0f;
             }
-
         }
     }
 
@@ -98,12 +97,22 @@ public class Enemy : Unit, IEnemyData
 
     public void Activate(Vector3 spawnPos)
     {
-        sr.enabled = true;
-
-        StartCoroutine(SetEnemyState_Delayed(true));
-
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();
+
+        sr.enabled = true;
+
+        if (rb.bodyType != RigidbodyType2D.Static)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        bAccelerate = false;
+        if (moveComponent != null)
+            moveComponent.SetAccelerate(bAccelerate);
+
+        StartCoroutine(SetEnemyState_Delayed(true));
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
