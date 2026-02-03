@@ -581,6 +581,7 @@ GameObject:
   - component: {fileID: 3896604757948162179}
   - component: {fileID: 7831457537719056636}
   - component: {fileID: 44922428512588595}
+  - component: {fileID: 8612589505394703700}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -659,9 +660,6 @@ MonoBehaviour:
   rejectTotal: 0.2
   rejectScale: 0.95
   rejectAngle: 5
-  graveDuration: 0.4
-  graveTiltZ: 60
-  graveScale: 0.3
 --- !u!114 &3896604757948162179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,6 +702,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5863989176703220490}
   m_CullTransparentMesh: 1
+--- !u!114 &8612589505394703700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
+  tmp: {fileID: 4219192507650260008}
+  useUnscaledTime: 1
+  speed: 1.2
+  charPhase: 0.15
+  updateInterval: 0
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0

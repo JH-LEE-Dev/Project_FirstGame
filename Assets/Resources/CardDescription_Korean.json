@@ -1,9 +1,9 @@
 {
   "cards": [
     {
-      "id" : 0,
+      "id": 0,
       "name": "추가 공격력",
-      "description": "추가 공격력 +2\n중첩가능.",
+      "description": "추<wb>가</wb> <ry>공격력</ry> +2\n<rb>중첩</rb>가능.",
       "upgradedDescription": "추가 공격력 +4\n중첩가능."
     },
     {

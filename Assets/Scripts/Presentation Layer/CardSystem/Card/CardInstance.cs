@@ -180,6 +180,10 @@ public class CardInstance : MonoBehaviour
             cardName.color = normalTextColor;
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
         }
+
+        var fx = GetComponent<TMPTextFxController>();
+        if (fx) fx.SetTaggedText(cardDescription.text);
+
     }
 
     public void UpdateForEnforce()

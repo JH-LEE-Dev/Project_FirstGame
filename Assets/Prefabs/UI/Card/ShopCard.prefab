@@ -220,6 +220,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286b4993a0615db4c95691fcf0207089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopCardVisual
+  floatPosAmp: 0.5
+  floatRotAmp: 0.2
+  FloatFreq: 0.2
   drawOverlay: {fileID: 575462182875157013}
   canvasGroup: {fileID: 705134568441123837}
 --- !u!1 &3782571784496366955
@@ -550,6 +553,7 @@ GameObject:
   - component: {fileID: 6502495658286524022}
   - component: {fileID: 1243197672332687960}
   - component: {fileID: 3091449442794618768}
+  - component: {fileID: 6108437827676441765}
   m_Layer: 0
   m_Name: ShopCard
   m_TagString: Untagged
@@ -631,6 +635,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7605fec4f5e664a9e6ab3bf5fb8b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopCardMotion
+--- !u!114 &6108437827676441765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
+  tmp: {fileID: 0}
+  useUnscaledTime: 1
+  speed: 1.2
+  charPhase: 0.15
+  updateInterval: 0
 --- !u!1 &5935708255483186501
 GameObject:
   m_ObjectHideFlags: 0
