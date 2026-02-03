@@ -122,6 +122,6 @@ public class CardUICoordinator
 
     public void ShopTimeStarted()
     {
-
+        cardUISystem.ResetCardUISystem();
     }
 }

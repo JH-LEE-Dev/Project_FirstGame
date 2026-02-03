@@ -246,6 +246,11 @@ public class UIView_CardSystem : UIView
         }
     }
 
+    public void ResetCardUISystem()
+    {
+        AllDeActivatePannel();
+    }
+
     //----------------------------------End Line-----------------------------------------------------
 
 
