@@ -304,7 +304,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             if (cards[i] != null)
                 extinctionPile.Add(cards[i]);
         }
-
+        Debug.Log(cardSystemContext);
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.CardsToExtinctionEvent, cardSystemContext, cards);
     }
 
@@ -325,6 +325,11 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     {
         cardSystemContext = actionCommand.GetCardSystemContext();
         actionCommand.Execute(this);
+    }
+
+    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    {
+        cardSystemContext = cardSystemContextType;
     }
 
     public void DrawAgain(int drawAmount)

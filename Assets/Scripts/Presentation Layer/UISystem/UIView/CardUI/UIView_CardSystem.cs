@@ -192,7 +192,7 @@ public class UIView_CardSystem : UIView
         CardUsingFinishedEvent?.Invoke();
     }
 
-    public void CardDrawFinished()
+    public void CardUsePhaseStarted()
     {
         turnFinishedButton.gameObject.SetActive(true);
     }

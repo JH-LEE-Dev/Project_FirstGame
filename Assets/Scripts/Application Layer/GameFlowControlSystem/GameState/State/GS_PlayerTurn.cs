@@ -1,3 +1,4 @@
+using CardSystemSignals;
 using GameControlSignals;
 using System;
 using UnitLogicSystemSignals;
@@ -23,15 +24,15 @@ public class GS_PlayerTurn : GameState
 
     protected override void SubscribeEvents()
     {
-        signalHub.Subscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
+        signalHub.Subscribe<PlayerTurnFinishedSignal>(PlayerTurnFinished);
     }
 
     protected override void UnSubscribeEvents()
     {
-        signalHub.UnSubscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
+        signalHub.UnSubscribe<PlayerTurnFinishedSignal>(PlayerTurnFinished);
     }
 
-    private void PlayerTurnFinished(PlayerAttackFinishedSignal playerTurnFinishedSignal)
+    private void PlayerTurnFinished(PlayerTurnFinishedSignal playerTurnFinishedSignal)
     {
         gameStateMachine.ChangeState<GS_EnemyTurn>();
     }

@@ -24,7 +24,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         if (extinctionPile.Count > 1)
-            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction, CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier);
+            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction, 
+                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType);
         else
         {
             for (int i = 0; i < extinctionPile.Count; ++i)
@@ -32,7 +33,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
                 writeBuffer[i] = extinctionPile[i];
             }
 
-            complexSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer);
+            complexSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer, cardSystemContextType);
         }
 
         ResetCommandData();

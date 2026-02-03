@@ -26,7 +26,7 @@ public class Enemy : Unit, IEnemyData
     private bool bAccelerate = false; // true -> 지구로 돌진할 때를 의미.
     [SerializeField] private ParticleSystem vfxDeadImpact;
 
-
+    bool bInitialized = false;
 
     /// <summary>
     /// 시스템 코드 존. -------------------------------------
@@ -37,29 +37,50 @@ public class Enemy : Unit, IEnemyData
         base.Awake();
     }
 
-    public void ActivateEnemy()
+    private void SetEnemyState(bool boolean)
     {
-        col.enabled = true;
-        sr.enabled = true;
-        bDead = false;
-    }
+        if (rb.bodyType != RigidbodyType2D.Static)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
 
-    public void DeActivateEnemy()
-    {
-        col.enabled = false;
-        sr.enabled = false;
-        bDead = true;
-        healthComponent.ResetHealthComponent();
-    }
-
-    public void Activate(Vector3 spawnPos)
-    {
         bAccelerate = false;
 
         if (moveComponent != null)
             moveComponent.SetAccelerate(bAccelerate);
 
-        rb.bodyType = RigidbodyType2D.Dynamic;
+        col.enabled = boolean;
+        sr.enabled = boolean;
+
+        bDead = !boolean;
+
+        if (boolean == false)
+        {
+            rb.bodyType = RigidbodyType2D.Static;
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+    }
+
+    public void ActivateEnemy()
+    {
+        SetEnemyState(true);
+    }
+
+    public void DeActivateEnemy()
+    {
+        SetEnemyState(false);
+
+        healthComponent.ResetHealthComponent();
+    }
+
+    public void Activate(Vector3 spawnPos)
+    {
+        SetEnemyState(true);
+
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();
     }
@@ -67,26 +88,31 @@ public class Enemy : Unit, IEnemyData
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
         , EnemyTypeData _enemyTypeData)
     {
-        base.Initialize(_inputManager, _gameServiceLocator);
-        enemyTypeData = _enemyTypeData;
+        if (bInitialized == false)
+        {
+            base.Initialize(_inputManager, _gameServiceLocator);
+            enemyTypeData = _enemyTypeData;
 
-        combatComponent = GetComponent<ECombatComponent>();
-        moveComponent = GetComponent<EMoveComponent>();
-        visualComponentCoordinator = new EVisualComponentCoordinator();
+            combatComponent = GetComponent<ECombatComponent>();
+            moveComponent = GetComponent<EMoveComponent>();
+            visualComponentCoordinator = new EVisualComponentCoordinator();
 
-        //Visual 로직에 필요한 의존성을 추가해주면 됨.
-        visualComponentCoordinator.Initialize(combatComponent, moveComponent);
-        moveComponent.Initialize(ctx, visualComponentCoordinator);
+            //Visual 로직에 필요한 의존성을 추가해주면 됨.
+            visualComponentCoordinator.Initialize(combatComponent, moveComponent);
+            moveComponent.Initialize(ctx, visualComponentCoordinator);
+
+            //trail 임시 코드.
+            trailRenderer = GetComponent<TrailRenderer>();
+            trailRenderer.material = sr.material;
+            trailRenderer.material.mainTexture = sr.sprite.texture;
+            Color c = trailRenderer.material.color;
+            c.a = 0.3f;
+            trailRenderer.material.color = c;
+        }
 
         SetupEnemyType();
 
-        //trail 임시 코드.
-        trailRenderer = GetComponent<TrailRenderer>();
-        trailRenderer.material = sr.material;
-        trailRenderer.material.mainTexture = sr.sprite.texture;
-        Color c = trailRenderer.material.color;
-        c.a = 0.3f;
-        trailRenderer.material.color = c;
+        bInitialized = true;
     }
 
     private void SetupEnemyType()
@@ -112,8 +138,7 @@ public class Enemy : Unit, IEnemyData
     {
         EnemyIsKilledEvent?.Invoke(this, enemyTypeData);
 
-        sr.enabled = false;
-        col.enabled = false;
+        SetEnemyState(false);
 
         vfxDeadImpact.Play(true);
     }
@@ -190,13 +215,10 @@ public class Enemy : Unit, IEnemyData
         {
             effectComponent.PlayExplosionEffect();
 
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-            rb.bodyType = RigidbodyType2D.Static;
-            col.enabled = false;
-            sr.enabled = false;
+            SetEnemyState(false);
 
             UnitIsDead();
+
             gameServiceLocator.PlayCameraShake();
 
             combatComponent.ApplyAttack(other);

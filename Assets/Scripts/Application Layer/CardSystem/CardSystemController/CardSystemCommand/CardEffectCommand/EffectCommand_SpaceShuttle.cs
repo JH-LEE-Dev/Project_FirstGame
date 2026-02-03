@@ -33,7 +33,7 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
             }
         }
 
-        complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt));
+        complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt), cardSystemContextType);
 
         ResetCommandData();
     }

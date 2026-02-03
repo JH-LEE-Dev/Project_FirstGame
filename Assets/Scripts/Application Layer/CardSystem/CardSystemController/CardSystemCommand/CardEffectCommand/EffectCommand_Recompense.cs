@@ -18,14 +18,14 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
                     ++bulletCardCnt;
             }
 
-            complexSystemActionCommandHandler.AdditionalDraw(bulletCardCnt);
+            complexSystemActionCommandHandler.AdditionalDraw(bulletCardCnt, cardSystemContextType);
         }
 
         if(upgradeNestingCnt != 0)
         {
             IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
 
-            complexSystemActionCommandHandler.AdditionalDraw(prevHandToGraveCards.Count);
+            complexSystemActionCommandHandler.AdditionalDraw(prevHandToGraveCards.Count, cardSystemContextType);
         }
 
         ResetCommandData();

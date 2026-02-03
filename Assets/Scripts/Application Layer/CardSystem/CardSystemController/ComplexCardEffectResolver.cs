@@ -43,7 +43,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemCommand.Execute(this);
     }
 
-    public void ApplyAttackCntModifier(int attckCnt)
+    public void ApplyAttackCntModifier(int attckCnt, CardSystemContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAttackCntModifier(attckCnt);
     }
@@ -53,8 +53,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedBulletCard();
     }
 
-    public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards)
+    public void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.GraveCardsToHand(cards);
     }
 
@@ -63,17 +64,18 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemActionCommandHandler.GetHandPile();
     }
 
-    public void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile)
+    public void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
     {
-        cardSystemControlActionCommandHandler.UseCardsAndExtinguishAll(cardPile);
+        cardSystemControlActionCommandHandler.UseCards(cardPile);
     }
 
-    public void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile)
+    public void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.CardsToExtinction(cardPile);
     }
 
-    public void ApplyAttackModifier(int attack)
+    public void ApplyAttackModifier(int attack, CardSystemContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
     }
@@ -83,8 +85,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
     }
 
-    public void AdditionalDraw(int amount)
+    public void AdditionalDraw(int amount, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.DrawAgain(amount);
     }
 
@@ -93,7 +96,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType)
     {
         cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount);
     }
@@ -113,8 +116,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemActionCommandHandler.GetExtinctionPile();
     }
 
-    public void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    public void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.GraveCardsToDeck(cards);
     }
 
@@ -128,7 +132,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler.RequestCardDataControlSystemActionCommand(cardDataControlSystemActionType, _cards, _cardSystemContextType);
     }
 
-    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant)
+    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, CardSystemContextType cardSystemContextType)
     {
         cardDataControlActionCommandHandler.UpgradeCards(cards, bPermenant);
     }
@@ -138,23 +142,35 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return slotSystemActionCommandHandler.GetCurrentBulletCards();
     }
 
-    public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
+    public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType)
     {
         cardDataControlActionCommandHandler.ApplyValueModifier(cards, valueModifier);
     }
 
-    public void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards)
+    public void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.CardsRemoveFromHand(cards);
     }
 
-    public void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    public void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
     {
+        cardSystemActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardSystemActionCommandHandler.ExtinctionCardsToDeck(cards);
     }
 
     public IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards()
     {
         return cardFlowDataActionCommandHandler.GetPrevTurnHandToGraveCards();
+    }
+
+    public void ApplyCardUsePhaseCntModifier(int cnt, CardSystemContextType cardSystemContextType)
+    {
+        cardSystemControlActionCommandHandler.ApplyCardUsePhaseCntModifier(cnt);
+    }
+
+    public void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
+    {
+        cardSystemControlActionCommandHandler.ExecuteHandPileExistEffect(cards);
     }
 }

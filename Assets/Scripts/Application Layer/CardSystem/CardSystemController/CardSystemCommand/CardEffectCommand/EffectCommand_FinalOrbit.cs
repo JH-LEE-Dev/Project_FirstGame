@@ -48,19 +48,24 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
                     ++upgradeCnt;
                 }
             }
-            else
-            {
-                writeBuffer_Extinction[extinctionCnt] = handPile[i];
-                ++extinctionCnt;
-            }
+
+            writeBuffer_Extinction[extinctionCnt] = handPile[i];
+            ++extinctionCnt;
         }
 
-        complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt));
-        complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt));
+        if (extinctionCnt != 0)
+        {
+            complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
+            complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
 
-        complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
-        writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);
-        complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt));
+            if (upgradeCnt != 0)
+            {
+                complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
+            writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);
+            }
+
+            complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+        }
 
         ResetCommandData();
     }

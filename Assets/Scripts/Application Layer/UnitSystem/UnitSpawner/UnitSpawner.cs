@@ -4,7 +4,7 @@ using UnityEngine.Pool;
 using System;
 using WaveSystemSignals;
 
-public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
+public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 {
     public event Action<Character> CharacterCreatedEvent;
     public event Action<Earth> PlayerCreatedEvent;
@@ -196,8 +196,11 @@ public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
 
-                enemyData.Add(spawnedUnit);
-                enemies.Add(spawnedUnit);
+                if (!enemies.Contains(spawnedUnit))
+                {
+                    enemyData.Add(spawnedUnit);
+                    enemies.Add(spawnedUnit);
+                }
             }
         }
 
@@ -212,6 +215,8 @@ public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
         {
             enemyPool.Release(enemies[i]);
         }
+
+        enemies.Clear();
     }
 
     private void ReleaseAllEnemy()
@@ -223,6 +228,8 @@ public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
                 enemyPool.Release(enemies[i]);
             }
         }
+
+        enemies.Clear();
 
         enemyPool.Dispose();
     }

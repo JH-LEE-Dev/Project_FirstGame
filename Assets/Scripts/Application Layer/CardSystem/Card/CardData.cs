@@ -23,4 +23,5 @@ public class CardData
     public List<CardSlotSystemEffectType> cardSlotSystemEffects;
     public List<ComplexSystemEffectType> complexSystemEffects;
     public List<CardSelectionSystemEffectType> selectionSystemEffects;
+    public CardEffectCommand HandPileExistEffect;
 }

@@ -75,8 +75,8 @@ public class CardSystem
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
         cardSystemController.CardDrawStartEvent += CardDrawStarted;
 
-        cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
-        cardSystemController.CardDrawFinishedEvent += CardDrawFinished;
+        cardSystemController.StartCardUsePhaseEvent -= CardUsePhaseStarted;
+        cardSystemController.StartCardUsePhaseEvent += CardUsePhaseStarted;
 
         cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
         cardSystemController.CardLogicSystemCommandDispatchEvent += cardManager.ExecuteCommand;
@@ -107,6 +107,9 @@ public class CardSystem
 
         cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
         cardSelectionManager.RequestCardDataControlSystemActionEvent += cardSystemController.RequestCardDataControlSystemActionCommand;
+
+        cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
+        cardSystemController.PlayerTurnFinishedEvent += PlayerTurnFinished;
     }
 
     private void ReleaseEvents()
@@ -117,7 +120,7 @@ public class CardSystem
 
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
 
-        cardSystemController.CardDrawFinishedEvent -= CardDrawFinished;
+        cardSystemController.StartCardUsePhaseEvent -= CardUsePhaseStarted;
 
         cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
 
@@ -138,6 +141,8 @@ public class CardSystem
         cardSelectionManager.RequestCardLogicSystemActionEvent -= cardSystemController.RequestCardLogicSystemActionCommand;
 
         cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
+
+        cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
     }
 
     public void Release()
@@ -177,9 +182,14 @@ public class CardSystem
         signalHub.EndScope<CardActionScopeSignal>(new CardActionScopeSignal());
     }
 
-    private void CardDrawFinished()
+    private void CardUsePhaseStarted()
     {
-        signalHub.Publish(new CardDrawFinishedSignal());
+        signalHub.Publish(new CardUsePhaseStarted());
+    }
+
+    private void PlayerTurnFinished()
+    {
+        signalHub.Publish(new PlayerTurnFinishedSignal());
     }
 
     private void CardStatusEffectDispatch(CardSystemCommand command)
@@ -231,7 +241,7 @@ public class CardSystem
 
     private void WaveEnd(WaveEndSignal waveEndSignal)
     {
-        cardSystemController.PlayerTurnFinished();
+        cardSystemController.WaveEnded();
         cardSystemController.ResetAllCommands();
     }
 

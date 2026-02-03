@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff7a5a7988c80e34a9f423d6cb12414c, type: 3}
   m_Name: CardPileDraw Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_CardPileDraw
-  cardSystemActionTimingType: 2
+  cardSystemActionTimingType: 4

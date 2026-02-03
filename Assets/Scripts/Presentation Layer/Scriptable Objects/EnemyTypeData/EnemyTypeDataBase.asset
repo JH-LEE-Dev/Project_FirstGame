@@ -24,7 +24,7 @@ MonoBehaviour:
   - id: Two
     sprite: {fileID: 215401576309132004, guid: c97a667afec2bd5419ec6d2d48465c7c, type: 3}
     scale: 4
-    moveForce: 7
+    moveForce: 5
     health: 1
     attack: 4
     shield: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   - id: Three
     sprite: {fileID: 6024657178149202955, guid: 47566be39d3a771448842dc5e7f9403e, type: 3}
     scale: 3
-    moveForce: 5
+    moveForce: 8
     health: 1
     attack: 6
     shield: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
   - id: Four
     sprite: {fileID: -4734392874465410214, guid: ccfe7fa19208eb44c8518c1d58cf0572, type: 3}
     scale: 3
-    moveForce: 8
+    moveForce: 4
     health: 1
     attack: 3
     shield: 0

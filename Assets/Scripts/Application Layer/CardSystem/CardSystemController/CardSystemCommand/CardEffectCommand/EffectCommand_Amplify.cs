@@ -31,7 +31,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier);
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, cardSystemContextType);
         }
 
         if (upgradeNestingCnt != 0)
@@ -51,7 +51,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, cardSystemContextType);
         }
 
         ResetCommandData();
