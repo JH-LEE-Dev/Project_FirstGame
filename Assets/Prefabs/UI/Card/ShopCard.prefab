@@ -553,6 +553,7 @@ GameObject:
   - component: {fileID: 6502495658286524022}
   - component: {fileID: 1243197672332687960}
   - component: {fileID: 3091449442794618768}
+  - component: {fileID: 3238714824588818232}
   - component: {fileID: 6108437827676441765}
   m_Layer: 0
   m_Name: ShopCard
@@ -611,6 +612,8 @@ MonoBehaviour:
   cardDescription: {fileID: 4219192507650260008}
   rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
   extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
+  fxNameController: {fileID: 3238714824588818232}
+  fxDescriptionController: {fileID: 6108437827676441765}
 --- !u!114 &1243197672332687960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,6 +638,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7605fec4f5e664a9e6ab3bf5fb8b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopCardMotion
+--- !u!114 &3238714824588818232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5863989176703220490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
+  tmp: {fileID: 2010789194705691865}
+  useUnscaledTime: 1
+  speed: 1.2
+  charPhase: 0.15
+  updateInterval: 0
 --- !u!114 &6108437827676441765
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -935,6 +935,7 @@ GameObject:
   - component: {fileID: 3029011206427382975}
   - component: {fileID: 5838685573002921066}
   - component: {fileID: 9191606903517851807}
+  - component: {fileID: 6800234086141754849}
   - component: {fileID: 5973828384329222186}
   m_Layer: 0
   m_Name: SocketCard
@@ -981,6 +982,8 @@ MonoBehaviour:
   cardDescription: {fileID: 8587617530878845966}
   rotationIcon: {fileID: 21300000, guid: 90865311695006541a7ad12ee6fdcee1, type: 3}
   extinctionIcon: {fileID: 21300000, guid: 9e83c91da5e0a1c4c84d4a38dfda6fe2, type: 3}
+  fxNameController: {fileID: 6800234086141754849}
+  fxDescriptionController: {fileID: 5973828384329222186}
 --- !u!114 &9191606903517851807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -994,6 +997,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldCanvasEnabler
   canvas: {fileID: 6823371282886669641}
+--- !u!114 &6800234086141754849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8825815609802249459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
+  tmp: {fileID: 448495544802464738}
+  useUnscaledTime: 1
+  speed: 1.2
+  charPhase: 0.15
+  updateInterval: 0
 --- !u!114 &5973828384329222186
 MonoBehaviour:
   m_ObjectHideFlags: 0
