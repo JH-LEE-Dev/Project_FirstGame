@@ -241,7 +241,6 @@ public class Enemy : Unit, IEnemyData
             SetEnemyState(false);
 
             UnitIsDead();
-            transform.position = new Vector2(1000f, 1000f);
 
             gameServiceLocator.PlayCameraShake();
 

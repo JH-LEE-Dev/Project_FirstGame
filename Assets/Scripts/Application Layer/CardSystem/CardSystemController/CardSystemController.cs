@@ -135,6 +135,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardEffect_BeforeTurn.Add(cardEffect_BeforeCardUsingPhase[i]);
         }
+
+        cardEffect_BeforeCardUsingPhase.Clear();
     }
 
     public void WaveEnded()
