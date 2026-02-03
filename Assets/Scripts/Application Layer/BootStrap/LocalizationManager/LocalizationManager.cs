@@ -8,6 +8,7 @@ public struct CardTextData
 {
     public int id;
     public string name;
+    public string upgradedName;
     public string description;
     public string upgradedDescription;
 }
@@ -21,6 +22,7 @@ public struct LangDataWrapper
 public class LocalizationManager : ICardLocalizationSystem
 {
     private Dictionary<int, byte[]> nameMap = new Dictionary<int, byte[]>(100);
+    private Dictionary<int, byte[]> upgradedNameMap = new Dictionary<int, byte[]>(100);
     private Dictionary<int, byte[]> descMap = new Dictionary<int, byte[]>(100);
     private Dictionary<int, byte[]> upgradedDescMap = new Dictionary<int, byte[]>(100);
 
@@ -30,6 +32,7 @@ public class LocalizationManager : ICardLocalizationSystem
     public void LoadLanguage(string fileName)
     {
         nameMap.Clear();
+        upgradedNameMap.Clear();
         descMap.Clear();
         upgradedDescMap.Clear();
 
@@ -48,6 +51,7 @@ public class LocalizationManager : ICardLocalizationSystem
             if (!nameMap.ContainsKey(item.id))
             {
                 nameMap.Add(item.id, Encoding.UTF8.GetBytes(item.name));
+                upgradedNameMap.Add(item.id, Encoding.UTF8.GetBytes(item.upgradedName));
                 descMap.Add(item.id, Encoding.UTF8.GetBytes(item.description));
                 upgradedDescMap.Add(item.id, Encoding.UTF8.GetBytes(item.upgradedDescription));
             }
@@ -56,11 +60,17 @@ public class LocalizationManager : ICardLocalizationSystem
         Resources.UnloadAsset(textAsset);
     }
 
-    public void SetCardUIText(int id, TextMeshProUGUI targetName, TextMeshProUGUI targetDesc, TextMeshProUGUI targetUpgradedDesc)
+    public void SetCardUIText(int id, TextMeshProUGUI targetName, TextMeshProUGUI targetUpgradedName, TextMeshProUGUI targetDesc, TextMeshProUGUI targetUpgradedDesc)
     {
         if (nameMap.TryGetValue(id, out byte[] nameBytes) && targetName)
         {
             BytesToBuffer(nameBytes); // 버퍼에 씀 (Alloc 0)
+            targetName.SetText(sharedBuffer); // TMP가 SB를 읽음 (Alloc 0)
+        }
+
+        if (upgradedNameMap.TryGetValue(id, out byte[] upgradedNameBytes) && targetUpgradedName)
+        {
+            BytesToBuffer(upgradedNameBytes); // 버퍼에 씀 (Alloc 0)
             targetName.SetText(sharedBuffer); // TMP가 SB를 읽음 (Alloc 0)
         }
 

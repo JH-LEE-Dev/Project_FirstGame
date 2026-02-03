@@ -3,6 +3,7 @@
     {
       "id": 0,
       "name": "추가 공격력",
+      "upgradedName": "",
       "description": "<5>추가 공격력 +2\n<ry>중첩</ry>가능",
       "upgradedDescription": "<5>추가 공격력 +4\n<ry>중첩</ry>가능"
     },

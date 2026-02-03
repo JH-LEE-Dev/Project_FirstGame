@@ -72,7 +72,7 @@ public class Enemy : Unit, IEnemyData
 
     public void ActivateEnemy()
     {
-        StartCoroutine(SetEnemyState_Delayed(true));
+        SetEnemyState(true);
     }
 
     public IEnumerator SetEnemyState_Delayed(bool boolean)
@@ -91,7 +91,9 @@ public class Enemy : Unit, IEnemyData
 
     public void Activate(Vector3 spawnPos)
     {
-        SetEnemyState(true);
+        sr.enabled = true;
+
+        StartCoroutine(SetEnemyState_Delayed(true));
 
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();

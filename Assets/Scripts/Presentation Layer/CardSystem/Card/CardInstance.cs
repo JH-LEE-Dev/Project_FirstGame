@@ -180,13 +180,13 @@ public class CardInstance : MonoBehaviour
         if (dataInstance.IsUpgraded() == true)
         {
             cardName.color = enforceTextColor;
-            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription);
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null,null, cardDescription);
         }
         // °­È­¾ÈµÊ
         else
         {
             cardName.color = normalTextColor;
-            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName,null, cardDescription, null);
         }
 
         var fx = GetComponent<TMPTextFxController>();
