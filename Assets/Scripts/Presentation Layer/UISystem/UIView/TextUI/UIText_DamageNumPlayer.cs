@@ -35,7 +35,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
     private Sequence seq;
 
-    private Action playMotionCompleteEvent;
+    private Action<GameObject> playMotionCompleteEvent;
 
     private void Awake()
     {
@@ -69,7 +69,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public void PlayMotion(bool _danger, Action _callback = null)
+    public void PlayMotion(bool _danger, Action<GameObject> _callback = null)
     {
         if (null != seq && seq.IsActive())
             seq.Kill();
@@ -129,7 +129,7 @@ public class UIText_DamageNumPlayer : MonoBehaviour
 
     private void PlayMotionCompleteEvent()
     {
-        playMotionCompleteEvent?.Invoke();
+        playMotionCompleteEvent?.Invoke(gameObject);
         playMotionCompleteEvent = null;
     }
 
