@@ -187,10 +187,10 @@ public class CardInstance : MonoBehaviour
 
         // °­È­µÊ
         if (dataInstance.IsUpgraded() == true)
-            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, null, cardDescription);
+            cardLocalizationSystem.SetCardUIText(cardData.id, null, cardName, null, cardDescription);
         // °­È­¾ÈµÊ
         else
-            cardLocalizationSystem.SetCardUIText(cardData.id, null, cardName, cardDescription, null);
+            cardLocalizationSystem.SetCardUIText(cardData.id, cardName, null, cardDescription, null);
 
 
         if (fxNameController) fxNameController.SetTaggedText(cardName.text);
