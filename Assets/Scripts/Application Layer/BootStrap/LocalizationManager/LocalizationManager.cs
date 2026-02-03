@@ -71,7 +71,7 @@ public class LocalizationManager : ICardLocalizationSystem
         if (upgradedNameMap.TryGetValue(id, out byte[] upgradedNameBytes) && targetUpgradedName)
         {
             BytesToBuffer(upgradedNameBytes); // 버퍼에 씀 (Alloc 0)
-            targetName.SetText(sharedBuffer); // TMP가 SB를 읽음 (Alloc 0)
+            targetUpgradedName.SetText(sharedBuffer); // TMP가 SB를 읽음 (Alloc 0)
         }
 
         if (descMap.TryGetValue(id, out byte[] descBytes) && targetDesc)

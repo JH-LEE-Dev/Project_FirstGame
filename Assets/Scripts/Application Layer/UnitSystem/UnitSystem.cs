@@ -99,7 +99,7 @@ public class UnitSystem
         signalHub.Subscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
         signalHub.Subscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
         signalHub.Subscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
-        signalHub.Subscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
+        signalHub.Subscribe<CardUsePhaseStarted>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
@@ -113,7 +113,7 @@ public class UnitSystem
         signalHub.UnSubscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
         signalHub.UnSubscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
-        signalHub.UnSubscribe<CardDrawStartSignal>(unitLogicSystem.CardDrawed);
+        signalHub.UnSubscribe<CardUsePhaseStarted>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
