@@ -56,24 +56,15 @@ public class Enemy : Unit, IEnemyData
 
         if (boolean == false)
         {
-            if (rb.bodyType != RigidbodyType2D.Static)
-            {
-                rb.linearVelocity = Vector2.zero;
-                rb.angularVelocity = 0f;
-            }
-
             rb.simulated = false;
         }
         else
         {
             rb.simulated = true;
-
-            if (rb.bodyType != RigidbodyType2D.Static)
-            {
-                rb.linearVelocity = Vector2.zero;
-                rb.angularVelocity = 0f;
-            }
         }
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
     }
 
     public void ActivateEnemy()
@@ -84,6 +75,11 @@ public class Enemy : Unit, IEnemyData
     public IEnumerator SetEnemyState_Delayed(bool boolean)
     {
         yield return new WaitForSeconds(activateDelay);
+
+        if (boolean == true)
+        {
+            Physics2D.SyncTransforms();
+        }
 
         SetEnemyState(boolean);
     }
@@ -108,8 +104,6 @@ public class Enemy : Unit, IEnemyData
         bAccelerate = false;
         if (moveComponent != null)
             moveComponent.SetAccelerate(bAccelerate);
-
-        Physics2D.SyncTransforms();
 
         StartCoroutine(SetEnemyState_Delayed(true));
     }

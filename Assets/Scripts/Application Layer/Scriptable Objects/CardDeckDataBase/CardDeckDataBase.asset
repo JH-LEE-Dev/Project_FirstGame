@@ -15,19 +15,10 @@ MonoBehaviour:
   cardPileData:
   - cardName: 5
     cnt: 1
+    bUpgraded: 0
+  - cardName: 5
+    cnt: 1
     bUpgraded: 1
   - cardName: 0
-    cnt: 1
+    cnt: 5
     bUpgraded: 1
-  - cardName: 10
-    cnt: 1
-    bUpgraded: 1
-  - cardName: 3
-    cnt: 1
-    bUpgraded: 0
-  - cardName: 4
-    cnt: 3
-    bUpgraded: 0
-  - cardName: 18
-    cnt: 1
-    bUpgraded: 0

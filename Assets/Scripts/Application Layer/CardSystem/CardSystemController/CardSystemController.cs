@@ -334,14 +334,17 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 continue;
 
             int upgradeNestingCnt = 0;
+            int nestingCnt = 0;
 
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
                 if (bulletCardSlot[i][j].IsUpgraded())
                     ++upgradeNestingCnt;
+                else
+                    ++nestingCnt;
             }
 
-            OrganizeCardEffectCommand(bulletCardSlot[i][0], bulletCardSlot[i].Count, upgradeNestingCnt);
+            OrganizeCardEffectCommand(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
 
             //SlotEffect는 가장 먼저 실행되어야 하므로, Dispatch를 for loop 안에서 해줘서 
             //SlotEffect가 적용되게 해야 함, loop안에서 하지 않으려면, 명령 객체가
