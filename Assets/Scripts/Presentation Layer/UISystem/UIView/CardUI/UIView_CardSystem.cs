@@ -686,6 +686,13 @@ public class UIView_CardSystem : UIView
         cardPannel.gameObject.SetActive(false);
     }
 
+    public void AllDeActivatePannel()
+    {
+        ForceDeActivatePannelSelf(CurrentPannel.Grave);
+        ForceDeActivatePannelSelf(CurrentPannel.Deck);
+        ForceDeActivatePannelSelf(CurrentPannel.Extinction);
+    }
+
     public void CallOneCardDrawedBlock(int currIdx, int _lastIdx, Vector3 _endPos, ICardDataInstanceProvider _data, GameObject _performer)
     {
         if (currIdx == _lastIdx)
