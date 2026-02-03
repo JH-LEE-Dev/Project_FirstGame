@@ -62,11 +62,11 @@ public class Enemy : Unit, IEnemyData
                 rb.angularVelocity = 0f;
             }
 
-            rb.bodyType = RigidbodyType2D.Static;
+            rb.simulated = false;
         }
         else
         {
-            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.simulated = true;
 
             if (rb.bodyType != RigidbodyType2D.Static)
             {
@@ -102,11 +102,8 @@ public class Enemy : Unit, IEnemyData
 
         sr.enabled = true;
 
-        if (rb.bodyType != RigidbodyType2D.Static)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-        }
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
 
         bAccelerate = false;
         if (moveComponent != null)
