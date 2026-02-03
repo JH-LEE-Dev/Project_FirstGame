@@ -90,7 +90,11 @@ public class CardInstance : MonoBehaviour
     // ¿Ê ÀÔÈ÷±â
     public void ApplyData(ICardDataInstanceProvider dataInstance)
     {
-        if (dataInstance == null) return;
+        if (dataInstance == null)
+        {
+            Debug.Log("NULLCard");
+            return;
+        }
 
         ResetVisual();
 
@@ -176,6 +180,10 @@ public class CardInstance : MonoBehaviour
             cardName.color = normalTextColor;
             cardLocalizationSystem.SetCardUIText(cardData.id, cardName, cardDescription, null);
         }
+
+        var fx = GetComponent<TMPTextFxController>();
+        if (fx) fx.SetTaggedText(cardDescription.text);
+
     }
 
     public void UpdateForEnforce()
