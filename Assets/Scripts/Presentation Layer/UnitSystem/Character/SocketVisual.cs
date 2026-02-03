@@ -20,6 +20,7 @@ public class SocketVisual : MonoBehaviour
     [SerializeField] private float hoverDuration = 2.2f;
     private Tween hoverTween;
     private float baseVisualLocalY;
+    private Quaternion baseVisualLocalRot;
     private float baseVisualZ;     
     private float hoverPhase0;
 
@@ -59,7 +60,7 @@ public class SocketVisual : MonoBehaviour
     private Vector3 baseVisualLocalPos;
     private Vector3 baseVisualLocalScale;
 
-    private void Awake()
+    public void Init()
     {
         targetRootLocalPos = transform.localPosition;
 
@@ -67,9 +68,15 @@ public class SocketVisual : MonoBehaviour
         {
             baseVisualLocalPos = visual.localPosition;
             baseVisualLocalScale = visual.localScale;
+
+            baseVisualLocalRot = visual.localRotation;
+
             baseVisualZ = visual.localEulerAngles.z; // 프리팹 기본 각도(예: 20도)
             baseVisualLocalY = baseVisualLocalPos.y; // 기존 Hover가 쓰던 값 유지
         }
+        else
+            Debug.Log("NULL Visual Socket");
+
 
         // 시작점만 다르게 (박자 동일)
         hoverPhase0 = Random.Range(0f, Mathf.PI * 2f);
@@ -81,14 +88,24 @@ public class SocketVisual : MonoBehaviour
 
     private void OnEnable()
     {
+        ResetVisualToBase();
         StartIdle();
     }
 
     private void OnDisable()
     {
         KillIdleTween();
+        ResetVisualToBase();
     }
 
+    private void ResetVisualToBase()
+    {
+        if (visual == null) return;
+
+        visual.localPosition = baseVisualLocalPos;
+        visual.localScale = baseVisualLocalScale;
+        visual.localRotation = baseVisualLocalRot;
+    }
 
 
     public void SetTargetLocalPosition(Vector3 rootLocalPos, bool snap = false)

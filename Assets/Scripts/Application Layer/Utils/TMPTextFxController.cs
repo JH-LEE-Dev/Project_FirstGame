@@ -26,10 +26,10 @@ public class TMPTextFxController : MonoBehaviour
     private readonly List<RangeFx> ranges = new();
     private Coroutine routine;
 
-    private static readonly Color32 BLACK = new Color32(0, 0, 0, 255);
-    private static readonly Color32 WHITE = new Color32(255, 255, 255, 255);
-    private static readonly Color32 RED = new Color32(255, 60, 60, 255);
-    private static readonly Color32 YELLOW = new Color32(255, 230, 80, 255);
+    private readonly Color32 GREENBLUE = new Color32(0, 172, 151, 255);
+    private readonly Color32 DARKBLUE = new Color32(65, 0, 172, 255);
+    private readonly Color32 RED = new Color32(255, 60, 60, 255);
+    private readonly Color32 YELLOW = new Color32(255, 230, 80, 255);
 
     private void Awake()
     {
@@ -230,7 +230,7 @@ public class TMPTextFxController : MonoBehaviour
             case FxType.WB:
                 {
                     float a = 0.5f + 0.5f * Mathf.Sin(phase * Mathf.PI * 2f);
-                    return Lerp32(BLACK, WHITE, a);
+                    return Lerp32(GREENBLUE, DARKBLUE, a);
                 }
             case FxType.RY:
             default:

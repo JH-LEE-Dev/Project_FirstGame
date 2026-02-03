@@ -45,7 +45,7 @@
     {
       "id": 7,
       "name": "우주 왕복선",
-      "description": "<4>소켓에 같이 장착된 모든 로테이션 불릿 카드를 다음 턴이 시작될 때, 웜홀에서 패로 회수\n<wb>소멸</wb>\n<wb>강화불가</wb>",
+      "description": "<4>소켓에 같이 장착된 모든 로테이션 불릿 카드를 다음 턴이 시작될 때, 웜홀에서 패로 회수\n<wb>소멸</wb>  <wb>강화불가</wb>",
       "upgradedDescription": ""
     },
     {
@@ -75,7 +75,7 @@
     {
       "id": 12,
       "name": "명왕성",
-      "description": "<5>제외된 카드 1장을 선택해 덱에 추가합니다.\n<wb>소멸</wb>\n<wb>강화불가</wb>",
+      "description": "<5>제외된 카드 1장을 선택해 덱에 추가합니다.\n<wb>소멸</wb>  <wb>강화불가</wb>",
       "upgradedDescription": ""
     },
     {

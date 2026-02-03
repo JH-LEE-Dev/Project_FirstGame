@@ -426,9 +426,10 @@ public class HandSystem : MonoBehaviour
 
         return c.cardState == CardState.Preview
             || c.cardState == CardState.Equipped
-            || c.cardState == CardState.Hidden
             || c.cardState == CardState.Other
-            || c.cardState == CardState.Selecting;
+            || c.cardState == CardState.EffectOther
+            || c.cardState == CardState.Selecting
+            || c.cardState == CardState.Hidden;
     }
     private void SortZ_RightIsTop()
     {
@@ -438,7 +439,7 @@ public class HandSystem : MonoBehaviour
             if (cards[i] == null) continue;
 
             // 손패에 남아있는 카드만 정렬(Equipped/Preview는 다른 부모일 수 있음)
-            if (cards[i].cardState == CardState.InHand)
+            if (cards[i].cardState == CardState.InHand || cards[i].cardState == CardState.EffectInHand)
                 cards[i].transform.SetAsLastSibling();
         }
     }
@@ -708,15 +709,17 @@ public class HandSystem : MonoBehaviour
         }
 
 
-        card.SetUIState(CardState.Other);
+        //card.SetUIState(CardState.Other);
         card.Motion.SetSocketIndex(-1);
 
-        if (computeArcOptimization == false)
+
+        if (!computeArcOptimization)
         {
             computeArc();
             ComputeSelectedPositions();
         }
 
+        bool wasInHand = card.cardState == CardState.InHand;
         switch (type)
         {
             case CardReturnType.Temp:
@@ -724,14 +727,19 @@ public class HandSystem : MonoBehaviour
                 break;
 
             case CardReturnType.FlyToGrave:
+                card.SetUIState(CardState.Other);
                 PlayFlyToGraveAndReturn(card, delay);
                 break;
 
             case CardReturnType.Extinction:
-                PlayExtinctionAndReturn(card, delay);
+                if (wasInHand) card.SetUIState(CardState.EffectInHand);
+                else card.SetUIState(CardState.EffectOther);
+                    PlayExtinctionAndReturn(card, delay);
                 break;
 
             case CardReturnType.MagicUse:
+                if (wasInHand) card.SetUIState(CardState.EffectInHand);
+                else card.SetUIState(CardState.EffectOther);
                 PlayMagicUseAndReturn(card, delay);
                 break;
         }

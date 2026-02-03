@@ -61,6 +61,7 @@ public class UIText_PlayerHP : MonoBehaviour
     private float tempDamage;
     private float tempPrevShield;
     private float tempCurrShield;
+    private float currentHPValue;
     private GameObject tempDamageNum;
 
     private void Awake()
@@ -83,8 +84,8 @@ public class UIText_PlayerHP : MonoBehaviour
         if (hpText == null) 
             return;
 
-        float convertedValue = Convert.ToSingle(_value);
-        hpText.text = Mathf.RoundToInt(convertedValue).ToString();
+        currentHPValue = Convert.ToSingle(_value);
+        hpText.text = Mathf.RoundToInt(currentHPValue).ToString();
 
         shieldText?.gameObject.SetActive(false);
     }
@@ -134,15 +135,20 @@ public class UIText_PlayerHP : MonoBehaviour
 
     private void CalcHP(float _prev, float _current)
     {
-        if (hpTween != null && hpTween.IsActive()) hpTween.Kill();
+        if (hpTween != null && hpTween.IsActive()) 
+            hpTween.Kill();
 
-        hpTween = DOVirtual.Float(_prev, _current, motionDuration, UpdateHPText)
+        float startValue = currentHPValue;
+
+        hpTween = DOVirtual.Float(startValue, _current, motionDuration, UpdateHPText)
             .SetEase(motionEase)
             .SetUpdate(false);
     }
 
     private void UpdateHPText(float value)
     {
+        currentHPValue = value;
+
         hpText.text = Mathf.RoundToInt(value).ToString();
     }
 
@@ -195,7 +201,8 @@ public class UIText_PlayerHP : MonoBehaviour
     private void OnDamageNumberHit()
     {
         UIText_DamageNumPlayer script = tempDamageNum?.GetComponent<UIText_DamageNumPlayer>();
-        if (null == script || null == visualRect) return;
+        if (null == script || null == visualRect) 
+            return;
 
         string damageString = "-" + Mathf.RoundToInt(tempDamage).ToString();
         script.Setup(damageString, damageWait, damageSpawnPoint.position, damageEndPoint);
@@ -205,11 +212,11 @@ public class UIText_PlayerHP : MonoBehaviour
         script.PlayMotion(dangerDamage, OnDamageNumberComplete);
     }
 
-    private void OnDamageNumberComplete()
+    private void OnDamageNumberComplete(GameObject obj)
     {
         OnDefaultHit();
-        hudSystem?.ReturnDamageText(tempDamageNum);
-        tempDamageNum = null;
+        hudSystem?.ReturnDamageText(obj);
+        obj = null;
     }
 
     private void OnColorChange(float _progress, bool _isShield)

@@ -164,7 +164,7 @@ public class UIView_HUD : UIView
 
     private void HP_BarUpdateforDamaged(float damage)
     {
-        if (null == hpBar)
+        if (null == hpBar || null == playerDamageNumPool)
             return;
 
         float maxHp = playerData.GetMaxHealth();
@@ -209,7 +209,7 @@ public class UIView_HUD : UIView
         }
 
         if (null != hpText)
-            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield,_damagNum: playerDamageNumPool.Pool.Get());
+            hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield, _damagNum: playerDamageNumPool.Pool.Get());
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
@@ -327,7 +327,17 @@ public class UIView_HUD : UIView
         WaveStartFirstTime = false;
     }
 
-    public void ReturnDamageText(GameObject target) => playerDamageNumPool?.Pool.Release(target);
+    public void ReturnDamageText(GameObject target)
+    {
+        if (null == target)
+            return;
+
+        if(target.activeSelf)
+        {
+            playerDamageNumPool?.Pool.Release(target);
+        }
+    }
+
     public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
 
     private void CharacterStatUpdate()

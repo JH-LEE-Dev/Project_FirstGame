@@ -52,6 +52,7 @@ public class BulletSocketSystem : MonoBehaviour
 
             var visual = go.GetComponent<SocketVisual>();
             if (visual == null) continue;
+            visual.Init();
             visual.SetOverlapCount(0);
             sockets.Add(visual);
         }
@@ -138,17 +139,22 @@ public class BulletSocketSystem : MonoBehaviour
     public void EquipBulletCard(int _index, ICardDataInstanceProvider _data = null)
     {
         CardData data = _data?.GetCardData();
-
-        SocketVisual socketVisual = sockets[_index];
-        int count = socketVisual.GetOverlapCount();
-        count++;
-        socketVisual.SetOverlapCount(count);
-
+        
+        // 카드 옷 입히기
         SocketCardInstance targetCardInstance = cards[_index];
         targetCardInstance.gameObject.SetActive(true);
         targetCardInstance.ApplyData(_data);
 
+        // 애니메이션
+        SocketVisual socketVisual = sockets[_index];
         socketVisual.PlayImpactSlam();
+
+        // 중첩 카드가 아닐경우, 카운팅하지않음.
+        if (data.cardType == CardType.Bullet && data.usingType == UsingType.NotNesting ) return;
+
+        int count = socketVisual.GetOverlapCount();
+        count++;
+        socketVisual.SetOverlapCount(count);
     }
     public void UnEquipBulletCard(int _index)
     {

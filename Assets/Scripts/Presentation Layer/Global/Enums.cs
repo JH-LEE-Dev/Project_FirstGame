@@ -35,6 +35,8 @@ public enum CardState
     Preview,
     Equipped,
     Other,
+    EffectInHand,
+    EffectOther,
     Selecting,
     Hidden
 }

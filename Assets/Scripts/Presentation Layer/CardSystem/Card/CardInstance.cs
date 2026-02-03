@@ -122,8 +122,16 @@ public class CardInstance : MonoBehaviour
         if (cardImage) cardImage.sprite = null;
         if (cardIcon) cardIcon.sprite = null;
 
-        if (cardName) cardName.text = string.Empty;
-        if (cardDescription) cardDescription.text = string.Empty;
+        if (cardName)
+        {
+            cardName.text = string.Empty;
+            cardName.alpha = descBaseAlpha;
+        }
+        if (cardDescription) 
+        {
+            cardDescription.text = string.Empty;
+            cardDescription.alpha = descBaseAlpha;
+        }
     }
 
     private void CardImageChange(Sprite _cardImage)
