@@ -25,7 +25,5 @@ public class ActionCommand_DuplicateCardsToDeck : CardSystemActionCommand<ICardL
         }
 
         cardSystemActionCommandHandler.CardsToDeck(writeBuffer);
-
-        rentalBuffer.Dispose();
     }
 }

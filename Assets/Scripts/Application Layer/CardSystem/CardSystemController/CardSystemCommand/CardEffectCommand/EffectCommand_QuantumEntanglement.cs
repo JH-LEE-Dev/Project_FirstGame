@@ -27,8 +27,6 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 }
 
                 complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand,writeBuffer,CardSystemContextType.MAX);
-
-                rentalBuffer.Dispose();
             }
         }
 
@@ -47,8 +45,6 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 }
 
                 complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, CardSystemContextType.MAX);
-
-                rentalBuffer.Dispose();
             }
         }
 

@@ -252,8 +252,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             writeBuffer[0] = usedCard;
             DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.UsedCardsRemoveFromHand, writeBuffer);
         }
-
-        rentalBuffer.Dispose();
     }
 
     public void CardUsingFinished()
@@ -418,8 +416,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer);
 
         cardSlotManager.DiscardBulletCard(slotIdx);
-
-        rentalBuffer.Dispose();
     }
 
     public void ClearAllBulletCard()
@@ -459,9 +455,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         if (toGraveCnt != 0)
             DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.SlotCardsToGrave, writeBuffer_ToGrave.Slice(0, toGraveCnt));
 
-        rentalBuffer_ToGrave.Dispose();
-        rentalBuffer_Extinction.Dispose();
-
         cardSlotManager.ClearAllBulletCard();
         CardActionEndScopeEvent?.Invoke();
     }
@@ -476,8 +469,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             writeBuffer_Duplicated[0] = _card;
 
             DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.DuplicateCardsToGrave, writeBuffer_Duplicated.Slice(0, 1));
-
-            rentalBuffer_Duplicated.Dispose();
         }
     }
 

@@ -162,7 +162,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             amount = deckPile.Count;
         }
 
-        var rentalBuffer = new RentalScope<CardDataInstance>(amount);
+        using var rentalBuffer = new RentalScope<CardDataInstance>(amount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         int n = deckPile.Count;
@@ -209,9 +209,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             if (deckPile.Count != 0)
                 CardPileDraw(restDrawCnt, false);
         }
-
-        //Àý´ë ÀØÀ¸¸é ¾ÈµÊ!
-        rentalBuffer.Dispose();
     }
 
     public void StartCardPileDraw()
@@ -279,8 +276,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         gravePile.Clear();
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer);
-
-        rentalBuffer.Dispose();
     }
 
     public void ResetCardPiles()

@@ -22,8 +22,6 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
             }
 
             complexSystemActionCommand.GraveCardsToDeck(writeBuffer);
-
-            rentalBuffer.Dispose();
         }
 
         ResetCommandData();

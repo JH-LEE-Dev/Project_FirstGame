@@ -21,7 +21,7 @@ public class ShopBehaviorHandler
         if (_cards.Count == 0)
             return;
 
-        var rentalBuffer = new RentalScope<CardDataInstance>(_cards.Count);
+        using var rentalBuffer = new RentalScope<CardDataInstance>(_cards.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         for (int i = 0; i < _cards.Count; ++i)
@@ -43,7 +43,5 @@ public class ShopBehaviorHandler
         {
             cardLogicSystemActionCommandHandler.AddCardsToDeck(writeBuffer);
         }
-
-        rentalBuffer.Dispose();
     }
 }

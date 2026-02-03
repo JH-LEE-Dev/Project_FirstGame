@@ -25,7 +25,5 @@ public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardL
         }
 
         cardSystemActionCommandHandler.CardsToHand(writeBuffer);
-
-        rentalBuffer.Dispose();
     }
 }

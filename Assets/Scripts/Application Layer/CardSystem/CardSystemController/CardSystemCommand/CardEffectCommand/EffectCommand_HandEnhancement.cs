@@ -46,8 +46,6 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
             complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade,false);
         }
 
-        rentalBuffer_Upgrade.Dispose();
-
         ResetCommandData();
     }
 }

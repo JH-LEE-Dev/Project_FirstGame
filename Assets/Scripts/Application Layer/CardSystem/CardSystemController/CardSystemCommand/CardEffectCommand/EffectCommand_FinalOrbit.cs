@@ -62,12 +62,6 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
         writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);
         complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt));
 
-
-
-        rentalBuffer_Using.Dispose();
-        rentalBuffer_Extinction.Dispose();
-        rentalBuffer_Upgrade.Dispose();
-
         ResetCommandData();
     }
 }

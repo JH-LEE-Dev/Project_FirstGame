@@ -54,8 +54,6 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
                 complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
         }
 
-        rentalBuffer.Dispose();
-
         ResetCommandData();
     }
 }

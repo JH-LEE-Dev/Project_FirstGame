@@ -48,7 +48,5 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
             RequestCardLogicSystemActionEvent?.Invoke(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, CardSystemContextType.MAX);
         else if(_data.selectionMode == CardSelectionMode.GraveCardsToHand)
             RequestCardLogicSystemActionEvent?.Invoke(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, CardSystemContextType.MAX);
-
-        rentalBuffer.Dispose();
     }
 }

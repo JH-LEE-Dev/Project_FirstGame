@@ -28,8 +28,6 @@ public class EffectCommand_Pluto : CardEffectCommand<ICardLogicSystemActionComma
 
         cardSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer);
 
-        rentalBuffer.Dispose();
-
         ResetCommandData();
     }
 }

@@ -27,8 +27,6 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer);
-
-                rentalBuffer.Dispose();
             }
         }
 
@@ -47,8 +45,6 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer);
-
-                rentalBuffer.Dispose();
             }
         }
 
