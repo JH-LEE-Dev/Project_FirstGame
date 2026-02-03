@@ -109,6 +109,8 @@ public class Enemy : Unit, IEnemyData
         if (moveComponent != null)
             moveComponent.SetAccelerate(bAccelerate);
 
+        Physics2D.SyncTransforms();
+
         StartCoroutine(SetEnemyState_Delayed(true));
     }
 
