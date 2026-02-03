@@ -1006,7 +1006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4155a7da841f82041afc09c56ddca9cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TMPTextFxController
-  tmp: {fileID: 0}
+  tmp: {fileID: 8587617530878845966}
   useUnscaledTime: 1
   speed: 1.2
   charPhase: 0.15

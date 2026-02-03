@@ -45,6 +45,7 @@ public class ShopPoolingSystem : MonoBehaviour
         cardPool.RemoveAt(last);
 
         card.gameObject.SetActive(true);
+        card.SetVisible(true);
         return card;
     }
 
@@ -59,6 +60,7 @@ public class ShopPoolingSystem : MonoBehaviour
         card.transform.SetParent(transform);
         card.Motion.AllKillTweens(true);
         card.gameObject.SetActive(false);
+        card.SetVisible(false);
 
         cardPool.Add(card);
     }
