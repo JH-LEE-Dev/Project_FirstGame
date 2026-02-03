@@ -5546,6 +5546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa3e1cb51f38f38408c3a9d4561797a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
+  cardDeckDataBase: {fileID: 11400000, guid: eb9f2f3f243991e4c9e557618dd3a3f7, type: 2}
   cardDataBase: {fileID: 11400000, guid: ea7f5a8bc0958a6409ca9ad113a5a1ec, type: 2}
   cardPileDrawAmount: 5
 --- !u!114 &-1934595178798189937
@@ -5575,7 +5576,6 @@ MonoBehaviour:
   cardLogicSystemCommands:
   - {fileID: 11400000, guid: 5fdbbf50f0367f04f98bb83d3995c183, type: 2}
   - {fileID: 11400000, guid: 1f9b2abbc091b6c4fa0c1525569139ce, type: 2}
-  - {fileID: 11400000, guid: 192db7c3347d09145b9eaeb2c84f3df8, type: 2}
   cardDataControlSystemCommands: []
   cardStatusCommands:
   - {fileID: 11400000, guid: cb7784a0a1a26be41b06bd03f6f2a8b9, type: 2}
@@ -5600,6 +5600,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4425f55f6ed8ec34da1c4399f0459093, type: 2}
   - {fileID: 11400000, guid: fdbebd4c178216949bf704bfdcdd14d0, type: 2}
   - {fileID: 11400000, guid: b121abc56d4b5b04398acbc479bad094, type: 2}
+  - {fileID: 11400000, guid: 192db7c3347d09145b9eaeb2c84f3df8, type: 2}
   cardSelectionSystemCommands: []
   cardLogicSystemActionCommands:
   - {fileID: 11400000, guid: c226817e29eec994a88b90e277dca034, type: 2}
@@ -5616,6 +5617,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce22ebc96e57d5c43826135241ef4851, type: 2}
   - {fileID: 11400000, guid: fc6bf7e2d9b8c4d48b7802763993c3be, type: 2}
   - {fileID: 11400000, guid: 6526a5cebcb00cd458127b74ac06b3f7, type: 2}
+  - {fileID: 11400000, guid: a2fbaffab52688d43b1897af1635e0ad, type: 2}
   cardDataControlSystemActionCommands:
   - {fileID: 11400000, guid: c1b4736c1b319f74eaeacf24206ee4b7, type: 2}
   - {fileID: 11400000, guid: 87600f64181c09145b2d5784bc686b61, type: 2}

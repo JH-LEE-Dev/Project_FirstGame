@@ -16,11 +16,12 @@ public class CardSystem
     private CardSelectionManager cardSelectionManager;
     private CardDataControlManager cardDataControlManager;
     private ShopBehaviorHandler shopBehaviorHandler;
+    private CardFlowDataManager cardFlowDataManager;
 
     public void Initialize(SignalHub _signalHub, CardManager _cardManager,
         CardSystemController _cardSystemController,CardSelectionManager _cardSelectionManager,
         ComplexCardEffectResolver _complexCardEffectResolver, CardDataControlManager _cardDataControlManager,
-        ShopBehaviorHandler _shopBehaviorHandler)
+        ShopBehaviorHandler _shopBehaviorHandler,CardFlowDataManager _cardFlowDataManager)
     {
         signalHub = _signalHub;
         cardManager = _cardManager;
@@ -29,6 +30,7 @@ public class CardSystem
         complexCardEffectResolver = _complexCardEffectResolver;
         cardDataControlManager =_cardDataControlManager;
         shopBehaviorHandler = _shopBehaviorHandler;
+        cardFlowDataManager = _cardFlowDataManager;
 
         SubscribeEvents();
         BindEvents();
@@ -156,6 +158,7 @@ public class CardSystem
 
     private void PublishCardLogicSystemEvent(CardLogicSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
+        cardFlowDataManager.CatchCardFlow(data, cards);
         signalHub.Publish(new CardLogicSystemEventSignal(data), cards);
     }
 

@@ -201,6 +201,8 @@ public class UnitSpawner : MonoBehaviour,IUnitSpawnSystemData
             }
         }
 
+        Physics2D.SyncTransforms();
+
         EnemyCreatedEvent?.Invoke(enemies);
     }
 

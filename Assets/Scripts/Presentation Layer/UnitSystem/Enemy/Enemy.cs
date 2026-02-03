@@ -54,6 +54,8 @@ public class Enemy : Unit, IEnemyData
 
     public void Activate(Vector3 spawnPos)
     {
+        bAccelerate = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         transform.position = spawnPos;
         healthComponent.ResetHealthComponent();
     }

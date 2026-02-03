@@ -99,6 +99,7 @@ public enum CardLogicSystemActionType
     HandCardsToGrave,
     DuplicateCardsToGrave,
     CardsToHand,
+    ExtinctionCardsToDeck,
     MAX
 }
 
@@ -106,7 +107,6 @@ public enum CardLogicSystemEffectType
 {
     FlareAdditionalDraw,
     SacrificeAdditionalDraw,
-    Pluto,
 }
 
 public enum CardDataControlSystemEffectType
@@ -130,6 +130,7 @@ public enum ComplexSystemEffectType
     HalleysComet,
     Scan,
     Amplify,
+    Pluto,
 }
 
 public enum CardSelectionSystemEffectType

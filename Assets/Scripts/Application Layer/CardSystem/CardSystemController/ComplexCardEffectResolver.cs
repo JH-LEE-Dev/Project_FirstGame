@@ -18,14 +18,16 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
     private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
     private ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler;
-    private ICardDataControlSystemActionCommandHandler cardDataControlActionCommandHandler;
+    private ICardDataControlActionCommandHandler cardDataControlActionCommandHandler;
+    private ICardFlowDataActionCommandHandler cardFlowDataActionCommandHandler;
 
     public void Initialize(ICardLogicSystemActionCommandHandler _cardSystemActionCommandHandler,
         ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
         ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
         ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler,
         ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler,
-        ICardDataControlSystemActionCommandHandler _cardDataControlActionCommandHandler)
+        ICardDataControlActionCommandHandler _cardDataControlActionCommandHandler,
+        ICardFlowDataActionCommandHandler _cardFlowDataActionCommandHandler)
     {
         cardStatusEffectCommandHandler = _cardStatusEffectCommandHandler;
         cardSystemActionCommandHandler = _cardSystemActionCommandHandler;
@@ -33,6 +35,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler = _cardSystemControlActionCommandHandler;
         cardSelectionSystemActionCommandHandler = _cardSelectionSystemActionCommandHandler;
         cardDataControlActionCommandHandler = _cardDataControlActionCommandHandler;
+        cardFlowDataActionCommandHandler = _cardFlowDataActionCommandHandler;
     }
 
     public void ExecuteCommand(CardSystemCommand cardSystemCommand)
@@ -90,9 +93,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(SelectCardPileType selectCardPileType,CardSelectionMode cardSelectionMode, int amount)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType,cardSelectionMode, amount);
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount);
     }
 
     public IReadOnlyList<CardDataInstance> GetDeckPile()
@@ -125,7 +128,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler.RequestCardDataControlSystemActionCommand(cardDataControlSystemActionType, _cards, _cardSystemContextType);
     }
 
-    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards,bool bPermenant)
+    public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant)
     {
         cardDataControlActionCommandHandler.UpgradeCards(cards, bPermenant);
     }
@@ -143,5 +146,15 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards)
     {
         cardSystemActionCommandHandler.CardsRemoveFromHand(cards);
+    }
+
+    public void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards)
+    {
+        cardSystemActionCommandHandler.ExtinctionCardsToDeck(cards);
+    }
+
+    public IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards()
+    {
+        return cardFlowDataActionCommandHandler.GetPrevTurnHandToGraveCards();
     }
 }

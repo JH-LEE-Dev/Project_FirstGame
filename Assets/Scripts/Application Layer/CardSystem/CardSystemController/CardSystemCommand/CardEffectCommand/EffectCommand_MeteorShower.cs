@@ -13,11 +13,11 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        var deckPile = complexSystemActionCommandHandler.GetDeckPile();
+        var handPile = complexSystemActionCommandHandler.GetHandPile();
 
         if (nestingCnt != 0)
         {
-            if (ConditionCheck(deckPile))
+            if (ConditionCheckOnly(handPile))
             {
                 complexSystemActionCommandHandler.ApplyAttackModifier(bonusAttack * nestingCnt * valueModifier);
                 complexSystemActionCommandHandler.ApplyAttackCntModifier(attackCnt * nestingCnt * valueModifier);
@@ -26,7 +26,7 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
         if (upgradeNestingCnt != 0)
         {
-            if (ConditionCheck(deckPile))
+            if (ConditionCheck(handPile))
             {
                 complexSystemActionCommandHandler.ApplyAttackModifier(upgradedBonusAttack * upgradeNestingCnt * valueModifier);
                 complexSystemActionCommandHandler.ApplyAttackCntModifier(upgradedAttackCnt * upgradeNestingCnt * valueModifier);
@@ -36,11 +36,21 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
         ResetCommandData();
     }
 
+    private bool ConditionCheckOnly(IReadOnlyList<CardDataInstance> _cards)
+    {
+        for (int i = 0; i < 1; ++i)
+        {
+            if (_cards[i].GetCardData().id != (int)CardName.MeteorShower)
+                return false;
+        }
+
+        return true;
+    }
+
     private bool ConditionCheck(IReadOnlyList<CardDataInstance> _cards)
     {
-        for(int i = 0;i< _cards.Count;++i)
+        for (int i = 0; i < _cards.Count; ++i)
         {
-            Debug.Log(attackCnt);
             if (_cards[i].GetCardData().id != (int)CardName.MeteorShower)
                 return false;
         }
