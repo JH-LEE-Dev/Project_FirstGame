@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Recompense")]
 public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCommandHandler>
@@ -8,14 +9,23 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
     {
         if (nestingCnt != 0)
         {
-            int prevUsedBulletCardCnt = complexSystemActionCommandHandler.GetPrevUsedBulletCardCnt();
-            complexSystemActionCommandHandler.AdditionalDraw(prevUsedBulletCardCnt);
+            IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
+
+            int bulletCardCnt = 0;
+            for(int i = 0;i<prevHandToGraveCards.Count;++i)
+            {
+                if (prevHandToGraveCards[i].GetCardData().cardType == CardType.Bullet)
+                    ++bulletCardCnt;
+            }
+
+            complexSystemActionCommandHandler.AdditionalDraw(bulletCardCnt);
         }
 
         if(upgradeNestingCnt != 0)
         {
-            int prevUsedCardCnt = complexSystemActionCommandHandler.GetPrevUsedCardCnt();
-            complexSystemActionCommandHandler.AdditionalDraw(prevUsedCardCnt);
+            IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
+
+            complexSystemActionCommandHandler.AdditionalDraw(prevHandToGraveCards.Count);
         }
 
         ResetCommandData();

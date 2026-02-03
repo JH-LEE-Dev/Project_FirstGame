@@ -113,13 +113,26 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             permanentDeckPile.Add(card);
         }
 
-        cardData = cardDataBase.GetCardData((int)CardName.SpaceShuttle);
+        cardData = cardDataBase.GetCardData(3);
         if (cardData == null)
             return;
 
         pool = cardPools[cardData.id];
 
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 1; ++i)
+        {
+            CardDataInstance card = pool.Get();
+            card.bPermanent = true;
+            permanentDeckPile.Add(card);
+        }
+
+        cardData = cardDataBase.GetCardData((int)CardName.Recompense);
+        if (cardData == null)
+            return;
+
+        pool = cardPools[cardData.id];
+
+        for (int i = 0; i < 3; ++i)
         {
             CardDataInstance card = pool.Get();
             card.bPermanent = true;
@@ -245,15 +258,19 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public void HandToGrave()
     {
+        using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
         for (int i = 0; i < handPile.Count; ++i)
         {
             var card = handPile[i];
             gravePile.Add(card);
+            writeBuffer[i] = handPile[i];
         }
 
         handPile.Clear();
 
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext);
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext, writeBuffer);
     }
 
     private void GraveToDeck()

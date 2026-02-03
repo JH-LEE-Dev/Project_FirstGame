@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardDataControlManager : MonoBehaviour, ICardDataControlSystemActionCommandHandler
+public class CardDataControlManager : MonoBehaviour, ICardDataControlActionCommandHandler
 {
     public CardSystemEventInvoker cardSystemEventInvoker;
 

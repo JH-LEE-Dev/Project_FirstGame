@@ -215,11 +215,11 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 0
-    cardLogicSystemEffects: 02000000
+    cardLogicSystemEffects: 
     cardDataControlSystemEffects: 
     cardStatusEffects: 
     cardSlotSystemEffects: 
-    complexSystemEffects: 
+    complexSystemEffects: 09000000
     selectionSystemEffects: 
   - id: 13
     cardImage: {fileID: 21300000, guid: b589c2a4a7770a54cb14d27e51f70ce2, type: 3}
