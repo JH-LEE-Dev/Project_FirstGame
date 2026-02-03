@@ -127,6 +127,7 @@ public class UIView_Shop : UIView
         if (0 >= inCount)
             return;
 
+        cardPannel.RentCards.Clear();
         foreach (ICardDataInstanceProvider data in _inCards)
         {
             cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, pannelCardScale));

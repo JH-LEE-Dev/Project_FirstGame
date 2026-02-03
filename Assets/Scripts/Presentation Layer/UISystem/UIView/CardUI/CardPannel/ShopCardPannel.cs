@@ -59,5 +59,7 @@ public class ShopCardPannel : BaseCardPannel
         {
             owner?.ReturnCard(data);
         }
+
+        rentCards.Clear();
     }
 }
