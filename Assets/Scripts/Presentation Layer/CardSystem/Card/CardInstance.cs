@@ -90,7 +90,11 @@ public class CardInstance : MonoBehaviour
     // ¿Ê ÀÔÈ÷±â
     public void ApplyData(ICardDataInstanceProvider dataInstance)
     {
-        if (dataInstance == null) return;
+        if (dataInstance == null)
+        {
+            Debug.Log("NULLCard");
+            return;
+        }
 
         ResetVisual();
 
