@@ -67,6 +67,7 @@ public class UIStat_Unit : MonoBehaviour
         if (null == mainText)
             return;
 
+        prevValue = _current;
         mainText.text = titleStr + _current.ToString("0.#");
     }
 
