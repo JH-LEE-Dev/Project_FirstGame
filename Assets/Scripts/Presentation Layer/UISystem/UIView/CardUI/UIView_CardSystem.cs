@@ -508,12 +508,11 @@ public class UIView_CardSystem : UIView
     public void StartCardSelectMode(CardSelectionModeData _data, int _selectCount, bool _bSelectforcing)
     {
         cardSelectionModeData = _data;
-
-        if(_data.selectCardPileType == SelectCardPileType.Hand)
+        if (_data.selectCardPileType == SelectCardPileType.Hand)
         {
             // _selectCount은 선택 개수
             // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
-            handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
+            handSystem.StartCardSelectMode(_data, _selectCount, _bSelectforcing);
             dimOverlay.SetDimOverlayActive(true);
         }
         else if(_data.selectCardPileType == SelectCardPileType.Grave)
