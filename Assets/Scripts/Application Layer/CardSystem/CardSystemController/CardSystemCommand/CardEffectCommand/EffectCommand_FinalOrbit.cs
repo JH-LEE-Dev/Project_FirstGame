@@ -73,4 +73,9 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
 
         ResetCommandData();
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    {
+
+    }
 }

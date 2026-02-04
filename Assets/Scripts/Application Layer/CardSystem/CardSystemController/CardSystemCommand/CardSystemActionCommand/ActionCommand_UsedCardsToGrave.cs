@@ -40,4 +40,8 @@ public class ActionCommand_UsedCardsToGrave : CardSystemActionCommand<ICardLogic
         if (duplicatedCnt != 0)
             cardSystemActionCommandHandler.CardsToGrave(writeBuffer_Duplicate.Slice(0, duplicatedCnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

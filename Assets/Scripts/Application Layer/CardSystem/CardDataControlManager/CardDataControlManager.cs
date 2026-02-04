@@ -29,10 +29,14 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsUpgraded, cardSystemContext, cards);
     }
 
-    public void ExecuteCommand(ICardSystemActionCommand actionCommand)
+    public void ExecuteCommand(CardSystemCommand actionCommand,bool bUndo)
     {
         cardSystemContext = actionCommand.GetCardSystemContext();
-        actionCommand.Execute(this);
+
+        if (bUndo == false)
+            actionCommand.Execute(this);
+        else
+            actionCommand.Undo(this);
     }
 
     public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
@@ -41,6 +45,17 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         {
             if (cards[i].GetCardData().usingType == UsingType.Nesting)
                 cards[i].valueModifier *= valueModifier;
+        }
+
+        cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);
+    }
+
+    public void UndoValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier)
+    {
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (cards[i].GetCardData().usingType == UsingType.Nesting)
+                cards[i].valueModifier /= valueModifier;
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);

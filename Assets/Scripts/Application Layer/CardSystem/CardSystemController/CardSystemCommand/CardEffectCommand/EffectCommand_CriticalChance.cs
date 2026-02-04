@@ -16,4 +16,14 @@ public class EffectCommand_CriticalChance : CardEffectCommand<ICardStatusEffectC
 
         ResetCommandData();
     }
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * valueModifier * nestingCnt);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusChance * valueModifier * upgradeNestingCnt);
+
+        ResetCommandData();
+    }
 }

@@ -325,10 +325,14 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.CardsToGraveEvent, cardSystemContext, cards);
     }
 
-    public void ExecuteCommand(ICardSystemActionCommand actionCommand)
+    public void ExecuteCommand(CardSystemCommand actionCommand,bool bUndo)
     {
         cardSystemContext = actionCommand.GetCardSystemContext();
-        actionCommand.Execute(this);
+
+        if (bUndo == false)
+            actionCommand.Execute(this);
+        else
+            actionCommand.Undo(this);
     }
 
     public void SetCardSystemContext(CardSystemContextType cardSystemContextType)

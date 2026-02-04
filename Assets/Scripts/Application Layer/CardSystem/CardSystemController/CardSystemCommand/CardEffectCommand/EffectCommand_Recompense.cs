@@ -30,4 +30,9 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
 
         ResetCommandData();
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    {
+
+    }
 }

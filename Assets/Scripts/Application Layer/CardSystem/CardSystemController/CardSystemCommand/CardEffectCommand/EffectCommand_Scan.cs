@@ -78,4 +78,8 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
 
         complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, cardSystemContextType);
     }
+    protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    {
+
+    }
 }

@@ -38,9 +38,12 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardFlowDataActionCommandHandler = _cardFlowDataActionCommandHandler;
     }
 
-    public void ExecuteCommand(CardSystemCommand cardSystemCommand)
+    public void ExecuteCommand(CardSystemCommand cardSystemCommand,bool bUndo)
     {
-        cardSystemCommand.Execute(this);
+        if (bUndo == false)
+            cardSystemCommand.Execute(this);
+        else
+            cardSystemCommand.Undo(this);
     }
 
     public void ApplyAttackCntModifier(int attckCnt, CardSystemContextType cardSystemContextType)
@@ -180,5 +183,12 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType)
     {
         cardSystemControlActionCommandHandler.ExecuteHandPileExistEffect(cards);
+    }
+
+    public void UndoValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType)
+    {
+
+            cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
+            cardDataControlActionCommandHandler.UndoValueModifier(cards, valueModifier);
     }
 }

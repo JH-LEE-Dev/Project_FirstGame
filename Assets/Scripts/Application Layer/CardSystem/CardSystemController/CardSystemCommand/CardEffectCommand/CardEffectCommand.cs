@@ -40,6 +40,14 @@ public abstract class CardEffectCommand<THandler> : CardEffectCommand
             Execute(target);
         }
     }
+    public override void Undo(ICommandHandler handler)
+    {
+        if (handler is THandler target)
+        {
+            Undo(target);
+        }
+    }
 
     protected abstract void Execute(THandler handler);
+    protected abstract void Undo(THandler handler);
 }

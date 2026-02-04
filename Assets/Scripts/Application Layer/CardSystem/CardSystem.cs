@@ -197,9 +197,9 @@ public class CardSystem
         signalHub.Publish(new PlayerTurnFinishedSignal());
     }
 
-    private void CardStatusEffectDispatch(CardSystemCommand command)
+    private void CardStatusEffectDispatch(CardSystemCommand command, bool bUndo)
     {
-        signalHub.Publish(new CardStatusEffectCommandDispatchSignal(command));
+        signalHub.Publish(new CardStatusEffectCommandDispatchSignal(command,bUndo));
     }
 
     private void StartCardDrawTurn(PlayerTurnStartSignal playerTurnStartSignal)

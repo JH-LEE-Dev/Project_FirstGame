@@ -16,4 +16,8 @@ public class EffectCommand_IncreaseHP : CardEffectCommand<ICardStatusEffectComma
 
         ResetCommandData();
     }
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+
+    }
 }

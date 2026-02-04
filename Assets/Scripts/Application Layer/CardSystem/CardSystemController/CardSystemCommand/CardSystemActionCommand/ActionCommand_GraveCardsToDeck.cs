@@ -16,4 +16,8 @@ public class ActionCommand_GraveCardsToDeck : CardSystemActionCommand<ICardLogic
     {
         cardSystemActionCommandHandler.GraveCardsToDeck(cards.AsSpan<CardDataInstance>().Slice(0,cnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

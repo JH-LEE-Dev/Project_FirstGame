@@ -18,13 +18,13 @@ public class CardMotion : MonoBehaviour
     private Vector2 velocity;
 
     [Header("Hover Scale")]
-    [SerializeField] private float hoverScale = 1.3f;
-    [SerializeField] private float hoverDuration = 0.15f;
+    private float hoverScale = 1.4f;
+    private float hoverDuration = 0.15f;
     private Tween hoverTween;
     private Vector3 originScale;
 
     [Header("Preview")]
-    private float previewScale = 2f;
+    private float previewScale = 2.4f;
     private float previewMoveDuration = 0.3f;
     private float previewScaleDuration = 0.3f;
     private float previewEndScaleDur = 0.3f;

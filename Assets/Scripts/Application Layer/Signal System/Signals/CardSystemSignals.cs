@@ -59,11 +59,13 @@ namespace CardEffectSystemSignal
 {
     public struct CardStatusEffectCommandDispatchSignal 
     {
-        public ICardStatusEffectCommand command;
+        public CardSystemCommand command;
+        public bool bUndo;
 
-        public CardStatusEffectCommandDispatchSignal(ICardStatusEffectCommand _command)
+        public CardStatusEffectCommandDispatchSignal(CardSystemCommand _command,bool _bUndo)
         {
             command = _command;
+            bUndo = _bUndo;
         }
     }
 }

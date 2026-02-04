@@ -15,4 +15,8 @@ public class ActionCommand_SlotCardsToGrave : CardSystemActionCommand<ICardLogic
     {
         cardSystemActionCommandHandler.CardsToGrave(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

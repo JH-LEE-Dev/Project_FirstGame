@@ -16,4 +16,8 @@ public class ActionCommand_ExtinctionCardsToDeck : CardSystemActionCommand<ICard
     {
         cardSystemActionCommandHandler.ExtinctionCardsToDeck(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

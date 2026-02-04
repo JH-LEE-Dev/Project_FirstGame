@@ -24,4 +24,17 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
         ResetCommandData();
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    {
+        if (nestingCnt != 0)
+        {
+            complexSystemActionCommandHandler.ApplyAttackModifier(-bonusAttack * nestingCnt * valueModifier, cardSystemContextType);
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            complexSystemActionCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * upgradeNestingCnt * valueModifier, cardSystemContextType);
+        }
+    }
 }

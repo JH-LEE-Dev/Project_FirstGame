@@ -20,4 +20,17 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
 
         ResetCommandData();
     }
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage * valueModifier * nestingCnt);
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            Debug.Log(-upgradedBonusDamage * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage * valueModifier * upgradeNestingCnt);
+        }
+    }
 }

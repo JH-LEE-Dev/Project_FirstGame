@@ -16,4 +16,8 @@ public class ActionCommand_UsedCardsRemoveFromHand : CardSystemActionCommand<ICa
     {
         cardSystemActionCommandHandler.CardsRemoveFromHand(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

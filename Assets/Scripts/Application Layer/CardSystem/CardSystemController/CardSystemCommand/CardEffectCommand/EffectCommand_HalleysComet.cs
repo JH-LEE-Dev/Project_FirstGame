@@ -66,4 +66,8 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
         complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
     }
+    protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommand)
+    {
+
+    }
 }

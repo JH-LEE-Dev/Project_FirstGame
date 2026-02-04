@@ -24,6 +24,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, CardSystemContextType cardSystemContextType);
     void RevertCardsUpgrade(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, CardSystemContextType cardSystemContextType);
     void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType);
+    void UndoValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType);
     void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
     void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
     IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards();

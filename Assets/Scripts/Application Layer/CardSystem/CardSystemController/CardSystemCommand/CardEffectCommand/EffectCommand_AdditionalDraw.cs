@@ -16,4 +16,8 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
 
         ResetCommandData();
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler handler)
+    {
+
+    }
 }
