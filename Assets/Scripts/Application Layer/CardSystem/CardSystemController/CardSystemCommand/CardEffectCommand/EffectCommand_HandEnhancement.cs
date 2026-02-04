@@ -21,6 +21,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        availableCards.Clear(); 
+
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
@@ -40,7 +42,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         {
             if (complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
-                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, null, HandleSelectionResult);
+                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards,true, HandleSelectionResult);
             else
             {
                 for (int i = 0; i < availableCards.Count; ++i)

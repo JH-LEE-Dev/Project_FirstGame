@@ -23,6 +23,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        availableCards.Clear();
+
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
         IReadOnlyList<CardDataInstance> extinctionPile = complexSystemActionCommandHandler.GetExtinctionPile();
@@ -43,7 +45,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         if (extinctionPile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,availableCards, HandleCardSelectionResult);
+                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,availableCards,true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)

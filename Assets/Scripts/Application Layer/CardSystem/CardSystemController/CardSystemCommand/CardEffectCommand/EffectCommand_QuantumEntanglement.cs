@@ -24,6 +24,8 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        availableCards.Clear();
+
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
@@ -41,7 +43,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             if (handPile.Count > duplicateAmount * nestingCnt * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
                     CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier, cardSystemContextType,
-                    null, HandleCardSelectionResult);
+                    availableCards,true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
@@ -61,7 +63,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
                     CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier, cardSystemContextType,
-                    null, HandleCardSelectionResult);
+                    availableCards,true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);

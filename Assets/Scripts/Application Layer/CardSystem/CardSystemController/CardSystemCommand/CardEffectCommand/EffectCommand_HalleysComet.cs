@@ -21,6 +21,8 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommand)
     {
+        availableCards.Clear();
+
         complexSystemActionCommandHandler = _complexSystemActionCommand;
 
         IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommandHandler.GetGravePile();
@@ -35,7 +37,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
         if (gravePile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards, HandleCardSelectionResult);
+                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards,true, HandleCardSelectionResult);
         else
         {
             using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
