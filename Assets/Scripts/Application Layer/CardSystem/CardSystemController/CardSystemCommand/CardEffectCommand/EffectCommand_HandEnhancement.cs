@@ -10,6 +10,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
+    private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
+
     public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
         base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
@@ -19,9 +21,19 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        availableCards.Clear(); 
+
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+
+        for (int i = 0; i < handPile.Count; ++i)
+        {
+            if (handPile[i].GetCardData().bUpgradable == false)
+                continue;
+
+            availableCards.Add(handPile[i]);
+        }
 
         using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
@@ -30,12 +42,12 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         {
             if (complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
-                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, null, HandleSelectionResult);
+                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards,true, HandleSelectionResult);
             else
             {
-                for (int i = 0; i < handPile.Count; ++i)
+                for (int i = 0; i < availableCards.Count; ++i)
                 {
-                    writeBuffer_Upgrade[i] = handPile[i];
+                    writeBuffer_Upgrade[i] = availableCards[i] as CardDataInstance;
                 }
 
                 complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
@@ -44,9 +56,9 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
         if (upgradeNestingCnt != 0)
         {
-            for (int i = 0; i < handPile.Count; ++i)
+            for (int i = 0; i < availableCards.Count; ++i)
             {
-                writeBuffer_Upgrade[i] = handPile[i];
+                writeBuffer_Upgrade[i] = availableCards[i] as CardDataInstance;
             }
 
             complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);

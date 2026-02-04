@@ -10,23 +10,32 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
 
     IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
+    private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
+
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        availableCards.Clear();
+
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
         IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommandHandler.GetGravePile();
 
+        for (int i = 0; i < gravePile.Count; ++i)
+        {
+            availableCards.Add(gravePile[i]);
+        }
+
         if (nestingCnt != 0)
         {
-            if(gravePile.Count > selectCnt)
+            if (gravePile.Count > selectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, selectCnt, cardSystemContextType,null,HandleCardSelectionResult);
+                    CardSelectionMode.GraveCardsToHand, selectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
                 Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-                for (int i = 0;i<gravePile.Count;++i)
+                for (int i = 0; i < gravePile.Count; ++i)
                 {
                     writeBuffer[i] = gravePile[i];
                 }
@@ -39,7 +48,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         {
             if (gravePile.Count > upgradedSelectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, cardSystemContextType,null,HandleCardSelectionResult);
+                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
