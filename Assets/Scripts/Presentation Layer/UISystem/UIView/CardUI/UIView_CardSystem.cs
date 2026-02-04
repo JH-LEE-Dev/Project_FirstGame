@@ -518,7 +518,7 @@ public class UIView_CardSystem : UIView
         }
         else if(_data.selectCardPileType == SelectCardPileType.Grave)
         {
-            StartCardSelectModefromPannel(CurrentPannel.Grave,_selectCount,_bSelectforcing);
+            StartCardSelectModefromPannel(CurrentPannel.Grave, _selectCount, _bSelectforcing);
         }
         else if (_data.selectCardPileType == SelectCardPileType.Extinction)
         {
@@ -579,7 +579,7 @@ public class UIView_CardSystem : UIView
 
     #region CardPannel System
 
-    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards, bool _bSelectMode)
+    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -596,13 +596,6 @@ public class UIView_CardSystem : UIView
         {
             if (i < inCount)
             {
-                if (_bSelectMode && null != cardSelectionModeData.forbiddenCards &&
-                    cardSelectionModeData.forbiddenCards.Contains(_inCards[i].GetCardDataProvider().cardName))
-                {
-                    pool[i].gameObject.SetActive(false);
-                    continue;
-                }
-
                 pool[i].ApplyData(_inCards[i]);
                 pool[i].transform.SetParent(pannelContent.transform);
                 pool[i].gameObject.SetActive(true);
@@ -624,15 +617,15 @@ public class UIView_CardSystem : UIView
         switch (_setType)
         {
             case CurrentPannel.Deck:
-                ActivatePannel(deckCards, bSelectMode);
+                ActivatePannel(deckCards);
                 break;
 
             case CurrentPannel.Grave:
-                ActivatePannel(graveCards, bSelectMode);
+                ActivatePannel(graveCards);
                 break;
 
             case CurrentPannel.Extinction:
-                ActivatePannel(extinctionCards, bSelectMode);
+                ActivatePannel(extinctionCards);
                 break;
         }
     }
