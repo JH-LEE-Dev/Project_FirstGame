@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.AppUI.UI;
+using UnityEditor;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -162,6 +164,16 @@ public class UIView_HUD : UIView
         HP_BarUpdateforDamaged(damage);
     }
 
+    private void HP_BarUpdateLateHit()
+    {
+        float maxHp = playerData.GetMaxHealth();
+        float currHp = playerData.GetCurrentHealth();
+
+        float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
+
+        hpBar.OnHit(hpProgress);
+    }
+
     private void HP_BarUpdateforDamaged(float damage)
     {
         if (null == hpBar || null == playerDamageNumPool)
@@ -177,18 +189,14 @@ public class UIView_HUD : UIView
         float shieldProgress = Mathf.Clamp((currShield + currHp) / maxHp, 0f, 1f);
         float hpProgress = Mathf.Clamp(currHp / maxHp, 0f, 1f);
 
+        // 맞기 전에 쉴드가 있었다면
         if (0f < prevShield)
         {
-            if (0f >= currShield && 1f > shieldProgress)
-            {
-                Action latePlay = () =>
-                {
-                    hpBar.OnHit(hpProgress);
-                };
+            // 맞은 다음 쉴드가 아예 없고, 맞은 다음의 쉴드 가중치가 최대 체력 이하일 때
+            if (0f >= currShield && 1f >= shieldProgress)
+                hpBar.OnShieldHit(0f, HP_BarUpdateLateHit);
 
-                hpBar.OnShieldHit(0f, latePlay);
-            }
-
+            // 현재 쉴드가 남았을 때, 현재 쉴드 가중치가 최대 체력과 동일하거나 넘으면
             else if (0f < currShield && 1f <= shieldProgress)
             {
                 float total = (currShield + currHp);
@@ -202,6 +210,7 @@ public class UIView_HUD : UIView
                 hpBar.OnShieldHit(shieldProgress);
         }
 
+        // 맞기 전에 쉴드가 없었으면 평범하게 맞기
         else
         {
             hpBar.DirectShieldSet(0f);
@@ -210,6 +219,9 @@ public class UIView_HUD : UIView
 
         if (null != hpText)
             hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield, _damagNum: playerDamageNumPool.Pool.Get());
+
+        Debug.Log(currHp);
+        Debug.Log(currShield);
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
@@ -275,7 +287,7 @@ public class UIView_HUD : UIView
         }
         else if (0f < currShield)
         {
-            hpBar.CalcMain(Mathf.Clamp(currHp / maxHp, 0f, 1f));
+            hpBar.CalcMain(Mathf.Clamp(currHp / maxHp, 0f, 1f), true);
             hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
         }
         else
@@ -285,7 +297,7 @@ public class UIView_HUD : UIView
             if (1f <= hpRatio)
                 hpBar.CalcMain(hpRatio);
             else
-                hpBar.CalcMain(hpRatio, ShieldZero);
+                hpBar.CalcMain(hpRatio, callback:ShieldZero);
         }
 
         hpText.CalcHP(currHp);
