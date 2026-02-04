@@ -154,6 +154,7 @@ public enum CardSystemActionTimingType
     AfterCardUsingPhase,
 }
 
+//AfterAttack에서는 반드시 StatusEffect만이 존재해야 함. 게임 로직으로도.
 //BeforeAttack -> AfterAttack -> BeforeCardUsingPhase -> AfterCardUsingPhase -> Turn End -> Before Turn ... 
 
 public enum CardDataControlSystemActionType
