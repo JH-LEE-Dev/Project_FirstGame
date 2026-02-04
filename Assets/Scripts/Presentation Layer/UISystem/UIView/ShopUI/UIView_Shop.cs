@@ -40,6 +40,9 @@ public class UIView_Shop : UIView
     private ShopPoolingSystem shopPoolingSystem;
     private ShopSelectSystem selectSystem;
 
+    [Header("Other UI")]
+    [SerializeField] private WarningUI warningUI;
+
     [Header("PickUpSystem")]
     [SerializeField] private PickUpSystem pickUpSystem;
 
@@ -268,6 +271,7 @@ public class UIView_Shop : UIView
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true))
         {
             // 강화 카드가 더 이상 존재하지 않을 경우
+            warningUI?.Play("더 이상 강화 가능한 카드가 없습니다.");
         }
 
         prevSelectMode = ShopBehaviorType.Upgrade;
@@ -282,6 +286,7 @@ public class UIView_Shop : UIView
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true))
         {
             // 삭제 카드가 더 이상 존재하지 않을 경우
+            warningUI?.Play("더 이상 삭제 가능한 카드가 없습니다.");
         }
 
         prevSelectMode = ShopBehaviorType.Delete;
