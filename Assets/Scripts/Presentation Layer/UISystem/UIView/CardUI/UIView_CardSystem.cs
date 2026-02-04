@@ -630,6 +630,18 @@ public class UIView_CardSystem : UIView
         }
     }
 
+    public void CallPannel(CurrentPannel _setType, bool bSelectMode, IReadOnlyList<ICardDataInstanceProvider> openList)
+    {
+        if (null == cardPannel)
+            return;
+
+        cardPannel.CurrPannelType = _setType;
+        cardPannel.gameObject.SetActive(true);
+        cardPannel.SetupSelectMode(bSelectMode);
+
+        ActivatePannel(openList);
+    }
+
     public void ForceDeActivatePannelSelf(CurrentPannel callType)
     {
         if (null == cardPannel || callType != cardPannel.CurrPannelType)
@@ -646,7 +658,7 @@ public class UIView_CardSystem : UIView
     }
     public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
     {
-        CallPannel(_pannelType, true);
+        CallPannel(_pannelType, true, cardSelectionModeData.forbiddenCards);
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }
 
