@@ -154,6 +154,8 @@ public enum CardSystemActionTimingType
     AfterCardUsingPhase,
 }
 
+//BeforeAttack -> AfterAttack -> BeforeCardUsingPhase -> AfterCardUsingPhase -> Turn End -> Before Turn ... 
+
 public enum CardDataControlSystemActionType
 {
     CardsUpgraded,

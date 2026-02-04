@@ -92,8 +92,6 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     {
         if (bIsWaveEnded == false)
             StartCoroutine(MoveTurnCoroutine());
-        else
-            signalHub.Publish(new AllEnemyDeadSignal());
     }
 
     private IEnumerator WaveMoveEnd()
@@ -124,6 +122,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         if (remainkilledEnemyCnt == 0)
         {
             bIsWaveEnded = true;
+            signalHub.Publish(new AllEnemyDeadSignal());
             return;
         }
 

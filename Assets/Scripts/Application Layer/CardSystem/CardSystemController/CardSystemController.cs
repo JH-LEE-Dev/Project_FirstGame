@@ -142,6 +142,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void WaveEnded()
     {
+        cardUsePhaseCnt = 1;
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.HandCardsToGrave);
         CardActionEndScopeEvent?.Invoke();
     }
@@ -681,7 +682,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
     {
-        DispatchCardSystemActionCommand_Instant(cardLogicSystemActionType, _cards);
+        if (_type == CardSystemActionTimingType.Instant)
+            DispatchCardSystemActionCommand_Instant(cardLogicSystemActionType, _cards);
 
         CardActionEndScopeEvent?.Invoke();
     }
