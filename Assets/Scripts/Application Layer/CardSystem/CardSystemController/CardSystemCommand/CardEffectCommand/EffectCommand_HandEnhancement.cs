@@ -40,7 +40,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
         if (nestingCnt != 0)
         {
-            if (complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
+            if (availableCards.Count > upgradeAmount)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
                     upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleSelectionResult);
             else

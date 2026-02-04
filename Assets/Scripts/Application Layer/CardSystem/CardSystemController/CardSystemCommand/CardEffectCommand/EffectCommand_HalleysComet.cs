@@ -35,7 +35,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
             availableCards.Add(gravePile[i]);
         }
 
-        if (gravePile.Count > 1)
+        if (availableCards.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
                 CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
         else
