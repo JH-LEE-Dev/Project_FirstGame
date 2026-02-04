@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
 using NaughtyAttributes;
@@ -215,7 +216,7 @@ public class UIView_CardSystem : UIView
 
         int size = currentActionDataList.Count;
 
-        UpdateCardsCounts();
+        UpdateCardsCount();
 
         for (int i = 0; i < size; ++i)
         {
@@ -581,6 +582,7 @@ public class UIView_CardSystem : UIView
     public void EndCardSelectModefromPannel(List<ICardDataInstanceProvider> _cards)
     {
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
+        UpdateCardsCount();
     }
 
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
@@ -632,7 +634,7 @@ public class UIView_CardSystem : UIView
     }
 
 
-    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
+    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards, bool _bSelectMode)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -649,6 +651,13 @@ public class UIView_CardSystem : UIView
         {
             if (i < inCount)
             {
+                if (_bSelectMode && null != cardSelectionModeData.forbiddenCards &&
+                    cardSelectionModeData.forbiddenCards.Contains(_inCards[i].GetCardDataProvider().cardName))
+                {
+                    pool[i].gameObject.SetActive(false);
+                    continue;
+                }
+
                 pool[i].ApplyData(_inCards[i]);
                 pool[i].transform.SetParent(pannelContent.transform);
                 pool[i].gameObject.SetActive(true);
@@ -670,15 +679,15 @@ public class UIView_CardSystem : UIView
         switch (_setType)
         {
             case CurrentPannel.Deck:
-                ActivatePannel(deckCards);
+                ActivatePannel(deckCards, bSelectMode);
                 break;
 
             case CurrentPannel.Grave:
-                ActivatePannel(graveCards);
+                ActivatePannel(graveCards, bSelectMode);
                 break;
 
             case CurrentPannel.Extinction:
-                ActivatePannel(extinctionCards);
+                ActivatePannel(extinctionCards, bSelectMode);
                 break;
         }
     }
@@ -808,7 +817,7 @@ public class UIView_CardSystem : UIView
     }
     /////////////////////////////////////////////////
 
-    private void UpdateCardsCounts()
+    private void UpdateCardsCount()
     {
         graveSystem?.SetCount(graveCards.Count);
         deckSystem?.SetCount(deckCards.Count);
