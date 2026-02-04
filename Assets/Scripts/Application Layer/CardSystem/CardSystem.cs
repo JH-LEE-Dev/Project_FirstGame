@@ -248,7 +248,6 @@ public class CardSystem
     {
         cardSystemController.WaveEnded();
         cardSystemController.ResetAllCommands();
-        cardSystemController.GameStarted();
     }
 
     private void HandleShopOutput(ShopOutputSignal shopOutputSignal)
