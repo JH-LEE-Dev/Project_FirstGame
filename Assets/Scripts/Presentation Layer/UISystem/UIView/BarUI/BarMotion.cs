@@ -143,7 +143,7 @@ public class BarMotion : MonoBehaviour
 
     public void DirectShieldSet(float _progress) => shieldSlider.value = _progress;
 
-    public void CalcMain(float _progressValue, Action callback = null)
+    public void CalcMain(float _progressValue, bool _bGhostUpdate = false, Action callback = null)
     {
         if (null == mainSlider) 
             return;
@@ -159,7 +159,7 @@ public class BarMotion : MonoBehaviour
             .SetEase(shieldEase)
             .SetUpdate(false));
 
-        if (activeGhost)
+        if (_bGhostUpdate && activeGhost)
         {
             mainSeq.Join(ghostSlider.DOValue(_progressValue, shieldDuration)
             .SetEase(shieldEase)
