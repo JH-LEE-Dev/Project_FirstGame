@@ -29,7 +29,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
         for (int i = 0; i < handPile.Count; ++i)
         {
-            if (handPile[i].GetCardData().bUpgradable == false)
+            if (handPile[i].GetCardData().bUpgradable == false || handPile[i].IsUpgraded())
                 continue;
 
             availableCards.Add(handPile[i]);
