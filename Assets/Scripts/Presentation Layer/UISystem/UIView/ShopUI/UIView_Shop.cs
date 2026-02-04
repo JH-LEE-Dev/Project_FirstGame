@@ -16,6 +16,7 @@ public class UIView_Shop : UIView
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<ICardDataInstanceProvider> deckCards;
+    List<ICardDataInstanceProvider> possibleList = new(50);
 
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
@@ -32,6 +33,8 @@ public class UIView_Shop : UIView
 
     private bool EnforcedComplete = false;
     private bool DeletedComplete = false;
+
+    private ShopBehaviorType prevSelectMode = ShopBehaviorType.PickUp;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
@@ -108,12 +111,35 @@ public class UIView_Shop : UIView
 
 
     /////////////// Pannel & Deck
+    
+    private void CheckUpgradCardList()
+    {
+        if (ShopBehaviorType.Upgrade == prevSelectMode)
+            return;
+
+        possibleList.Clear();
+        for (int i = 0; i < deckCards.Count; ++i)
+        {
+            if (true == deckCards[i].IsUpgraded() || false == deckCards[i].GetCardDataProvider().bUpgradable)
+                continue;
+
+            possibleList.Add(deckCards[i]);
+        }
+    }
+
     public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
     {
         if (null == cardPannel)
             return;
 
-        CallPannel(true);
+        if (ShopBehaviorType.Upgrade == _type)
+        {
+            CheckUpgradCardList();
+            CallPannel(true, possibles: possibleList);
+        }
+        else
+            CallPannel(true);
+
         selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
     }
 
@@ -134,7 +160,7 @@ public class UIView_Shop : UIView
         }
     }
 
-    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false)
+    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false, List<ICardDataInstanceProvider> possibles = null)
     {
         if (null == cardPannel)
             return;
@@ -143,7 +169,7 @@ public class UIView_Shop : UIView
         cardPannel.gameObject.SetActive(true);
         cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 
-        ActivatePannel(deckCards);
+        ActivatePannel(null != possibles ? possibles : deckCards);
     }
 
     public void DeactivatePannel()
@@ -221,6 +247,8 @@ public class UIView_Shop : UIView
             , pickUpSystem.GetPickUpButton(), true);
 
         pickUpSystem?.PickUpCardMode(shopSystemData.cardMerchandiseData);
+
+        prevSelectMode = ShopBehaviorType.PickUp;
     }
 
     private void OnClick_EnforceCard()
@@ -230,6 +258,8 @@ public class UIView_Shop : UIView
 
         Debug.Log("[Shop] EnforceCard clicked");
         StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true);
+
+        prevSelectMode = ShopBehaviorType.Upgrade;
     }
 
     private void OnClick_DeleteCard()
@@ -239,6 +269,8 @@ public class UIView_Shop : UIView
 
         Debug.Log("[Shop] DeleteCard clicked");
         StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true);
+
+        prevSelectMode = ShopBehaviorType.Delete;
     }
 
     private void OnClick_ViewDeck()
