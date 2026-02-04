@@ -27,7 +27,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
 
         if (nestingCnt != 0)
         {
-            if (gravePile.Count > selectCnt)
+            if (availableCards.Count > selectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
                     CardSelectionMode.GraveCardsToHand, selectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
             else
@@ -47,7 +47,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
 
         if (upgradeNestingCnt != 0)
         {
-            if (gravePile.Count > upgradedSelectCnt)
+            if (availableCards.Count > upgradedSelectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
                     CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
             else

@@ -43,7 +43,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
         using var rentalBuffer = new RentalScope<CardDataInstance>(1);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-        if (extinctionPile.Count > 1)
+        if (availableCards.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
                 CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
         else

@@ -40,7 +40,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
         if (nestingCnt != 0)
         {
-            if (handPile.Count > duplicateAmount * nestingCnt * valueModifier)
+            if (availableCards.Count > duplicateAmount * nestingCnt * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
                     CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier, cardSystemContextType,
                     availableCards, true, HandleCardSelectionResult);
@@ -61,7 +61,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
         if (upgradeNestingCnt != 0)
         {
-            if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
+            if (availableCards.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
                     CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier, cardSystemContextType,
                     availableCards, true, HandleCardSelectionResult);

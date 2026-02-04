@@ -40,8 +40,8 @@ public class HandSystem : MonoBehaviour
     public bool GetChooseMode() { return bCardSelectMode; }
     private int selectMaxCount = 0;
     private bool selectForcing = false;
-    private readonly HashSet<int> selectableIdSet  // 선택모드에서 "선택 가능" 판정용
-        = new HashSet<int>(); 
+    private readonly HashSet<ICardDataInstanceProvider> selectableSet  // 선택모드에서 "선택 가능" 판정용
+        = new HashSet<ICardDataInstanceProvider>(); 
     private readonly List<MainCardInstance> hiddenInSelectMode // 선택모드에서 숨겼던 카드들 복구용
         = new List<MainCardInstance>();
 
@@ -469,7 +469,7 @@ public class HandSystem : MonoBehaviour
     // 선택 가능 카드 담음.
     private void BuildSelectableSet(CardSelectionModeData selectionData)
     {
-        selectableIdSet.Clear();
+        selectableSet.Clear();
 
         if (selectionData.availableCards == null) return;
 
@@ -477,9 +477,8 @@ public class HandSystem : MonoBehaviour
         {
             var p = selectionData.availableCards[i];
             if (p == null) continue;
-
-            var data = p.GetCardDataProvider();
-            selectableIdSet.Add(data.id);
+            //var data = p.GetCardDataProvider();
+            selectableSet.Add(p);
         }
     }
 
@@ -488,8 +487,8 @@ public class HandSystem : MonoBehaviour
     {
         if (card == null) return false;
 
-        var data = card.CardData.GetCardDataProvider();
-        return selectableIdSet.Contains(data.id);
+        var data = card.CardData;//.GetCardDataProvider();
+        return selectableSet.Contains(data);
     }
 
 
@@ -594,7 +593,7 @@ public class HandSystem : MonoBehaviour
         }
 
         hiddenInSelectMode.Clear();
-        selectableIdSet.Clear();
+        selectableSet.Clear();
 
         foreach (var card in cards)
         {
