@@ -107,7 +107,11 @@ public class CardMotion : MonoBehaviour
         extinctionScaleTween?.Kill();
         extinctionActive = false;
 
-        if (bRestoreScale) transform.localScale = originScale;
+        if (bRestoreScale)
+        {
+            transform.localScale = originScale;
+            rt.localRotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 
 
