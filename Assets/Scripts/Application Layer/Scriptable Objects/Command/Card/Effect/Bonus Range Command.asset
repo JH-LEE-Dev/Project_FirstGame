@@ -17,5 +17,5 @@ MonoBehaviour:
   nestingCnt: 0
   upgradeNestingCnt: 0
   valueModifier: 1
-  bonusRange: 0.1
-  upgradedBonusRange: 0.2
+  bonusRange: 10
+  upgradedBonusRange: 20

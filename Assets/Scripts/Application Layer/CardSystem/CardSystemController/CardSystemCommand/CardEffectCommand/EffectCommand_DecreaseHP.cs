@@ -14,7 +14,7 @@ public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectComma
             cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount * nestingCnt * valueModifier);
 
         if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.HPDecrease(upgradedHPDecreaseAmount * nestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.HPDecrease(upgradedHPDecreaseAmount * upgradeNestingCnt * valueModifier);
 
 
         ResetCommandData();

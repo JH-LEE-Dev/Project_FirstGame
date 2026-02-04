@@ -4,9 +4,10 @@ using System.Collections.Generic;
 public interface ICardSystemControlActionCommandHandler : ICommandHandler
 {
     void UseCards(ReadOnlySpan<CardDataInstance> usingCards);
-    void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType);
-    void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType);
+    void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant);
+    void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant);
     int GetPrevUsedCardCnt();
     void ApplyCardUsePhaseCntModifier(int cnt);
     void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards);
+    void UndoUseCards(ReadOnlySpan<CardDataInstance> usingCards);
 }

@@ -36,6 +36,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     private List<CardEffectCommand> cardEffect_BeforeAttack = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
     private List<CardEffectCommand> cardEffect_AfterAttack = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
     private List<CardEffectCommand> cardEffect_BeforeCardUsingPhase = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
+    private List<CardEffectCommand> cardEffect_AfterCardUsingPhase = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
 
     private List<CardDataInstance> usedCardPile = new List<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
 
@@ -500,6 +501,10 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardEffect_BeforeCardUsingPhase.Add(command);
         }
+        else if (timingType == CardSystemActionTimingType.AfterCardUsingPhase)
+        {
+            cardEffect_AfterCardUsingPhase.Add(command);
+        }
     }
 
     public CardUsedResult TryCardUse(ICardDataInstanceProvider usedCard)
@@ -630,11 +635,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         usedCardPile.Sort(new CardIdComparer());
 
         var currentCard = usedCardPile[0];
-        int currentNestingCnt = 1;
+        int currentNestingCnt = 0;
         int currentUpgradeNestingCnt = 0;
 
         if (currentCard.IsUpgraded())
             ++currentUpgradeNestingCnt;
+        else
+            ++currentNestingCnt;
 
         for (int i = 1; i < usedCardPile.Count; ++i)
         {
@@ -649,13 +656,20 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
                 }
                 else
                 {
-                    currentCard = usedCardPile[i];
                     OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
 
+                    currentCard = usedCardPile[i];
+
                     if (usedCardPile[i].IsUpgraded())
+                    {
                         currentUpgradeNestingCnt = 1;
+                        currentNestingCnt = 0;
+                    }
                     else
+                    {
+                        currentUpgradeNestingCnt = 0;
                         currentNestingCnt = 1;
+                    }
                 }
             }
         }
@@ -665,14 +679,14 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         usedCardPile.Clear();
     }
 
-    public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
+    public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
     {
         DispatchCardSystemActionCommand_Instant(cardLogicSystemActionType, _cards);
 
         CardActionEndScopeEvent?.Invoke();
     }
 
-    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
+    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
     {
         DispatchCardDataControlSystemActionCommand_Instant(cardDataControlSystemActionType, _cards, _cardSystemContextType);
 
@@ -721,5 +735,65 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
         }
+    }
+
+    public void UndoUseCards(ReadOnlySpan<CardDataInstance> usingCards)
+    {
+        if (usingCards == null || usingCards.Length == 0)
+            return;
+
+        for (int i = 0; i < usingCards.Length; ++i)
+        {
+            if (usingCards[i] != null)
+            {
+                usedCardPile.Add(usingCards[i]);
+            }
+        }
+
+        usedCardPile.Sort(new CardIdComparer());
+
+        var currentCard = usedCardPile[0];
+        int currentNestingCnt = 0;
+        int currentUpgradeNestingCnt = 0;
+
+        if (currentCard.IsUpgraded())
+            ++currentUpgradeNestingCnt;
+        else
+            ++currentNestingCnt;
+
+        for (int i = 1; i < usedCardPile.Count; ++i)
+        {
+            if (usedCardPile[i] != null)
+            {
+                if (currentCard.GetCardData().id == usedCardPile[i].GetCardData().id)
+                {
+                    if (usedCardPile[i].IsUpgraded())
+                        ++currentUpgradeNestingCnt;
+                    else
+                        ++currentNestingCnt;
+                }
+                else
+                {
+                    OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
+
+                    currentCard = usedCardPile[i];
+
+                    if (usedCardPile[i].IsUpgraded())
+                    {
+                        currentUpgradeNestingCnt = 1;
+                        currentNestingCnt = 0;
+                    }
+                    else
+                    {
+                        currentUpgradeNestingCnt = 0;
+                        currentNestingCnt = 1;
+                    }
+                }
+            }
+        }
+
+        OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
+
+        usedCardPile.Clear();
     }
 }

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
 {
     public event Action<CardSelectionModeData> CardSelectionStartEvent;
-    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
+    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType,CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
     public RequestCardSystemActionDelegate RequestCardLogicSystemActionEvent;
-    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
+    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
     public RequestCardDataControlSystemActionDelegate RequestCardDataControlSystemActionEvent;
 
     private CardSelectionMode cardSelectionMode;

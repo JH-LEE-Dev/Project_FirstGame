@@ -44,7 +44,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 
     public void ApplyWeaknessModifier(int turnCnt)
     {
-        weaknessTurnCnt = turnCnt;
+        weaknessTurnCnt += turnCnt;
     }
 
     public void ResetStat()
