@@ -8,6 +8,7 @@ public enum ShopSystemInputType
 
 public enum ShopBehaviorType
 {
+    None,
     PickUp,
     Upgrade,
     Delete,

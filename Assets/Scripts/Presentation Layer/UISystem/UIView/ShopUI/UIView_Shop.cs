@@ -34,7 +34,7 @@ public class UIView_Shop : UIView
     private bool EnforcedComplete = false;
     private bool DeletedComplete = false;
 
-    private ShopBehaviorType prevSelectMode = ShopBehaviorType.PickUp;
+    private ShopBehaviorType prevSelectMode = ShopBehaviorType.None;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
@@ -112,7 +112,7 @@ public class UIView_Shop : UIView
 
     /////////////// Pannel & Deck
     
-    private void CheckUpgradCardList()
+    private void CheckUpgradeCardList()
     {
         if (ShopBehaviorType.Upgrade == prevSelectMode)
             return;
@@ -134,7 +134,7 @@ public class UIView_Shop : UIView
 
         if (ShopBehaviorType.Upgrade == _type)
         {
-            CheckUpgradCardList();
+            CheckUpgradeCardList();
             CallPannel(true, possibles: possibleList);
         }
         else
@@ -287,10 +287,8 @@ public class UIView_Shop : UIView
 
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
     {
-        foreach(var c in cards)
-        {
-            Debug.Log(c.GetCardDataProvider().cardName);
-        }
+        if (ShopBehaviorType.Upgrade == prevSelectMode)
+            prevSelectMode = ShopBehaviorType.None;
 
         ShopUIOutputEvent?.Invoke(cards, type);
     }
