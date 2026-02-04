@@ -16,6 +16,7 @@ public class UIView_Shop : UIView
 
     //현재 게임 시스템의 카드 정보.
     IReadOnlyList<ICardDataInstanceProvider> deckCards;
+    List<ICardDataInstanceProvider> possibleList = new(50);
 
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
@@ -32,6 +33,8 @@ public class UIView_Shop : UIView
 
     private bool EnforcedComplete = false;
     private bool DeletedComplete = false;
+
+    private ShopBehaviorType prevSelectMode = ShopBehaviorType.None;
 
     [Header("System")]
     private ShopPoolingSystem shopPoolingSystem;
@@ -108,13 +111,39 @@ public class UIView_Shop : UIView
 
 
     /////////////// Pannel & Deck
-    public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
+    
+    private void CheckUpgradeCardList()
     {
-        if (null == cardPannel)
+        if (ShopBehaviorType.Upgrade == prevSelectMode)
             return;
 
-        CallPannel(true);
+        possibleList.Clear();
+        for (int i = 0; i < deckCards.Count; ++i)
+        {
+            if (true == deckCards[i].IsUpgraded() || false == deckCards[i].GetCardDataProvider().bUpgradable)
+                continue;
+
+            possibleList.Add(deckCards[i]);
+        }
+    }
+
+    public bool StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
+    {
+        if (null == cardPannel)
+            return false;
+
+        bool bOpenList = false;
+
+        if (ShopBehaviorType.Upgrade == _type)
+        {
+            CheckUpgradeCardList();
+            bOpenList = CallPannel(true, possibles: possibleList);
+        }
+        else
+            bOpenList = CallPannel(true);
+
         selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
+        return bOpenList;
     }
 
     private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
@@ -134,16 +163,21 @@ public class UIView_Shop : UIView
         }
     }
 
-    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false)
+    public bool CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false, List<ICardDataInstanceProvider> possibles = null)
     {
         if (null == cardPannel)
-            return;
+            return false;
+
+        var openList = null != possibles ? possibles : deckCards;
+        if (0 >= openList.Count)
+            return false;
 
         cardPannel.CurrPannelType = CurrentPannel.Deck;
         cardPannel.gameObject.SetActive(true);
         cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 
-        ActivatePannel(deckCards);
+        ActivatePannel(openList);
+        return true;
     }
 
     public void DeactivatePannel()
@@ -221,6 +255,8 @@ public class UIView_Shop : UIView
             , pickUpSystem.GetPickUpButton(), true);
 
         pickUpSystem?.PickUpCardMode(shopSystemData.cardMerchandiseData);
+
+        prevSelectMode = ShopBehaviorType.PickUp;
     }
 
     private void OnClick_EnforceCard()
@@ -229,7 +265,12 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] EnforceCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true);
+        if (!StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true))
+        {
+            // 강화 카드가 더 이상 존재하지 않을 경우
+        }
+
+        prevSelectMode = ShopBehaviorType.Upgrade;
     }
 
     private void OnClick_DeleteCard()
@@ -238,7 +279,12 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] DeleteCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true);
+        if (!StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true))
+        {
+            // 삭제 카드가 더 이상 존재하지 않을 경우
+        }
+
+        prevSelectMode = ShopBehaviorType.Delete;
     }
 
     private void OnClick_ViewDeck()
@@ -255,10 +301,8 @@ public class UIView_Shop : UIView
 
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
     {
-        foreach(var c in cards)
-        {
-            Debug.Log(c.GetCardDataProvider().cardName);
-        }
+        if (ShopBehaviorType.Upgrade == prevSelectMode)
+            prevSelectMode = ShopBehaviorType.None;
 
         ShopUIOutputEvent?.Invoke(cards, type);
     }

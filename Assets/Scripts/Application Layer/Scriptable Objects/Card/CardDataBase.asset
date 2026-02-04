@@ -328,7 +328,7 @@ MonoBehaviour:
     elementType: 0
     usingType: 1
     priority: 2
-    bUpgradable: 1
+    bUpgradable: 0
     cardLogicSystemEffects: 
     cardDataControlSystemEffects: 
     cardStatusEffects: 
