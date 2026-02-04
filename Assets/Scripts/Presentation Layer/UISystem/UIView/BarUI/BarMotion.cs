@@ -159,6 +159,13 @@ public class BarMotion : MonoBehaviour
             .SetEase(shieldEase)
             .SetUpdate(false));
 
+        if (activeGhost)
+        {
+            mainSeq.Join(ghostSlider.DOValue(_progressValue, shieldDuration)
+            .SetEase(shieldEase)
+            .SetUpdate(false));
+        }
+
         mainSeq.OnComplete(OnMainComplete);
     }
 
