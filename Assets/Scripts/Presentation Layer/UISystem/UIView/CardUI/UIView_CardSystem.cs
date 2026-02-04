@@ -204,6 +204,15 @@ public class UIView_CardSystem : UIView
     }
 
     ///////////////////////////////////
+    public void GameStarted()
+    {
+        UpdateCardsCount();
+    }
+
+    public void WaveStarted()
+    {
+        UpdateCardsCount();
+    }
 
     public void PlayerTurnStarted()
     {

@@ -70,6 +70,16 @@ public class CardUICoordinator
         cardUISystem.CardUsePhaseStarted();
     }
 
+    public void WaveStarted()
+    {
+        cardUISystem.WaveStarted();
+    }
+
+    public void GameStarted()
+    {
+        cardUISystem.GameStarted();
+    }
+
     public void CardUsingFinished()
     {
         CardUsingFinishedEvent?.Invoke();

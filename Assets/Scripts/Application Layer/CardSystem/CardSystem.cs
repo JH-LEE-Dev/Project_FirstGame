@@ -226,7 +226,7 @@ public class CardSystem
 
     private void WaveStarted(WaveStartSignal waveStartSignal)
     {
-        cardSystemController.GameStarted();
+
     }
 
     private void CardSelectionEnd(UICardSelectionEndSignal uICardSelectionEndSignal)
@@ -248,6 +248,7 @@ public class CardSystem
     {
         cardSystemController.WaveEnded();
         cardSystemController.ResetAllCommands();
+        cardSystemController.GameStarted();
     }
 
     private void HandleShopOutput(ShopOutputSignal shopOutputSignal)

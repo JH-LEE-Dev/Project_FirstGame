@@ -183,11 +183,13 @@ public class GameplayUIModuleCoordinator
     private void WaveStarted(WaveStartSignal waveStartSignal)
     {
         gameplayUICoordinator.WaveStarted(waveStartSignal.waveIdx);
+        cardUICoordinator.WaveStarted();
     }
 
     private void GameStarted(GameStartedSignal gameStartedSignal)
     {
         gameplayUICoordinator.GameStarted();
+        cardUICoordinator.GameStarted();
     }
 
     private void WaveEnded(WaveEndSignal waveEndSignal)

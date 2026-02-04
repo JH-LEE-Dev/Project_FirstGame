@@ -34,14 +34,11 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     public void Initialize()
     {
         cardSystemEventInvoker = new CardSystemEventInvoker();
+        ReadyCardPools();
+        ReadyDeckPiles();
     }
 
-    public void Release()
-    {
-
-    }
-
-    public void Awake()
+    private void ReadyCardPools()
     {
         for (int i = 0; i < cardDataBase.cardData.Count; ++i)
         {
@@ -72,15 +69,15 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
     }
 
-    public void Start()
+    private void ReadyDeckPiles()
     {
         int totalCnt = 0;
 
-        for(int i = 0;i< cardDeckDataBase.cardPileData.Count;++i)
+        for (int i = 0; i < cardDeckDataBase.cardPileData.Count; ++i)
         {
             totalCnt += cardDeckDataBase.cardPileData[i].cnt;
         }
-        if(totalCnt >= SYSTEM_VAR.maxDeckPileCount)
+        if (totalCnt >= SYSTEM_VAR.maxDeckPileCount)
         {
             Debug.LogWarning("덱에 최대 30장의 카드만 넣을 수 있습니다.");
             return;
@@ -105,8 +102,24 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
                     card.SetPermanentlyUpgrade(true);
 
                 permanentDeckPile.Add(card);
+                deckPile.Add(card);
             }
         }
+    }
+
+    public void Release()
+    {
+
+    }
+
+    public void Awake()
+    {
+       
+    }
+
+    public void Start()
+    {
+       
     }
 
     private void OnDestroy()
