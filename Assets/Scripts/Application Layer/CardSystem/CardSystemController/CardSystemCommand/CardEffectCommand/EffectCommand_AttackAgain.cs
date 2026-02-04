@@ -16,4 +16,13 @@ public class EffectCommand_AttackAgain : CardEffectCommand<ICardStatusEffectComm
 
         ResetCommandData();
     }
+
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyAttackCntModifier(-attackCnt * valueModifier);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyAttackCntModifier(-upgradedAttackCnt * valueModifier);
+    }
 }

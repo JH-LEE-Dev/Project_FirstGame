@@ -16,4 +16,8 @@ public class ActionCommand_UsedCardsToExtinction : CardSystemActionCommand<ICard
     {
         cardSystemActionCommandHandler.CardsToExtinction(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

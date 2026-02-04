@@ -11,4 +11,8 @@ public class ActionCommand_RevertCardsUpgrade : CardSystemActionCommand<ICardDat
     {
         cardDataControlSystemActionCommandHandler.RevertCardsUpgrade(cards.AsSpan<CardDataInstance>().Slice(0, cnt), bPermanent);
     }
+    protected override void Undo(ICardDataControlActionCommandHandler cardDataControlSystemActionCommandHandler)
+    {
+
+    }
 }

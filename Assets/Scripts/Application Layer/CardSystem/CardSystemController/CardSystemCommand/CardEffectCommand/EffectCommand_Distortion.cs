@@ -29,4 +29,21 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
 
         ResetCommandData();
     }
+
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange * nestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusCrit * nestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage * nestingCnt * valueModifier);
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange * upgradeNestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusCrit * upgradeNestingCnt * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage * upgradeNestingCnt * valueModifier);
+        }
+    }
 }

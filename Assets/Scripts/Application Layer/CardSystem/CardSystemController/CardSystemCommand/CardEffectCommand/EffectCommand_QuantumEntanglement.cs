@@ -94,10 +94,10 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         int duplicateCnt = 0;
         for (int i = 0; i < _cards.Count; ++i)
         {
-            writeBuffer[i] = _cards[i] as CardDataInstance;
+            writeBuffer[duplicateCnt] = _cards[i] as CardDataInstance;
             ++duplicateCnt;
         }
-        ++duplicateCnt;
+
         if (nestingCnt != 0)
         {
             complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, _cards.Count), CardSystemContextType.MAX);
@@ -107,8 +107,12 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         {
             if (duplicateCnt != 0)
                 writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
-            Debug.Log(duplicateCnt);
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt), CardSystemContextType.MAX);
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt+1), CardSystemContextType.MAX);
         }
+    }
+
+    protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    {
+
     }
 }

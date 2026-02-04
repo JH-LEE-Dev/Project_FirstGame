@@ -37,4 +37,9 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
 
         ResetCommandData();
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    {
+
+    }
 }

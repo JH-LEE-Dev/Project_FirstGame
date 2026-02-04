@@ -16,4 +16,14 @@ public class EffectCommand_BonusRange : CardEffectCommand<ICardStatusEffectComma
 
         ResetCommandData();
     }
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange * valueModifier * nestingCnt);
+
+        if (upgradeNestingCnt != 0)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange * valueModifier * upgradeNestingCnt);
+
+        ResetCommandData();
+    }
 }

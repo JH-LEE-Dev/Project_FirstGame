@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.GPUSort;
 
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
 {
@@ -10,6 +11,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     private const int maxSlotCnt = 10;
     private const int maxSlotCardCnt = SYSTEM_VAR.maxDeckPileCount;
     private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
+    private List<List<CardDataInstance>> bulletCardSlotForUse = new List<List<CardDataInstance>>(maxSlotCnt);
     private List<List<CardDataInstance>> prevBulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private int bulletCardSlotCnt = 2;
     private int prevUsedBulletCardCnt = 0;
@@ -20,6 +22,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         {
             prevBulletCardSlot.Add(new List<CardDataInstance>(maxSlotCardCnt));
             bulletCardSlot.Add(new List<CardDataInstance>(maxSlotCardCnt));
+            bulletCardSlotForUse.Add(new List<CardDataInstance>(maxSlotCardCnt));
         }
     }
 
@@ -38,7 +41,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
                 result.bVerified = true;
                 result.slotIdx = i;
                 ++prevUsedBulletCardCnt;
-
+                SynchronizeCardSlotForUse();
                 return result;
             }
 
@@ -51,7 +54,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
                 result.bVerified = true;
                 result.slotIdx = i;
                 ++prevUsedBulletCardCnt;
-
+                SynchronizeCardSlotForUse();
                 return result;
             }
         }
@@ -61,6 +64,19 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         Debug.Log("Ä«µå ½½·ÔÀÌ °¡µæ Ã¡½À´Ï´Ù.");
 
         return result;
+    }
+
+    private void SynchronizeCardSlotForUse()
+    {
+        for (int i = 0; i < bulletCardSlot.Count; ++i)
+        {
+            bulletCardSlotForUse[i].Clear();
+
+            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
+            {
+                bulletCardSlotForUse[i].Add(bulletCardSlot[i][j]);
+            }
+        }
     }
 
     public void DiscardBulletCard(int slotIdx)
@@ -76,6 +92,8 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
         bulletCardSlot[slotIdx].Clear();
         prevBulletCardSlot[slotIdx].Clear();
+
+        SynchronizeCardSlotForUse();
     }
 
     public List<CardDataInstance> GetBulletCardSpecificSlot(int idx)
@@ -98,7 +116,10 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             }
 
             bulletCardSlot[i].Clear();
+            bulletCardSlotForUse[i].Clear();
         }
+
+        SynchronizeCardSlotForUse();
     }
 
     public void ClearAllPrevBulletCard()
@@ -112,18 +133,26 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCardSlot()
     {
-        return bulletCardSlot;
+        return bulletCardSlotForUse;
     }
 
     public void SortCardSlot()
     {
         var comparer = new CardListPriorityComparer();
-        bulletCardSlot.Sort(comparer);
+        bulletCardSlotForUse.Sort(comparer);
     }
 
-    public void ExecuteCommand(CardSystemCommand command)
+    public void ReverseSortCardSlot()
     {
-        command.Execute(this);
+        bulletCardSlotForUse.Reverse();
+    }
+
+    public void ExecuteCommand(CardSystemCommand command, bool bUndo)
+    {
+        if (bUndo == false)
+            command.Execute(this);
+        else
+            command.Undo(this);
     }
 
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCard()
@@ -152,6 +181,6 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
     public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
     {
-      
+
     }
 }

@@ -25,4 +25,19 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
 
         ResetCommandData();
     }
+
+    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    {
+        if (nestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * valueModifier * nestingCnt);
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier * upgradeNestingCnt);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * valueModifier * upgradeNestingCnt);
+        }
+    }
 }

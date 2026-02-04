@@ -16,4 +16,8 @@ public class EffectCommand_SecureTheZone : CardEffectCommand<ICardSlotSystemActi
 
         ResetCommandData();
     }
+    protected override void Undo(ICardSlotSystemActionCommandHandler cardSlotSystemActionCommandHandler)
+    {
+
+    }
 }

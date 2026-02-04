@@ -10,4 +10,8 @@ public class ActionCommand_ResetCardPiles : CardSystemActionCommand<ICardLogicSy
     {
         cardSystemActionCommandHandler.ResetCardPiles();
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

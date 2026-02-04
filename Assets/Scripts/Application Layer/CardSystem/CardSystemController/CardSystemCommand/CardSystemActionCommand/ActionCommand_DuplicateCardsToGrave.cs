@@ -27,4 +27,8 @@ public class ActionCommand_DuplicateCardsToGrave : CardSystemActionCommand<ICard
 
         cardSystemActionCommandHandler.CardsToGrave(writeBuffer);
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

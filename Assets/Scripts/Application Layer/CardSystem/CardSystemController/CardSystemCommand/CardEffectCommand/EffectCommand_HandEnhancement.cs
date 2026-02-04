@@ -79,4 +79,9 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
         complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, cardSystemContextType);
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    {
+
+    }
 }

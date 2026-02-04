@@ -26,9 +26,12 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         CardSelectionStartEvent?.Invoke(data);
     }
 
-    public void ExecuteCommand(CardSystemCommand command)
+    public void ExecuteCommand(CardSystemCommand command,bool bUndo)
     {
-        command.Execute(this);
+        if (bUndo == false)
+            command.Execute(this);
+        else
+            command.Undo(this);
     }
 
     public void CardSelectionEnd(CardSelectionModeData _data, List<ICardDataInstanceProvider> _cards)

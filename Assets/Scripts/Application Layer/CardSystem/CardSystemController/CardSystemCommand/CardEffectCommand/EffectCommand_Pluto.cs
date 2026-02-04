@@ -71,4 +71,9 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
     }
+
+    protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    {
+
+    }
 }

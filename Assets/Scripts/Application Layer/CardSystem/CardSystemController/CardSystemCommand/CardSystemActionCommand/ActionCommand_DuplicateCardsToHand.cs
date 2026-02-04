@@ -27,4 +27,9 @@ public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardL
 
         cardSystemActionCommandHandler.CardsToHand(writeBuffer);
     }
+
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

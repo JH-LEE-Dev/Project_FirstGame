@@ -23,7 +23,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action PlayerAttackedEvent;
     public event Action<float> PlayerGetShieldEvent;
     public event Action<float> PlayerGetHPEvent;
-    public event Action<IEnemyData, float,bool> EnemyTakeDamageEvent;
+    public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action CharacterStatChangedEvent;
 
     //의존성 DIP적용 검토하기.
@@ -138,7 +138,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         EnemyIsDeadEvent?.Invoke(deadUnit.transform.position);
     }
 
-    private void EnemyIsKilled(IEnemyData _enemyData,EnemyTypeData enemyTypeData)
+    private void EnemyIsKilled(IEnemyData _enemyData, EnemyTypeData enemyTypeData)
     {
         playerUnit.EarnMoney(enemyTypeData.rewardWhenKilled);
         EnemyIsKilledEvent?.Invoke(_enemyData);
@@ -181,7 +181,10 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         var cardEffectCommand = cardEffectCommandSignal.command;
 
-        cardEffectCommand.Execute(this);
+        if (cardEffectCommandSignal.bUndo == false)
+            cardEffectCommand.Execute(this);
+        else
+            cardEffectCommand.Undo(this);
     }
 
     public void ApplyShieldModifier(float bonusShield)
@@ -220,7 +223,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     public void HPDecrease(float amount)
     {
-        playerUnit.TakeDamage(amount,false);
+        playerUnit.TakeDamage(amount, false);
     }
 
     public void ApplyCriticalChanceModifier(int chance)
@@ -241,7 +244,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         PlayerGetHPEvent?.Invoke(amount);
     }
 
-    private void EnemyTakeDamage(IEnemyData enemyData, float damage,bool bCritical)
+    private void EnemyTakeDamage(IEnemyData enemyData, float damage, bool bCritical)
     {
         EnemyTakeDamageEvent?.Invoke(enemyData, damage, bCritical);
     }

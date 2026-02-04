@@ -30,4 +30,8 @@ public class ActionCommand_HandToGrave : CardSystemActionCommand<ICardLogicSyste
 
         cardSystemActionCommandHandler.HandToGrave();
     }
+    protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
+    {
+
+    }
 }

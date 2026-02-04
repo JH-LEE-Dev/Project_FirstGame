@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class CardSystemCommand : ScriptableObject, ICardSystemActionCommand, ICardStatusEffectCommand
+public abstract class CardSystemCommand : ScriptableObject
 {
     protected CardSystemContextType cardSystemContextType = CardSystemContextType.MAX;
 
@@ -11,6 +11,7 @@ public abstract class CardSystemCommand : ScriptableObject, ICardSystemActionCom
     public bool IsActive { get; private set; }
 
     public abstract void Execute(ICommandHandler handler);
+    public abstract void Undo(ICommandHandler handler);
 
     public void Activate() => IsActive = true;
 

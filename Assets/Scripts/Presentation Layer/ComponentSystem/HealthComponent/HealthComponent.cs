@@ -131,5 +131,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
     public void IncreaseHP(float amount)
     {
         currentHealth += amount;
+        if(currentHealth > maxHealth)
+            currentHealth = maxHealth;
     }
 }
