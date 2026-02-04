@@ -21,6 +21,7 @@ public class ActionCommand_HandToGrave : CardSystemActionCommand<ICardLogicSyste
                 {
                     var card = cardSystemActionCommandHandler.CreateCard(handPile[i].GetCardData().id);
                     writeBuffer[i] = card;
+                    writeBuffer[i].SetUpgrade(handPile[i].IsUpgraded());
                 }
             }
 

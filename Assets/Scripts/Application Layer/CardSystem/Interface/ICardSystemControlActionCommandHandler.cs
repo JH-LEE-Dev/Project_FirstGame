@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public interface ICardSystemControlActionCommandHandler
+public interface ICardSystemControlActionCommandHandler : ICommandHandler
 {
     void UseCards(ReadOnlySpan<CardDataInstance> usingCards);
     void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType);

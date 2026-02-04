@@ -8,6 +8,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 {
     private List<CardName> forbiddenCards = new List<CardName>(5);
 
+    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+
     public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
         base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
@@ -18,8 +20,10 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
             forbiddenCards.Add(CardName.Pluto);
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+
         IReadOnlyList<CardDataInstance> extinctionPile = complexSystemActionCommandHandler.GetExtinctionPile();
 
         if (extinctionPile.Count == 0)
@@ -30,7 +34,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         if (extinctionPile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,forbiddenCards);
+                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,forbiddenCards, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < extinctionPile.Count; ++i)
@@ -38,9 +42,22 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
                 writeBuffer[i] = extinctionPile[i];
             }
 
-            complexSystemActionCommandHandler.ExtinctionCardsToDeck(writeBuffer, cardSystemContextType);
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
         }
 
         ResetCommandData();
+    }
+
+    private void HandleCardSelectionResult(List<ICardDataInstanceProvider> _cards)
+    {
+        using var rentalBuffer = new RentalScope<CardDataInstance>(1);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        for (int i = 0; i < _cards.Count; ++i)
+        {
+            writeBuffer[i] = _cards[i] as CardDataInstance;
+        }
+
+        complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
     }
 }

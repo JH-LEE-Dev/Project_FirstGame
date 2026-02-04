@@ -14,6 +14,7 @@ public class ActionCommand_GraveCardsToHand : CardSystemActionCommand<ICardLogic
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
+        Debug.Log("BBB");
         cardSystemActionCommandHandler.GraveCardsToHand(cards.AsSpan<CardDataInstance>().Slice(0, cnt));
     }
 }

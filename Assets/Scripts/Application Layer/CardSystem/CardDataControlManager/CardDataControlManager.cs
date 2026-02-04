@@ -17,6 +17,9 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
     {
         for (int i = 0; i < cards.Length; ++i)
         {
+            if (cards[i].GetCardData().bUpgradable == false)
+                continue;
+
             if (bPermenant == false)
                 cards[i].SetUpgrade(true);
             else
@@ -41,5 +44,21 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);
+    }
+
+    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    {
+        cardSystemContext = cardSystemContextType;
+    }
+
+    public void RevertCardsUpgrade(ReadOnlySpan<CardDataInstance> cards, bool bPermenant)
+    {
+        for (int i = 0; i < cards.Length; ++i)
+        {
+            if (bPermenant == false)
+                cards[i].SetUpgrade(false);
+            else
+                cards[i].SetPermanentlyUpgrade(false);
+        }
     }
 }

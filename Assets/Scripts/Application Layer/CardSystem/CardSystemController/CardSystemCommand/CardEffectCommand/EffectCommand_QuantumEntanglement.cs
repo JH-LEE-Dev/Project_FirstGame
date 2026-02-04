@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/QuantumEntanglement")]
 public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSystemActionCommandHandler>
@@ -10,6 +11,8 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
     private List<CardName> forbiddenCards = new List<CardName>(5);
 
+    private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+
     public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
         base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
@@ -18,34 +21,18 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             forbiddenCards.Add(CardName.QuantumEntanglement);
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
+        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
 
         if (nestingCnt != 0)
         {
-            if(handPile.Count > duplicateAmount * nestingCnt * valueModifier)
+            if (handPile.Count > duplicateAmount * nestingCnt * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier, cardSystemContextType);
-            else
-            {
-                using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
-                Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
-
-                for (int i = 0; i < handPile.Count; ++i)
-                {
-                    writeBuffer[i] = handPile[i];
-                }
-
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand,writeBuffer,CardSystemContextType.MAX);
-            }
-        }
-
-        if (upgradeNestingCnt != 0)
-        {
-            if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier, cardSystemContextType);
+                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * nestingCnt * valueModifier, cardSystemContextType,
+                    null, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
@@ -60,6 +47,57 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             }
         }
 
+        if (upgradeNestingCnt != 0)
+        {
+            if (handPile.Count > upgradedDuplicateAmount * upgradeNestingCnt * valueModifier)
+                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
+                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * upgradeNestingCnt * valueModifier, cardSystemContextType,
+                    null, HandleCardSelectionResult);
+            else
+            {
+                using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
+                Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+                int duplicateCnt = 0;
+                for (int i = 0; i < handPile.Count; ++i)
+                {
+                    writeBuffer[i] = handPile[i];
+                    ++duplicateCnt;
+                }
+                ++duplicateCnt;
+                if (duplicateCnt != 0)
+                    writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
+
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0,duplicateCnt), CardSystemContextType.MAX);
+            }
+        }
+
         ResetCommandData();
+    }
+
+    private void HandleCardSelectionResult(List<ICardDataInstanceProvider> _cards)
+    {
+        using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
+        Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
+
+        int duplicateCnt = 0;
+        for (int i = 0; i < _cards.Count; ++i)
+        {
+            writeBuffer[i] = _cards[i] as CardDataInstance;
+            ++duplicateCnt;
+        }
+        ++duplicateCnt;
+        if (nestingCnt!= 0)
+        {
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0,_cards.Count), CardSystemContextType.MAX);
+        }
+
+        if (upgradeNestingCnt != 0)
+        {
+            if (duplicateCnt != 0)
+                writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
+            Debug.Log(duplicateCnt);
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0,duplicateCnt), CardSystemContextType.MAX);
+        }
     }
 }

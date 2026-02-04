@@ -96,9 +96,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType,List<CardName> _forbiddenCards)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType,List<CardName> _forbiddenCards, Action<List<ICardDataInstanceProvider>> onComplete)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards);
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards,onComplete);
     }
 
     public IReadOnlyList<CardDataInstance> GetDeckPile()
@@ -134,7 +134,14 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, CardSystemContextType cardSystemContextType)
     {
+        cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardDataControlActionCommandHandler.UpgradeCards(cards, bPermenant);
+    }
+
+    public void RevertCardsUpgrade(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, CardSystemContextType cardSystemContextType)
+    {
+        cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
+        cardDataControlActionCommandHandler.RevertCardsUpgrade(cards, bPermenant);
     }
 
     public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
@@ -144,6 +151,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType)
     {
+        cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
         cardDataControlActionCommandHandler.ApplyValueModifier(cards, valueModifier);
     }
 

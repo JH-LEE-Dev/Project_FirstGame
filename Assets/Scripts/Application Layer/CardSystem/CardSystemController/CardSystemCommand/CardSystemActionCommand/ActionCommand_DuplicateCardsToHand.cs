@@ -21,6 +21,7 @@ public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardL
             if (cards[i] != null)
             {
                 writeBuffer[i] = cardSystemActionCommandHandler.CreateCard(cards[i].GetCardData().id);
+                writeBuffer[i].SetUpgrade(cards[i].IsUpgraded());
             }
         }
 

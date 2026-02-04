@@ -21,6 +21,7 @@ public class ActionCommand_DuplicateCardsToGrave : CardSystemActionCommand<ICard
             if (cards[i] != null)
             {
                 writeBuffer[i] = cardSystemActionCommandHandler.CreateCard(cards[i].GetCardData().id);
+                writeBuffer[i].SetUpgrade(cards[i].IsUpgraded());
             }
         }
 

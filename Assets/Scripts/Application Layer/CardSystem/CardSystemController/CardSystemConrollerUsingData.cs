@@ -157,6 +157,7 @@ public enum CardDataControlSystemActionType
 {
     CardsUpgraded,
     CardsPermenantlyUpgraded,
+    RevertCardsUpgrade,
     MAX,
 }
 

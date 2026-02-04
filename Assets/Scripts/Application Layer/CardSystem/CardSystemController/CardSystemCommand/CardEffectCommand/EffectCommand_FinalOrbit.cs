@@ -60,11 +60,15 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
 
             if (upgradeCnt != 0)
             {
-                complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded,
-            writeBuffer_Upgrade.Slice(0, upgradeCnt), CardSystemContextType.UpgradeCardsFromHand);
+                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
             }
 
             complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+
+            if (upgradeCnt != 0)
+            {
+                complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+            }
         }
 
         ResetCommandData();
