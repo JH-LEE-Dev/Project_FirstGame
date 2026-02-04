@@ -21,7 +21,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
-        availableCards.Clear(); 
+        availableCards.Clear();
 
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
@@ -42,7 +42,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         {
             if (complexSystemActionCommandHandler.GetHandPile().Count > upgradeAmount)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
-                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards,true, HandleSelectionResult);
+                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleSelectionResult);
             else
             {
                 for (int i = 0; i < availableCards.Count; ++i)
@@ -50,7 +50,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                     writeBuffer_Upgrade[i] = availableCards[i] as CardDataInstance;
                 }
 
-                complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
+                if (availableCards.Count > 0)
+                    complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
             }
         }
 
@@ -61,7 +62,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                 writeBuffer_Upgrade[i] = availableCards[i] as CardDataInstance;
             }
 
-            complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
+            if (availableCards.Count > 0)
+                complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
         }
 
         ResetCommandData();
@@ -77,7 +79,8 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
             writeBuffer[i] = _cards[i] as CardDataInstance;
         }
 
-        complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, cardSystemContextType);
+        if (_cards.Count > 0)
+            complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, cardSystemContextType);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)

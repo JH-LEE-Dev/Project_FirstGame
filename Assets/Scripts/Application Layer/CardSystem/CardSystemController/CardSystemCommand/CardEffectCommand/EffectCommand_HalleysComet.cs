@@ -37,18 +37,19 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
         if (gravePile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards,true, HandleCardSelectionResult);
+                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
         else
         {
             using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
             Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-            for(int i = 0;i< availableCards.Count;++i)
+            for (int i = 0; i < availableCards.Count; ++i)
             {
                 writeBuffer[i] = availableCards[i] as CardDataInstance;
             }
 
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
+            if (availableCards.Count > 0)
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
         }
 
         ResetCommandData();
@@ -64,7 +65,8 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
             writeBuffer[i] = _cards[i] as CardDataInstance;
         }
 
-        complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
+        if (_cards.Count > 0)
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
     }
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommand)
     {

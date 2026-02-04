@@ -151,6 +151,7 @@ public enum CardSystemActionTimingType
     BeforeCardUsingPhase,
     Instant,
     BeforeTurn,
+    AfterCardUsingPhase,
 }
 
 public enum CardDataControlSystemActionType

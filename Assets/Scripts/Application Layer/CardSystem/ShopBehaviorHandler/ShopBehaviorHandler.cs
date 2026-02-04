@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class ShopBehaviorHandler
 {
-    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
+    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
     public RequestCardSystemActionDelegate RequestCardLogicSystemActionEvent;
-    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType);
+    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
     public RequestCardDataControlSystemActionDelegate RequestCardDataControlSystemActionEvent;
 
     //외부 의존성

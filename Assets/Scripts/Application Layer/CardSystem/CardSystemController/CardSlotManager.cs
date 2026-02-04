@@ -8,7 +8,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public event Action<int> CardSlotCntChangedEvent;
 
     private const int defaultSlotCnt = 2;
-    private const int maxSlotCnt = 10;
+    private const int maxSlotCnt = 5;
     private const int maxSlotCardCnt = SYSTEM_VAR.maxDeckPileCount;
     private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private List<List<CardDataInstance>> bulletCardSlotForUse = new List<List<CardDataInstance>>(maxSlotCnt);
@@ -168,6 +168,9 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public void ApplySlotCntModifier(int cnt)
     {
         bulletCardSlotCnt += cnt;
+
+        if(bulletCardSlotCnt > maxSlotCardCnt)
+            bulletCardSlotCnt = maxSlotCardCnt;
 
         CardSlotCntChangedEvent?.Invoke(bulletCardSlotCnt);
     }

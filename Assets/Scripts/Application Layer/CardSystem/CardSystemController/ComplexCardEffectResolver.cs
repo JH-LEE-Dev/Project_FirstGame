@@ -38,7 +38,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardFlowDataActionCommandHandler = _cardFlowDataActionCommandHandler;
     }
 
-    public void ExecuteCommand(CardSystemCommand cardSystemCommand,bool bUndo)
+    public void ExecuteCommand(CardSystemCommand cardSystemCommand, bool bUndo)
     {
         if (bUndo == false)
             cardSystemCommand.Execute(this);
@@ -99,9 +99,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType, IReadOnlyList<ICardDataInstanceProvider> _forbiddenCards,bool _bForced, Action<List<ICardDataInstanceProvider>> onComplete)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType, IReadOnlyList<ICardDataInstanceProvider> _forbiddenCards, bool _bForced, Action<List<ICardDataInstanceProvider>> onComplete)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards,_bForced,onComplete);
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards, _bForced, onComplete);
     }
 
     public IReadOnlyList<CardDataInstance> GetDeckPile()
@@ -125,12 +125,12 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemActionCommandHandler.GraveCardsToDeck(cards);
     }
 
-    public void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
+    public void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType,CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
     {
         cardSystemControlActionCommandHandler.RequestCardLogicSystemActionCommand(cardSystemActionType, _cards, _cardSystemContextType);
     }
 
-    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType)
+    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
     {
         cardSystemControlActionCommandHandler.RequestCardDataControlSystemActionCommand(cardDataControlSystemActionType, _cards, _cardSystemContextType);
     }
@@ -187,8 +187,12 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void UndoValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, CardSystemContextType cardSystemContextType)
     {
+        cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
+        cardDataControlActionCommandHandler.UndoValueModifier(cards, valueModifier);
+    }
 
-            cardDataControlActionCommandHandler.SetCardSystemContext(cardSystemContextType);
-            cardDataControlActionCommandHandler.UndoValueModifier(cards, valueModifier);
+    public void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
+    {
+        cardSystemControlActionCommandHandler.UndoUseCards(cardPile);
     }
 }

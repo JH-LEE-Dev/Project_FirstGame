@@ -12,7 +12,7 @@ public class EffectCommand_SecureTheZone : CardEffectCommand<ICardSlotSystemActi
             cardSlotSystemActionCommandHandler.ApplySlotCntModifier(bonusSlotCnt * nestingCnt * valueModifier);
 
         if (upgradeNestingCnt != 0)
-            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(upgradedBonusSlotCnt * nestingCnt * valueModifier);
+            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(upgradedBonusSlotCnt * upgradeNestingCnt * valueModifier);
 
         ResetCommandData();
     }

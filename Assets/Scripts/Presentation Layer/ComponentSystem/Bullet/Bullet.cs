@@ -111,7 +111,7 @@ public class Bullet : MonoBehaviour
     private void CheckExplosion()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position,
-            range + range * characterStatProvider.attackRange, targetMask);
+            range + range * (characterStatProvider.attackRange * 0.01f), targetMask);
 
         foreach (var enemy in hitEnemies)
         {

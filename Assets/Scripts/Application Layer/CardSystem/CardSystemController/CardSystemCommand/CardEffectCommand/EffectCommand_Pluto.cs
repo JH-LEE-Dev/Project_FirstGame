@@ -45,7 +45,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         if (extinctionPile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,availableCards,true, HandleCardSelectionResult);
+                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
@@ -53,7 +53,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
                 writeBuffer[i] = availableCards[i] as CardDataInstance;
             }
 
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
+            if (availableCards.Count > 0)
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
         }
 
         ResetCommandData();
@@ -69,7 +70,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
             writeBuffer[i] = _cards[i] as CardDataInstance;
         }
 
-        complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
+        if (_cards.Count > 0)
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
