@@ -296,6 +296,31 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardDataControlSystemCommandDispatchEvent?.Invoke(cardDataControlSystemActionCommand);
     }
 
+    private void CalculateCardStatusEffectsForVisible()
+    {
+        cardSlotManager.SortCardSlot();
+        var bulletCardSlot = cardSlotManager.GetCardSlot();
+
+        for (int i = 0; i < bulletCardSlot.Count; ++i)
+        {
+            if (bulletCardSlot[i].Count == 0)
+                continue;
+
+            int upgradeNestingCnt = 0;
+            int nestingCnt = 0;
+
+            for (int j = 0; j < bulletCardSlot[i].Count; ++j)
+            {
+                if (bulletCardSlot[i][j].IsUpgraded())
+                    ++upgradeNestingCnt;
+                else
+                    ++nestingCnt;
+            }
+
+            OrganizeCardEffectCommand(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
+        }
+    }
+
     private void CardUsed(CardDataInstance usedCard)
     {
         ++prevUsedCardCnt;
