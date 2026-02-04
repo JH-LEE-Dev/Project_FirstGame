@@ -27,14 +27,16 @@ public struct CardSelectionModeData
     public SelectCardPileType selectCardPileType;
     public CardSelectionMode selectionMode;
     public int amount;
-    public List<CardName> forbiddenCards;
+    public IReadOnlyList<ICardDataInstanceProvider> forbiddenCards;
+    public bool bForced;
 
     public CardSelectionModeData(SelectCardPileType _selectCardPileType, CardSelectionMode _selectionMode, int _amount,
-        List<CardName> _forbiddenCards)
+        IReadOnlyList<ICardDataInstanceProvider> _forbiddenCards, bool _bForced)
     {
         selectCardPileType = _selectCardPileType;   
         selectionMode = _selectionMode;
         amount = _amount;
         forbiddenCards = _forbiddenCards;
+        bForced = _bForced;
     }
 }

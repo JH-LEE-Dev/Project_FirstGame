@@ -15,13 +15,13 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
 
     Action<List<ICardDataInstanceProvider>> onCompleteAction;
 
-    public void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount,List<CardName> _forbiddenCards,
+    public void StartCardSelectionMode(SelectCardPileType _selectCardPileType, CardSelectionMode _cardSelectionMode, int amount, IReadOnlyList<ICardDataInstanceProvider> _forbiddenCards,bool _bForced,
         Action<List<ICardDataInstanceProvider>> onComplete)
     {
         selectCardPileType = _selectCardPileType;
         cardSelectionMode = _cardSelectionMode;
         onCompleteAction = onComplete;
-        CardSelectionModeData data = new CardSelectionModeData(selectCardPileType,cardSelectionMode, amount, _forbiddenCards);
+        CardSelectionModeData data = new CardSelectionModeData(selectCardPileType,cardSelectionMode, amount, _forbiddenCards, _bForced);
 
         CardSelectionStartEvent?.Invoke(data);
     }

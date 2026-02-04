@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Halley's Comet")]
 public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     private List<CardName> forbiddenCards = new List<CardName>(5);
+    private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
     private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
@@ -23,17 +25,25 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
         IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommandHandler.GetGravePile();
 
+        for (int i = 0; i < gravePile.Count; ++i)
+        {
+            if (forbiddenCards.Contains(gravePile[i].GetCardData().cardName))
+                continue;
+
+            availableCards.Add(gravePile[i]);
+        }
+
         if (gravePile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, forbiddenCards,HandleCardSelectionResult);
+                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards, HandleCardSelectionResult);
         else
         {
             using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
             Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-            for(int i = 0;i<gravePile.Count;++i)
+            for(int i = 0;i< availableCards.Count;++i)
             {
-                writeBuffer[i] = gravePile[i];
+                writeBuffer[i] = availableCards[i] as CardDataInstance;
             }
 
             complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);

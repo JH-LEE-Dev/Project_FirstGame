@@ -7,6 +7,7 @@ using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     private List<CardName> forbiddenCards = new List<CardName>(5);
+    private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
     IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
@@ -29,17 +30,25 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
         if (extinctionPile.Count == 0)
             return;
 
+        for (int i = 0; i < extinctionPile.Count; ++i)
+        {
+            if (forbiddenCards.Contains(extinctionPile[i].GetCardData().cardName))
+                continue;
+
+            availableCards.Add(extinctionPile[i]);
+        }
+
         using var rentalBuffer = new RentalScope<CardDataInstance>(1);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         if (extinctionPile.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,forbiddenCards, HandleCardSelectionResult);
+                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType,availableCards, HandleCardSelectionResult);
         else
         {
-            for (int i = 0; i < extinctionPile.Count; ++i)
+            for (int i = 0; i < availableCards.Count; ++i)
             {
-                writeBuffer[i] = extinctionPile[i];
+                writeBuffer[i] = availableCards[i] as CardDataInstance;
             }
 
             complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, cardSystemContextType);

@@ -96,9 +96,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemControlActionCommandHandler.GetPrevUsedCardCnt();
     }
 
-    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType,List<CardName> _forbiddenCards, Action<List<ICardDataInstanceProvider>> onComplete)
+    public void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, CardSystemContextType cardSystemContextType, IReadOnlyList<ICardDataInstanceProvider> _forbiddenCards,bool _bForced, Action<List<ICardDataInstanceProvider>> onComplete)
     {
-        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards,onComplete);
+        cardSelectionSystemActionCommandHandler.StartCardSelectionMode(selectCardPileType, cardSelectionMode, amount, _forbiddenCards,_bForced,onComplete);
     }
 
     public IReadOnlyList<CardDataInstance> GetDeckPile()
