@@ -144,6 +144,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     {
         cardUsePhaseCnt = 1;
         DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.HandCardsToGrave);
+        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.ResetCardPiles);
         CardActionEndScopeEvent?.Invoke();
     }
 
@@ -778,12 +779,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.SlotCardsToGrave, writeBuffer_ToGrave.Slice(0, toGraveCnt));
 
         cardSlotManager.ClearAllBulletCard();
-        CardActionEndScopeEvent?.Invoke();
-    }
-
-    public void GameStarted()
-    {
-        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.ResetCardPiles);
         CardActionEndScopeEvent?.Invoke();
     }
 
