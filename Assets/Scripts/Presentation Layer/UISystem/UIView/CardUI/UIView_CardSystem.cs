@@ -632,7 +632,7 @@ public class UIView_CardSystem : UIView
 
     public void CallPannel(CurrentPannel _setType, bool bSelectMode, IReadOnlyList<ICardDataInstanceProvider> openList)
     {
-        if (null == cardPannel)
+        if (null == cardPannel || 0 >= openList.Count)
             return;
 
         cardPannel.CurrPannelType = _setType;
@@ -658,7 +658,10 @@ public class UIView_CardSystem : UIView
     }
     public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
     {
-        CallPannel(_pannelType, true, cardSelectionModeData.forbiddenCards);
+        if (null == cardSelectionModeData.availableCards)
+            return;
+
+        CallPannel(_pannelType, true, cardSelectionModeData.availableCards);
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }
 
