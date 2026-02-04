@@ -1,8 +1,13 @@
 using NaughtyAttributes;
+using TMPro;
 using UnityEngine;
 
 public class MainCardInstance : CardInstance
 {
+    [Header("Debug")]
+    [SerializeField] private TextMeshProUGUI debugTMP;
+    private CardState _prevState = (CardState)(-1);
+
     // 이 카드의 풀링 전용이 HandSystem인가 아니면 Other인가에 대한 열거
     public CardInstanceType cardInstanceType { get; private set; }
 
@@ -33,6 +38,10 @@ public class MainCardInstance : CardInstance
         if (OtherMotion) OtherMotion.Bind(this);
         if (Input) Input.Bind(this);
         if (VisualFloat) VisualFloat.Bind(this);
+
+
+        // 디버깅.
+        debugTMP.raycastTarget = false;
     }
 
     public void Initialize(UIView_CardSystem system, CardInstanceType type, Material template, ICardLocalizationSystem cls)
@@ -40,6 +49,17 @@ public class MainCardInstance : CardInstance
         base.Initialize(template, cls);
         cardSystem = system;
         cardInstanceType = type;
+    }
+
+    private void Update()
+    {
+        if (!debugTMP) return;
+        if (cardInstanceType != CardInstanceType.Hand) return;
+
+        if (cardState == _prevState) return;
+
+        _prevState = cardState;
+        debugTMP.text = $"{cardState}";
     }
 
     public void SetUIState(CardState state)
