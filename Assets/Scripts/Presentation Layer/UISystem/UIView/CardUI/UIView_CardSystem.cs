@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
 using NaughtyAttributes;
@@ -215,7 +216,7 @@ public class UIView_CardSystem : UIView
 
         int size = currentActionDataList.Count;
 
-        UpdateCardsCounts();
+        UpdateCardsCount();
 
         for (int i = 0; i < size; ++i)
         {
@@ -431,18 +432,8 @@ public class UIView_CardSystem : UIView
 
     //----------------------------------End Line-----------------------------------------------------
 
+    #region Pooling System
 
-
-
-
-
-    /// <summary>
-    /// UI 구현 함수들 ------------------------------------------------------------------------------
-    /// </summary>
-
-
-
-    /////////////////////////////////// For PoolingSystem
     public MainCardInstance RentHandCard()
     {
         return poolingSystem?.RentHandCard();
@@ -458,11 +449,10 @@ public class UIView_CardSystem : UIView
         poolingSystem?.PlayMagicCardEffect(worldPos, scaleMul, onComplete);
     }
 
-    ///////////////////////////////////
+    #endregion
 
+    #region Hand System
 
-
-    /////////////////////////////////// For HandSystem
     public void TryUseCard(MainCardInstance _card)
     {
         //카드 사용 승인 대기 카드
@@ -554,35 +544,6 @@ public class UIView_CardSystem : UIView
         CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
     }
 
-    public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
-    {
-        if (CurrentPannel.Grave == _pannelType)
-        {
-            if (0 >= graveCards.Count)
-                return;
-
-            else if (_bSelectforcing && _selectCount > graveCards.Count)
-                return;
-        }
-
-        else if (CurrentPannel.Deck == _pannelType && 0 >= deckCards.Count)
-        {
-            if (0 >= deckCards.Count)
-                return;
-
-            else if (_bSelectforcing && _selectCount > deckCards.Count)
-                return;
-        }
-
-        CallPannel(_pannelType, true);
-        cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
-    }
-
-    public void EndCardSelectModefromPannel(List<ICardDataInstanceProvider> _cards)
-    {
-        CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
-    }
-
     public bool GetChooseMode() { return handSystem.GetChooseMode(); }
 
     // 현재 패 개수 + 지금 들어오는 패에 몇 번째로 들어오는 애인지
@@ -614,25 +575,11 @@ public class UIView_CardSystem : UIView
         handSystem.ReturnCard(cardDataList, type, delay);
     }
 
-    ///////////////////////////////////
+    #endregion
 
+    #region CardPannel System
 
-
-    /////////////////////////////////// For GraveSystem
-    public Vector3 GetGraveAnchoredPos()
-    {
-        if (graveSystem == null) return Vector3.zero;
-        return graveSystem.GetComponent<RectTransform>().anchoredPosition;
-    }
-
-    public Vector3 GetGravePos()
-    {
-        if (graveSystem == null) return Vector3.zero;
-        return graveSystem.transform.position;
-    }
-
-
-    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
+    private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards, bool _bSelectMode)
     {
         if (null == poolingSystem || null == pannelContent)
             return;
@@ -649,6 +596,13 @@ public class UIView_CardSystem : UIView
         {
             if (i < inCount)
             {
+                if (_bSelectMode && null != cardSelectionModeData.forbiddenCards &&
+                    cardSelectionModeData.forbiddenCards.Contains(_inCards[i].GetCardDataProvider().cardName))
+                {
+                    pool[i].gameObject.SetActive(false);
+                    continue;
+                }
+
                 pool[i].ApplyData(_inCards[i]);
                 pool[i].transform.SetParent(pannelContent.transform);
                 pool[i].gameObject.SetActive(true);
@@ -670,15 +624,15 @@ public class UIView_CardSystem : UIView
         switch (_setType)
         {
             case CurrentPannel.Deck:
-                ActivatePannel(deckCards);
+                ActivatePannel(deckCards, bSelectMode);
                 break;
 
             case CurrentPannel.Grave:
-                ActivatePannel(graveCards);
+                ActivatePannel(graveCards, bSelectMode);
                 break;
 
             case CurrentPannel.Extinction:
-                ActivatePannel(extinctionCards);
+                ActivatePannel(extinctionCards, bSelectMode);
                 break;
         }
     }
@@ -696,6 +650,51 @@ public class UIView_CardSystem : UIView
         ForceDeActivatePannelSelf(CurrentPannel.Grave);
         ForceDeActivatePannelSelf(CurrentPannel.Deck);
         ForceDeActivatePannelSelf(CurrentPannel.Extinction);
+    }
+    public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
+    {
+        if (CurrentPannel.Grave == _pannelType)
+        {
+            if (0 >= graveCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > graveCards.Count)
+                return;
+        }
+
+        else if (CurrentPannel.Deck == _pannelType && 0 >= deckCards.Count)
+        {
+            if (0 >= deckCards.Count)
+                return;
+
+            else if (_bSelectforcing && _selectCount > deckCards.Count)
+                return;
+        }
+
+        CallPannel(_pannelType, true);
+        cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
+    }
+
+    public void EndCardSelectModefromPannel(List<ICardDataInstanceProvider> _cards)
+    {
+        CardSelectionEndEvent?.Invoke(_cards, cardSelectionModeData);
+        UpdateCardsCount();
+    }
+
+    #endregion
+
+    #region Graveyard System
+    /////////////////////////////////// For GraveSystem
+    public Vector3 GetGraveAnchoredPos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.GetComponent<RectTransform>().anchoredPosition;
+    }
+
+    public Vector3 GetGravePos()
+    {
+        if (graveSystem == null) return Vector3.zero;
+        return graveSystem.transform.position;
     }
 
     public void CallOneCardDrawedBlock(int currIdx, int _lastIdx, Vector3 _endPos, ICardDataInstanceProvider _data, GameObject _performer)
@@ -726,6 +725,10 @@ public class UIView_CardSystem : UIView
 
     public void PlayDrawedEffect() => deckSystem?.CardBackDrawedEffect();
     public void PlayMoveToDeckMotion() => graveSystem?.CardMoveToDeckMotion();
+
+    #endregion
+
+    #region Effect 
 
     public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, ICardDataInstanceProvider _data = null)
     {
@@ -767,26 +770,6 @@ public class UIView_CardSystem : UIView
         poolingSystem?.StarEffects?.Release(vfx.gameObject);
     }
 
-    public Vector3 GetDeckWorldPos()
-    {
-        if (null == deckSystem)
-            return Vector3.zero;
-
-        return deckSystem.transform.position;
-    }
-
-    public Vector2 GetDeckAnchoredPos()
-    {
-        if (null == deckSystem)
-            return Vector2.zero;
-
-        RectTransform Rt = deckSystem.GetComponent<RectTransform>();
-        if (null == Rt)
-            return Vector2.zero;
-
-        return Rt.anchoredPosition;
-    }
-
     public GameObject GetStarPerformerFromPool(Transform target)
     {
         GameObject getObj = poolingSystem?.StarEffects.Get();
@@ -806,14 +789,18 @@ public class UIView_CardSystem : UIView
 
         return getObj;
     }
-    /////////////////////////////////////////////////
+    #endregion
 
-    private void UpdateCardsCounts()
+    #region Counting System
+
+    private void UpdateCardsCount()
     {
         graveSystem?.SetCount(graveCards.Count);
         deckSystem?.SetCount(deckCards.Count);
         extinctionSystem?.SetCount(extinctionCards.Count);
     }
+
+    #endregion 
 
     private void DrawingCards(List<ICardDataInstanceProvider> _datas)
     {
