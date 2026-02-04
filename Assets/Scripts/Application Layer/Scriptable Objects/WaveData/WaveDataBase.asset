@@ -17,7 +17,7 @@ MonoBehaviour:
     spawnEnemyCnt: 2
     InitialEnemyCnt: 3
     currentEnemyThreshold: 1
-    numberOfEnemiesToKill: 5
+    numberOfEnemiesToKill: 1
   - waveIdx: 1
     spawnEnemyCnt: 4
     InitialEnemyCnt: 5

@@ -456,6 +456,21 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
+    private void OrganizeCardStatusEffectCommand_ForVisible(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
+    {
+        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
+
+        for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
+        {
+            CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
+
+            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+
+            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
+            InsertCommandToList(timing, effectCommand);
+        }
+    }
+
     private void InsertCommandToList(CardSystemActionTimingType timingType, CardEffectCommand command)
     {
         if (timingType == CardSystemActionTimingType.BeforeAttack)
