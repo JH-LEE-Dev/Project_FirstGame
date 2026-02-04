@@ -43,7 +43,7 @@ public class UIStat_Unit : MonoBehaviour
         animSeq.Append(DOVirtual.Float(prevValue, _current, duration, UpdateValueChange));
 
         // 상승
-        if (prevValue < targetValue)
+        if (basicValue < targetValue)
             animSeq.Join(mainText.DOColor(Color.green, duration));
 
         // 기본 값으로 복귀
