@@ -275,6 +275,7 @@ public class UIView_HUD : UIView
         }
         else if (0f < currShield)
         {
+            hpBar.CalcMain(Mathf.Clamp(currHp / maxHp, 0f, 1f));
             hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
         }
         else
