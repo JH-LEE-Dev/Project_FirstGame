@@ -110,6 +110,9 @@ public class CardSystem
 
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
         cardSystemController.PlayerTurnFinishedEvent += PlayerTurnFinished;
+
+        shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
+        shopBehaviorHandler.RequestCardDataControlSystemActionEvent += cardSystemController.RequestCardDataControlSystemActionCommand;
     }
 
     private void ReleaseEvents()
@@ -143,6 +146,8 @@ public class CardSystem
         cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
 
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
+
+        shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
     }
 
     public void Release()
