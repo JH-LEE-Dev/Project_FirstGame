@@ -46,8 +46,8 @@
       "id": 6,
       "name": "희생",
       "upgradedName": "<5><rb>희생+</rb>",
-      "description": "<5>자신에게 3의 피해를 입히고, 카드 1장 드로우",
-      "upgradedDescription": "<5>자신에게 5의 피해를 입히고, 카드 2장 드로우"
+      "description": "<5>자신에게 3의 피해를 입히고, 카드 2장 드로우",
+      "upgradedDescription": "<5>자신에게 5의 피해를 입히고, 카드 3장 드로우"
     },
     {
       "id": 7,

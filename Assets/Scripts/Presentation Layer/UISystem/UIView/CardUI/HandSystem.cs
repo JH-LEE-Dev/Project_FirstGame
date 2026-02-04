@@ -160,12 +160,12 @@ public class HandSystem : MonoBehaviour
 
     }
 
-    public void CancelPreview()
+    public void CancelPreview(CardState newState = CardState.InHand)
     {
         if (previewCard == null) return;
 
-        previewCard.SetUIState(CardState.InHand);
-        previewCard.Motion.EndPreview();
+        previewCard.SetUIState(newState);
+        if (newState == CardState.InHand) previewCard.Motion.EndPreview();
         previewCard = null;
 
         computeArc();
@@ -434,10 +434,12 @@ public class HandSystem : MonoBehaviour
     {
         if (c == null) return true;
 
+        // 선택 모드이면서, 핸드에 있고, 선택 불가 카드일땐 호 계산 스킵.
         if (bCardSelectMode && c.cardState == CardState.InHand && !IsSelectableInSelectMode(c))
             return true;
 
-        if (bCardSelectMode && c.cardState == CardState.EffectInHand && !IsSelectableInSelectMode(c))
+        // 선택모드이면서, 핸드안에서 이펙트 중일 때.
+        if (bCardSelectMode && c.cardState == CardState.EffectInHand)
             return true;
 
         return c.cardState == CardState.Preview
