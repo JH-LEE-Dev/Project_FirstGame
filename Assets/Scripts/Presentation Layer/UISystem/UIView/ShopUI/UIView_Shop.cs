@@ -165,11 +165,15 @@ public class UIView_Shop : UIView
         if (null == cardPannel)
             return;
 
+        var openList = null != possibles ? possibles : deckCards;
+        if (0 >= openList.Count)
+            return;
+
         cardPannel.CurrPannelType = CurrentPannel.Deck;
         cardPannel.gameObject.SetActive(true);
         cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 
-        ActivatePannel(null != possibles ? possibles : deckCards);
+        ActivatePannel(openList);
     }
 
     public void DeactivatePannel()
