@@ -941,9 +941,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774 \uD134\uC5D0 \uD328\uC5D0\uC11C \uC0AC\uC6A9\uD558\uC9C0 \uC54A\uC740
-    \uBD88\uB9BF \uCE74\uB4DC \uAC1C\uC218\uB9CC\uD07C \uB2E4\uC74C \uD134\uC774
-    \uC2DC\uC791\uD560 \uB54C \uCD94\uAC00 \uB4DC\uB85C\uC6B0\uB97C \uD569\uB2C8\uB2E4. "
+  m_text: "\uCD94\uAC00 \uACF5\uACA9\uB825 +1, \uCD94\uAC00 \uBC94\uC704 +5%, \uCE58\uBA85\uD0C0
+    \uD655\uB960 +5% \n\uC0AC\uC6A9\uD558\uC9C0 \uC54A\uC558\uC73C\uBA74, \uC6DC\uD640\uB85C
+    \uAC08 \uB54C \uBCF5\uC0AC\uB418\uC5B4 \uC6DC\uD640\uB85C \uB4E4\uC5B4\uAC11\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ee73945b2e2ca845932bef0889f79e2, type: 2}
   m_sharedMaterial: {fileID: -5988548979307429028, guid: 7ee73945b2e2ca845932bef0889f79e2, type: 2}
@@ -970,8 +970,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
-  m_fontSizeBase: 5
+  m_fontSize: 4
+  m_fontSizeBase: 4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
