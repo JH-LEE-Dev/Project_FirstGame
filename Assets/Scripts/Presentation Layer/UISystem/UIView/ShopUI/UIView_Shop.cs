@@ -127,20 +127,23 @@ public class UIView_Shop : UIView
         }
     }
 
-    public void StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
+    public bool StartCardSelectModefromPannel(ShopBehaviorType _type, int _selectCount, bool _bSelectforcing)
     {
         if (null == cardPannel)
-            return;
+            return false;
+
+        bool bOpenList = false;
 
         if (ShopBehaviorType.Upgrade == _type)
         {
             CheckUpgradeCardList();
-            CallPannel(true, possibles: possibleList);
+            bOpenList = CallPannel(true, possibles: possibleList);
         }
         else
-            CallPannel(true);
+            bOpenList = CallPannel(true);
 
         selectSystem.SetSelectMode(_type, _selectCount, _bSelectforcing, cardPannel.SelectBtn);
+        return bOpenList;
     }
 
     private void ActivatePannel(IReadOnlyList<ICardDataInstanceProvider> _inCards)
@@ -160,20 +163,21 @@ public class UIView_Shop : UIView
         }
     }
 
-    public void CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false, List<ICardDataInstanceProvider> possibles = null)
+    public bool CallPannel(bool bSelectMode = false, bool bSelectBtnHidden = false, List<ICardDataInstanceProvider> possibles = null)
     {
         if (null == cardPannel)
-            return;
+            return false;
 
         var openList = null != possibles ? possibles : deckCards;
         if (0 >= openList.Count)
-            return;
+            return false;
 
         cardPannel.CurrPannelType = CurrentPannel.Deck;
         cardPannel.gameObject.SetActive(true);
         cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 
         ActivatePannel(openList);
+        return true;
     }
 
     public void DeactivatePannel()
@@ -261,7 +265,10 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] EnforceCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true);
+        if (!StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true))
+        {
+            // 강화 카드가 더 이상 존재하지 않을 경우
+        }
 
         prevSelectMode = ShopBehaviorType.Upgrade;
     }
@@ -272,7 +279,10 @@ public class UIView_Shop : UIView
             return;
 
         Debug.Log("[Shop] DeleteCard clicked");
-        StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true);
+        if (!StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true))
+        {
+            // 삭제 카드가 더 이상 존재하지 않을 경우
+        }
 
         prevSelectMode = ShopBehaviorType.Delete;
     }
