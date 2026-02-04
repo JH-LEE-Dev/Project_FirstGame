@@ -143,7 +143,7 @@ public class UIView_HUD : UIView
 
     public void PlayerGetHP(float amount)
     {
-
+        HP_BarShieldCalc();
     }
 
     public void ResetPlayerShield()
@@ -275,6 +275,7 @@ public class UIView_HUD : UIView
         }
         else if (0f < currShield)
         {
+            hpBar.CalcMain(Mathf.Clamp(currHp / maxHp, 0f, 1f));
             hpBar.CalcShield(Mathf.Clamp(shieldProgress, 0f, 1f));
         }
         else
@@ -286,6 +287,8 @@ public class UIView_HUD : UIView
             else
                 hpBar.CalcMain(hpRatio, ShieldZero);
         }
+
+        hpText.CalcHP(currHp);
     }
 
     public void ShieldZero() => hpBar?.CalcShield(0f);

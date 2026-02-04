@@ -133,7 +133,7 @@ public class UIText_PlayerHP : MonoBehaviour
         onShieldCompletedEvent = null;
     }
 
-    private void CalcHP(float _prev, float _current)
+    public void CalcHP(float _current)
     {
         if (hpTween != null && hpTween.IsActive()) 
             hpTween.Kill();
@@ -183,7 +183,7 @@ public class UIText_PlayerHP : MonoBehaviour
         if (hasShield)
             CalcShield(tempPrevShield, tempCurrShield, OnShieldCalcFinished);
         else
-            CalcHP(tempPrevHp, tempCurrHp);
+            CalcHP(tempCurrHp);
 
         OnColorChange(tempProgressHp, hasShield);
         OnShake();
@@ -193,7 +193,7 @@ public class UIText_PlayerHP : MonoBehaviour
     {
         if (0f < tempDamage - tempPrevShield)
         {
-            CalcHP(tempPrevHp, tempCurrHp);
+            CalcHP(tempCurrHp);
             OnColorChange(tempProgressHp, false);
         }
     }

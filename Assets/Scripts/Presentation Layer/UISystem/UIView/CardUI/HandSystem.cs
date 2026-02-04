@@ -40,7 +40,10 @@ public class HandSystem : MonoBehaviour
     public bool GetChooseMode() { return bCardSelectMode; }
     private int selectMaxCount = 0;
     private bool selectForcing = false;
-
+    private readonly HashSet<int> selectableIdSet  // 선택모드에서 "선택 가능" 판정용
+        = new HashSet<int>(); 
+    private readonly List<MainCardInstance> hiddenInSelectMode // 선택모드에서 숨겼던 카드들 복구용
+        = new List<MainCardInstance>();
 
     [Header("Preview")]
     [SerializeField] private RectTransform previewRoot;
@@ -157,12 +160,12 @@ public class HandSystem : MonoBehaviour
 
     }
 
-    public void CancelPreview()
+    public void CancelPreview(CardState newState = CardState.InHand)
     {
         if (previewCard == null) return;
 
-        previewCard.SetUIState(CardState.InHand);
-        previewCard.Motion.EndPreview();
+        previewCard.SetUIState(newState);
+        if (newState == CardState.InHand) previewCard.Motion.EndPreview();
         previewCard = null;
 
         computeArc();
@@ -253,6 +256,13 @@ public class HandSystem : MonoBehaviour
         if (!bCardSelectMode) return;
         if (card == null) return;
         if (card.cardState != CardState.InHand && card.cardState != CardState.Selecting) return;
+
+        // 선택 불가능 카드면 거부 (방어 코드임)
+        if (card.cardState == CardState.InHand && !IsSelectableInSelectMode(card))
+        {
+            card.Motion.PlayReject();
+            return;
+        }
 
         // 이미 선택 상태면 해제
         if (card.cardState == CardState.Selecting)
@@ -424,6 +434,14 @@ public class HandSystem : MonoBehaviour
     {
         if (c == null) return true;
 
+        // 선택 모드이면서, 핸드에 있고, 선택 불가 카드일땐 호 계산 스킵.
+        if (bCardSelectMode && c.cardState == CardState.InHand && !IsSelectableInSelectMode(c))
+            return true;
+
+        // 선택모드이면서, 핸드안에서 이펙트 중일 때.
+        if (bCardSelectMode && c.cardState == CardState.EffectInHand)
+            return true;
+
         return c.cardState == CardState.Preview
             || c.cardState == CardState.Equipped
             || c.cardState == CardState.Other
@@ -444,7 +462,38 @@ public class HandSystem : MonoBehaviour
         }
     }
 
-    public void StartCardSelectMode(int selectCount, bool bSelectforcing)
+
+
+    // For SelectMode
+
+    // 선택 가능 카드 담음.
+    private void BuildSelectableSet(CardSelectionModeData selectionData)
+    {
+        selectableIdSet.Clear();
+
+        if (selectionData.availableCards == null) return;
+
+        for (int i = 0; i < selectionData.availableCards.Count; i++)
+        {
+            var p = selectionData.availableCards[i];
+            if (p == null) continue;
+
+            var data = p.GetCardDataProvider();
+            selectableIdSet.Add(data.id);
+        }
+    }
+
+    // 선택이 가능하다면 true, 선택이 불가하다면 false를 뱉음.
+    private bool IsSelectableInSelectMode(MainCardInstance card)
+    {
+        if (card == null) return false;
+
+        var data = card.CardData.GetCardDataProvider();
+        return selectableIdSet.Contains(data.id);
+    }
+
+
+    public void StartCardSelectMode(CardSelectionModeData selectionData, int selectCount, bool bSelectforcing)
     {
         if (bCardSelectMode) return;
 
@@ -452,21 +501,9 @@ public class HandSystem : MonoBehaviour
         hoveredCard = null;
 
         int n = Mathf.Max(0, selectCount);
-        List<ICardDataInstanceProvider> available = new();
 
-        foreach (var c in cards)
-        {
-            if (c != null && c.cardState == CardState.InHand)
-                available.Add(c.CardData);
-        }
-        // 0장 요구 혹은, 0장일 때
-        if (available.Count == 0 || n == 0) return;
-
-        if (bSelectforcing && available.Count <= n)
-        {
-            cardSystem.EndCardSelectMode(available);
-            return;
-        }
+        // 선택가능한 Set 구성함.
+        BuildSelectableSet(selectionData);
 
         bCardSelectMode = true;
 
@@ -475,9 +512,8 @@ public class HandSystem : MonoBehaviour
         maxArcAngle = selectModeMaxArcAngle;
         hoverGapWeight = selectModeHoverGapWeight;
 
-
         // 요구사항 저장 및 반영
-        selectMaxCount = Mathf.Max(0, selectCount);
+        selectMaxCount = n;
         selectForcing = bSelectforcing;
 
 
@@ -486,11 +522,25 @@ public class HandSystem : MonoBehaviour
         RefreshSelectEndButton();
         SettingSelectText(bCardSelectMode);
 
+        // 선택모드용 숨김 리스트 초기화
+        hiddenInSelectMode.Clear();
 
+        // InHand 중 선택 불가능 숨김 처리함
         foreach (var card in cards)
         {
-            if (card != null && card.cardState == CardState.InHand)
-                card.Motion.StartSelectMode();
+            if (card == null) continue;
+            if (card.cardState != CardState.InHand) continue;
+
+            // 선택 불가능한 카드라면
+            if (!IsSelectableInSelectMode(card))
+            {
+                card.SetVisible(false);
+                hiddenInSelectMode.Add(card);
+                continue;
+            }
+
+            // 선택 가능한 카드만 셀렉트 모드 연출 진입
+            card.Motion.StartSelectMode();
         }
 
         computeArc();
@@ -514,7 +564,7 @@ public class HandSystem : MonoBehaviour
 
         bCardSelectMode = false;
 
-
+        // 호 복구
         radius = baseRadius;
         minArcAngle = baseMinArcAngle;
         maxArcAngle = baseMaxArcAngle;
@@ -523,6 +573,7 @@ public class HandSystem : MonoBehaviour
         if (previewCard != null) CancelPreview();
         hoveredCard = null;
 
+        // 카드 선택 결과 전달함.
         List<ICardDataInstanceProvider> selected = GetSelectedCards();
         cardSystem.EndCardSelectMode(selected);
 
@@ -531,8 +582,23 @@ public class HandSystem : MonoBehaviour
         selectEndButton.SetCanClick(false);
         SettingSelectText(bCardSelectMode);
 
+
+        // 숨겼던 카드들 복구
+        for (int i = 0; i < hiddenInSelectMode.Count; i++)
+        {
+            var c = hiddenInSelectMode[i];
+            if (c == null) continue;
+            // 여전히 손패이면 (사실 당연함)
+            if (c.cardState == CardState.InHand)
+                c.SetVisible(true);
+        }
+
+        hiddenInSelectMode.Clear();
+        selectableIdSet.Clear();
+
         foreach (var card in cards)
         {
+            if (card == null) continue;
             if (card.cardState == CardState.InHand)
                 card.Motion.EndSelectMode();
         }

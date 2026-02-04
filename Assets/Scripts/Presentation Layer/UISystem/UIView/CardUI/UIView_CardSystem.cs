@@ -508,12 +508,11 @@ public class UIView_CardSystem : UIView
     public void StartCardSelectMode(CardSelectionModeData _data, int _selectCount, bool _bSelectforcing)
     {
         cardSelectionModeData = _data;
-
-        if(_data.selectCardPileType == SelectCardPileType.Hand)
+        if (_data.selectCardPileType == SelectCardPileType.Hand)
         {
             // _selectCount은 선택 개수
             // _bSelectforcing은 반드시 _selectCount만큼 선택해야 하는가?
-            handSystem.StartCardSelectMode(_selectCount, _bSelectforcing);
+            handSystem.StartCardSelectMode(_data, _selectCount, _bSelectforcing);
             dimOverlay.SetDimOverlayActive(true);
         }
         else if(_data.selectCardPileType == SelectCardPileType.Grave)
@@ -630,6 +629,18 @@ public class UIView_CardSystem : UIView
         }
     }
 
+    public void CallPannel(CurrentPannel _setType, bool bSelectMode, IReadOnlyList<ICardDataInstanceProvider> openList)
+    {
+        if (null == cardPannel || 0 >= openList.Count)
+            return;
+
+        cardPannel.CurrPannelType = _setType;
+        cardPannel.gameObject.SetActive(true);
+        cardPannel.SetupSelectMode(bSelectMode);
+
+        ActivatePannel(openList);
+    }
+
     public void ForceDeActivatePannelSelf(CurrentPannel callType)
     {
         if (null == cardPannel || callType != cardPannel.CurrPannelType)
@@ -646,25 +657,10 @@ public class UIView_CardSystem : UIView
     }
     public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
     {
-        if (CurrentPannel.Grave == _pannelType)
-        {
-            if (0 >= graveCards.Count)
-                return;
+        if (null == cardSelectionModeData.availableCards)
+            return;
 
-            else if (_bSelectforcing && _selectCount > graveCards.Count)
-                return;
-        }
-
-        else if (CurrentPannel.Deck == _pannelType && 0 >= deckCards.Count)
-        {
-            if (0 >= deckCards.Count)
-                return;
-
-            else if (_bSelectforcing && _selectCount > deckCards.Count)
-                return;
-        }
-
-        CallPannel(_pannelType, true);
+        CallPannel(_pannelType, true, cardSelectionModeData.availableCards);
         cardPannel?.StartSelectMode(_selectCount, _bSelectforcing);
     }
 
