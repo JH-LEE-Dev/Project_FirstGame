@@ -2,140 +2,140 @@
   "cards": [
     {
       "id": 0,
-      "name": "추가 공격력",
+      "name": "<5>추가 공격력",
       "upgradedName": "<5><rb>추가 공격력+</rb>",
       "description": "<5>추가 공격력 +2\n<ry>중첩</ry>가능",
       "upgradedDescription": "<5>추가 공격력 +4\n<ry>중첩</ry>가능"
     },
     {
       "id": 1,
-      "name": "실드",
+      "name": "<5>실드",
       "upgradedName": "<5><rb>실드+</rb>",
       "description": "<5>방어력 +4",
       "upgradedDescription": "<5>방어력 +6"
     },
     {
       "id": 2,
-      "name": "추가 범위",
+      "name": "<5>추가 범위",
       "upgradedName": "<5><rb>추가 범위+</rb>",
       "description": "<5>추가 범위 + 10%\n<ry>중첩</ry>가능",
       "upgradedDescription": "<5>추가 범위 + 20%\n<ry>중첩</ry>가능"
     },
     {
       "id": 3,
-      "name": "증폭",
+      "name": "<5>증폭",
       "upgradedName": "<5><rb>증폭+</rb>",
       "description": "<5>소켓에 같이 장착된 중첩 카드의 수치를 두 배 올립니다.\n<wb>소멸</wb>",
       "upgradedDescription": "<5>소켓에 같이 장착된 중첩 카드의 수치를 세 배 올립니다.\n<wb>소멸</wb>"
     },
     {
       "id": 4,
-      "name": "유성우",
+      "name": "<5>유성우",
       "upgradedName": "<5><rb>유성우+</rb>",
       "description": "<4>추가 공격력 +3\n아무 불릿 카드를 사용한 공격 후, 패에 이 카드뿐이면 즉시 카드 사용 페이즈로 이동합니다.",
       "upgradedDescription": "<4>추가 공격력 +4\n아무 불릿 카드를 사용한 공격 후, 패에 유성우카드만 존재한다면 즉시 카드 사용 페이즈로 이동합니다."
     },
     {
       "id": 5,
-      "name": "플레어",
+      "name": "<5>플레어",
       "upgradedName": "<5><rb>플레어+</rb>",
       "description": "<5>추가 공격력 +4\n사용 시, 다음 카드 사용 페이즈에 카드 1장 드로우.",
       "upgradedDescription": "<5>추가 공격력 +6\n사용 시, 다음 카드 사용 페이즈에 카드 2장 드로우."
     },
     {
       "id": 6,
-      "name": "희생",
+      "name": "<5>희생",
       "upgradedName": "<5><rb>희생+</rb>",
       "description": "<5>자신에게 3의 피해를 입히고, 카드 2장 드로우",
       "upgradedDescription": "<5>자신에게 5의 피해를 입히고, 카드 3장 드로우"
     },
     {
       "id": 7,
-      "name": "우주 왕복선",
+      "name": "<5>우주 왕복선",
       "upgradedName": "",
       "description": "<4>소켓에 같이 장착된 모든 로테이션 불릿 카드를 다음 턴이 시작될 때, 웜홀에서 패로 회수\n<wb>소멸</wb>  <wb>강화불가</wb>",
       "upgradedDescription": ""
     },
     {
       "id": 8,
-      "name": "마지막 궤도",
+      "name": "<5>마지막 궤도",
       "upgradedName": "<5><rb>마지막 궤도+</rb>",
       "description": "<4>패의 모든 카드를 소멸합니다. 소멸된 중첩 불릿 카드의 능력치를 이 공격에 모두 합산합니다.\n<wb>소멸</wb>",
       "upgradedDescription": "<4>패의 모든 카드를 소멸합니다. 소멸된 중첩 불릿 카드의 <rb>강화</rb>된 능력치를 이 공격에 모두 합산합니다.\n<wb>소멸</wb>"
     },
     {
       "id": 9,
-      "name": "영역 확보",
+      "name": "<5>영역 확보",
       "upgradedName": "<5><rb>영역 확보+</rb>",
       "description": "<5>이 턴에 위성의 카드 슬롯을 한 칸 늘립니다.\n<wb>소멸</wb>",
       "upgradedDescription": "<5>이 턴에 위성의 카드 슬롯을 두 칸 늘립니다.\n<wb>소멸</wb>"
     },
     {
       "id": 10,
-      "name": "치명타",
+      "name": "<5>치명타",
       "upgradedName": "<5><rb>치명타+</rb>",
       "description": "<5>치명타 확률 +20%\n<ry>중첩</ry>가능",
       "upgradedDescription": "<5>치명타 확률 +40%\n<ry>중첩</ry>가능"
     },
     {
       "id": 11,
-      "name": "균열 감지",
+      "name": "<5>균열 감지",
       "upgradedName": "<5><rb>균열 감지+</rb>",
       "description": "<5>추가 공격력 +5\n이 턴의 공격으로 피해를 받은 모든 적에게 약점 노출 1턴 부여",
       "upgradedDescription": "<5>추가 공격력 +7\n이 턴의 공격으로 피해를 받는 모든 적은 약점 노출 상태를 2턴 부여합니다."
     },
     {
       "id": 12,
-      "name": "명왕성",
+      "name": "<5>명왕성",
       "upgradedName": "",
       "description": "<5>제외된 카드 1장을 선택해 덱에 추가합니다.\n<wb>소멸</wb>  <wb>강화불가</wb>",
       "upgradedDescription": ""
     },
     {
       "id": 13,
-      "name": "과잉 대비",
+      "name": "<5>과잉 대비",
       "upgradedName": "<5><rb>과잉 대비+</rb>",
       "description": "<5>HP 5 회복, 방어 30 증가\n<wb>소멸</wb>",
       "upgradedDescription": "<5>HP 7 회복, 방어 40 증가\n<wb>소멸</wb>"
     },
     {
       "id": 14,
-      "name": "왜곡",
+      "name": "<5>왜곡",
       "upgradedName": "<5><rb>왜곡+</rb>",
       "description": "<4>추가 공격력 +1, 추가 범위 +5%, 치명타 확률 +5%\n사용하지 않았으면, 웜홀로 갈 때 <rb>복사</rb>되어 웜홀로 들어갑니다.\n<ry>중첩</ry>가능",
       "upgradedDescription": "<4>추가 공격력 +2, 추가 범위 +10%, 치명타 확률 +10%\n사용하지 않았으면, 웜홀로 갈 때 <rb>복사</rb>되어 웜홀로 들어갑니다.\n<ry>중첩</ry>가능"
     },
     {
       "id": 15,
-      "name": "보답",
+      "name": "<5>보답",
       "upgradedName": "<5><rb>보답+</rb>",
       "description": "<5>이 턴에 패에서 사용하지 않은 불릿 카드 개수만큼 다음 턴이 시작할 때 추가 드로우",
       "upgradedDescription": "<5>이 턴에 패에서 사용하지 않은 카드 개수만큼 다음 턴이 시작할 때 추가 드로우"
     },
     {
       "id": 16,
-      "name": "양자 얽힘",
+      "name": "<5>양자 얽힘",
       "upgradedName": "<5><rb>양자 얽힘+</rb>",
       "description": "<5>패에 있는 카드중 양자 얽힘을 제외한 1장을 선택하여 <rb>복사</rb> 후 패에 넣습니다.",
       "upgradedDescription": "<5>패에 있는 카드중 양자 얽힘을 제외한 2장을 선택하여 <rb>복사</rb> 후 패에 넣습니다."
     },
     {
       "id": 17,
-      "name": "패 강화",
+      "name": "<5>패 강화",
       "upgradedName": "<5><rb>패 강화+</rb>",
       "description": "<5>사용 시, 패에 있는 카드 2장을 선택해 <rb>강화</rb>합니다.",
       "upgradedDescription": "<5>사용 시, 패에 있는 카드를 전부 <rb>강화</rb>합니다."
     },
     {
       "id": 18,
-      "name": "핼리 혜성",
+      "name": "<5>핼리 혜성",
       "upgradedName": "",
       "description": "<5>사용 시, 웜홀에 있는 카드 1장을 선택해 덱 맨 위에 올립니다.\n<wb>강화불가</wb>",
       "upgradedDescription": ""
     },
     {
       "id": 19,
-      "name": "탐색",
+      "name": "<5>탐색",
       "upgradedName": "<5><rb>탐색+</rb>",
       "description": "<5>웜홀에 있는 카드 중 1장을 선택해 패에 넣습니다. \n<wb>소멸</wb>",
       "upgradedDescription": "<5>웜홀에 있는 카드 중 2장을 선택해 패에 넣습니다. \n<wb>소멸</wb>"
