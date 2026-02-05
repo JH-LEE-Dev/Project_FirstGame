@@ -8,21 +8,19 @@ public class EffectCommand_BonusRange : CardEffectCommand<ICardStatusEffectComma
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier * nestingCnt);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange * valueModifier * upgradeNestingCnt);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange * valueModifier);
 
         ResetCommandData();
     }
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange * valueModifier * nestingCnt);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange * valueModifier * upgradeNestingCnt);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange * valueModifier);
 
         ResetCommandData();
     }

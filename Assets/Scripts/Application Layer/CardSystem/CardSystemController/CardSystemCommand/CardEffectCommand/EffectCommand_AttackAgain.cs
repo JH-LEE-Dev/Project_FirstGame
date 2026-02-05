@@ -8,21 +8,19 @@ public class EffectCommand_AttackAgain : CardEffectCommand<ICardStatusEffectComm
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyAttackCntModifier(attackCnt*valueModifier);
-
-        if(upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyAttackCntModifier(upgradedAttackCnt*valueModifier);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyAttackCntModifier(attackCnt * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyAttackCntModifier(upgradedAttackCnt * valueModifier);
 
         ResetCommandData();
     }
 
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
             cardStatusEffectCommandHandler.ApplyAttackCntModifier(-attackCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
+        else
             cardStatusEffectCommandHandler.ApplyAttackCntModifier(-upgradedAttackCnt * valueModifier);
     }
 }

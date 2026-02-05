@@ -8,11 +8,10 @@ public class EffectCommand_DrawAgain : CardEffectCommand<ICardLogicSystemActionC
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardSystemActionCommandHandler.DrawAgain(drawAmount * nestingCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
-            cardSystemActionCommandHandler.DrawAgain(upgradedDrawAmount * upgradeNestingCnt * valueModifier);
+        if (bUpgraded == false)
+            cardSystemActionCommandHandler.DrawAgain(drawAmount  * valueModifier);
+        else
+            cardSystemActionCommandHandler.DrawAgain(upgradedDrawAmount  * valueModifier);
 
         ResetCommandData();
     }

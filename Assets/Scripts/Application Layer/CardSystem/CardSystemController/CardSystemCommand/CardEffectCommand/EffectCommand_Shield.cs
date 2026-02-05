@@ -8,11 +8,10 @@ public class EffectCommand_Shield : CardEffectCommand<ICardStatusEffectCommandHa
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyShieldModifier(bonusShield * nestingCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyShieldModifier(upgradedBonusShield * upgradeNestingCnt * valueModifier);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyShieldModifier(bonusShield  * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyShieldModifier(upgradedBonusShield  * valueModifier);
 
 
         ResetCommandData();

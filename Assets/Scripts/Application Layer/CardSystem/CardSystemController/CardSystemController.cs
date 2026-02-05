@@ -21,13 +21,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public event Action<CardSystemCommand, bool> CardComplexCommandDispatchEvent;
     public event Action<CardSystemCommand, bool> CardSelectionSystemCommandDispatchEvent;
 
-    [SerializeField] private List<CardEffectCommand> cardLogicSystemCommands = new List<CardEffectCommand>();
-    [SerializeField] private List<CardEffectCommand> cardDataControlSystemCommands = new List<CardEffectCommand>();
-    [SerializeField] private List<CardEffectCommand> cardStatusCommands = new List<CardEffectCommand>();
-    [SerializeField] private List<CardEffectCommand> cardSlotSystemCommands = new List<CardEffectCommand>();
-    [SerializeField] private List<CardEffectCommand> cardComplexSystemCommands = new List<CardEffectCommand>();
-    [SerializeField] private List<CardEffectCommand> cardSelectionSystemCommands = new List<CardEffectCommand>();
-
     [SerializeField] private List<CardSystemActionCommand> cardLogicSystemActionCommands = new List<CardSystemActionCommand>();
     [SerializeField] private List<CardSystemActionCommand> cardDataControlSystemActionCommands = new List<CardSystemActionCommand>();
     [SerializeField] private List<CardSystemActionCommand> complexSystemActionCommands = new List<CardSystemActionCommand>();
@@ -37,8 +30,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     private List<CardEffectCommand> cardEffect_AfterAttack = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
     private List<CardEffectCommand> cardEffect_BeforeCardUsingPhase = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
     private List<CardEffectCommand> cardEffect_AfterCardUsingPhase = new List<CardEffectCommand>(SYSTEM_VAR.maxDeckPileCount);
-
-    private List<CardDataInstance> usedCardPile = new List<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
 
     private CardSlotManager cardSlotManager;
 
@@ -330,10 +321,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         if (usedCard.GetCardData().cardType != CardType.Bullet)
         {
-            if (usedCard.IsUpgraded())
-                OrganizeCardEffectCommand(usedCard, 0, 1);
-            else
-                OrganizeCardEffectCommand(usedCard, 1);
+            OrganizeCardEffectCommand(usedCard);
 
             writeBuffer[0] = usedCard;
             DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.UsedCardsRemoveFromHand, writeBuffer);
@@ -370,23 +358,15 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             if (bulletCardSlot[i].Count == 0)
                 continue;
 
-            int upgradeNestingCnt = 0;
-            int nestingCnt = 0;
-
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                if (bulletCardSlot[i][j] != null && bulletCardSlot[i][j].IsUpgraded())
-                    ++upgradeNestingCnt;
-                else
-                    ++nestingCnt;
+                OrganizeCardEffectCommand_AfterAttack(bulletCardSlot[i][j]);
+
+                //SlotEffect는 가장 먼저 실행되어야 하므로, Dispatch를 for loop 안에서 해줘서 
+                //SlotEffect가 적용되게 해야 함, loop안에서 하지 않으려면, 명령 객체가
+                //CardDataInstance에 의존해서 nestingCnt,valueModifier를 받아와야 함.
+                DispatchCardEffect_AfterAttack();
             }
-
-            OrganizeCardEffectCommand_AfterAttack(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
-
-            //SlotEffect는 가장 먼저 실행되어야 하므로, Dispatch를 for loop 안에서 해줘서 
-            //SlotEffect가 적용되게 해야 함, loop안에서 하지 않으려면, 명령 객체가
-            //CardDataInstance에 의존해서 nestingCnt,valueModifier를 받아와야 함.
-            DispatchCardEffect_AfterAttack();
         }
     }
 
@@ -400,18 +380,10 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             if (bulletCardSlot[i].Count == 0)
                 continue;
 
-            int upgradeNestingCnt = 0;
-            int nestingCnt = 0;
-
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                if (bulletCardSlot[i][j] != null && bulletCardSlot[i][j].IsUpgraded())
-                    ++upgradeNestingCnt;
-                else
-                    ++nestingCnt;
+                OrganizeCardEffectCommand_WithoutAfterAttack(bulletCardSlot[i][j]);
             }
-
-            OrganizeCardEffectCommand_WithoutAfterAttack(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
         }
     }
 
@@ -433,223 +405,185 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             if (bulletCardSlot[i].Count == 0)
                 continue;
 
-            int upgradeNestingCnt = 0;
-            int nestingCnt = 0;
-
             for (int j = 0; j < bulletCardSlot[i].Count; ++j)
             {
-                if (bulletCardSlot[i][j] != null && bulletCardSlot[i][j].IsUpgraded())
-                    ++upgradeNestingCnt;
-                else
-                    ++nestingCnt;
+                OrganizeCardEffectCommand_AfterAttack(bulletCardSlot[i][j]);
+
+                DispatchCardEffect_AfterAttack_Undo();
             }
-
-            OrganizeCardEffectCommand_AfterAttack(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
-        }
-
-        DispatchCardEffect_AfterAttack_Undo();
-    }
-
-    private void OrganizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
-    {
-        //OCP 위반.
-        List<CardLogicSystemEffectType> cardLogicSystemEffectTypes = usedCard.GetCardData().cardLogicSystemEffects;
-        List<CardDataControlSystemEffectType> cardDataControlSystemEffectTypes = usedCard.GetCardData().cardDataControlSystemEffects;
-        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
-        List<CardSlotSystemEffectType> cardSlotSystemEffectsTypes = usedCard.GetCardData().cardSlotSystemEffects;
-        List<ComplexSystemEffectType> complexSystemEffectsTypes = usedCard.GetCardData().complexSystemEffects;
-        List<CardSelectionSystemEffectType> selectionSystemEffectTypes = usedCard.GetCardData().selectionSystemEffects;
-
-        for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
-        }
-
-        for (int i = 0; i < cardLogicSystemEffectTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardLogicSystemCommands[(int)cardLogicSystemEffectTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
-        }
-
-        for (int i = 0; i < cardSlotSystemEffectsTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardSlotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
-        }
-
-        for (int i = 0; i < complexSystemEffectsTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardComplexSystemCommands[(int)complexSystemEffectsTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
-        }
-
-        for (int i = 0; i < selectionSystemEffectTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffectTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
         }
     }
 
-    private void OrganizeCardEffectCommand_AfterAttack(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
+    private void OrganizeCardEffectCommand(CardDataInstance usedCard)
     {
         //OCP 위반.
-        List<CardLogicSystemEffectType> cardLogicSystemEffectTypes = usedCard.GetCardData().cardLogicSystemEffects;
-        List<CardDataControlSystemEffectType> cardDataControlSystemEffectTypes = usedCard.GetCardData().cardDataControlSystemEffects;
-        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
-        List<CardSlotSystemEffectType> cardSlotSystemEffectsTypes = usedCard.GetCardData().cardSlotSystemEffects;
-        List<ComplexSystemEffectType> complexSystemEffectsTypes = usedCard.GetCardData().complexSystemEffects;
-        List<CardSelectionSystemEffectType> selectionSystemEffectTypes = usedCard.GetCardData().selectionSystemEffects;
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetcardLogicSystemEffects();
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetcardDataControlSystemEffects();
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetcardStatusEffects();
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetcardSlotSystemEffects();
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetcomplexSystemEffects();
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetselectionSystemEffects();
 
-        for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier,usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing == CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, cardStatusEffects[i]);
         }
 
-        for (int i = 0; i < cardLogicSystemEffectTypes.Count; ++i)
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardLogicSystemCommands[(int)cardLogicSystemEffectTypes[i]];
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing == CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, cardLogicSystemEffects[i]);
         }
 
-        for (int i = 0; i < cardSlotSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSlotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing == CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, cardSlotSystemEffects[i]);
         }
 
-        for (int i = 0; i < complexSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardComplexSystemCommands[(int)complexSystemEffectsTypes[i]];
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing == CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, complexSystemEffects[i]);
         }
 
-        for (int i = 0; i < selectionSystemEffectTypes.Count; ++i)
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffectTypes[i]];
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing == CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, selectionSystemEffects[i]);
         }
     }
 
-    private void OrganizeCardEffectCommand_WithoutAfterAttack(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
+    private void OrganizeCardEffectCommand_AfterAttack(CardDataInstance usedCard)
     {
         //OCP 위반.
-        List<CardLogicSystemEffectType> cardLogicSystemEffectTypes = usedCard.GetCardData().cardLogicSystemEffects;
-        List<CardDataControlSystemEffectType> cardDataControlSystemEffectTypes = usedCard.GetCardData().cardDataControlSystemEffects;
-        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
-        List<CardSlotSystemEffectType> cardSlotSystemEffectsTypes = usedCard.GetCardData().cardSlotSystemEffects;
-        List<ComplexSystemEffectType> complexSystemEffectsTypes = usedCard.GetCardData().complexSystemEffects;
-        List<CardSelectionSystemEffectType> selectionSystemEffectTypes = usedCard.GetCardData().selectionSystemEffects;
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetcardLogicSystemEffects();
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetcardDataControlSystemEffects();
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetcardStatusEffects();
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetcardSlotSystemEffects();
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetcomplexSystemEffects();
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetselectionSystemEffects();
 
-        for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
 
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing != CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, cardStatusEffects[i]);
         }
 
-        for (int i = 0; i < cardLogicSystemEffectTypes.Count; ++i)
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardLogicSystemCommands[(int)cardLogicSystemEffectTypes[i]];
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
 
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing != CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, cardLogicSystemEffects[i]);
         }
 
-        for (int i = 0; i < cardSlotSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSlotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
 
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing != CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, cardSlotSystemEffects[i]);
         }
 
-        for (int i = 0; i < complexSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardComplexSystemCommands[(int)complexSystemEffectsTypes[i]];
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
 
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-
-            if (timing != CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, complexSystemEffects[i]);
         }
 
-        for (int i = 0; i < selectionSystemEffectTypes.Count; ++i)
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffectTypes[i]];
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
 
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, selectionSystemEffects[i]);
+        }
+    }
+
+    private void OrganizeCardEffectCommand_WithoutAfterAttack(CardDataInstance usedCard)
+    {
+        //OCP 위반.
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetcardLogicSystemEffects();
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetcardDataControlSystemEffects();
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetcardStatusEffects();
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetcardSlotSystemEffects();
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetcomplexSystemEffects();
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetselectionSystemEffects();
+
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
+        {
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
 
             if (timing != CardSystemActionTimingType.AfterAttack)
-                InsertCommandToList(timing, effectCommand);
+                InsertCommandToList(timing, cardStatusEffects[i]);
+        }
+
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
+        {
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+
+            if (timing != CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, cardLogicSystemEffects[i]);
+        }
+
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
+        {
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+
+            if (timing != CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, cardSlotSystemEffects[i]);
+        }
+
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
+        {
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+
+            if (timing != CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, complexSystemEffects[i]);
+        }
+
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
+        {
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+
+            if (timing != CardSystemActionTimingType.AfterAttack)
+                InsertCommandToList(timing, selectionSystemEffects[i]);
         }
     }
 
@@ -783,64 +717,18 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     }
 
     //무한 루프 방어 코드 필요. - 도메인 로직이 이를 방어하지만 아키텍쳐에서 방어되지는 않음.
-    public void UseCards(ReadOnlySpan<CardDataInstance> usingCards)
+    public void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> usingCards)
     {
         if (usingCards == null || usingCards.Length == 0)
             return;
 
-        for (int i = 0; i < usingCards.Length; ++i)
+        for (int i = 1; i < usingCards.Length; ++i)
         {
             if (usingCards[i] != null)
             {
-                usedCardPile.Add(usingCards[i]);
+                OrganizeCardEffectCommand_AfterAttack(usingCards[i]);
             }
         }
-
-        usedCardPile.Sort(new CardIdComparer());
-
-        var currentCard = usedCardPile[0];
-        int currentNestingCnt = 0;
-        int currentUpgradeNestingCnt = 0;
-
-        if (currentCard.IsUpgraded())
-            ++currentUpgradeNestingCnt;
-        else
-            ++currentNestingCnt;
-
-        for (int i = 1; i < usedCardPile.Count; ++i)
-        {
-            if (usedCardPile[i] != null)
-            {
-                if (currentCard.GetCardData().id == usedCardPile[i].GetCardData().id)
-                {
-                    if (usedCardPile[i].IsUpgraded())
-                        ++currentUpgradeNestingCnt;
-                    else
-                        ++currentNestingCnt;
-                }
-                else
-                {
-                    OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
-
-                    currentCard = usedCardPile[i];
-
-                    if (usedCardPile[i].IsUpgraded())
-                    {
-                        currentUpgradeNestingCnt = 1;
-                        currentNestingCnt = 0;
-                    }
-                    else
-                    {
-                        currentUpgradeNestingCnt = 0;
-                        currentNestingCnt = 1;
-                    }
-                }
-            }
-        }
-
-        OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
-
-        usedCardPile.Clear();
     }
 
     public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
@@ -878,15 +766,12 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cards.Length; ++i)
         {
-            var command = cards[i].GetCardData().HandPileExistEffect;
+            var command = cards[i].GetHandPileExistEffect();
 
             if (command == null)
                 continue;
 
-            if (cards[i].IsUpgraded())
-                command.InitializeCommand(0, 1, 1);
-            else
-                command.InitializeCommand(1, 0, 1);
+            command.InitializeCommand(cards[i].valueModifier, cards[i].IsUpgraded());
 
             //OCP 위반.
             if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
@@ -902,63 +787,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
-    public void UndoUseCards(ReadOnlySpan<CardDataInstance> usingCards)
+    public void UndoUseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> usingCards)
     {
-        if (usingCards == null || usingCards.Length == 0)
-            return;
-
-        for (int i = 0; i < usingCards.Length; ++i)
-        {
-            if (usingCards[i] != null)
-            {
-                usedCardPile.Add(usingCards[i]);
-            }
-        }
-
-        usedCardPile.Sort(new CardIdComparer());
-
-        var currentCard = usedCardPile[0];
-        int currentNestingCnt = 0;
-        int currentUpgradeNestingCnt = 0;
-
-        if (currentCard.IsUpgraded())
-            ++currentUpgradeNestingCnt;
-        else
-            ++currentNestingCnt;
-
-        for (int i = 1; i < usedCardPile.Count; ++i)
-        {
-            if (usedCardPile[i] != null)
-            {
-                if (currentCard.GetCardData().id == usedCardPile[i].GetCardData().id)
-                {
-                    if (usedCardPile[i].IsUpgraded())
-                        ++currentUpgradeNestingCnt;
-                    else
-                        ++currentNestingCnt;
-                }
-                else
-                {
-                    OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
-
-                    currentCard = usedCardPile[i];
-
-                    if (usedCardPile[i].IsUpgraded())
-                    {
-                        currentUpgradeNestingCnt = 1;
-                        currentNestingCnt = 0;
-                    }
-                    else
-                    {
-                        currentUpgradeNestingCnt = 0;
-                        currentNestingCnt = 1;
-                    }
-                }
-            }
-        }
-
-        OrganizeCardEffectCommand(currentCard, currentNestingCnt, currentUpgradeNestingCnt);
-
-        usedCardPile.Clear();
+        
     }
 }

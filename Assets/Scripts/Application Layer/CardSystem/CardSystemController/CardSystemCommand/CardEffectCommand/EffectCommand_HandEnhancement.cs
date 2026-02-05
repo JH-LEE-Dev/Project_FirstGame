@@ -12,9 +12,9 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
-        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+        base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
         cardSystemContextType = CardSystemContextType.UpgradeCardsFromHand;
     }
@@ -38,11 +38,11 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
             if (availableCards.Count > upgradeAmount)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
-                    upgradeAmount * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleSelectionResult);
+                    upgradeAmount  * valueModifier, cardSystemContextType, availableCards, true, HandleSelectionResult);
             else
             {
                 for (int i = 0; i < availableCards.Count; ++i)
@@ -54,8 +54,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                     complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, cardSystemContextType);
             }
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
             for (int i = 0; i < availableCards.Count; ++i)
             {
