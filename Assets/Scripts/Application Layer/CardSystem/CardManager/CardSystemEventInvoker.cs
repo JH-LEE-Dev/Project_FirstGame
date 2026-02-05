@@ -9,7 +9,7 @@ public class CardSystemEventInvoker
     public delegate void CardDataControlManagerDelegate(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards);
     public CardDataControlManagerDelegate CardDataControlManagerEvent;
 
-    public void Dispatch(CardLogicSystemEventType type, CardSystemContextType ctx,ReadOnlySpan<CardDataInstance> cards = default)
+    public void Dispatch(CardLogicSystemEventType type, GameSystemActionContextType ctx,ReadOnlySpan<CardDataInstance> cards = default)
     {
         CardLogicSystemEventData data = new CardLogicSystemEventData();
         data.contextType = ctx;
@@ -18,7 +18,7 @@ public class CardSystemEventInvoker
         CardManagerEvent?.Invoke(data, cards);
     }
 
-    public void Dispatch(CardDataControlSystemEventType type, CardSystemContextType ctx, ReadOnlySpan<CardDataInstance> cards = default)
+    public void Dispatch(CardDataControlSystemEventType type, GameSystemActionContextType ctx, ReadOnlySpan<CardDataInstance> cards = default)
     {
         CardDataControlSystemEventData data = new CardDataControlSystemEventData();
         data.contextType = ctx;

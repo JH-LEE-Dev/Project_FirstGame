@@ -18,11 +18,11 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         }
     }
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.UsedCardsToExtinction;
+        gameSystemActionContext = GameSystemActionContextType.UsedCardsToExtinction;
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
@@ -65,14 +65,14 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
         }
 
-        complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+        complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), gameSystemActionContext);
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
         }
 
         ResetCommandData();
@@ -126,7 +126,7 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         }
 
         if (revertCurrentCardsCnt != 0 && bUpgraded == false)
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, GameSystemActionContextType.NoContext);
 
 
 
@@ -135,18 +135,18 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
         }
 
-        complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+        complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), gameSystemActionContext);
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
         }
 
         if (revertCurrentCardsCnt != 0 && bUpgraded == false)
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, CardSystemContextType.NoContext);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, GameSystemActionContextType.NoContext);
 
         currentUsingPiles.Clear();
     }

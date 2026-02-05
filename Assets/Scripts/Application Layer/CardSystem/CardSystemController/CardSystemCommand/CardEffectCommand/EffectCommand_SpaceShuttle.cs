@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/SpaceShuttle")]
 public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    public override void InitializeCommand(int _valueModifier,bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier,bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.GraveCardsToHand;
+        gameSystemActionContext = GameSystemActionContextType.GraveCardsToHand;
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
@@ -50,7 +50,7 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
             return;
         }
 
-        complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt), cardSystemContextType);
+        complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt), gameSystemActionContext);
 
         ResetCommandData();
     }

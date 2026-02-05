@@ -196,7 +196,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     {
         for (int i = 0; i < cardLogicSystemActionCommands.Count; ++i)
         {
-            if (cardLogicSystemActionCommands[i].GetCardActionTimingType() == CardSystemActionTimingType.BeforeTurn)
+            if (cardLogicSystemActionCommands[i].GetGameSystemActionTimingType() == GameSystemActionTimingType.BeforeTurn)
                 CardLogicSystemCommandDispatchEvent?.Invoke(cardLogicSystemActionCommands[i], false);
         }
     }
@@ -208,13 +208,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             var command = cardEffect_BeforeTurn[i];
 
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -231,13 +231,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_BeforeAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -253,13 +253,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -275,13 +275,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterCardUsingPhase[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -304,9 +304,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
             Debug.Log(usedCard.IsUpgraded());
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardStatusCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
 
@@ -314,9 +314,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardLogicSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
 
@@ -324,9 +324,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardSlotSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
 
@@ -334,9 +334,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardComplexCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
 
@@ -344,9 +344,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardSelectionSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
     }
@@ -365,9 +365,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardStatusCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
         }
 
@@ -375,9 +375,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardLogicSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
         }
 
@@ -385,9 +385,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardSlotSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
         }
 
@@ -395,9 +395,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardComplexCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
         }
 
@@ -405,9 +405,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 CardSelectionSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
         }
     }
@@ -419,13 +419,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, true);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, true);
@@ -441,13 +441,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_BeforeCardUsingPhase[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -456,7 +456,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardEffect_BeforeCardUsingPhase.Clear();
     }
 
-    private void DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    private void DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         CardSystemActionCommand cardSystemActionCommand = cardLogicSystemActionCommands[(int)type];
 
@@ -471,7 +471,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardLogicSystemCommandDispatchEvent?.Invoke(cardSystemActionCommand, false);
     }
 
-    private void DispatchComplexSystemActionCommand_Instant(ComplexSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    private void DispatchComplexSystemActionCommand_Instant(ComplexSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         CardSystemActionCommand cardSystemActionCommand = complexSystemActionCommands[(int)type];
 
@@ -486,7 +486,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardComplexCommandDispatchEvent?.Invoke(cardSystemActionCommand, false);
     }
 
-    private void DispatchCardDataControlSystemActionCommand_Instant(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    private void DispatchCardDataControlSystemActionCommand_Instant(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards = default, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         CardSystemActionCommand cardDataControlSystemActionCommand = cardDataControlSystemActionCommands[(int)type];
 
@@ -620,7 +620,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier,usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardStatusEffects[i]);
         }
 
@@ -628,7 +628,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardLogicSystemEffects[i]);
         }
 
@@ -636,7 +636,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardSlotSystemEffects[i]);
         }
 
@@ -644,7 +644,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, complexSystemEffects[i]);
         }
 
@@ -652,7 +652,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, selectionSystemEffects[i]);
         }
     }
@@ -671,9 +671,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardStatusEffects[i]);
         }
 
@@ -681,9 +681,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardLogicSystemEffects[i]);
         }
 
@@ -691,9 +691,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardSlotSystemEffects[i]);
         }
 
@@ -701,9 +701,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, complexSystemEffects[i]);
         }
 
@@ -711,9 +711,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing == CardSystemActionTimingType.AfterAttack)
+            if (timing == GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, selectionSystemEffects[i]);
         }
     }
@@ -732,9 +732,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
-            if (timing != CardSystemActionTimingType.AfterAttack)
+            if (timing != GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardStatusEffects[i]);
         }
 
@@ -742,9 +742,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing != CardSystemActionTimingType.AfterAttack)
+            if (timing != GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardLogicSystemEffects[i]);
         }
 
@@ -752,9 +752,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing != CardSystemActionTimingType.AfterAttack)
+            if (timing != GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, cardSlotSystemEffects[i]);
         }
 
@@ -762,9 +762,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing != CardSystemActionTimingType.AfterAttack)
+            if (timing != GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, complexSystemEffects[i]);
         }
 
@@ -772,32 +772,32 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
-            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+            GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
-            if (timing != CardSystemActionTimingType.AfterAttack)
+            if (timing != GameSystemActionTimingType.AfterAttack)
                 InsertCommandToList(timing, selectionSystemEffects[i]);
         }
     }
 
-    private void InsertCommandToList(CardSystemActionTimingType timingType, CardEffectCommand command)
+    private void InsertCommandToList(GameSystemActionTimingType timingType, CardEffectCommand command)
     {
-        if (timingType == CardSystemActionTimingType.BeforeAttack)
+        if (timingType == GameSystemActionTimingType.BeforeAttack)
         {
             cardEffect_BeforeAttack.Add(command);
         }
-        else if (timingType == CardSystemActionTimingType.AfterAttack)
+        else if (timingType == GameSystemActionTimingType.AfterAttack)
         {
             cardEffect_AfterAttack.Add(command);
         }
-        else if (timingType == CardSystemActionTimingType.BeforeTurn)
+        else if (timingType == GameSystemActionTimingType.BeforeTurn)
         {
             cardEffect_BeforeTurn.Add(command);
         }
-        else if (timingType == CardSystemActionTimingType.BeforeCardUsingPhase)
+        else if (timingType == GameSystemActionTimingType.BeforeCardUsingPhase)
         {
             cardEffect_BeforeCardUsingPhase.Add(command);
         }
-        else if (timingType == CardSystemActionTimingType.AfterCardUsingPhase)
+        else if (timingType == GameSystemActionTimingType.AfterCardUsingPhase)
         {
             cardEffect_AfterCardUsingPhase.Add(command);
         }
@@ -937,15 +937,15 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
-    public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
+    public void RequestCardLogicSystemActionCommand(CardLogicSystemActionType cardLogicSystemActionType, ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType, GameSystemActionTimingType _type = GameSystemActionTimingType.Instant)
     {
-        if (_type == CardSystemActionTimingType.Instant)
+        if (_type == GameSystemActionTimingType.Instant)
             DispatchCardSystemActionCommand_Instant(cardLogicSystemActionType, _cards);
 
         CardActionEndScopeEvent?.Invoke();
     }
 
-    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType, CardSystemActionTimingType _type = CardSystemActionTimingType.Instant)
+    public void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType, GameSystemActionTimingType _type = GameSystemActionTimingType.Instant)
     {
         DispatchCardDataControlSystemActionCommand_Instant(cardDataControlSystemActionType, _cards, _cardSystemContextType);
 
@@ -980,13 +980,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             command.InitializeCommand(cards[i].valueModifier, cards[i].IsUpgraded());
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+            if (command.GetCardEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -1000,7 +1000,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void CatchCardDataControlSystemEvent(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        if (data.contextType == CardSystemContextType.NoContext)
+        if (data.contextType == GameSystemActionContextType.NoContext)
             return;
 
         cardDataControlSystemCreatorMap[(int)data.eventType]?.Invoke();

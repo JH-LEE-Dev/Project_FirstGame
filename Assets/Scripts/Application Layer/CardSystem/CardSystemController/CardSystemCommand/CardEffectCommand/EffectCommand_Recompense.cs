@@ -39,7 +39,7 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
                 return;
             }
 
-            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, cardSystemContextType);
+            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, gameSystemActionContext);
         }
         else
         {
@@ -57,7 +57,7 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
                 return;
             }
 
-            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, cardSystemContextType);
+            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, gameSystemActionContext);
         }
 
         ResetCommandData();

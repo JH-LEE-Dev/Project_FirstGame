@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/FinalOrbit_Used")]
 public class EffectCommand_FinalOrbit_Used : CardEffectCommand<ICardLogicSystemActionCommandHandler>
 {
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.UsedCardsToExtinction;
+        gameSystemActionContext = GameSystemActionContextType.UsedCardsToExtinction;
     }
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardLogicSystemActionCommandHandler)

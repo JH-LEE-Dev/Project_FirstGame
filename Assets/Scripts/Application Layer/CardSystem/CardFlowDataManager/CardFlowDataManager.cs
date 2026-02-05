@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CardFlowDataManager : ICardFlowDataActionCommandHandler
 {
-    public delegate void CardLogicSystemCommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
+    public delegate void CardLogicSystemCommandCreator(GameSystemActionContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
     private Dictionary<CardLogicSystemEventType, CardLogicSystemCommandCreator> cardLogicSystemCreatorMap = new();
 
     private List<CardDataInstance> prevTurnHandToGraveCards = new List<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
@@ -28,7 +28,7 @@ public class CardFlowDataManager : ICardFlowDataActionCommandHandler
         }
     }
 
-    public void HandCardsToGrave(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
+    public void HandCardsToGrave(GameSystemActionContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
     {
         prevTurnHandToGraveCards.Clear();
 

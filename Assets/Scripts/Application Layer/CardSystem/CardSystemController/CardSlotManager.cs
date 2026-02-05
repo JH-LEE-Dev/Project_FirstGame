@@ -210,7 +210,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         CardSlotCntChangedEvent?.Invoke(bulletCardSlotCnt);
     }
 
-    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
 
     }

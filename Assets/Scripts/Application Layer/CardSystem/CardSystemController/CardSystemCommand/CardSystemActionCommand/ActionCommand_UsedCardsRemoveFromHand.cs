@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardLogicSystemAction/UsedCardsRemoveFromHand")]
 public class ActionCommand_UsedCardsRemoveFromHand : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
-    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_cards, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.UsedCardsRemoveFromHand;
+        gameSystemActionContext = GameSystemActionContextType.UsedCardsRemoveFromHand;
     }
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)

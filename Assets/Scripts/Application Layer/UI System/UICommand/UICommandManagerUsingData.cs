@@ -22,7 +22,7 @@ public enum CardUIActionType
 public struct CardUIActionData
 {
     public CardUIActionType uiActionType;
-    public CardSystemContextType cardSystemContextType;
+    public GameSystemActionContextType cardSystemContextType;
     public List<ICardDataInstanceProvider> cards;
 }
 

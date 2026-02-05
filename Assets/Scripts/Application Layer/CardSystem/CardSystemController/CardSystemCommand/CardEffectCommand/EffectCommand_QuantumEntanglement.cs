@@ -14,7 +14,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
     private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
@@ -42,7 +42,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         {
             if (availableCards.Count > duplicateAmount * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * valueModifier, cardSystemContextType,
+                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * valueModifier, gameSystemActionContext,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -55,14 +55,14 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, CardSystemContextType.MAX);
+                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, GameSystemActionContextType.MAX);
             }
         }
         else
         {
             if (availableCards.Count > upgradedDuplicateAmount * valueModifier)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * valueModifier, cardSystemContextType,
+                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * valueModifier, gameSystemActionContext,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -81,7 +81,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), CardSystemContextType.MAX);
+                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
             }
         }
 
@@ -103,7 +103,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         if (bUpgraded == false)
         {
             if (_cards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, _cards.Count), CardSystemContextType.MAX);
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, _cards.Count), GameSystemActionContextType.MAX);
         }
         else
         {
@@ -111,7 +111,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
 
             if (_cards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), CardSystemContextType.MAX);
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
         }
     }
 

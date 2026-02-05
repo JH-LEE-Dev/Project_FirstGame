@@ -29,7 +29,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     [SerializeField] private int cardPileDrawAmount = 5;
     //[SerializeField] private int initialDeckCnt = 40;
 
-    private CardSystemContextType cardSystemContext;
+    private GameSystemActionContextType cardSystemContext;
 
     int currentCardCount = 0;
 
@@ -364,7 +364,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             actionCommand.Undo(this);
     }
 
-    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
         cardSystemContext = cardSystemContextType;
     }
