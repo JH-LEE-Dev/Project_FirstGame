@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c485fd5ce813a804bb52c2a8279d0e5f, type: 3}
   m_Name: Amplify Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Amplify
-  cardSystemActionTimingType: 1
+  gameSystemActionTimingType: 1
   effectApplyType: 3
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0
   bonusValueModifier: 2
   upgradedBonusValueModifier: 3

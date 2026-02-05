@@ -175,7 +175,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         bulletCardSlotForUse.Reverse();
     }
 
-    public void ExecuteCommand(CardSystemCommand command, bool bUndo)
+    public void ExecuteCommand(GameSystemCommand command, bool bUndo)
     {
         if (bUndo == false)
             command.Execute(this);

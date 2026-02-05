@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f04ee1d42b91bce4e9cb2f07ff00efa1, type: 3}
   m_Name: FinalOrbit_Used Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_FinalOrbit_Used
-  cardSystemActionTimingType: 5
+  gameSystemActionTimingType: 5
   effectApplyType: 1
   valueModifier: 1
   bUpgraded: 0

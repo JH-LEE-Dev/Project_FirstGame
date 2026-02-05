@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1ef90a04ebfcd84e86c35cb30e78ebd, type: 3}
   m_Name: PermenantlyUpgradeCards Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_UpgradeCards
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0
   bPermanent: 1

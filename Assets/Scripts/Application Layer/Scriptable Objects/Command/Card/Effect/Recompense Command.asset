@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68df10520a16ee045ad185631fe7785b, type: 3}
   m_Name: Recompense Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Recompense
-  cardSystemActionTimingType: 4
+  gameSystemActionTimingType: 4
   effectApplyType: 3
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0

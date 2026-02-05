@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae5720268424a04193eeaa175f5186a, type: 3}
   m_Name: SlotCardsToExtinction Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_SlotCardsToExtinction
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0

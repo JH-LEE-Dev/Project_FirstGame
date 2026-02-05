@@ -38,7 +38,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardFlowDataActionCommandHandler = _cardFlowDataActionCommandHandler;
     }
 
-    public void ExecuteCommand(CardSystemCommand cardSystemCommand, bool bUndo)
+    public void ExecuteCommand(GameSystemCommand cardSystemCommand, bool bUndo)
     {
         if (bUndo == false)
             cardSystemCommand.Execute(this);

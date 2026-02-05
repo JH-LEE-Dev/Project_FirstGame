@@ -40,9 +40,9 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         }
     }
 
-    public void ExecuteCommand(CardSystemCommand actionCommand,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand actionCommand,bool bUndo)
     {
-        cardSystemContext = actionCommand.GetCardSystemContext();
+        cardSystemContext = actionCommand.GetGameSystemContext();
 
         if (bUndo == false)
             actionCommand.Execute(this);

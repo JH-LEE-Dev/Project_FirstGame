@@ -208,13 +208,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         {
             var command = cardEffect_BeforeTurn[i];
 
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -231,13 +231,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_BeforeAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -253,13 +253,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -275,13 +275,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterCardUsingPhase[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -419,13 +419,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_AfterAttack[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, true);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, true);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, true);
@@ -441,13 +441,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             var command = cardEffect_BeforeCardUsingPhase[i];
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
@@ -980,13 +980,13 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             command.InitializeCommand(cards[i].valueModifier, cards[i].IsUpgraded());
 
             //OCP 위반.
-            if (command.GetCardEffectApplyType() == EffectApplyType.System)
+            if (command.GetEffectApplyType() == EffectApplyType.System)
                 CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.StatusSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.StatusSystem)
                 CardStatusCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.SlotSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.SlotSystem)
                 CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
-            else if (command.GetCardEffectApplyType() == EffectApplyType.ComplexSystem)
+            else if (command.GetEffectApplyType() == EffectApplyType.ComplexSystem)
                 CardComplexCommandDispatchEvent?.Invoke(command, false);
             else
                 CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);

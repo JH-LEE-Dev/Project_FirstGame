@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1811b698c6f9e4f41b0329bb6404d855, type: 3}
   m_Name: GraveCardsToHand Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_GraveCardsToHand
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0

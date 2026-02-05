@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08de3a0294f1a641bd10cd4b9b52192, type: 3}
   m_Name: Bonus Range Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_BonusRange
-  cardSystemActionTimingType: 1
+  gameSystemActionTimingType: 1
   effectApplyType: 0
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0
   bonusRange: 10
   upgradedBonusRange: 20

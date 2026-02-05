@@ -67,10 +67,10 @@ namespace CardEffectSystemSignal
 {
     public struct CardStatusEffectCommandDispatchSignal 
     {
-        public CardSystemCommand command;
+        public GameSystemCommand command;
         public bool bUndo;
 
-        public CardStatusEffectCommandDispatchSignal(CardSystemCommand _command,bool _bUndo)
+        public CardStatusEffectCommandDispatchSignal(GameSystemCommand _command,bool _bUndo)
         {
             command = _command;
             bUndo = _bUndo;

@@ -204,7 +204,7 @@ public class CardSystem
         signalHub.Publish(new PlayerTurnFinishedSignal());
     }
 
-    private void CardStatusEffectDispatch(CardSystemCommand command, bool bUndo)
+    private void CardStatusEffectDispatch(GameSystemCommand command, bool bUndo)
     {
         signalHub.Publish(new CardStatusEffectCommandDispatchSignal(command,bUndo));
     }

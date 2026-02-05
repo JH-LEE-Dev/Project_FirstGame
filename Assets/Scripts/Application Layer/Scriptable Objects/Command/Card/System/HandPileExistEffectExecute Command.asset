@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1779f56ce8f4144a9858ceb0c1dd07d, type: 3}
   m_Name: HandPileExistEffectExecute Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_HandPileExistEffectExecute
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0

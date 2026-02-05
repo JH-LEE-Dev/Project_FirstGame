@@ -2,7 +2,6 @@ using UnityEngine;
 
 public abstract class CardEffectCommand : CardSystemCommand
 {
-    [SerializeField] protected EffectApplyType effectApplyType;
 
     public int valueModifier = 1;
     public bool bUpgraded = false;
@@ -12,11 +11,6 @@ public abstract class CardEffectCommand : CardSystemCommand
         gameSystemActionContext = _cardSystemContextType;
         valueModifier = _valueModifier;
         bUpgraded = _bUpgraded;
-    }
-
-    public EffectApplyType GetCardEffectApplyType()
-    {
-        return effectApplyType;
     }
 
     public void ResetCommandData()
