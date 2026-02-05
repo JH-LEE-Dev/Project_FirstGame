@@ -203,7 +203,7 @@ MonoBehaviour:
   duration: 0.25
   waitToFinish: 0.5
   ease: 18
-  power: 25
+  power: 5
 --- !u!1 &6227177691374144599
 GameObject:
   m_ObjectHideFlags: 0
