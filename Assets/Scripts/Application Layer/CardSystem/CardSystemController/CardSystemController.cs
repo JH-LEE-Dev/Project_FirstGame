@@ -453,16 +453,24 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     private void OrganizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
     {
         //OCP À§¹Ý.
-        List<CardLogicSystemEffectType> cardLogicSystemEffectTypes = usedCard.GetCardData().cardLogicSystemEffects;
-        List<CardDataControlSystemEffectType> cardDataControlSystemEffectTypes = usedCard.GetCardData().cardDataControlSystemEffects;
-        List<CardStatusEffectType> cardStatusEffectTypes = usedCard.GetCardData().cardStatusEffects;
-        List<CardSlotSystemEffectType> cardSlotSystemEffectsTypes = usedCard.GetCardData().cardSlotSystemEffects;
-        List<ComplexSystemEffectType> complexSystemEffectsTypes = usedCard.GetCardData().complexSystemEffects;
-        List<CardSelectionSystemEffectType> selectionSystemEffectTypes = usedCard.GetCardData().selectionSystemEffects;
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetCardData().cardLogicSystemEffects;
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetCardData().cardDataControlSystemEffects;
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetCardData().cardStatusEffects;
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetCardData().cardSlotSystemEffects;
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetCardData().complexSystemEffects;
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetCardData().selectionSystemEffects;
 
-        for (int i = 0; i < cardStatusEffectTypes.Count; ++i)
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardStatusCommands[(int)cardStatusEffectTypes[i]];
+            cardStatusEffects[i].InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
+
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            InsertCommandToList(timing, cardStatusEffects[i]);
+        }
+
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
+        {
+            CardEffectCommand effectCommand = cardLogicSystemCommands[(int)cardLogicSystemEffects[i]];
 
             effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
@@ -470,9 +478,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             InsertCommandToList(timing, effectCommand);
         }
 
-        for (int i = 0; i < cardLogicSystemEffectTypes.Count; ++i)
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardLogicSystemCommands[(int)cardLogicSystemEffectTypes[i]];
+            CardEffectCommand effectCommand = cardSlotSystemCommands[(int)cardSlotSystemEffects[i]];
 
             effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
@@ -480,9 +488,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             InsertCommandToList(timing, effectCommand);
         }
 
-        for (int i = 0; i < cardSlotSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardSlotSystemCommands[(int)cardSlotSystemEffectsTypes[i]];
+            CardEffectCommand effectCommand = cardComplexSystemCommands[(int)complexSystemEffects[i]];
 
             effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 
@@ -490,19 +498,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             InsertCommandToList(timing, effectCommand);
         }
 
-        for (int i = 0; i < complexSystemEffectsTypes.Count; ++i)
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            CardEffectCommand effectCommand = cardComplexSystemCommands[(int)complexSystemEffectsTypes[i]];
-
-            effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
-
-            CardSystemActionTimingType timing = effectCommand.GetCardActionTimingType();
-            InsertCommandToList(timing, effectCommand);
-        }
-
-        for (int i = 0; i < selectionSystemEffectTypes.Count; ++i)
-        {
-            CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffectTypes[i]];
+            CardEffectCommand effectCommand = cardSelectionSystemCommands[(int)selectionSystemEffects[i]];
 
             effectCommand.InitializeCommand(nestingCnt, upgradeNestingCnt, usedCard.valueModifier);
 

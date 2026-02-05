@@ -18,12 +18,12 @@ public class CardData : ICardDataProvider
 
     [Space]
     [Header("Card Effects")]
-    public List<CardLogicSystemEffectType> cardLogicSystemEffects;
-    public List<CardDataControlSystemEffectType> cardDataControlSystemEffects;
-    public List<CardStatusEffectType> cardStatusEffects;
-    public List<CardSlotSystemEffectType> cardSlotSystemEffects;
-    public List<ComplexSystemEffectType> complexSystemEffects;
-    public List<CardSelectionSystemEffectType> selectionSystemEffects;
+    public List<CardEffectCommand> cardLogicSystemEffects;
+    public List<CardEffectCommand> cardDataControlSystemEffects;
+    public List<CardEffectCommand> cardStatusEffects;
+    public List<CardEffectCommand> cardSlotSystemEffects;
+    public List<CardEffectCommand> complexSystemEffects;
+    public List<CardEffectCommand> selectionSystemEffects;
     public CardEffectCommand HandPileExistEffect;
 
     bool ICardDataProvider.bUpgradable => bUpgradable;

@@ -34,7 +34,6 @@ public class CardDataInstance : ICardDataInstanceProvider
         return cardData;
     }
 
-
     public CardData GetCardData()
     {
         return cardData;
