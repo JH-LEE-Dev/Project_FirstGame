@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnitLogicSystemSignals;
 using UnityEngine;
+using static UICommandFactory_CardSystem;
 
 public class CardSystemController : MonoBehaviour, ICardSystemControlActionCommandHandler
 {
@@ -33,9 +34,14 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     private CardSlotManager cardSlotManager;
 
-    private int prevUsedCardCnt;
+    public delegate void CardLogicSystemCommandCreator();
+    private CardLogicSystemCommandCreator[] cardLogicSystemCreatorMap;
+    public delegate void CardDataControlSystemCommandCreator();
+    private CardDataControlSystemCommandCreator[] cardDataControlSystemCreatorMap;
 
+    private int prevUsedCardCnt;
     private int cardUsePhaseCnt;
+    bool bCardUsingFinished = false;
 
     public void Initialize()
     {
@@ -45,6 +51,35 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         cardSlotManager.Initialize();
         BindEvents();
+
+        ReadyCreatorMap();
+    }
+
+    private void ReadyCreatorMap()
+    {
+        cardLogicSystemCreatorMap = new CardLogicSystemCommandCreator[(int)CardLogicSystemEventType.MAX];
+        cardDataControlSystemCreatorMap = new CardDataControlSystemCommandCreator[(int)CardDataControlSystemEventType.MAX];
+
+        //Card Logic System 맵 할당
+        //CardSystemContext로 좀 더 세분화하여 HandleSlotEffectsWhenHandChanged함수 호출하기.
+        //현재 CardsToExtinction같은 경우에 패에 있는 카드가 extinction으로 가지 않았음에도 호출됨.
+        BindLogic(CardLogicSystemEventType.CardPileDrawEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.CardAdditionalDrawEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.HandCardsToGraveEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.CardsToExtinctionEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.GraveCardsToHandEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.CardsToGraveEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.CardsToHandEvent, HandleSlotEffectsWhenHandChanged);
+        BindLogic(CardLogicSystemEventType.CardsToDeckEvent, HandleSlotEffectsWhenHandChanged);
+
+        //Card Data Control System 맵 할당
+        BindData(CardDataControlSystemEventType.CardsUpgraded, HandleSlotEffectsWhenHandChanged);
+
+        void BindLogic(CardLogicSystemEventType type, CardLogicSystemCommandCreator action)
+            => cardLogicSystemCreatorMap[(int)type] = action;
+
+        void BindData(CardDataControlSystemEventType type, CardDataControlSystemCommandCreator action)
+            => cardDataControlSystemCreatorMap[(int)type] = action;
     }
 
     private void BindEvents()
@@ -104,6 +139,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void PlayerTurnFinished()
     {
+        bCardUsingFinished = false;
+
         --cardUsePhaseCnt;
 
         if (cardUsePhaseCnt != 0)
@@ -221,6 +258,150 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
 
         cardEffect_AfterAttack.Clear();
+    }
+
+    private void DispatchCardEffect_AfterCardUsingPhase()
+    {
+        for (int i = 0; i < cardEffect_AfterCardUsingPhase.Count; ++i)
+        {
+            var command = cardEffect_AfterCardUsingPhase[i];
+
+            //OCP 위반.
+            if (command.GetCardEffectApplyType() == CardEffectApplyType.System)
+                CardLogicSystemCommandDispatchEvent?.Invoke(command, false);
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.StatusSystem)
+                CardStatusCommandDispatchEvent?.Invoke(command, false);
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.SlotSystem)
+                CardSlotSystemCommandDispatchEvent?.Invoke(command, false);
+            else if (command.GetCardEffectApplyType() == CardEffectApplyType.ComplexSystem)
+                CardComplexCommandDispatchEvent?.Invoke(command, false);
+            else
+                CardSelectionSystemCommandDispatchEvent?.Invoke(command, false);
+        }
+
+        cardEffect_AfterCardUsingPhase.Clear();
+    }
+
+    private void DirectOrganizeAndDispatch_AfterAttack(CardDataInstance usedCard)
+    {
+        //OCP 위반.
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetcardLogicSystemEffects();
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetcardDataControlSystemEffects();
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetcardStatusEffects();
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetcardSlotSystemEffects();
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetcomplexSystemEffects();
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetselectionSystemEffects();
+
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
+        {
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+            Debug.Log(usedCard.IsUpgraded());
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardStatusCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
+        }
+
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
+        {
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardLogicSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
+        }
+
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
+        {
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardSlotSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
+        }
+
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
+        {
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardComplexCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
+        }
+
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
+        {
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardSelectionSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
+        }
+    }
+
+    private void DirectOrganizeAndDispatch_AfterAttack_Undo(CardDataInstance usedCard)
+    {
+        //OCP 위반.
+        List<CardEffectCommand> cardLogicSystemEffects = usedCard.GetcardLogicSystemEffects();
+        List<CardEffectCommand> cardDataControlSystemEffects = usedCard.GetcardDataControlSystemEffects();
+        List<CardEffectCommand> cardStatusEffects = usedCard.GetcardStatusEffects();
+        List<CardEffectCommand> cardSlotSystemEffects = usedCard.GetcardSlotSystemEffects();
+        List<CardEffectCommand> complexSystemEffects = usedCard.GetcomplexSystemEffects();
+        List<CardEffectCommand> selectionSystemEffects = usedCard.GetselectionSystemEffects();
+
+        for (int i = 0; i < cardStatusEffects.Count; ++i)
+        {
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardStatusCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
+        }
+
+        for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
+        {
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardLogicSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardLogicSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
+        }
+
+        for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
+        {
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = cardSlotSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardSlotSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
+        }
+
+        for (int i = 0; i < complexSystemEffects.Count; ++i)
+        {
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = complexSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardComplexCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
+        }
+
+        for (int i = 0; i < selectionSystemEffects.Count; ++i)
+        {
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+
+            CardSystemActionTimingType timing = selectionSystemEffects[i].GetCardActionTimingType();
+
+            if (timing == CardSystemActionTimingType.AfterAttack)
+                CardSelectionSystemCommandDispatchEvent?.Invoke(cardStatusEffects[i], true);
+        }
     }
 
     private void DispatchCardEffect_AfterAttack_Undo()
@@ -389,7 +570,10 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void CardUsingFinished()
     {
+        bCardUsingFinished = true;
+
         ApplyWithoutAfterAttackEffects();
+        DispatchCardEffect_AfterCardUsingPhase();
         DispatchComplexSystemActionCommand_Instant(ComplexSystemActionType.HandPileExistEffectExecute);
 
         CardActionEndScopeEvent?.Invoke();
@@ -722,11 +906,25 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         if (usingCards == null || usingCards.Length == 0)
             return;
 
-        for (int i = 1; i < usingCards.Length; ++i)
+        for (int i = 0; i < usingCards.Length; ++i)
         {
             if (usingCards[i] != null)
             {
-                OrganizeCardEffectCommand_AfterAttack(usingCards[i]);
+                DirectOrganizeAndDispatch_AfterAttack(usingCards[i]);
+            }
+        }
+    }
+
+    public void UndoUseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> usingCards)
+    {
+        if (usingCards == null || usingCards.Length == 0)
+            return;
+
+        for (int i = 0; i < usingCards.Length; ++i)
+        {
+            if (usingCards[i] != null)
+            {
+                DirectOrganizeAndDispatch_AfterAttack_Undo(usingCards[i]);
             }
         }
     }
@@ -787,8 +985,25 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         }
     }
 
-    public void UndoUseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> usingCards)
+    public void CatchCardLogicSystemEvent(CardLogicSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        
+        cardLogicSystemCreatorMap[(int)data.eventType]?.Invoke();
+    }
+
+    public void CatchCardDataControlSystemEvent(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        if (data.contextType == CardSystemContextType.NoContext)
+            return;
+
+        cardDataControlSystemCreatorMap[(int)data.eventType]?.Invoke();
+    }
+
+    private void HandleSlotEffectsWhenHandChanged()
+    {
+        if(bCardUsingFinished == true) 
+            return;
+
+        UndoAfterAttackEffets();
+        ApplyAfterAttackEffects();
     }
 }

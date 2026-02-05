@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Net;
 using UnityEngine;
 using WaveSystemSignals;
 
@@ -159,6 +160,9 @@ public class Enemy : Unit, IEnemyData
 
     public override void TakeDamage(float damage, bool bCritical)
     {
+        if (bDead == true)
+            return;
+
         healthComponent.TakeDamange(damage);
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }

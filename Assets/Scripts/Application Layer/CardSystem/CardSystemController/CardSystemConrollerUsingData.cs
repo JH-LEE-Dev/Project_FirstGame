@@ -190,5 +190,6 @@ public enum CardSystemContextType
     UpgradeCardsFromHand,
     UpgradeCardsFromExtinction,
     UpgradeCardsFromGrave,
-    MAX
+    MAX,
+    NoContext,
 }

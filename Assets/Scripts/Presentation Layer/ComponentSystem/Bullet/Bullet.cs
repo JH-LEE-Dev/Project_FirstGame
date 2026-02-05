@@ -80,8 +80,6 @@ public class Bullet : MonoBehaviour
 
     private bool CheckCollision_Enemy(Vector2 delta, float distance)
     {
-        //적들이 죽었을 때, Additional Wave가 스폰되는데, 이때 막 스폰된 애들이 범위에 잡혀서 뒤질 수 있음
-        //현재는 Enemy의 Activate에 Delay를 걸어놔서 임시방편으로 막음.
         RaycastHit2D hit = Physics2D.CircleCast(
             prevPosition,
             circleCollider.radius,
