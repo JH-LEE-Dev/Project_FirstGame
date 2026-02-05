@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardEffect/Bullet/FinalOrbit")]
-public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardEffect/Bullet/FinalOrbit_Equipped")]
+public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
     private List<CardDataInstance> currentHandPiles = new List<CardDataInstance>(SYSTEM_VAR.maxHandPileCount);
 
@@ -16,6 +16,8 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
+        currentHandPiles.Clear();
+
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
 
         for(int i = 0;i<handPile.Count;++i)
@@ -29,14 +31,10 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
         using var rentalBuffer_Using = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer_Using = rentalBuffer_Using.Span;
 
-        using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(handPile.Count);
-        Span<CardDataInstance> writeBuffer_Extinction = rentalBuffer_Extinction.Span;
-
         using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
         int usingCnt = 0;
-        int extinctionCnt = 0;
         int upgradeCnt = 0;
 
         for (int i = 0; i < handPile.Count; ++i)
@@ -55,27 +53,18 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
                     ++upgradeCnt;
                 }
             }
-
-            writeBuffer_Extinction[extinctionCnt] = handPile[i];
-            ++extinctionCnt;
         }
 
-        if (extinctionCnt != 0)
+        if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
-            complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+        }
 
-            if (upgradeCnt != 0)
-            {
-                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
-            }
+        complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
 
-            complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
-
-            if (upgradeCnt != 0)
-            {
-                complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
-            }
+        if (upgradeCnt != 0)
+        {
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
         }
 
         ResetCommandData();
@@ -89,14 +78,10 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
         using var rentalBuffer_Using = new RentalScope<CardDataInstance>(currentHandPiles.Count);
         Span<CardDataInstance> writeBuffer_Using = rentalBuffer_Using.Span;
 
-        using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(currentHandPiles.Count);
-        Span<CardDataInstance> writeBuffer_Extinction = rentalBuffer_Extinction.Span;
-
         using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(currentHandPiles.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
         int usingCnt = 0;
-        int extinctionCnt = 0;
         int upgradeCnt = 0;
 
         for (int i = 0; i < currentHandPiles.Count; ++i)
@@ -115,27 +100,20 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
                     ++upgradeCnt;
                 }
             }
-
-            writeBuffer_Extinction[extinctionCnt] = currentHandPiles[i];
-            ++extinctionCnt;
         }
 
-        if (extinctionCnt != 0)
+        if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
-            complexSystemActionCommandHandler.CardsToExtinction(writeBuffer_Extinction.Slice(0, extinctionCnt), cardSystemContextType);
-
-            if (upgradeCnt != 0)
-            {
-                complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
-            }
-
-            complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
-
-            if (upgradeCnt != 0)
-            {
-                complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
-            }
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
         }
+
+        complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+
+        if (upgradeCnt != 0)
+        {
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+        }
+
+        currentHandPiles.Clear();
     }
 }

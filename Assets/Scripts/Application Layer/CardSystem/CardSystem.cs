@@ -169,6 +169,7 @@ public class CardSystem
     private void PublishCardLogicSystemEvent(CardLogicSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
         cardFlowDataManager.CatchCardFlow(data, cards);
+        cardSystemController.CatchCardLogicSystemEvent(data, cards);
         signalHub.Publish(new CardLogicSystemEventSignal(data), cards);
     }
 

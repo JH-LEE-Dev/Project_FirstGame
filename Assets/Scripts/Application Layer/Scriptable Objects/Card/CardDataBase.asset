@@ -169,7 +169,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
-    cardLogicSystemEffects_Prefab: []
+    cardLogicSystemEffects_Prefab:
+    - {fileID: 11400000, guid: 55c6aaf15fe6f1e46ad6b29c50b8a996, type: 2}
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
     cardSlotSystemEffects_Prefab: []
