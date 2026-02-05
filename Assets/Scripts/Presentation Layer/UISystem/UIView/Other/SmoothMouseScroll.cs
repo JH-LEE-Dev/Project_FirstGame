@@ -6,84 +6,82 @@ using UnityEngine.InputSystem; // ★ 이 네임스페이스가 꼭 필요합니
 public class SmoothMouseScroll : MonoBehaviour, IScrollHandler
 {
     [Header("Main Settings")]
-    [SerializeField] ScrollRect targetScrollRect;
-    [SerializeField] float scrollSpeed = 0.3f;
-    [SerializeField] float smoothTime = 0.15f;
+    [SerializeField] private ScrollRect targetScrollRect;
+    [SerializeField] private float scrollSpeed = 0.03f;
+    [SerializeField] private float smoothTime = 0.2f;
 
     // 내부 변수
-    private float _targetPosition = 1f;
-    private float _currentVelocity = 0f;
-    private bool _isScrolling = false;
+    private float targetPosition = 1f;
+    private float currentVelocity = 0f;
+    private bool isScrolling = false;
 
     private void Awake()
     {
-        if (targetScrollRect == null)
+        if (null == targetScrollRect)
             targetScrollRect = GetComponent<ScrollRect>();
     }
 
     private void OnEnable()
     {
-        if (targetScrollRect != null)
+        if (null != targetScrollRect)
         {
             targetScrollRect.verticalNormalizedPosition = 1f;
-            _targetPosition = 1f;
-            _currentVelocity = 0f;
-            _isScrolling = false;
+            targetPosition = 1f;
+            currentVelocity = 0f;
+            isScrolling = false;
         }
     }
 
     public void OnScroll(PointerEventData data)
     {
-        if (targetScrollRect == null) 
+        if (null == targetScrollRect) 
             return;
 
-        if (!_isScrolling) 
-            _targetPosition = targetScrollRect.verticalNormalizedPosition;
+        if (!isScrolling) 
+            targetPosition = targetScrollRect.verticalNormalizedPosition;
 
-        _targetPosition += data.scrollDelta.y * scrollSpeed;
-        _targetPosition = Mathf.Clamp01(_targetPosition);
+        targetPosition += data.scrollDelta.y * scrollSpeed;
+        targetPosition = Mathf.Clamp01(targetPosition);
 
-        _isScrolling = true;
+        isScrolling = true;
     }
 
     private void Update()
     {
-        if (targetScrollRect == null) 
+        if (null == targetScrollRect) 
             return;
 
         bool isPressed = false;
-        if (Pointer.current != null && Pointer.current.press.isPressed)
-        {
+        if (null != Pointer.current && Pointer.current.press.isPressed)
             isPressed = true;
-        }
 
         if (isPressed)
         {
-            _targetPosition = targetScrollRect.verticalNormalizedPosition;
-            _currentVelocity = 0f;
-            _isScrolling = false;
+            targetPosition = targetScrollRect.verticalNormalizedPosition;
+            currentVelocity = 0f;
+            isScrolling = false;
             return;
         }
 
-        if (!_isScrolling && Mathf.Abs(targetScrollRect.velocity.y) > 0.01f)
+        if (!isScrolling && Mathf.Abs(targetScrollRect.velocity.y) > 0.01f)
         {
-            _targetPosition = targetScrollRect.verticalNormalizedPosition;
+            targetPosition = targetScrollRect.verticalNormalizedPosition;
             return;
         }
 
-        if (_isScrolling)
+        if (isScrolling)
         {
-            if (Mathf.Abs(targetScrollRect.verticalNormalizedPosition - _targetPosition) < 0.0001f)
+            if (Mathf.Abs(targetScrollRect.verticalNormalizedPosition - targetPosition) < 0.0001f)
             {
-                _isScrolling = false;
-                _currentVelocity = 0f;
+                isScrolling = false;
+                currentVelocity = 0f;
                 return;
             }
 
             float nextPos = Mathf.SmoothDamp(
                 targetScrollRect.verticalNormalizedPosition,
-                _targetPosition,
-                ref _currentVelocity,
+                targetPosition,
+                ref currentVelocity,
                 smoothTime
             );
 
