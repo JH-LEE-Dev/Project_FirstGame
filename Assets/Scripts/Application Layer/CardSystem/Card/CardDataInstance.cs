@@ -1,9 +1,7 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using static UnityEngine.UI.Image;
 
 [Serializable]
 public class CardDataInstance : ICardDataInstanceProvider
@@ -17,10 +15,76 @@ public class CardDataInstance : ICardDataInstanceProvider
     public int valueModifier = 1;
     public bool bPermanent = false;
 
+    private List<CardEffectCommand> cardLogicSystemEffects = new List<CardEffectCommand>(3);
+    private List<CardEffectCommand> cardDataControlSystemEffects = new List<CardEffectCommand>(3);
+    private List<CardEffectCommand> cardStatusEffects = new List<CardEffectCommand>(3);
+    private List<CardEffectCommand> cardSlotSystemEffects = new List<CardEffectCommand>(3);
+    private List<CardEffectCommand> complexSystemEffects = new List<CardEffectCommand>(3);
+    private List<CardEffectCommand> selectionSystemEffects = new List<CardEffectCommand>(3);
+    private CardEffectCommand HandPileExistEffect;
+
+    public List<CardEffectCommand> GetcardLogicSystemEffects() { return cardLogicSystemEffects; }
+    public List<CardEffectCommand> GetcardDataControlSystemEffects() { return cardDataControlSystemEffects; }
+    public List<CardEffectCommand> GetcardStatusEffects() { return cardStatusEffects; }
+    public List<CardEffectCommand> GetcardSlotSystemEffects() { return cardSlotSystemEffects; }
+    public List<CardEffectCommand> GetcomplexSystemEffects() { return complexSystemEffects; }
+    public List<CardEffectCommand> GetselectionSystemEffects() { return selectionSystemEffects; }
+    public CardEffectCommand GetHandPileExistEffect() { return HandPileExistEffect; }
+
     public void Initialize(CardData cardData)
     {
         this.cardData = cardData;
         ResetState();
+
+        ReadyEffects();
+    }
+
+    private void ReadyEffects()
+    {
+        for (int i = 0; i < cardData.cardLogicSystemEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.cardLogicSystemEffects_Prefab[i]);
+
+            cardLogicSystemEffects.Add(commands);
+        }
+
+        for (int i = 0; i < cardData.cardStatusEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.cardStatusEffects_Prefab[i]);
+
+            cardStatusEffects.Add(commands);
+        }
+
+        for (int i = 0; i < cardData.cardDataControlSystemEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.cardDataControlSystemEffects_Prefab[i]);
+
+            cardDataControlSystemEffects.Add(commands);
+        }
+
+        for (int i = 0; i < cardData.cardSlotSystemEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.cardSlotSystemEffects_Prefab[i]);
+
+            cardSlotSystemEffects.Add(commands);
+        }
+
+        for (int i = 0; i < cardData.complexSystemEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.complexSystemEffects_Prefab[i]);
+
+            complexSystemEffects.Add(commands);
+        }
+
+        for (int i = 0; i < cardData.selectionSystemEffects_Prefab.Count; ++i)
+        {
+            var commands = UnityEngine.Object.Instantiate(cardData.selectionSystemEffects_Prefab[i]);
+
+            selectionSystemEffects.Add(commands);
+        }
+
+        if (cardData.HandPileExistEffect_Prefab != null)
+            HandPileExistEffect = UnityEngine.Object.Instantiate(cardData.HandPileExistEffect_Prefab);
     }
 
     public void ResetState()
@@ -33,7 +97,6 @@ public class CardDataInstance : ICardDataInstanceProvider
     {
         return cardData;
     }
-
 
     public CardData GetCardData()
     {

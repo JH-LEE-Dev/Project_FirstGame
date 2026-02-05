@@ -11,9 +11,9 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
     private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
-        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+        base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
         if (forbiddenCards.Count == 0)
             forbiddenCards.Add(CardName.HalleysComet);

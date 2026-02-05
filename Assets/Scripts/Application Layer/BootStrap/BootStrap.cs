@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Unity.AppUI.MVVM;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -53,6 +54,14 @@ public class BootStrap : MonoBehaviour, IBootStrapProvider
         inputManager.Initialize();
 
         BindEvent();
+
+        InitializeDoTweenPool();
+    }
+
+    private void InitializeDoTweenPool()
+    {
+        DOTween.Init();
+        DOTween.SetTweensCapacity(1250, 312);
     }
 
     public void Start()

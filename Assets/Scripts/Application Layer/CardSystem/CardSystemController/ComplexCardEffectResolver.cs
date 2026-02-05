@@ -67,9 +67,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         return cardSystemActionCommandHandler.GetHandPile();
     }
 
-    public void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
+    public void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
     {
-        cardSystemControlActionCommandHandler.UseCards(cardPile);
+        cardSystemControlActionCommandHandler.UseCards_AfterAttackEffects(cardPile);
     }
 
     public void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
@@ -193,6 +193,6 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 
     public void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType)
     {
-        cardSystemControlActionCommandHandler.UndoUseCards(cardPile);
+        cardSystemControlActionCommandHandler.UndoUseCards_AfterAttackEffects(cardPile);
     }
 }

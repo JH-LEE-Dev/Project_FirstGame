@@ -11,16 +11,15 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusAttack * valueModifier * nestingCnt);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(weaknessTurn * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(weaknessTurn * valueModifier);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusAttack * valueModifier* upgradeNestingCnt);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(upgradedWeaknessTurn * valueModifier* upgradeNestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(upgradedWeaknessTurn * valueModifier);
         }
 
         ResetCommandData();
@@ -28,16 +27,15 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
 
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier * nestingCnt);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * valueModifier);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier * upgradeNestingCnt);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * valueModifier * upgradeNestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * valueModifier);
         }
     }
 }

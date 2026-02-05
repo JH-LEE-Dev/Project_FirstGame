@@ -8,14 +8,13 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * valueModifier);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusDamage * valueModifier * upgradeNestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusDamage * valueModifier);
         }
 
         ResetCommandData();
@@ -23,14 +22,13 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
 
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage * valueModifier * nestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage * valueModifier);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage * valueModifier * upgradeNestingCnt);
+            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage * valueModifier);
         }
     }
 }

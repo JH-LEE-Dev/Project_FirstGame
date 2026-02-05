@@ -11,9 +11,9 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
     IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
-        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+        base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
         cardSystemContextType = CardSystemContextType.ExtinctionCardsToDeck;
 
@@ -45,7 +45,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         if (availableCards.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, 1 * nestingCnt * valueModifier, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
+                CardSelectionMode.ExtinctionCardsToDeck, valueModifier, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
