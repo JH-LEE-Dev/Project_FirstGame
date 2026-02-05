@@ -349,8 +349,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SmoothMouseScroll
   targetScrollRect: {fileID: 6053370303404749569}
-  scrollSpeed: 0.5
-  smoothTime: 0.1
+  scrollSpeed: 0.03
+  smoothTime: 0.2
 --- !u!114 &6053370303404749569
 MonoBehaviour:
   m_ObjectHideFlags: 0
