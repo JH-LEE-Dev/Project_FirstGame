@@ -2,8 +2,6 @@ using UnityEngine;
 
 public abstract class ArtifactCommand : GameSystemCommand
 {
-    [SerializeField] protected EffectApplyType effectApplyType;
-
     public int valueModifier = 1;
     public bool bUpgraded = false;
 
@@ -12,11 +10,6 @@ public abstract class ArtifactCommand : GameSystemCommand
         gameSystemActionContext = _cardSystemContextType;
         valueModifier = _valueModifier;
         bUpgraded = _bUpgraded;
-    }
-
-    public EffectApplyType GetEffectApplyType()
-    {
-        return effectApplyType;
     }
 }
 
