@@ -8,21 +8,19 @@ public class EffectCommand_CriticalChance : CardEffectCommand<ICardStatusEffectC
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier * nestingCnt);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusChance * valueModifier * upgradeNestingCnt);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusChance * valueModifier);
 
         ResetCommandData();
     }
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * valueModifier * nestingCnt);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusChance * valueModifier * upgradeNestingCnt);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusChance * valueModifier);
 
         ResetCommandData();
     }

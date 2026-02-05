@@ -10,17 +10,16 @@ public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectComma
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount * nestingCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.HPDecrease(upgradedHPDecreaseAmount * upgradeNestingCnt * valueModifier);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount * valueModifier);
+        else
+            cardStatusEffectCommandHandler.HPDecrease(upgradedHPDecreaseAmount * valueModifier);
 
 
         ResetCommandData();
     }
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        
+
     }
 }

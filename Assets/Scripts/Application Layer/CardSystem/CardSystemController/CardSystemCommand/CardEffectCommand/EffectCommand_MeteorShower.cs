@@ -12,14 +12,13 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
     {
         var handPile = complexSystemActionCommandHandler.GetHandPile();
 
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(bonusAttack * nestingCnt * valueModifier,cardSystemContextType);
+            complexSystemActionCommandHandler.ApplyAttackModifier(bonusAttack * valueModifier,cardSystemContextType);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(upgradedBonusAttack * upgradeNestingCnt * valueModifier, cardSystemContextType);
+            complexSystemActionCommandHandler.ApplyAttackModifier(upgradedBonusAttack * valueModifier, cardSystemContextType);
         }
 
         ResetCommandData();
@@ -27,14 +26,13 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(-bonusAttack * nestingCnt * valueModifier, cardSystemContextType);
+            complexSystemActionCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier, cardSystemContextType);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * upgradeNestingCnt * valueModifier, cardSystemContextType);
+            complexSystemActionCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier, cardSystemContextType);
         }
     }
 }

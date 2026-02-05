@@ -12,7 +12,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetDeckPile();
     IReadOnlyList<CardDataInstance> GetGravePile();
     IReadOnlyList<CardDataInstance> GetExtinctionPile();
-    void CardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType);
+    void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType);
     void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, CardSystemContextType cardSystemContextType);
     void ApplyAttackModifier(int attack, CardSystemContextType cardSystemContextType);

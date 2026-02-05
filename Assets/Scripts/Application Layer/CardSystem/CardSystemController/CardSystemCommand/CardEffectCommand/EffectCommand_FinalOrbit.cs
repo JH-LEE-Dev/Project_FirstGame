@@ -5,9 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/FinalOrbit")]
 public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    public override void InitializeCommand(int _nestingCnt, int _upgradeNestingCnt, int _valueModifier, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    private List<CardDataInstance> currentHandPiles = new List<CardDataInstance>(SYSTEM_VAR.maxHandPileCount);
+
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
-        base.InitializeCommand(_nestingCnt, _upgradeNestingCnt, _valueModifier, _cardSystemContextType);
+        base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
         cardSystemContextType = CardSystemContextType.UsedCardsToExtinction;
     }
@@ -15,6 +17,11 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+
+        for(int i = 0;i<handPile.Count;++i)
+        {
+            currentHandPiles.Add(handPile[i]);
+        }
 
         if (handPile.Count == 0)
             return;
@@ -42,7 +49,7 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
                 writeBuffer_Using[usingCnt] = handPile[i];
                 ++usingCnt;
 
-                if (upgradeNestingCnt != 0)
+                if (bUpgraded)
                 {
                     writeBuffer_Upgrade[upgradeCnt] = handPile[i];
                     ++upgradeCnt;
@@ -63,7 +70,7 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
                 complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
             }
 
-            complexSystemActionCommandHandler.CardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
+            complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
 
             if (upgradeCnt != 0)
             {
@@ -76,42 +83,40 @@ public class EffectCommand_FinalOrbit : CardEffectCommand<IComplexSystemActionCo
 
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
-
-        if (handPile.Count == 0)
+        if (currentHandPiles.Count == 0)
             return;
 
-        using var rentalBuffer_Using = new RentalScope<CardDataInstance>(handPile.Count);
+        using var rentalBuffer_Using = new RentalScope<CardDataInstance>(currentHandPiles.Count);
         Span<CardDataInstance> writeBuffer_Using = rentalBuffer_Using.Span;
 
-        using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(handPile.Count);
+        using var rentalBuffer_Extinction = new RentalScope<CardDataInstance>(currentHandPiles.Count);
         Span<CardDataInstance> writeBuffer_Extinction = rentalBuffer_Extinction.Span;
 
-        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(handPile.Count);
+        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(currentHandPiles.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
         int usingCnt = 0;
         int extinctionCnt = 0;
         int upgradeCnt = 0;
 
-        for (int i = 0; i < handPile.Count; ++i)
+        for (int i = 0; i < currentHandPiles.Count; ++i)
         {
-            CardData cardData = handPile[i].GetCardData();
+            CardData cardData = currentHandPiles[i].GetCardData();
 
             if (cardData.usingType == UsingType.Nesting &&
                 cardData.cardType == CardType.Bullet)
             {
-                writeBuffer_Using[usingCnt] = handPile[i];
+                writeBuffer_Using[usingCnt] = currentHandPiles[i];
                 ++usingCnt;
 
-                if (upgradeNestingCnt != 0)
+                if (bUpgraded)
                 {
-                    writeBuffer_Upgrade[upgradeCnt] = handPile[i];
+                    writeBuffer_Upgrade[upgradeCnt] = currentHandPiles[i];
                     ++upgradeCnt;
                 }
             }
 
-            writeBuffer_Extinction[extinctionCnt] = handPile[i];
+            writeBuffer_Extinction[extinctionCnt] = currentHandPiles[i];
             ++extinctionCnt;
         }
 

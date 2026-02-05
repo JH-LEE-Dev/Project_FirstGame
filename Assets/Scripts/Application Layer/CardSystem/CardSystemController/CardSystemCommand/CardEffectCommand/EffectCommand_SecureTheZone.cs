@@ -8,11 +8,10 @@ public class EffectCommand_SecureTheZone : CardEffectCommand<ICardSlotSystemActi
 
     protected override void Execute(ICardSlotSystemActionCommandHandler cardSlotSystemActionCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(bonusSlotCnt * nestingCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
-            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(upgradedBonusSlotCnt * upgradeNestingCnt * valueModifier);
+        if (bUpgraded == false)
+            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(bonusSlotCnt  * valueModifier);
+        else
+            cardSlotSystemActionCommandHandler.ApplySlotCntModifier(upgradedBonusSlotCnt  * valueModifier);
 
         ResetCommandData();
     }

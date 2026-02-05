@@ -4,16 +4,14 @@ public abstract class CardEffectCommand : CardSystemCommand
 {
     [SerializeField] protected CardEffectApplyType effectApplyType;
 
-    public int nestingCnt = 0;
-    public int upgradeNestingCnt = 0;
     public int valueModifier = 1;
+    public bool bUpgraded = false;
 
-    public virtual void InitializeCommand(int _nestingCnt,int _upgradeNestingCnt,int _valueModifier,CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public virtual void InitializeCommand(int _valueModifier,bool _bUpgraded,CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
         cardSystemContextType = _cardSystemContextType;
-        nestingCnt = _nestingCnt;
-        upgradeNestingCnt = _upgradeNestingCnt;
         valueModifier = _valueModifier;
+        bUpgraded = _bUpgraded;
     }
 
     public CardEffectApplyType GetCardEffectApplyType()

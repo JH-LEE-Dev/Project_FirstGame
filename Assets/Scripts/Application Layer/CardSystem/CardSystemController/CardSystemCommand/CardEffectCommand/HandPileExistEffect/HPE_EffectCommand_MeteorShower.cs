@@ -24,7 +24,7 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
         if (handPile.Count == 0)
             return;
 
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
             bool bCondition = true;
 
@@ -43,8 +43,7 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
                 complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, cardSystemContextType);
             }
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
             bool bCondition = true;
 

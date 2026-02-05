@@ -7,12 +7,12 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
 {
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
             IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
 
             int bulletCardCnt = 0;
-            for(int i = 0;i<prevHandToGraveCards.Count;++i)
+            for (int i = 0; i < prevHandToGraveCards.Count; ++i)
             {
                 if (prevHandToGraveCards[i].GetCardData().cardType == CardType.Bullet)
                     ++bulletCardCnt;
@@ -20,8 +20,7 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
 
             complexSystemActionCommandHandler.AdditionalDraw(bulletCardCnt, cardSystemContextType);
         }
-
-        if(upgradeNestingCnt != 0)
+        else
         {
             IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
 

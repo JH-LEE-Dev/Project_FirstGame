@@ -8,11 +8,10 @@ public class EffectCommand_IncreaseHP : CardEffectCommand<ICardStatusEffectComma
 
     protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (nestingCnt != 0)
-            cardStatusEffectCommandHandler.HPIncrease(bonusHP * nestingCnt * valueModifier);
-
-        if (upgradeNestingCnt != 0)
-            cardStatusEffectCommandHandler.HPIncrease(upgradedBonusHP * upgradeNestingCnt * valueModifier);
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.HPIncrease(bonusHP  * valueModifier);
+        else
+            cardStatusEffectCommandHandler.HPIncrease(upgradedBonusHP  * valueModifier);
 
         ResetCommandData();
     }

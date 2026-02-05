@@ -14,7 +14,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
             int modifiedCnt = 0;
 
@@ -33,8 +33,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             if (modifiedCnt != 0)
                 complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, cardSystemContextType);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
             int modifiedCnt = 0;
 
@@ -64,7 +63,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
-        if (nestingCnt != 0)
+        if (bUpgraded == false)
         {
             int modifiedCnt = 0;
 
@@ -81,10 +80,9 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt),bonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, cardSystemContextType);
         }
-
-        if (upgradeNestingCnt != 0)
+        else
         {
             int modifiedCnt = 0;
 
@@ -101,7 +99,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt),upgradedBonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, cardSystemContextType);
         }
     }
 }
