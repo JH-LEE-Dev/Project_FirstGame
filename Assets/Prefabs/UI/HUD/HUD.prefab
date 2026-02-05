@@ -514,7 +514,7 @@ MonoBehaviour:
   damageNumberSystem: {fileID: 0}
   playerDamageNumPool: {fileID: 5798511087296296503}
   targetBarEffectPool: {fileID: 5983773190150631590}
-  starlight: {fileID: 0}
+  starlight: {fileID: 2299575033048496404}
   characterStatUI: {fileID: 8429222229447185701}
 --- !u!1 &3534484546545379159
 GameObject:
@@ -2175,3 +2175,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7705459304524719704, guid: 114757ed4aa29234db52acdd62f80e1a, type: 3}
   m_PrefabInstance: {fileID: 7304541910714785940}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2299575033048496404 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8842617094595795328, guid: 114757ed4aa29234db52acdd62f80e1a, type: 3}
+  m_PrefabInstance: {fileID: 7304541910714785940}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ab21c53ad4f7345b38ae3a5a740584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarlightUI
