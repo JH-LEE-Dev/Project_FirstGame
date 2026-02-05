@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarMotion
   activeGhost: 1
+  activeShield: 0
   activeShaking: 0
   activeJelly: 1
   mainSlider: {fileID: 8634236022681328983}
@@ -66,6 +67,10 @@ MonoBehaviour:
   ghostDelay: 0
   ghostDuration: 0.15
   ghostEase: 1
+  shieldSlider: {fileID: 0}
+  shieldDelay: 0.5
+  shieldDuration: 0.5
+  shieldEase: 1
   shakeDuration: 0.5
   shakePower: 0.15
   shakeEase: 1
@@ -362,7 +367,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 5070423847779292684}
   m_HandleRect: {fileID: 0}
@@ -902,7 +907,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 4018561771775278514}
   m_HandleRect: {fileID: 0}
