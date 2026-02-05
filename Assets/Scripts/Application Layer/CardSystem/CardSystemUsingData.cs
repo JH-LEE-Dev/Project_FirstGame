@@ -1,15 +1,17 @@
 
 public static class SYSTEM_VAR
 {
-    public const int maxDeckPileCount = 30;
+    public const int maxCardCount = 50;
+    public const int maxDeckPileCount = 50;
     public const int limitDeckPileCount = 60;
-    public const int maxHandPileCount = 20;
+    public const int maxHandPileCount = 12;
 }
 
 public enum CardType
 {
     Bullet,
     Magic,
+    Inherence,
 }
 
 public enum ElementType

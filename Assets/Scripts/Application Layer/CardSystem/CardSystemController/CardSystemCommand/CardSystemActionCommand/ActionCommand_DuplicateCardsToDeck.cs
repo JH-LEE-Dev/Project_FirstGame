@@ -16,16 +16,27 @@ public class ActionCommand_DuplicateCardsToDeck : CardSystemActionCommand<ICardL
         using var rentalBuffer = new RentalScope<CardDataInstance>(cnt);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
+        int duplicatedCnt = 0;
         for (int i = 0; i < cards.Length; ++i)
         {
             if (cards[i] != null)
             {
-                writeBuffer[i] = cardSystemActionCommandHandler.CreateCard(cards[i].GetCardData().id);
+                var newCard = cardSystemActionCommandHandler.CreateCard(cards[i].GetCardData().id);
+
+                if (newCard == null)
+                {
+                    Debug.LogWarning("카드를 복제할 수 없습니다. 카드 총량은 50장입니다.");
+                    break;
+                }
+                ++duplicatedCnt;
+
+                writeBuffer[i] = newCard;
                 writeBuffer[i].SetUpgrade(cards[i].IsUpgraded());
             }
         }
 
-        cardSystemActionCommandHandler.CardsToDeck(writeBuffer);
+        if (duplicatedCnt != 0)
+            cardSystemActionCommandHandler.CardsToDeck(writeBuffer.Slice(0,duplicatedCnt));
     }
     protected override void Undo(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)
     {

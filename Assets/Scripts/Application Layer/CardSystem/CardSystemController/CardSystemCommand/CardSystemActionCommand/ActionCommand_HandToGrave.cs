@@ -15,17 +15,29 @@ public class ActionCommand_HandToGrave : CardSystemActionCommand<ICardLogicSyste
             using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
             Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
+            int duplicatedCnt = 0;
+
             for (int i = 0; i < handPile.Count; ++i)
             {
                 if (handPile[i].GetCardData().id == (int)CardName.Distortion)
                 {
                     var card = cardSystemActionCommandHandler.CreateCard(handPile[i].GetCardData().id);
+
+                    if (card == null)
+                    {
+                        Debug.LogWarning("카드를 복사하지 못했습니다. 카드 총량 초과.");
+                        break;
+                    }
+
+                    ++duplicatedCnt;
+
                     writeBuffer[i] = card;
                     writeBuffer[i].SetUpgrade(handPile[i].IsUpgraded());
                 }
             }
 
-            cardSystemActionCommandHandler.CardsToGrave(writeBuffer);
+            if (duplicatedCnt != 0)
+                cardSystemActionCommandHandler.CardsToGrave(writeBuffer.Slice(0, duplicatedCnt));
         }
 
         cardSystemActionCommandHandler.HandToGrave();

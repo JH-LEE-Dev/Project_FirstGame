@@ -11,6 +11,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public event Action CardDrawStartEvent;
     public event Action StartCardUsePhaseEvent;
     public event Action PlayerTurnFinishedEvent;
+    public event Action<bool> IsInherenceCardEquippedEvent;
 
     //public event Action CardActionBeginScopeEvent;
     public event Action CardActionEndScopeEvent;
@@ -86,14 +87,21 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     {
         CardSlotSystemCommandDispatchEvent -= cardSlotManager.ExecuteCommand;
         CardSlotSystemCommandDispatchEvent += cardSlotManager.ExecuteCommand;
+
         cardSlotManager.CardSlotCntChangedEvent -= CardSlotCntChanged;
         cardSlotManager.CardSlotCntChangedEvent += CardSlotCntChanged;
+
+        cardSlotManager.InherenceCardEquippedEvent -= IsInherenceCardEquipped;
+        cardSlotManager.InherenceCardEquippedEvent += IsInherenceCardEquipped;
     }
 
     private void ReleaseEvents()
     {
         CardSlotSystemCommandDispatchEvent -= cardSlotManager.ExecuteCommand;
+
         cardSlotManager.CardSlotCntChangedEvent -= CardSlotCntChanged;
+
+        cardSlotManager.InherenceCardEquippedEvent -= IsInherenceCardEquipped;
     }
 
     public void Release()
@@ -117,9 +125,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         CardDrawStartEvent?.Invoke();
 
-        DispatchCardEffect_BeforeTurn();
-
         DispatchCardSystemActionCommand_BeforeTurn();
+
+        DispatchCardEffect_BeforeTurn();
 
         StartCardUsePhaseEvent?.Invoke();
 
@@ -1005,5 +1013,10 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         UndoAfterAttackEffets();
         ApplyAfterAttackEffects();
+    }
+
+    private void IsInherenceCardEquipped(bool boolean)
+    {
+        IsInherenceCardEquippedEvent?.Invoke(boolean);
     }
 }

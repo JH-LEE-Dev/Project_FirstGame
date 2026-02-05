@@ -104,6 +104,7 @@ public class UnitSystem
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.Subscribe<IsInherenceCardEquippedSignal>(IsInherenceCardEquipped);
     }
 
     private void UnSubscribeEvents()
@@ -118,6 +119,7 @@ public class UnitSystem
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.UnSubscribe<IsInherenceCardEquippedSignal>(IsInherenceCardEquipped);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -181,5 +183,10 @@ public class UnitSystem
     {
         unitLogicSystem.ResetPlayerShield();
         signalHub.Publish(new ResetPlayerShieldSignal());
+    }
+
+    private void IsInherenceCardEquipped(IsInherenceCardEquippedSignal inherenceCardEquippedSignal)
+    {
+        unitLogicSystem.SetCharacterCanAttackState(inherenceCardEquippedSignal.bEquipped);
     }
 }

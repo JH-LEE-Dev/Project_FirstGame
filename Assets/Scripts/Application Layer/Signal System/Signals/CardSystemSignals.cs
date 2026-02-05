@@ -51,6 +51,14 @@ namespace CardSystemSignals
             data = _data;
         }
     }
+    public struct  IsInherenceCardEquippedSignal
+    {
+        public bool bEquipped;
+        public IsInherenceCardEquippedSignal(bool _bEquipped)
+        {
+            bEquipped = _bEquipped;
+        }
+    }
     //Scope
     public struct CardActionScopeSignal  { }
 }

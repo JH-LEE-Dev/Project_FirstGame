@@ -6,15 +6,18 @@ using static UnityEngine.Rendering.GPUSort;
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
 {
     public event Action<int> CardSlotCntChangedEvent;
+    public event Action<bool> InherenceCardEquippedEvent;
 
-    private const int defaultSlotCnt = 2;
+    private const int defaultSlotCnt = 0;
     private const int maxSlotCnt = 5;
     private const int maxSlotCardCnt = SYSTEM_VAR.maxDeckPileCount;
     private List<List<CardDataInstance>> bulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
     private List<List<CardDataInstance>> bulletCardSlotForUse = new List<List<CardDataInstance>>(maxSlotCnt);
     private List<List<CardDataInstance>> prevBulletCardSlot = new List<List<CardDataInstance>>(maxSlotCnt);
-    private int bulletCardSlotCnt = 2;
+    private int bulletCardSlotCnt = 0;
     private int prevUsedBulletCardCnt = 0;
+
+    bool bInherenceCardEquipped = false;
 
     public void Initialize()
     {
@@ -31,6 +34,22 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         BulletCardUsedResult result = new BulletCardUsedResult();
 
         CardData usedCardData = usedCard.GetCardData();
+
+        if (usedCardData.cardType == CardType.Inherence)
+        {
+            if (bInherenceCardEquipped == true)
+            {
+                Debug.LogWarning("이미 고유 카드가 장착되어 있습니다. 더 이상 장착할 수 없습니다.");
+                result.bVerified = false;
+                result.slotIdx = -1;
+
+                return result;
+            }
+
+            bInherenceCardEquipped = true;
+
+            InherenceCardEquippedEvent?.Invoke(true);
+        }
 
         for (int i = 0; i < bulletCardSlotCnt; ++i)
         {
@@ -81,11 +100,20 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
     public void DiscardBulletCard(int slotIdx)
     {
+        if (bulletCardSlot[slotIdx].Count == 0)
+            return;
+
         var slotCard = bulletCardSlot[slotIdx];
 
         for (int i = 0; i < bulletCardSlot[slotIdx].Count; ++i)
         {
             bulletCardSlot[slotIdx][i].ResetCardData();
+        }
+
+        if (bulletCardSlot[slotIdx][0].GetCardData().cardType == CardType.Inherence)
+        {
+            InherenceCardEquippedEvent?.Invoke(false);
+            bInherenceCardEquipped = false;
         }
 
         prevUsedBulletCardCnt -= bulletCardSlot[slotIdx].Count;
@@ -169,7 +197,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     {
         bulletCardSlotCnt += cnt;
 
-        if(bulletCardSlotCnt > maxSlotCardCnt)
+        if (bulletCardSlotCnt > maxSlotCardCnt)
             bulletCardSlotCnt = maxSlotCardCnt;
 
         CardSlotCntChangedEvent?.Invoke(bulletCardSlotCnt);

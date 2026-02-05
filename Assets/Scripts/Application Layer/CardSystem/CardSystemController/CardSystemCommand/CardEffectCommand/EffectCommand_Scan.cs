@@ -41,7 +41,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer, cardSystemContextType);
+                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, cardSystemContextType);
             }
         }
         else

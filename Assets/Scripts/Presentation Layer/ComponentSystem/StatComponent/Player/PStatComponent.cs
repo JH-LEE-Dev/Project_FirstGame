@@ -11,7 +11,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     private int initialAttackCnt = 1;
     private float initialAttackRange = 0f;
     private float initialCriticalChange = 10f;
-    private float initialAttack = 1f;
+    private float initialAttack = 0f;
 
     public void Initialize()
     {

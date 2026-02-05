@@ -39,7 +39,6 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
 
             if(bCondition && handPile.Count == 1)
             {
-                Debug.Log("AA");
                 complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, cardSystemContextType);
             }
         }

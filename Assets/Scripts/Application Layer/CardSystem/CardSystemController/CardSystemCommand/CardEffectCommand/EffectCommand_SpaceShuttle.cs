@@ -16,6 +16,14 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
     {
         IReadOnlyList<IReadOnlyList<CardDataInstance>> prevUsedBulletCards = complexSystemActionCommandHandler.GetPrevUsedBulletCards();
 
+        var handPile = complexSystemActionCommandHandler.GetHandPile();
+
+        if(handPile.Count >= SYSTEM_VAR.maxHandPileCount)
+        {
+            Debug.LogWarning("패로 카드를 옮기지 못했습니다. 패 카드 총량 초과.");
+            return;
+        }
+
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
@@ -31,6 +39,15 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
                     ++bufferCnt;
                 }
             }
+        }
+
+        if (handPile.Count + bufferCnt > SYSTEM_VAR.maxHandPileCount)
+            bufferCnt = SYSTEM_VAR.maxHandPileCount - handPile.Count;
+
+        if (bufferCnt < 0)
+        {
+            Debug.LogWarning("패로 카드를 이동시키지 못했습니다. 패 총량 초과.");
+            return;
         }
 
         complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt), cardSystemContextType);
