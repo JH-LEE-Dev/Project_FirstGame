@@ -17,8 +17,8 @@ MonoBehaviour:
     cnt: 1
     bUpgraded: 0
   - cardName: 5
-    cnt: 1
-    bUpgraded: 0
+    cnt: 10
+    bUpgraded: 1
   - cardName: 5
     cnt: 3
-    bUpgraded: 1
+    bUpgraded: 0
