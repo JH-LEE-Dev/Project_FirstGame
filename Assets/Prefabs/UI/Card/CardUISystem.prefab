@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 7357832516065317931}
   - component: {fileID: 8515565074815144563}
   - component: {fileID: 8548298578951077815}
+  - component: {fileID: 4167634148748983309}
   - component: {fileID: 6053370303404749569}
   - component: {fileID: 9173507292072912734}
   m_Layer: 5
@@ -335,6 +336,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4167634148748983309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353484158621185099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ef0111b06843548a100810c2d20676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SmoothMouseScroll
+  targetScrollRect: {fileID: 6053370303404749569}
+  scrollSpeed: 0.5
+  smoothTime: 0.1
 --- !u!114 &6053370303404749569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +370,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.35
-  m_ScrollSensitivity: 17.5
+  m_ScrollSensitivity: 0
   m_Viewport: {fileID: 285732828282006409}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}

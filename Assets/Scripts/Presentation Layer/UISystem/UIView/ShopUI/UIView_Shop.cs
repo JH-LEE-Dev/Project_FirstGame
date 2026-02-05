@@ -162,7 +162,11 @@ public class UIView_Shop : UIView
         cardPannel.RentCards.Clear();
         foreach (ICardDataInstanceProvider data in _inCards)
         {
-            cardPannel.RentCards.Add(RentCard(data, pannelContent.transform, pannelCardScale));
+            ShopCardInstance shopCard = RentCard(data, pannelContent.transform, pannelCardScale);
+            if (null == shopCard)
+                continue;
+
+            cardPannel.RentCards.Add(shopCard);
         }
     }
 
