@@ -175,6 +175,7 @@ public class CardSystem
 
     private void PublishCardDataControlSystemEvent(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
+        cardSystemController.CatchCardDataControlSystemEvent(data, cards);
         signalHub.Publish(new CardDataControlSystemEventSignal(data), cards);
     }
 

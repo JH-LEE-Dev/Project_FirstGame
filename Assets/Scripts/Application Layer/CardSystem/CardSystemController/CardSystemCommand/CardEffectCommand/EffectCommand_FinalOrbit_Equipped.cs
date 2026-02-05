@@ -5,7 +5,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/FinalOrbit_Equipped")]
 public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    private List<CardDataInstance> currentHandPiles = new List<CardDataInstance>(SYSTEM_VAR.maxHandPileCount);
+    private List<FinalOrbitCardData> currentUsingPiles = new List<FinalOrbitCardData>(SYSTEM_VAR.maxHandPileCount);
+
+    private struct FinalOrbitCardData
+    {
+        public CardDataInstance card;
+        public bool bCardUpgraded;
+        public FinalOrbitCardData(CardDataInstance _card, bool _bCardUpgraded)
+        {
+            card = _card;
+            bCardUpgraded = _bCardUpgraded;
+        }
+    }
 
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
     {
@@ -16,14 +27,9 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        currentHandPiles.Clear();
+        currentUsingPiles.Clear();
 
         IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
-
-        for(int i = 0;i<handPile.Count;++i)
-        {
-            currentHandPiles.Add(handPile[i]);
-        }
 
         if (handPile.Count == 0)
             return;
@@ -47,7 +53,9 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
                 writeBuffer_Using[usingCnt] = handPile[i];
                 ++usingCnt;
 
-                if (bUpgraded)
+                currentUsingPiles.Add(new FinalOrbitCardData(handPile[i], handPile[i].IsUpgraded()));
+
+                if (bUpgraded && handPile[i].IsUpgraded() == false)
                 {
                     writeBuffer_Upgrade[upgradeCnt] = handPile[i];
                     ++upgradeCnt;
@@ -57,14 +65,14 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
         }
 
         complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
         }
 
         ResetCommandData();
@@ -72,48 +80,74 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        if (currentHandPiles.Count == 0)
+        if (currentUsingPiles.Count == 0)
             return;
 
-        using var rentalBuffer_Using = new RentalScope<CardDataInstance>(currentHandPiles.Count);
+        using var rentalBuffer_Using = new RentalScope<CardDataInstance>(currentUsingPiles.Count);
         Span<CardDataInstance> writeBuffer_Using = rentalBuffer_Using.Span;
 
-        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(currentHandPiles.Count);
+        using var rentalBuffer_Upgrade = new RentalScope<CardDataInstance>(currentUsingPiles.Count);
         Span<CardDataInstance> writeBuffer_Upgrade = rentalBuffer_Upgrade.Span;
 
         int usingCnt = 0;
         int upgradeCnt = 0;
 
-        for (int i = 0; i < currentHandPiles.Count; ++i)
+        for (int i = 0; i < currentUsingPiles.Count; ++i)
         {
-            CardData cardData = currentHandPiles[i].GetCardData();
+            writeBuffer_Using[usingCnt] = currentUsingPiles[i].card;
+            ++usingCnt;
 
-            if (cardData.usingType == UsingType.Nesting &&
-                cardData.cardType == CardType.Bullet)
+            if (bUpgraded && currentUsingPiles[i].card.IsUpgraded() == false)
             {
-                writeBuffer_Using[usingCnt] = currentHandPiles[i];
-                ++usingCnt;
+                writeBuffer_Upgrade[upgradeCnt] = currentUsingPiles[i].card;
+                ++upgradeCnt;
+            }
+        }
 
-                if (bUpgraded)
+        //이 카드를 장착한 후에 강화된 카드가 있으면, 장착 전으로 돌아가야 함.
+        using var rentalBuffer_Revert = new RentalScope<CardDataInstance>(currentUsingPiles.Count);
+        Span<CardDataInstance> writeBuffer_Revert = rentalBuffer_Revert.Span;
+
+        int revertCurrentCardsCnt = 0;
+
+        if (bUpgraded == false)
+        {
+            for (int i = 0; i < currentUsingPiles.Count; ++i)
+            {
+                if (currentUsingPiles[i].card.IsUpgraded() == true)
                 {
-                    writeBuffer_Upgrade[upgradeCnt] = currentHandPiles[i];
-                    ++upgradeCnt;
+                    if (currentUsingPiles[i].bCardUpgraded == false)
+                    {
+                        writeBuffer_Revert[revertCurrentCardsCnt] = currentUsingPiles[i].card;
+                        ++revertCurrentCardsCnt;
+                    }
                 }
             }
         }
 
+        if (revertCurrentCardsCnt != 0 && bUpgraded == false)
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, CardSystemContextType.NoContext);
+
+
+
+
+
+
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
         }
 
         complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), cardSystemContextType);
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, cardSystemContextType);
+            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, CardSystemContextType.NoContext);
         }
 
-        currentHandPiles.Clear();
+        if (revertCurrentCardsCnt != 0 && bUpgraded == false)
+            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, CardSystemContextType.NoContext);
+
+        currentUsingPiles.Clear();
     }
 }

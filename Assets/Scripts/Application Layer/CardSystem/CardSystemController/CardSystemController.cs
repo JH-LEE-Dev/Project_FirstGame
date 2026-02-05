@@ -36,6 +36,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public delegate void CardLogicSystemCommandCreator();
     private CardLogicSystemCommandCreator[] cardLogicSystemCreatorMap;
+    public delegate void CardDataControlSystemCommandCreator();
+    private CardDataControlSystemCommandCreator[] cardDataControlSystemCreatorMap;
 
     private int prevUsedCardCnt;
     private int cardUsePhaseCnt;
@@ -56,8 +58,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     private void ReadyCreatorMap()
     {
         cardLogicSystemCreatorMap = new CardLogicSystemCommandCreator[(int)CardLogicSystemEventType.MAX];
-
-        var logic = cardLogicSystemCreatorMap;
+        cardDataControlSystemCreatorMap = new CardDataControlSystemCommandCreator[(int)CardDataControlSystemEventType.MAX];
 
         //Card Logic System 맵 할당
         //CardSystemContext로 좀 더 세분화하여 HandleSlotEffectsWhenHandChanged함수 호출하기.
@@ -71,9 +72,14 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         BindLogic(CardLogicSystemEventType.CardsToHandEvent, HandleSlotEffectsWhenHandChanged);
         BindLogic(CardLogicSystemEventType.CardsToDeckEvent, HandleSlotEffectsWhenHandChanged);
 
+        //Card Data Control System 맵 할당
+        BindData(CardDataControlSystemEventType.CardsUpgraded, HandleSlotEffectsWhenHandChanged);
 
         void BindLogic(CardLogicSystemEventType type, CardLogicSystemCommandCreator action)
             => cardLogicSystemCreatorMap[(int)type] = action;
+
+        void BindData(CardDataControlSystemEventType type, CardDataControlSystemCommandCreator action)
+            => cardDataControlSystemCreatorMap[(int)type] = action;
     }
 
     private void BindEvents()
@@ -291,7 +297,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
 
             CardSystemActionTimingType timing = cardStatusEffects[i].GetCardActionTimingType();
-
+            Debug.Log(usedCard.IsUpgraded());
             if (timing == CardSystemActionTimingType.AfterAttack)
                 CardStatusCommandDispatchEvent?.Invoke(cardStatusEffects[i], false);
         }
@@ -982,6 +988,14 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public void CatchCardLogicSystemEvent(CardLogicSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
     {
         cardLogicSystemCreatorMap[(int)data.eventType]?.Invoke();
+    }
+
+    public void CatchCardDataControlSystemEvent(CardDataControlSystemEventData data, ReadOnlySpan<CardDataInstance> cards = default)
+    {
+        if (data.contextType == CardSystemContextType.NoContext)
+            return;
+
+        cardDataControlSystemCreatorMap[(int)data.eventType]?.Invoke();
     }
 
     private void HandleSlotEffectsWhenHandChanged()
