@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uACF5\uACA9\uB825:1212"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4a9a70faa0e64ec4fadceddd4a66a464, type: 2}
-  m_sharedMaterial: {fileID: -5988548979307429028, guid: 4a9a70faa0e64ec4fadceddd4a66a464, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e0d7f1c581fad645bd2c0d6108e46cc, type: 2}
+  m_sharedMaterial: {fileID: -5692259789102682203, guid: 8e0d7f1c581fad645bd2c0d6108e46cc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -188,7 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f4c3f1270f1f464e9643aee9dada4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIStat_Unit
-  iconImage: {fileID: 4243692280142862637}
   mainText: {fileID: 5457647220789678958}
 --- !u!222 &5296207184925243234
 CanvasRenderer:
