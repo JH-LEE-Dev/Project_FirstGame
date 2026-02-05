@@ -84,3 +84,4 @@ MonoBehaviour:
   - Assets/Scenes/TempScene.unity
   - Assets/Scenes/VFXScene/VFXScene.unity
   - Assets/Scenes/MainMenuScene.unity
+  - Assets/Scenes/GameplayScene.unity

@@ -76,7 +76,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 2044243269620236438}
   m_HandleRect: {fileID: 0}
@@ -275,7 +275,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 3579321520126236249}
   m_HandleRect: {fileID: 0}
@@ -688,7 +688,6 @@ MonoBehaviour:
   colorChange: 1
   shaking: 1
   damageNumber: 1
-  shieldMotionRect: {fileID: 2314191696591748983}
   spawnShieldDuration: 0.25
   spawnShieldX: 30
   spawnShieldEase: 30
@@ -984,7 +983,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 2412223959121212944}
   m_HandleRect: {fileID: 0}
@@ -1330,7 +1329,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6237761476687552324}
   m_HandleRect: {fileID: 0}

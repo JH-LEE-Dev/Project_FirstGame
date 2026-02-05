@@ -64,4 +64,9 @@ public class WarningMotion : MonoBehaviour
         callback?.Invoke();
         ownerRt.eulerAngles = originRot;
     }
+
+    private void OnDisable()
+    {
+        seq.Kill();
+    }
 }

@@ -735,7 +735,7 @@ public class UIView_CardSystem : UIView
         if (null == vfx)
             return;
 
-        Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f);
+        Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f, DragDir.UP);
 
         vfx.CardDataInstance = _data;
 
@@ -761,6 +761,7 @@ public class UIView_CardSystem : UIView
 
     private void NotCardSpawnStarEvent(VFX_CardStar vfx)
     {
+
     }
 
     private void NotCardSpawnCompleteEvent(VFX_CardStar vfx)
