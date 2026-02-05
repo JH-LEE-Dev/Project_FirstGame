@@ -445,9 +445,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             }
 
             OrganizeCardEffectCommand_AfterAttack(bulletCardSlot[i][0], nestingCnt, upgradeNestingCnt);
-        }
 
-        DispatchCardEffect_AfterAttack_Undo();
+            DispatchCardEffect_AfterAttack_Undo();
+        }
     }
 
     private void OrganizeCardEffectCommand(CardDataInstance usedCard, int nestingCnt = 0, int upgradeNestingCnt = 0)
