@@ -321,8 +321,6 @@ public class UIView_Shop : UIView
         ShopIsClosedEvent?.Invoke();
     }
 
-    #endregion
-
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
     {
         if (ShopBehaviorType.Upgrade == prevSelectMode)
@@ -333,6 +331,8 @@ public class UIView_Shop : UIView
         if (ShopBehaviorType.PickUp != type)
             Payment(type);
     }
+
+    #endregion
 
     #region Payment Functions
 
