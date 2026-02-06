@@ -13,12 +13,12 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusAttack * valueModifier);
             cardStatusEffectCommandHandler.ApplyWeaknessModifier(weaknessTurn * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier);
             cardStatusEffectCommandHandler.ApplyWeaknessModifier(upgradedWeaknessTurn * valueModifier);
         }
 
@@ -29,12 +29,12 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusAttack * valueModifier);
             cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusAttack * valueModifier);
             cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * valueModifier);
         }
     }

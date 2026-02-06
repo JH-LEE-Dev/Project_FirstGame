@@ -377,3 +377,21 @@ MonoBehaviour:
     - {fileID: 11400000, guid: fdbebd4c178216949bf704bfdcdd14d0, type: 2}
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
+  - id: 20
+    cardImage: {fileID: 21300000, guid: 7b294001e30c95a4f814350c32c92efd, type: 3}
+    cardName: 20
+    cardNameId: 20
+    cardDescriptionId: 20
+    cardType: 2
+    elementType: 0
+    usingType: 1
+    priority: 2
+    bUpgradable: 1
+    cardLogicSystemEffects_Prefab: []
+    cardDataControlSystemEffects_Prefab: []
+    cardStatusEffects_Prefab:
+    - {fileID: 11400000, guid: f2787c0bdf79bf640ae9a31f28fa4684, type: 2}
+    cardSlotSystemEffects_Prefab: []
+    complexSystemEffects_Prefab: []
+    selectionSystemEffects_Prefab: []
+    HandPileExistEffect_Prefab: {fileID: 0}

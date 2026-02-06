@@ -15,6 +15,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
+    void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType);
     void ApplyAttackModifier(int attack, GameSystemActionContextType cardSystemContextType);
     int GetPrevUsedBulletCardCnt();
     int GetPrevUsedCardCnt();
@@ -31,4 +32,6 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards();
     void ApplyCardUsePhaseCntModifier(int cnt, GameSystemActionContextType cardSystemContextType);
     void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
+    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyTotalDamageValueModifier(float bonusValue);
 }

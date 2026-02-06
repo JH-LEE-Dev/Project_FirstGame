@@ -170,6 +170,7 @@ public enum CardEffectPriority
 {
     Multiplier,
     Adder,
+    totalDamageMultiplier,
     Normal,
 }
 

@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class ECombatComponent : CombatComponent
 {
-    [SerializeField] private float attack = 0f;
+    //외부 의존성
+    IEnemyStatProvider enemyStatProvider;
 
-    public void Initialize(UnitContext _ctx,ICombatSignalHandler _signalHandler,float _attack)
+    public void Initialize(UnitContext _ctx,ICombatSignalHandler _signalHandler,IEnemyStatProvider _enemyStatProvider)
     {
-        base.Initialize(_ctx, _signalHandler); 
-        attack = _attack;
+        base.Initialize(_ctx, _signalHandler);
+        enemyStatProvider = _enemyStatProvider;
     }
 
     public void ApplyAttack(Collider2D other)
@@ -16,7 +17,7 @@ public class ECombatComponent : CombatComponent
 
         if(target != null )
         {
-            target.TakeDamage(attack,false);
+            target.TakeDamage(enemyStatProvider.attack, false);
         }
     }
 }

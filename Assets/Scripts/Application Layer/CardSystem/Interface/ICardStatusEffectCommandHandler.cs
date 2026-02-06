@@ -5,6 +5,7 @@ public interface ICardStatusEffectCommandHandler : ICommandHandler
 
     void ApplyShieldModifier(float bonusShield);
 
+    void ApplyAdditionalAttackModifier(float bonusDamage);
     void ApplyAttackModifier(float bonusDamage);
 
     void ApplyRangeModifier(float bonusRange);  
@@ -13,7 +14,8 @@ public interface ICardStatusEffectCommandHandler : ICommandHandler
 
     void ApplyCriticalChanceModifier(int chance);
     void ApplyWeaknessModifier(int turnCnt);
-
+    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyTotalDamageValueModifier(float bonusValue);
     void HPDecrease(float amount);
     void HPIncrease(float amount);
 }

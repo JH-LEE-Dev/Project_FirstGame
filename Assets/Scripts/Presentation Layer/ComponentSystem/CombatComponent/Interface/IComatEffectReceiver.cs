@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public interface ICombatEffectReceiver
 {
+    void ApplyAdditionalAttackModifier(float bonusDamage);
     void ApplyAttackModifier(float bonusDamage);
 
     void ApplyRangeModifier(float bonusRange);
@@ -12,4 +13,6 @@ public interface ICombatEffectReceiver
     void ApplyWeaknessModifier(int turnCnt);
 
     void ApplyAttackCntModifier(int cnt);
+    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyTotalDamageValueModifier(float bonusValue);
 }
