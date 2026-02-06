@@ -18,13 +18,18 @@ public class UIView_Shop : UIView
     IReadOnlyList<ICardDataInstanceProvider> deckCards;
     List<ICardDataInstanceProvider> possibleList = new(50);
 
+    [Header("Starlight Settings")]
+    [SerializeField] private int pickupPrice = 10;
+    [SerializeField] private int upgradePrice = 20;
+    [SerializeField] private int deletePrice = 20;
+    [SerializeField] private string failPayment = "보유 중인 스타라이트가 부족합니다.";
+
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
     [SerializeField] private Button enforceCardButton;
     [SerializeField] private Button deleteCardButton;
     [SerializeField] private Button viewDeckButton;
     [SerializeField] private Button nextStageButton;
-
 
     private int pickUpCardCount = 2;
     private bool pickUpCardForce = false;
@@ -55,7 +60,13 @@ public class UIView_Shop : UIView
 
     ///////// Basic Values
     private Vector3 pannelCardScale = new Vector3(5f, 5f, 1f);
+    private int currentPrice = 0;
+    private int pickupPayCnt = 1;
 
+    private void OnEnable()
+    {
+        
+    }
 
     public override void Initialize(UIViewContext ctx)
     {
@@ -102,8 +113,7 @@ public class UIView_Shop : UIView
 
     public void OpenShop()
     {
-
-
+        pickupPayCnt = 1;
     }
 
     public void PlayerSpawned(IPlayerData _playerData)
@@ -111,10 +121,8 @@ public class UIView_Shop : UIView
         playerData = _playerData;
     }
 
+    #region CardPannel & Deck System
 
-
-    /////////////// Pannel & Deck
-    
     private void CheckUpgradeCardList()
     {
         if (ShopBehaviorType.Upgrade == prevSelectMode)
@@ -187,19 +195,9 @@ public class UIView_Shop : UIView
         return true;
     }
 
-    public void DeactivatePannel()
-    {
+    #endregion
 
-    }
-
-    [Button]
-    private void TestCall_PannelSelectMode()
-    {
-        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, 2, true);
-    }
-
-
-    ////////////// PoolingCard
+    #region Pooling Card System
 
     public ShopCardInstance RentCard(ICardDataInstanceProvider data, Transform attachTransform, Vector3 cardSize)
     {
@@ -236,8 +234,9 @@ public class UIView_Shop : UIView
         shopPoolingSystem?.ReturnCard(card);
     }
 
+    #endregion
 
-    ////////////// SelectSystem
+    #region SelectSystem
 
     public void ToggleSelect(ShopCardInstance card)
     {
@@ -249,13 +248,17 @@ public class UIView_Shop : UIView
         return selectSystem.SelectComplete();
     }
 
+    #endregion
 
-
-    ////////////// Click
+    #region Click Events
     ///
     private void OnClick_PickUpCard()
     {
-        Debug.Log("[Shop] PickUpCard clicked");
+        if (!CheckPayment(1, pickupPrice * pickupPayCnt))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
 
         CardPackRerollEvent?.Invoke();
         selectSystem?.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce
@@ -271,7 +274,12 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        Debug.Log("[Shop] EnforceCard clicked");
+        if (!CheckPayment(1, upgradePrice))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
+
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true))
         {
             // 강화 카드가 더 이상 존재하지 않을 경우
@@ -286,7 +294,12 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        Debug.Log("[Shop] DeleteCard clicked");
+        if (!CheckPayment(1, deletePrice))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
+
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true))
         {
             // 삭제 카드가 더 이상 존재하지 않을 경우
@@ -308,21 +321,44 @@ public class UIView_Shop : UIView
         ShopIsClosedEvent?.Invoke();
     }
 
+    #endregion
+
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
     {
         if (ShopBehaviorType.Upgrade == prevSelectMode)
             prevSelectMode = ShopBehaviorType.None;
 
         ShopUIOutputEvent?.Invoke(cards, type);
+
+        if (ShopBehaviorType.PickUp != type)
+            Payment(type);
     }
 
-    // For PickUpCard
+    #region Payment Functions
 
-    // For EnforceCard
+    private bool CheckPayment(int _haveCoin, int _needCoin) => _needCoin <= _haveCoin;
 
-    // For DeleteCard
+    public void Payment(ShopBehaviorType type)
+    {
+        switch(type)
+        {
+            case ShopBehaviorType.PickUp:
+                currentPrice = pickupPrice * pickupPayCnt++;
+                break;
 
-    // For ViewDeck
+            case ShopBehaviorType.Upgrade:
+                currentPrice = upgradePrice;
+                upgradePrice *= 2;
+                break;
 
-    // For NextStage
+            case ShopBehaviorType.Delete:
+                currentPrice = deletePrice;
+                deletePrice *= 2;
+                break;
+        }
+
+
+    }
+
+    #endregion
 }
