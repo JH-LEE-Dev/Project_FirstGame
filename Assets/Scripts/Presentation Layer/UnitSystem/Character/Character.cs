@@ -24,10 +24,6 @@ public class Character : Unit, ICharacterData
     private CutsceneComponent cutsceneComponent;
     private PStatComponent statComponent;
 
-    [Header("aim Object")]
-    private LineRenderer lineRenderer;
-    [SerializeField] private float aimLength = 10f;
-
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
     /// </summary>
@@ -66,8 +62,6 @@ public class Character : Unit, ICharacterData
         moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
         combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
-
-        lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
 
@@ -129,14 +123,12 @@ public class Character : Unit, ICharacterData
     //이 여부는 상위 시스템에 의해 결정.
     public override void SetbCanAction()
     {
-        lineRenderer.enabled = true;
         bCanAction = true;
         PlayerAttackTurnStarted();
     }
 
     public override void ResetbCanAction()
     {
-        lineRenderer.enabled = false;
         bCanAction = false;
     }
 
@@ -191,11 +183,6 @@ public class Character : Unit, ICharacterData
 
         Vector2 dir = (mouseWorldPos - origin).normalized;
         fireDir = dir;
-
-        Vector2 endPos = origin + dir * aimLength;
-
-        lineRenderer.SetPosition(0, origin);
-        lineRenderer.SetPosition(1, endPos);
     }
 
     //마우스 좌표 받아오는 함수 -> 마우스 좌표가 바뀔 때마다 호출됨.

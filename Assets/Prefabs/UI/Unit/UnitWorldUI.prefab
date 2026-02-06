@@ -50,6 +50,7 @@ MonoBehaviour:
   uiRoot: {fileID: 4944410294537709981}
   bulletSocketSystemPrefab: {fileID: 6922502279702456963, guid: ff156f6272b09e849958add35f5fa146, type: 3}
   clickCatchSystemPrefab: {fileID: 1764982564372588467, guid: aeb280d7059c2cb4381ba7591cf77870, type: 3}
+  bulletLineSystemPrefab: {fileID: 557511791273958322, guid: d633e5b9f86d39e499670f1163854b54, type: 3}
   damageNumberSystem: {fileID: 1952432284334122069}
 --- !u!1 &3916907660417457956
 GameObject:

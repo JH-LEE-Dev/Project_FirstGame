@@ -42,7 +42,7 @@ public class UIView_Unit_World : UIView
 
         InitializeBulletSocketSystem();
         InitializeClickCatchSystem();
-        //InitializeBulletLineSystem();
+        InitializeBulletLineSystem();
     }
 
     private void InitializeBulletSocketSystem()
@@ -66,7 +66,7 @@ public class UIView_Unit_World : UIView
     {
         GameObject go = Instantiate(bulletLineSystemPrefab, this.transform);
         bulletLineSystem = go.GetComponent<BulletLineSystem>();
-        bulletLineSystem.Init(this, characterData.GetTransform());
+        bulletLineSystem.Init(this, characterData.GetTransform(), viewCtx.inputManager);
     }
 
 
@@ -95,6 +95,13 @@ public class UIView_Unit_World : UIView
         CancelCardPreviewEvent?.Invoke();
     }
 
+    // For BulletLine
+
+    public void SetAiming(bool aiming)
+    {
+        bulletLineSystem?.SetAiming(aiming);
+    }
+
 
 
     // For BulletSocketSystem
@@ -105,26 +112,6 @@ public class UIView_Unit_World : UIView
 
         return bulletsocketSystem.GetSocketTransform(_index);
     }
-
-
-    [Button]
-    public void Test2()
-    {
-        SetBulletSocketCount(2);
-    }
-    [Button]
-    public void Test3()
-    {
-        SetBulletSocketCount(3);
-    }
-
-    [Button]
-    public void Test4()
-    {
-        SetBulletSocketCount(4);
-    }
-
-
 
     public void SetBulletSocketCount(int _count)
     {
