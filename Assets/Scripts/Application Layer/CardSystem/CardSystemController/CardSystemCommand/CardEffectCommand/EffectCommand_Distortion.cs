@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Distortion")]
-public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectCommandHandler>
+public class EffectCommand_Distortion : CardEffectCommand<IStatusEffectCommandHandler>
 {
     [SerializeField] private float bonusRange = 0;
     [SerializeField] private int bonusCrit = 0;
@@ -11,7 +11,7 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
     [SerializeField] private int upgradedBonusCrit = 0;
     [SerializeField] private float upgradedBonusDamage = 0;
 
-    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {
@@ -29,7 +29,7 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
         ResetCommandData();
     }
 
-    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {

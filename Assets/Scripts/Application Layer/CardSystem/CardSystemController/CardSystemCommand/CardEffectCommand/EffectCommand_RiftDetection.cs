@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/RiftDetection")]
-public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCommandHandler>
+public class EffectCommand_RiftDetection : CardEffectCommand<IStatusEffectCommandHandler>
 {
     [SerializeField] private int weaknessTurn = 0;
     [SerializeField] private int bonusAttack = 0;
@@ -9,7 +9,7 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
     [SerializeField] private int upgradedWeaknessTurn = 0;
     [SerializeField] private int upgradedBonusAttack = 0;
 
-    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {
@@ -25,7 +25,7 @@ public class EffectCommand_RiftDetection : CardEffectCommand<ICardStatusEffectCo
         ResetCommandData();
     }
 
-    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {

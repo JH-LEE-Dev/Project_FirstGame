@@ -80,4 +80,5 @@ namespace UnitLogicSystemSignals
             enemyData = _enemyData;
         }
     }
+    public struct PlayerIsDeadSignal { }
 }

@@ -39,6 +39,6 @@ public class UIView_Unit_Canvas : UIView
 
     public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> _enemyDatas)
     {
-
+        
     }
 }

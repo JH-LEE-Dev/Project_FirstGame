@@ -43,6 +43,13 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     public void ApplyTotalDamageModifier(float bonusDamage)
     {
         additionalAttack *= bonusDamage;
+
+        CalcResultDamage();
+    }
+
+    public void UndoTotalDamageModifier(float bonusDamage)
+    {
+        additionalAttack /= bonusDamage;
         CalcResultDamage();
     }
 

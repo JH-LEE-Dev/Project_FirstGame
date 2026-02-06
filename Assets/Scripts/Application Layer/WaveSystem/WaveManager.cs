@@ -21,6 +21,8 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     private int currentEnemyThreshold = 0;
     private bool bIsWaveEnded = false;
 
+    bool bDontProceedWave = false;
+
     //인터페이스 구현 존
     public int GetCurrentWaveProgress()
     {
@@ -98,7 +100,8 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     {
         yield return new WaitForSeconds(MoveTurnDelay);
 
-        signalHub.Publish(new WaveMoveEndSignal());
+        if (bDontProceedWave == false)
+            signalHub.Publish(new WaveMoveEndSignal());
     }
 
     private IEnumerator MoveTurnCoroutine()
@@ -140,5 +143,10 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         {
             SpawnAdditionalWave();
         }
+    }
+
+    public void PauseWaveSystem()
+    {
+        bDontProceedWave = true;
     }
 }

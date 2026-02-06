@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface ICardStatusEffectCommandHandler : ICommandHandler
+public interface IStatusEffectCommandHandler : ICommandHandler
 {
 
     void ApplyShieldModifier(float bonusShield);
@@ -16,6 +16,8 @@ public interface ICardStatusEffectCommandHandler : ICommandHandler
     void ApplyWeaknessModifier(int turnCnt);
     void ApplyTotalDamageModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
+    void UndoTotalDamageModifier(float bonusDamage);
     void HPDecrease(float amount);
     void HPIncrease(float amount);
+    void SetCharacterCanAttackState(bool bCanAttack);
 }

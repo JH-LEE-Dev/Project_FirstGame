@@ -135,6 +135,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
         if (spawnedUnit != null)
         {
             playerUnit = spawnedUnit;
+            playerUnit.Initialize();
 
             PlayerCreatedEvent?.Invoke(playerUnit);
 
@@ -223,7 +224,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
         enemies.Clear();
     }
 
-    private void ReleaseAllEnemy()
+    public void ReleaseAllEnemy()
     {
         for (int i = 0; i < enemies.Count; ++i)
         {

@@ -66,6 +66,7 @@ public enum EffectApplyType
     SlotSystem,
     ComplexSystem,
     SelectionSystem,
+    DataControlSystem,
 }
 
 

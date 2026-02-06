@@ -15,4 +15,5 @@ public interface ICombatEffectReceiver
     void ApplyAttackCntModifier(int cnt);
     void ApplyTotalDamageModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
+    void UndoTotalDamageModifier(float bonusDamage);
 }

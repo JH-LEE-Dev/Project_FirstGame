@@ -1,12 +1,12 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/CardEffect/Inherence/Prism Bolt")]
-public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandHandler>
+[CreateAssetMenu(menuName = "Command/CardEffect/Inherence/Arc Discharge")]
+public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectCommandHandler>
 {
-    [SerializeField] private float value = 0;
-    [SerializeField] private float attackValue = 0;
-    [SerializeField] private float upgradedvalue = 0;
-    [SerializeField] private float upgradedAttackValue = 0;
+    [SerializeField] private float value = 1.5f;
+    [SerializeField] private float attackValue = 30;
+    [SerializeField] private float upgradedvalue = 2;
+    [SerializeField] private float upgradedAttackValue = 50;
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {

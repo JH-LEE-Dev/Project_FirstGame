@@ -16,7 +16,8 @@ MonoBehaviour:
   - type: 0
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
-    cardStatusEffects_Prefab: []
+    cardStatusEffects_Prefab:
+    - {fileID: 11400000, guid: 83ec552359791e24e9de47567380c139, type: 2}
     cardSlotSystemEffects_Prefab: []
     complexSystemEffects_Prefab: []
     selectionSystemEffects_Prefab: []
