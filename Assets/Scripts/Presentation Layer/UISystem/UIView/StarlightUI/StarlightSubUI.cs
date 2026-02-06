@@ -464,4 +464,36 @@ public class StarlightSubUI : MonoBehaviour
 
         return seq;
     }
+
+
+    public void ResetBaseCount()
+    {
+        baseCount = 0;
+        baseDisplayed = 0;
+        if (countTM) countTM.text = "0";
+    }
+
+    public void ResetAllCounts()
+    {
+        ResetBaseCount();
+        addTotal = 0;
+        addDisplayed = 0;
+
+        // Add 텍스트 숨김
+        if (addCountTM)
+        {
+            addCountTM.text = "";
+            addCountTM.gameObject.SetActive(false);
+            var c = addCountTM.color; c.a = 0f; addCountTM.color = c;
+        }
+
+        // add 위치/스케일 복구
+        if (addTMRT)
+        {
+            addTMRT.anchoredPosition = addTMBasePos;
+            addTMRT.localScale = addTMBaseScale;
+        }
+
+        KillAddTweens();
+    }
 }

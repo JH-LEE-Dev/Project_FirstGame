@@ -400,6 +400,36 @@ public class UIView_HUD : UIView
 
     // For StarlightUI
 
+    [NaughtyAttributes.Button]
+    void Test1()
+    {
+        ActivateSubUI(StarLightAcquisitionType.Kill, 10);
+    }
+    [NaughtyAttributes.Button]
+    void Test2()
+    {
+        ActivateSubUI(StarLightAcquisitionType.Ability, 10);
+    }
+    [NaughtyAttributes.Button]
+    void Test3()
+    {
+        ActivateSubUI(StarLightAcquisitionType.OverKill, 10);
+    }
+
+    [NaughtyAttributes.Button]
+    void Test4()
+    {
+        TurnAdjustment();
+    }
+
+    [NaughtyAttributes.Button]
+    void Test5()
+    {
+        WaveAdjustment();
+    }
+
+
+
     // StarLightAcquisitionType.Kill -> 적 유닛을 킬 하면 오르는 재화
     // StarLightAcquisitionType.Ability -> 카드 능력 혹은 서브위성으로 인한 추가 재화
     // StarLightAcquisitionType.OverKill -> Wave 클리어 충족치를 넘겼을 때, 그 만큼 버는 재화

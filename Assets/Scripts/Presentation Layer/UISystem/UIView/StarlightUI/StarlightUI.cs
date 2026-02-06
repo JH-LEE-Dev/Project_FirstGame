@@ -374,6 +374,7 @@ public class StarlightUI : MonoBehaviour
                 onArrive: () =>
                 {
                     AddToStarlightAdd(baseMoney);
+                    ui.ResetAllCounts();
                     if (isLast) lastArrived = true;
                 });
 
