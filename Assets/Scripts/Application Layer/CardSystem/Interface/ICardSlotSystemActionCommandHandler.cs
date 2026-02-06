@@ -8,4 +8,5 @@ public interface ICardSlotSystemActionCommandHandler : ICommandHandler
 
     void ApplySlotCntModifier(int cnt);
     int GetPrevUsedBulletCardCnt();
+    bool IsInherenceCardEquipped();
 }

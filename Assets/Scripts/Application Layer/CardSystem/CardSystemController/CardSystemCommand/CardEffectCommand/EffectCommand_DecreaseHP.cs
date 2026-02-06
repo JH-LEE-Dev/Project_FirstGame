@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/DecreaseHP")]
-public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectCommandHandler>
+public class EffectCommand_DecreaseHP : CardEffectCommand<IStatusEffectCommandHandler>
 {
     [SerializeField] private int hpDecreaseAmount = 0;
     [SerializeField] private int upgradedHPDecreaseAmount = 0;
 
-    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
             cardStatusEffectCommandHandler.HPDecrease(hpDecreaseAmount * valueModifier);
@@ -17,7 +17,7 @@ public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectComma
         ResetCommandData();
     }
 
-    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
 
     }

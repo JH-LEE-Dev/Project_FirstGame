@@ -16,7 +16,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType);
-    void ApplyAttackModifier(int attack, GameSystemActionContextType cardSystemContextType);
+    void ApplyAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
     int GetPrevUsedBulletCardCnt();
     int GetPrevUsedCardCnt();
     void AdditionalDraw(int amount, GameSystemActionContextType cardSystemContextType);
@@ -34,4 +34,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
     void ApplyTotalDamageModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
+    void UndoTotalDamageModifier(float bonusDamage);
+    void SetCharacterCanAttackState(bool boolean);
+    bool IsInherenceCardEquipped();
 }

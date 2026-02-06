@@ -2,13 +2,11 @@ using UnityEngine;
 
 public abstract class ArtifactCommand : GameSystemCommand
 {
-    public int valueModifier = 1;
     public bool bUpgraded = false;
 
-    public virtual void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
+    public virtual void InitializeCommand(bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         gameSystemActionContext = _cardSystemContextType;
-        valueModifier = _valueModifier;
         bUpgraded = _bUpgraded;
     }
 }

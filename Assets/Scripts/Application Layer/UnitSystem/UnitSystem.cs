@@ -1,4 +1,4 @@
-using CardEffectSystemSignal;
+using EffectSystemSignal;
 using CardSystemSignals;
 using GameControlSignals;
 using UnityEngine;
@@ -30,8 +30,8 @@ public class UnitSystem
         unitSpawner.PlayerCreatedEvent -= unitLogicSystem.PlayerCreated;
         unitSpawner.PlayerCreatedEvent += unitLogicSystem.PlayerCreated;
 
-        unitSpawner.CharacterCreatedEvent -= unitLogicSystem.CharacterCreated;
-        unitSpawner.CharacterCreatedEvent += unitLogicSystem.CharacterCreated;
+        unitSpawner.CharacterCreatedEvent -= CharacterCreated;
+        unitSpawner.CharacterCreatedEvent += CharacterCreated;
 
         unitSpawner.EnemyCreatedEvent -= unitLogicSystem.EnemyCreated;
         unitSpawner.EnemyCreatedEvent += unitLogicSystem.EnemyCreated;
@@ -65,13 +65,16 @@ public class UnitSystem
 
         unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
         unitSpawner.AdditionalEnemySpawnedEvent += AdditionalEnemySpawned;
+
+        unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
+        unitLogicSystem.PlayerIsDeadEvent += PlayerIsDead;
     }
 
     private void ReleaseEvents()
     {
         unitSpawner.PlayerCreatedEvent -= unitLogicSystem.PlayerCreated;
 
-        unitSpawner.CharacterCreatedEvent -= unitLogicSystem.CharacterCreated;
+        unitSpawner.CharacterCreatedEvent -= CharacterCreated;
 
         unitSpawner.EnemyCreatedEvent -= unitLogicSystem.EnemyCreated;
 
@@ -94,6 +97,8 @@ public class UnitSystem
         unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
 
         unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
+
+        unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
     }
 
     private void SubscribeEvents()
@@ -105,12 +110,11 @@ public class UnitSystem
         signalHub.Subscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
         signalHub.Subscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
         signalHub.Subscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
-        signalHub.Subscribe<CardUsePhaseStarted>(unitLogicSystem.CardUsePhaseStarted);
+        signalHub.Subscribe<CardUsePhaseStartedSignal>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
-        signalHub.Subscribe<IsInherenceCardEquippedSignal>(IsInherenceCardEquipped);
     }
 
     private void UnSubscribeEvents()
@@ -120,12 +124,11 @@ public class UnitSystem
         signalHub.UnSubscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
         signalHub.UnSubscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
-        signalHub.UnSubscribe<CardUsePhaseStarted>(unitLogicSystem.CardUsePhaseStarted);
+        signalHub.UnSubscribe<CardUsePhaseStartedSignal>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
-        signalHub.UnSubscribe<IsInherenceCardEquippedSignal>(IsInherenceCardEquipped);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -191,13 +194,20 @@ public class UnitSystem
         signalHub.Publish(new ResetPlayerShieldSignal());
     }
 
-    private void IsInherenceCardEquipped(IsInherenceCardEquippedSignal inherenceCardEquippedSignal)
-    {
-        unitLogicSystem.SetCharacterCanAttackState(inherenceCardEquippedSignal.bEquipped);
-    }
-
     private void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> enemyDatas)
     {
         signalHub.Publish(new AdditionalEnemySpawnedSignal(enemyDatas));
+    }
+
+    private void CharacterCreated(Character _characterUnit)
+    {
+        unitLogicSystem.CharacterCreated(_characterUnit);
+        signalHub.Publish(new CharacterCreatedSignal(_characterUnit));
+    }
+
+    private void PlayerIsDead()
+    {
+        unitSpawner.ReleaseAllEnemy();
+        signalHub.Publish(new PlayerIsDeadSignal());
     }
 }

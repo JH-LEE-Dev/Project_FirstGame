@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/BonusDamage")]
-public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectCommandHandler>
+public class EffectCommand_BonusDamage : CardEffectCommand<IStatusEffectCommandHandler>
 {
     [SerializeField] float bonusDamage = 0f;
     [SerializeField] float upgradedBonusDamage = 0f;
 
-    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {
@@ -20,7 +20,7 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
         ResetCommandData();
     }
 
-    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
         {

@@ -37,6 +37,13 @@ public class BulletSocketSystem : MonoBehaviour
         unitWorldUI = _unitWorldUI;
     }
 
+    public void Init(UIView_Unit_World _unitWorldUI, ICardLocalizationSystem cls)
+    {
+        if (pivot == null) { enabled = false; return; }
+        BuildSlotsIfNeeded(cls);
+        unitWorldUI = _unitWorldUI;
+    }
+
     // 풀링 함수
     private void BuildSlotsIfNeeded(ICardLocalizationSystem cls)
     {

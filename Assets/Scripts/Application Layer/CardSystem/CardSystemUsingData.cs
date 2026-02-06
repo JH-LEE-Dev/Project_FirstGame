@@ -5,6 +5,8 @@ public static class SYSTEM_VAR
     public const int maxDeckPileCount = 50;
     public const int limitDeckPileCount = 60;
     public const int maxHandPileCount = 12;
+
+    public const int maxArtifactCount = 5;
 }
 
 public enum CardType

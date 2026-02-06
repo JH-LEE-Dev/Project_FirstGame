@@ -1,7 +1,8 @@
 
 namespace CardSystemSignals
 { 
-    public struct CardUsePhaseStarted { }
+    public struct CardUsePhaseStartedSignal { }
+    public struct AfterCardUsePhaseStartedSignal { }
     public struct PlayerTurnFinishedSignal { }
     public struct CardUsedSignal
     {
@@ -51,19 +52,11 @@ namespace CardSystemSignals
             data = _data;
         }
     }
-    public struct  IsInherenceCardEquippedSignal
-    {
-        public bool bEquipped;
-        public IsInherenceCardEquippedSignal(bool _bEquipped)
-        {
-            bEquipped = _bEquipped;
-        }
-    }
     //Scope
     public struct CardActionScopeSignal  { }
 }
 
-namespace CardEffectSystemSignal
+namespace EffectSystemSignal
 {
     public struct CardStatusEffectCommandDispatchSignal 
     {
@@ -76,4 +69,19 @@ namespace CardEffectSystemSignal
             bUndo = _bUndo;
         }
     }
+
+    public struct ArtifactEffectCommandDispatchSignal
+    {
+        public GameSystemCommand command;
+        public bool bUndo;
+        public EffectApplyType type;
+
+        public ArtifactEffectCommandDispatchSignal(GameSystemCommand _command, bool _bUndo,EffectApplyType _type)
+        {
+            command = _command;
+            bUndo = _bUndo;
+            type = _type;
+        }
+    }
+
 }

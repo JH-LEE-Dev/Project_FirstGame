@@ -162,4 +162,9 @@ public class GameplayUICoordinator
     {
         unitCanvasUISystem.AdditionalEnemySpawned(enemyDatas);
     }
+
+    public void PlayerIsDead()
+    {
+
+    }
 }

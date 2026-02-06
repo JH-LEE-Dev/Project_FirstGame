@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7534f4f0f78d054e826b724e065e94d, type: 3}
-  m_Name: PrismBolt Command
-  m_EditorClassIdentifier: Assembly-CSharp::IHEffectCommand_PrismBolt
-  gameSystemActionTimingType: 1
-  effectApplyType: 0
-  valueModifier: 1
+  m_Script: {fileID: 11500000, guid: 8ce1bd1c3fd3dd94a929f80838013bfb, type: 3}
+  m_Name: Rumy's Satellite
+  m_EditorClassIdentifier: Assembly-CSharp::ACommand_RumysSatellite
+  gameSystemActionTimingType: 5
+  effectApplyType: 3
   bUpgraded: 0
   value: 1
   attackValue: 10
-  upgradedvalue: 2
+  upgradedvalue: 1.5
   upgradedAttackValue: 20
