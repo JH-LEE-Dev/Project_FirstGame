@@ -1,7 +1,6 @@
 using NaughtyAttributes;
 using System;
-using System.ComponentModel.Design;
-using UnityEditor.U2D.Animation;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIView_Unit_World : UIView
@@ -13,6 +12,7 @@ public class UIView_Unit_World : UIView
     [SerializeField] private Transform uiRoot;
 
     ICharacterData characterData;
+    IReadOnlyList<IEnemyData> enemyDatas;
 
 
     [Header("Systems")]
@@ -31,9 +31,10 @@ public class UIView_Unit_World : UIView
         base.Awake();
     }
 
-    public void DataInjection(ICharacterData _characterData)
+    public void DataInjection(ICharacterData _characterData,IReadOnlyList<IEnemyData> _enemyDatas)
     {
         characterData = _characterData;
+        enemyDatas = _enemyDatas;
 
         InitializeBulletSocketSystem();
         InitializeClickCatchSystem();

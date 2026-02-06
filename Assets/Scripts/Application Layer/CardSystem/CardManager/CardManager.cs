@@ -29,7 +29,9 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
     [SerializeField] private int cardPileDrawAmount = 5;
     //[SerializeField] private int initialDeckCnt = 40;
 
-    private CardSystemContextType cardSystemContext;
+    private GameSystemActionContextType cardSystemContext;
+
+    int currentCardCount = 0;
 
     public void Initialize()
     {
@@ -105,6 +107,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
                 deckPile.Add(card);
             }
         }
+
+        currentCardCount = permanentDeckPile.Count;
     }
 
     public void Release()
@@ -277,33 +281,45 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer);
     }
 
+    public void ReleaseCard(CardDataInstance card)
+    {
+        cardPools[card.GetCardData().id].Release(card);
+
+        --currentCardCount;
+
+        if(currentCardCount < 0)
+        {
+            Debug.Log("Card Release에서 오작동이 발생했습니다.");
+        }
+    }
+
     public void ResetCardPiles()
     {
         for (int i = 0; i < deckPile.Count; ++i)
         {
             if (deckPile[i].bPermanent == false)
-                cardPools[deckPile[i].GetCardData().id].Release(deckPile[i]);
+                ReleaseCard(deckPile[i]);
         }
         deckPile.Clear();
 
         for (int i = 0; i < gravePile.Count; ++i)
         {
             if (gravePile[i].bPermanent == false)
-                cardPools[gravePile[i].GetCardData().id].Release(gravePile[i]);
+                ReleaseCard(gravePile[i]);
         }
         gravePile.Clear();
 
         for (int i = 0; i < extinctionPile.Count; ++i)
         {
             if (extinctionPile[i].bPermanent == false)
-                cardPools[extinctionPile[i].GetCardData().id].Release(extinctionPile[i]);
+                ReleaseCard(extinctionPile[i]);
         }
         extinctionPile.Clear();
 
         for (int i = 0; i < handPile.Count; ++i)
         {
             if (handPile[i].bPermanent == false)
-                cardPools[handPile[i].GetCardData().id].Release(handPile[i]);
+                ReleaseCard(handPile[i]);
         }
         handPile.Clear();
 
@@ -338,9 +354,9 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.CardsToGraveEvent, cardSystemContext, cards);
     }
 
-    public void ExecuteCommand(CardSystemCommand actionCommand,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand actionCommand,bool bUndo)
     {
-        cardSystemContext = actionCommand.GetCardSystemContext();
+        cardSystemContext = actionCommand.GetGameSystemContext();
 
         if (bUndo == false)
             actionCommand.Execute(this);
@@ -348,7 +364,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             actionCommand.Undo(this);
     }
 
-    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
         cardSystemContext = cardSystemContextType;
     }
@@ -374,6 +390,14 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public CardDataInstance CreateCard(int id)
     {
+        if(currentCardCount == SYSTEM_VAR.maxCardCount)
+        {
+            Debug.LogWarning("더 이상 카드를 생성할 수 없습니다.");
+            return null;
+        }
+
+        ++currentCardCount;
+
         CardData cardData = cardDataBase.GetCardData(id);
         if (cardData == null)
             return null;
@@ -383,11 +407,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         CardDataInstance card = pool.Get();
 
         return card;
-    }
-
-    public void ReleaseCard(CardDataInstance card)
-    {
-        cardPools[card.GetCardData().id].Release(card);
     }
 
     public void CardsToHand(ReadOnlySpan<CardDataInstance> cards)

@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5cab25dd7e736e4a89949281f8e9cd8, type: 3}
   m_Name: RiftDetection Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_RiftDetection
-  cardSystemActionTimingType: 1
+  gameSystemActionTimingType: 1
   effectApplyType: 0
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0
   weaknessTurn: 1
   bonusAttack: 5
   upgradedWeaknessTurn: 2

@@ -1,31 +1,14 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 
-public abstract class CardSystemCommand : ScriptableObject
+public abstract class CardSystemCommand : GameSystemCommand
 {
-    protected CardSystemContextType cardSystemContextType = CardSystemContextType.MAX;
-
-    [SerializeField] protected CardSystemActionTimingType cardSystemActionTimingType;
-
     public bool IsActive { get; private set; }
-
-    public abstract void Execute(ICommandHandler handler);
-    public abstract void Undo(ICommandHandler handler);
 
     public void Activate() => IsActive = true;
 
     public void Deactivate() => IsActive = false;
 
-    public CardSystemActionTimingType GetCardActionTimingType()
-    {
-        return cardSystemActionTimingType;
-    }
 
-    public CardSystemContextType GetCardSystemContext()
-    {
-        return cardSystemContextType;
-    }
 }
 
 /*public class CardSystemCommand : ScriptableObject, ICardStatusEffectCommand, ICardSystemActionCommand

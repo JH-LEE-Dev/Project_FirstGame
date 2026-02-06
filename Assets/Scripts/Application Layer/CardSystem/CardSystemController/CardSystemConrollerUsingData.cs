@@ -47,19 +47,19 @@ public struct CardIdComparer : IComparer<CardDataInstance>
 public struct CardLogicSystemEventData
 {
     public CardLogicSystemEventType eventType;
-    public CardSystemContextType contextType;
+    public GameSystemActionContextType contextType;
 }
 
 public struct CardDataControlSystemEventData
 {
     public CardDataControlSystemEventType eventType;
-    public CardSystemContextType contextType;
+    public GameSystemActionContextType contextType;
 }
 
 /// <summary>
 /// Enums ----------------------------------------------
 /// </summary>
-public enum CardEffectApplyType
+public enum EffectApplyType
 {
     StatusSystem,
     System,
@@ -144,7 +144,7 @@ public enum CardSelectionSystemEffectType
 
 }
 
-public enum CardSystemActionTimingType
+public enum GameSystemActionTimingType
 {
     BeforeAttack,
     AfterAttack,
@@ -173,7 +173,7 @@ public enum CardEffectPriority
     Normal,
 }
 
-public enum CardSystemContextType
+public enum GameSystemActionContextType
 {
     CardPileDraw,
     UsedCardsRemoveFromHand,

@@ -51,6 +51,14 @@ namespace CardSystemSignals
             data = _data;
         }
     }
+    public struct  IsInherenceCardEquippedSignal
+    {
+        public bool bEquipped;
+        public IsInherenceCardEquippedSignal(bool _bEquipped)
+        {
+            bEquipped = _bEquipped;
+        }
+    }
     //Scope
     public struct CardActionScopeSignal  { }
 }
@@ -59,10 +67,10 @@ namespace CardEffectSystemSignal
 {
     public struct CardStatusEffectCommandDispatchSignal 
     {
-        public CardSystemCommand command;
+        public GameSystemCommand command;
         public bool bUndo;
 
-        public CardStatusEffectCommandDispatchSignal(CardSystemCommand _command,bool _bUndo)
+        public CardStatusEffectCommandDispatchSignal(GameSystemCommand _command,bool _bUndo)
         {
             command = _command;
             bUndo = _bUndo;

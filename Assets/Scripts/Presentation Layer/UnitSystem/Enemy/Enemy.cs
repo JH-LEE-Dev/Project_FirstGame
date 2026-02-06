@@ -9,6 +9,8 @@ public class Enemy : Unit, IEnemyData
 {
     public event Action<IEnemyData, EnemyTypeData> EnemyIsKilledEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
+    public event Action EnemySpawnedEvent;
+    public IHealthComponentProvider healthComponentProvider => healthComponent;
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -113,6 +115,8 @@ public class Enemy : Unit, IEnemyData
         rb.angularDamping = initialAngularDamping;
 
         StartCoroutine(SetEnemyState_Delayed(true));
+
+        EnemySpawnedEvent?.Invoke();
     }
 
     public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
@@ -163,7 +167,7 @@ public class Enemy : Unit, IEnemyData
         if (bDead == true)
             return;
 
-        healthComponent.TakeDamange(damage);
+        healthComponent.TakeDamage(damage);
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 

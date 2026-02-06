@@ -55,7 +55,7 @@ public class UICommandManager : MonoBehaviour
 
     private void ReceiveCardLogicSystemEventSignal(CardLogicSystemEventSignal cardSystemEventSignal,ReadOnlySpan<CardDataInstance> cards = default)
     {
-        if (cardSystemEventSignal.data.contextType == CardSystemContextType.NoContext)
+        if (cardSystemEventSignal.data.contextType == GameSystemActionContextType.NoContext)
             return;
 
         commandFactory_CardSystem.CreateCommand(cardSystemEventSignal.data, cards);
@@ -63,7 +63,7 @@ public class UICommandManager : MonoBehaviour
 
     private void ReceiveCardDataControlSystemEventSignal(CardDataControlSystemEventSignal cardDataControlSystemEventSignal, ReadOnlySpan<CardDataInstance> cards = default)
     {
-        if (cardDataControlSystemEventSignal.data.contextType == CardSystemContextType.NoContext)
+        if (cardDataControlSystemEventSignal.data.contextType == GameSystemActionContextType.NoContext)
             return;
 
         commandFactory_CardSystem.CreateCommand(cardDataControlSystemEventSignal.data, cards);

@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9683a8ab8bd42bf4892180f5940e8838, type: 3}
   m_Name: HPE_Effect_Command Meteor Shower
   m_EditorClassIdentifier: Assembly-CSharp::HPE_EffectCommand_MeteorShower
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
   effectApplyType: 3
-  nestingCnt: 1
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0

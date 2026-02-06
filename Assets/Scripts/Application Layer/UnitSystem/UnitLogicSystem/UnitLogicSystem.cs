@@ -39,6 +39,9 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         characterUnit = _character;
 
+        if (characterUnit.characterType == CharacterType.Rumy)
+            characterUnit.SetbCanAttack(true);
+
         BindEvent_Character();
     }
 
@@ -257,5 +260,13 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     private void CharacterStatChanged()
     {
         CharacterStatChangedEvent?.Invoke();
+    }
+
+    public void SetCharacterCanAttackState(bool bCanAttack)
+    {
+        if (characterUnit.characterType == CharacterType.Rumy)
+            characterUnit.SetbCanAttack(true);
+        else
+            characterUnit.SetbCanAttack(bCanAttack);
     }
 }

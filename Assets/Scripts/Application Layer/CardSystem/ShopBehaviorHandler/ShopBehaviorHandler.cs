@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class ShopBehaviorHandler
 {
-    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
+    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType, GameSystemActionTimingType cardSystemActionTimingType = GameSystemActionTimingType.Instant);
     public RequestCardSystemActionDelegate RequestCardLogicSystemActionEvent;
-    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
+    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType, GameSystemActionTimingType cardSystemActionTimingType = GameSystemActionTimingType.Instant);
     public RequestCardDataControlSystemActionDelegate RequestCardDataControlSystemActionEvent;
 
     //외부 의존성
@@ -38,7 +38,7 @@ public class ShopBehaviorHandler
 
         if (_type == ShopBehaviorType.Upgrade)
         {
-            RequestCardDataControlSystemActionEvent?.Invoke(CardDataControlSystemActionType.CardsPermenantlyUpgraded, writeBuffer, CardSystemContextType.MAX);
+            RequestCardDataControlSystemActionEvent?.Invoke(CardDataControlSystemActionType.CardsPermenantlyUpgraded, writeBuffer, GameSystemActionContextType.MAX);
         }
 
         if (_type == ShopBehaviorType.PickUp)

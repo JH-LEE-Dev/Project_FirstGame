@@ -26,9 +26,11 @@ public class GameInstaller : MonoBehaviour
     private ShopUIInstaller shopUIInstaller;
     private ShopSystem shopSystem;
     private ShopManager shopManager;
-    private CardDataControlManager cardDataControlManager;  
+    private CardDataControlManager cardDataControlManager;
     private ShopBehaviorHandler shopBehaviorHandler;
     private CardFlowDataManager cardFlowDataManager;
+    private ArtifactSystem artifactSystem;
+    private ArtifactManager artifactManager;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -52,7 +54,7 @@ public class GameInstaller : MonoBehaviour
         unitSystem = new UnitSystem();
         cardSystem = new CardSystem();
         complexCardEffectResolver = new ComplexCardEffectResolver();
-        cardSelectionManager= new CardSelectionManager();
+        cardSelectionManager = new CardSelectionManager();
         shopUIInstaller = GetComponentInChildren<ShopUIInstaller>();
         shopSystem = new ShopSystem();
         shopManager = GetComponent<ShopManager>();
@@ -60,6 +62,8 @@ public class GameInstaller : MonoBehaviour
         cardDataControlManager = GetComponent<CardDataControlManager>();
         shopBehaviorHandler = new ShopBehaviorHandler();
         cardFlowDataManager = new CardFlowDataManager();
+        artifactSystem = new ArtifactSystem();
+        artifactManager = GetComponent<ArtifactManager>();
 
         gameController.Initialize(signalHub);
         gameServiceLocator.Initialize(cameraController);
@@ -74,17 +78,19 @@ public class GameInstaller : MonoBehaviour
         cardManager.Initialize();
         cardSystemController.Initialize();
         shopBehaviorHandler.Initialize(cardManager);
-        cardSystem.Initialize(signalHub, cardManager, cardSystemController,cardSelectionManager, complexCardEffectResolver, cardDataControlManager,
-            shopBehaviorHandler,cardFlowDataManager);
+        cardSystem.Initialize(signalHub, cardManager, cardSystemController, cardSelectionManager, complexCardEffectResolver, cardDataControlManager,
+            shopBehaviorHandler, cardFlowDataManager);
 
         complexCardEffectResolver.Initialize(cardManager, unitLogicSystem, cardSystemController.GetCardSlotManager(),
-            cardSystemController,cardSelectionManager, cardDataControlManager,cardFlowDataManager);
+            cardSystemController, cardSelectionManager, cardDataControlManager, cardFlowDataManager);
 
-        gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager,cardLocalizationSystem,unitSpawner);
-        shopUIInstaller.Initialize(bootStrapProvider, inputManager,signalHub,shopManager,cardLocalizationSystem,cardManager,unitSpawner);
+        gameplayUIInstaller.Initialize(bootStrapProvider, signalHub, inputManager, cardManager, waveManager, cardLocalizationSystem, unitSpawner);
+        shopUIInstaller.Initialize(bootStrapProvider, inputManager, signalHub, shopManager, cardLocalizationSystem, cardManager, unitSpawner);
 
         shopManager.Initialize(cardManager);
         shopSystem.Initialize(signalHub, shopManager);
+
+        artifactSystem.Initialize(artifactManager);
 
         SetupGamePlayScene();
     }

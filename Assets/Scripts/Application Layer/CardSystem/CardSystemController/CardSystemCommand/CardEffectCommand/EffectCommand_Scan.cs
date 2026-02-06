@@ -29,7 +29,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         {
             if (availableCards.Count > selectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, selectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
+                    CardSelectionMode.GraveCardsToHand, selectCnt, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -41,14 +41,14 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer, cardSystemContextType);
+                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
             }
         }
         else
         {
             if (availableCards.Count > upgradedSelectCnt)
                 complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
+                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -60,7 +60,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, cardSystemContextType);
+                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
             }
         }
 
@@ -78,7 +78,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         }
 
         if (_cards.Count > 0)
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, cardSystemContextType);
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
     }
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {

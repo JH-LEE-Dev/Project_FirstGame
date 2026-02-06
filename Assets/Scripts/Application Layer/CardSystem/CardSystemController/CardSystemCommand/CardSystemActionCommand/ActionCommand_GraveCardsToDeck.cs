@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardLogicSystemAction/GraveCardsToDeck")]
 public class ActionCommand_GraveCardsToDeck : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
-    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_cards, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.GraveCardsToDeck;
+        gameSystemActionContext = GameSystemActionContextType.GraveCardsToDeck;
     }
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)

@@ -5,9 +5,9 @@ using UnityEngine.Pool;
 
 public class UICommandFactory_CardSystem : UICommandFactory
 {
-    public delegate void CardLogicSystemCommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
+    public delegate void CardLogicSystemCommandCreator(GameSystemActionContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
     private CardLogicSystemCommandCreator[] cardLogicSystemCreatorMap;
-    public delegate void CardDataControlSystemCommandCreator(CardSystemContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
+    public delegate void CardDataControlSystemCommandCreator(GameSystemActionContextType cardSystemContextType, ReadOnlySpan<CardDataInstance> cards);
     private CardDataControlSystemCommandCreator[] cardDataControlSystemCreatorMap;
 
     const int maxBatchPoolSize = 10;
@@ -145,7 +145,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         cardDataControlSystemCreatorMap[(int)cardDataControlSystemEventData.eventType]?.Invoke(cardDataControlSystemEventData.contextType, cards);
     }
 
-    public void CreateJob_Draw(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> drawCards)
+    public void CreateJob_Draw(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> drawCards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -170,7 +170,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_AdditionalDraw(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> drawCards)
+    public void CreateJob_AdditionalDraw(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> drawCards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -195,7 +195,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_HandToGrave(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toGraveCards)
+    public void CreateJob_HandToGrave(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toGraveCards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -220,7 +220,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_GraveToDeck(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toDeckCards)
+    public void CreateJob_GraveToDeck(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toDeckCards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -245,7 +245,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_GraveToHand(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toHandCards)
+    public void CreateJob_GraveToHand(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> toHandCards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -270,7 +270,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsToExtinction(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    public void CreateJob_CardsToExtinction(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -295,7 +295,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsToGrave(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    public void CreateJob_CardsToGrave(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -320,7 +320,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_ExtinctionToDeck(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    public void CreateJob_ExtinctionToDeck(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -345,7 +345,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsToHand(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    public void CreateJob_CardsToHand(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -370,7 +370,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsToDeck(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
+    public void CreateJob_CardsToDeck(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cardPile)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -395,7 +395,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsUpgraded(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
+    public void CreateJob_CardsUpgraded(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)
@@ -420,7 +420,7 @@ public class UICommandFactory_CardSystem : UICommandFactory
         });
     }
 
-    public void CreateJob_CardsValueModified(CardSystemContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
+    public void CreateJob_CardsValueModified(GameSystemActionContextType _cardSystemContextType, ReadOnlySpan<CardDataInstance> cards)
     {
         var batch = InitializeActionDataBatch();
         if (batch.actionList == null)

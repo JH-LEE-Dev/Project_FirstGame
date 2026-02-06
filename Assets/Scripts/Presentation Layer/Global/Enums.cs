@@ -121,3 +121,8 @@ public enum PlayerStatType
     AttackDamage,
     WeaknessTurnCount,
 }
+
+public enum CharacterType
+{
+    Rumy,
+}

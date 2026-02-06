@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17302b4916a7f71439c02767f9bda9ef, type: 3}
   m_Name: SpaceShuttle Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_SpaceShuttle
-  cardSystemActionTimingType: 4
+  gameSystemActionTimingType: 4
   effectApplyType: 3
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0

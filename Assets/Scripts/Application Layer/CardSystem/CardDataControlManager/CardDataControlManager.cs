@@ -6,7 +6,7 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
 {
     public CardSystemEventInvoker cardSystemEventInvoker;
 
-    private CardSystemContextType cardSystemContext;
+    private GameSystemActionContextType cardSystemContext;
 
     public void Initialize()
     {
@@ -40,9 +40,9 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         }
     }
 
-    public void ExecuteCommand(CardSystemCommand actionCommand,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand actionCommand,bool bUndo)
     {
-        cardSystemContext = actionCommand.GetCardSystemContext();
+        cardSystemContext = actionCommand.GetGameSystemContext();
 
         if (bUndo == false)
             actionCommand.Execute(this);
@@ -72,7 +72,7 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);
     }
 
-    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
         cardSystemContext = cardSystemContextType;
     }

@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547d15b70d1d42b4ea7bd771d59d82e5, type: 3}
   m_Name: Distortion Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Distortion
-  cardSystemActionTimingType: 1
+  gameSystemActionTimingType: 1
   effectApplyType: 0
-  nestingCnt: 0
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0
   bonusRange: 5
   bonusCrit: 5
   bonusDamage: 1

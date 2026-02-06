@@ -32,6 +32,8 @@ public class Character : Unit, ICharacterData
     /// 구현 속성 존 ------------------------------------------
     /// </summary>
 
+    public CharacterType characterType {  get; private set; }
+    public bool bCanAttack { get; private set; }
     private Vector2 mousePos;
     private Vector2 fireDir;
 
@@ -49,6 +51,7 @@ public class Character : Unit, ICharacterData
     public void Initialize_Character(InputManager _inputManager, IOrbitPathProvider _orbitPathProvider, GameServiceLocator _gameServiceLocator)
     {
         base.Initialize(_inputManager, _gameServiceLocator);
+
         orbitPathProvider = _orbitPathProvider;
 
         combatComponent = GetComponent<PCombatComponent>();
@@ -67,6 +70,10 @@ public class Character : Unit, ICharacterData
         lineRenderer = GetComponent<LineRenderer>();
 
         BindEvent();
+
+        bCanAttack = false;
+        characterType = CharacterType.Rumy;
+
         character_Visual?.Bind(this, cutsceneComponent);
     }
 
@@ -133,6 +140,11 @@ public class Character : Unit, ICharacterData
         bCanAction = false;
     }
 
+    public void SetbCanAttack(bool boolean)
+    {
+        bCanAttack = boolean;
+    }
+
     /// <summary>
     /// 구현 코드 존.--------------------------------------------
     /// </summary>
@@ -195,7 +207,13 @@ public class Character : Unit, ICharacterData
     //발사하는 함수, 공격턴에 마우스 좌클릭을 누르면 호출됨.
     private void Fire()
     {
-        if (bCanAction == true)
+        if(bCanAttack == false)
+        {
+            Debug.LogWarning("고유 카드가 장착되지 않으면 발사할 수 없습니다.");
+            return;
+        }
+
+        if (bCanAction == true && bCanAttack)
         {
             //발사가 끝나면 움직임을 제한해야 하므로 zero를 넣어줌.
             moveComponent.SetMoveDirection(Vector2.zero);

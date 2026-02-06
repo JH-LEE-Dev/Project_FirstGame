@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ae3e460417a6d4f83a01cb71ad21c5, type: 3}
   m_Name: UsedCardsRemoveFromHand Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_UsedCardsRemoveFromHand
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0

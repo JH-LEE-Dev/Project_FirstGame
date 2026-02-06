@@ -325,13 +325,13 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
-        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToExtinction)
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.UsedCardsToExtinction)
         {
             Debug.Log("사용된 카드가 소멸로 감.");
             ReturnCard(uiActionData.cards, CardReturnType.Extinction);
 
         }
-        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToExtinction)
+        else if (uiActionData.cardSystemContextType == GameSystemActionContextType.SlotCardsToExtinction)
         {
             Debug.Log("슬롯에 있던 카드가 소멸로 감.");
             ReturnStateAllCard(CardState.Equipped);
@@ -345,13 +345,13 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
-        if (uiActionData.cardSystemContextType == CardSystemContextType.UsedCardsToGrave)
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.UsedCardsToGrave)
         {
             Debug.Log("사용된 카드가 묘지로 감.");
             ReturnCard(uiActionData.cards, CardReturnType.MagicUse);
 
         }
-        else if (uiActionData.cardSystemContextType == CardSystemContextType.SlotCardsToGrave)
+        else if (uiActionData.cardSystemContextType == GameSystemActionContextType.SlotCardsToGrave)
         {
             Debug.Log("슬롯에 있던 카드가 묘지로 감.");
             ReturnStateAllCard(CardState.Equipped);
@@ -387,7 +387,7 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
-        if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToHand)
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.DuplicateCardCardsToHand)
         {
             Debug.Log("복사된 카드가 패로 감");
             // 복사된 카드가 패로 들어옴. 임시.
@@ -405,7 +405,7 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
-        if (uiActionData.cardSystemContextType == CardSystemContextType.DuplicateCardCardsToDeck)
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.DuplicateCardCardsToDeck)
         {
             Debug.Log("복사된 카드가 덱으로 감");
             //복사된 카드가 덱으로 들어옴.
@@ -430,7 +430,7 @@ public class UIView_CardSystem : UIView
         //설정할 것.
         float turnWaitTime = 0f;
 
-        if (uiActionData.cardSystemContextType == CardSystemContextType.UpgradeCardsFromHand)
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.UpgradeCardsFromHand)
         {
             Debug.Log("패에 있는 카드가 강화됨");
             handSystem.UpgradeCard(uiActionData.cards);

@@ -4,11 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardLogicSystemAction/SlotCardsToGrave")]
 public class ActionCommand_SlotCardsToGrave : CardSystemActionCommand<ICardLogicSystemActionCommandHandler>
 {
-    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_cards, _cardSystemContextType);
 
-        cardSystemContextType = CardSystemContextType.SlotCardsToGrave;
+        gameSystemActionContext = GameSystemActionContextType.SlotCardsToGrave;
     }
 
     protected override void Execute(ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler)

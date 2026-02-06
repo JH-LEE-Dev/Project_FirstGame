@@ -11,7 +11,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
     private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
 
@@ -37,7 +37,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
         if (availableCards.Count > 1)
             complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToDeck, 1, cardSystemContextType, availableCards, true, HandleCardSelectionResult);
+                CardSelectionMode.GraveCardsToDeck, 1, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
         else
         {
             using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -49,7 +49,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
             }
 
             if (availableCards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
+                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, gameSystemActionContext);
         }
 
         ResetCommandData();
@@ -66,7 +66,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
         }
 
         if (_cards.Count > 0)
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, cardSystemContextType);
+            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, gameSystemActionContext);
     }
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommand)
     {

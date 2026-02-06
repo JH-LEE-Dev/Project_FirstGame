@@ -31,7 +31,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, gameSystemActionContext);
         }
         else
         {
@@ -50,7 +50,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, gameSystemActionContext);
         }
 
         ResetCommandData();
@@ -80,7 +80,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, gameSystemActionContext);
         }
         else
         {
@@ -99,7 +99,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, cardSystemContextType);
+                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, gameSystemActionContext);
         }
     }
 }

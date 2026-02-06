@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 608e179a69808bf489443bc81777f5c6, type: 3}
   m_Name: RevertCardsUpgrade Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_RevertCardsUpgrade
-  cardSystemActionTimingType: 3
+  gameSystemActionTimingType: 3
+  effectApplyType: 0
   bPermanent: 0

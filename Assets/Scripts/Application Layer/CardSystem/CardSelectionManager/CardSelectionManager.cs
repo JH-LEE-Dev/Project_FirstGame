@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
 {
     public event Action<CardSelectionModeData> CardSelectionStartEvent;
-    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType,CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
+    public delegate void RequestCardSystemActionDelegate(CardLogicSystemActionType type, ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType,GameSystemActionTimingType cardSystemActionTimingType = GameSystemActionTimingType.Instant);
     public RequestCardSystemActionDelegate RequestCardLogicSystemActionEvent;
-    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, CardSystemContextType cardSystemContextType, CardSystemActionTimingType cardSystemActionTimingType = CardSystemActionTimingType.Instant);
+    public delegate void RequestCardDataControlSystemActionDelegate(CardDataControlSystemActionType type, ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType, GameSystemActionTimingType cardSystemActionTimingType = GameSystemActionTimingType.Instant);
     public RequestCardDataControlSystemActionDelegate RequestCardDataControlSystemActionEvent;
 
     private CardSelectionMode cardSelectionMode;
@@ -26,7 +26,7 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         CardSelectionStartEvent?.Invoke(data);
     }
 
-    public void ExecuteCommand(CardSystemCommand command,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand command,bool bUndo)
     {
         if (bUndo == false)
             command.Execute(this);
@@ -39,7 +39,7 @@ public class CardSelectionManager : ICardSelectionSystemActionCommandHandler
         onCompleteAction?.Invoke(_cards);
     }
 
-    public void SetCardSystemContext(CardSystemContextType cardSystemContextType)
+    public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
         
     }

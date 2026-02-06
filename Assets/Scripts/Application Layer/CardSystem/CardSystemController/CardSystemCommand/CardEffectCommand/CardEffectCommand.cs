@@ -2,21 +2,15 @@ using UnityEngine;
 
 public abstract class CardEffectCommand : CardSystemCommand
 {
-    [SerializeField] protected CardEffectApplyType effectApplyType;
 
     public int valueModifier = 1;
     public bool bUpgraded = false;
 
-    public virtual void InitializeCommand(int _valueModifier,bool _bUpgraded,CardSystemContextType _cardSystemContextType = CardSystemContextType.MAX)
+    public virtual void InitializeCommand(int _valueModifier,bool _bUpgraded,GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        cardSystemContextType = _cardSystemContextType;
+        gameSystemActionContext = _cardSystemContextType;
         valueModifier = _valueModifier;
         bUpgraded = _bUpgraded;
-    }
-
-    public CardEffectApplyType GetCardEffectApplyType()
-    {
-        return effectApplyType;
     }
 
     public void ResetCommandData()

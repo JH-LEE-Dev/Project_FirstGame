@@ -111,6 +111,9 @@ public class CardSystem
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
         cardSystemController.PlayerTurnFinishedEvent += PlayerTurnFinished;
 
+        cardSystemController.IsInherenceCardEquippedEvent -= IsInherenceCardEquipped;
+        cardSystemController.IsInherenceCardEquippedEvent += IsInherenceCardEquipped;
+
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent += cardSystemController.RequestCardDataControlSystemActionCommand;
     }
@@ -146,6 +149,8 @@ public class CardSystem
         cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
 
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
+
+        cardSystemController.IsInherenceCardEquippedEvent -= IsInherenceCardEquipped;
 
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
     }
@@ -199,7 +204,7 @@ public class CardSystem
         signalHub.Publish(new PlayerTurnFinishedSignal());
     }
 
-    private void CardStatusEffectDispatch(CardSystemCommand command, bool bUndo)
+    private void CardStatusEffectDispatch(GameSystemCommand command, bool bUndo)
     {
         signalHub.Publish(new CardStatusEffectCommandDispatchSignal(command,bUndo));
     }
@@ -255,5 +260,10 @@ public class CardSystem
     private void HandleShopOutput(ShopOutputSignal shopOutputSignal)
     {
         shopBehaviorHandler.AnalysisShopBehavior(shopOutputSignal.cards, shopOutputSignal.behaviorType);
+    }
+
+    private void IsInherenceCardEquipped(bool boolean)
+    {
+        signalHub.Publish(new IsInherenceCardEquippedSignal(boolean));
     }
 }

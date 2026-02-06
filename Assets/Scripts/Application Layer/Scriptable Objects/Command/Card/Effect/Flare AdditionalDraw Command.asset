@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1948dfbeb2f4f438ff2f8a116f2793, type: 3}
   m_Name: Flare AdditionalDraw Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_AdditionalDraw
-  cardSystemActionTimingType: 2
+  gameSystemActionTimingType: 2
   effectApplyType: 1
-  nestingCnt: 1
-  upgradeNestingCnt: 0
   valueModifier: 1
+  bUpgraded: 0
   drawAmount: 1
   upgradedDrawAmount: 2
