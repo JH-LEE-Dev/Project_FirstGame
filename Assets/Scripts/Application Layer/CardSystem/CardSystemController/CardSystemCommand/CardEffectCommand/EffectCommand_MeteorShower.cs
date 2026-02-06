@@ -14,11 +14,11 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
 
         if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(bonusAttack * valueModifier,gameSystemActionContext);
+            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(bonusAttack * valueModifier,gameSystemActionContext);
         }
         else
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(upgradedBonusAttack * valueModifier, gameSystemActionContext);
+            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier, gameSystemActionContext);
         }
 
         ResetCommandData();
@@ -28,11 +28,11 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
     {
         if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(-bonusAttack * valueModifier, gameSystemActionContext);
+            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(-bonusAttack * valueModifier, gameSystemActionContext);
         }
         else
         {
-            complexSystemActionCommandHandler.ApplyAttackModifier(-upgradedBonusAttack * valueModifier, gameSystemActionContext);
+            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusAttack * valueModifier, gameSystemActionContext);
         }
     }
 }

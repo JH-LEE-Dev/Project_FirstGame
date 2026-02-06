@@ -154,12 +154,12 @@ public class Bullet : MonoBehaviour
 
         int critical = UnityEngine.Random.Range(0, 100);
 
-        float totalDamage = characterStatProvider.attack;
+        float totalDamage = characterStatProvider.resultDamage;
 
         if (critical < characterStatProvider.criticalChance)
         {
             bCritical = true;
-            totalDamage = characterStatProvider.attack * 2;
+            totalDamage = characterStatProvider.totalDamage * 2 * characterStatProvider.totalDamageValue;
         }
 
         if (hit != null)

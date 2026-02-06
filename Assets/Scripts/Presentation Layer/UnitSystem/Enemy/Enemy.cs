@@ -11,6 +11,7 @@ public class Enemy : Unit, IEnemyData
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
     public IHealthComponentProvider healthComponentProvider => healthComponent;
+    public IEnemyStatProvider enemyStatProvider => statComponent;
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -23,6 +24,7 @@ public class Enemy : Unit, IEnemyData
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;
+    private EStatComponent statComponent;
     private int weaknessTurn = 0;
 
     /// <summary>
@@ -125,11 +127,11 @@ public class Enemy : Unit, IEnemyData
         if (bInitialized == false)
         {
             base.Initialize(_inputManager, _gameServiceLocator);
-            enemyTypeData = _enemyTypeData;
-
+            
             combatComponent = GetComponent<ECombatComponent>();
             moveComponent = GetComponent<EMoveComponent>();
             visualComponentCoordinator = new EVisualComponentCoordinator();
+            statComponent = GetComponent<EStatComponent>();
 
             //Visual 로직에 필요한 의존성을 추가해주면 됨.
             visualComponentCoordinator.Initialize(combatComponent, moveComponent);
@@ -144,6 +146,7 @@ public class Enemy : Unit, IEnemyData
             trailRenderer.material.color = c;
         }
 
+        enemyTypeData = _enemyTypeData;
         SetupEnemyType();
 
         bInitialized = true;
@@ -158,8 +161,10 @@ public class Enemy : Unit, IEnemyData
         moveComponent.SetImpulsePower(enemyTypeData.moveForce);
         healthComponent.SetHealth(enemyTypeData.health);
 
+        statComponent.Initialize(enemyTypeData.attack);
+
         //비주얼 관련 초기화.
-        combatComponent.Initialize(ctx, visualComponentCoordinator, enemyTypeData.attack);
+        combatComponent.Initialize(ctx, visualComponentCoordinator, statComponent);
     }
 
     public override void TakeDamage(float damage, bool bCritical)

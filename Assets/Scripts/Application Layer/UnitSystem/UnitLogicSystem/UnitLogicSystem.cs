@@ -196,6 +196,12 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         PlayerGetShieldEvent?.Invoke(bonusShield);
     }
 
+    public void ApplyAdditionalAttackModifier(float bonusDamage)
+    {
+        characterUnit.combatEffectReceiver.ApplyAdditionalAttackModifier(bonusDamage);
+        CharacterStatChanged();
+    }
+
     public void ApplyAttackModifier(float bonusDamage)
     {
         characterUnit.combatEffectReceiver.ApplyAttackModifier(bonusDamage);
@@ -268,5 +274,15 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
             characterUnit.SetbCanAttack(true);
         else
             characterUnit.SetbCanAttack(bCanAttack);
+    }
+
+    public void ApplyTotalDamageModifier(float bonusDamage)
+    {
+        characterUnit.combatEffectReceiver.ApplyTotalDamageModifier(bonusDamage);
+    }
+
+    public void ApplyTotalDamageValueModifier(float bonusValue)
+    {
+        characterUnit.combatEffectReceiver.ApplyTotalDamageValueModifier(bonusValue);
     }
 }

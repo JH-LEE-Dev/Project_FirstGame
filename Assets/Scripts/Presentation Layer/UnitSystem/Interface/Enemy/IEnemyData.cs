@@ -7,5 +7,6 @@ public interface IEnemyData
     float GetMaxHealth();
     float GetCurrentHealth();
     IHealthComponentProvider healthComponentProvider { get; }
+    IEnemyStatProvider enemyStatProvider { get; }
     event Action EnemySpawnedEvent;
 }

@@ -10,11 +10,11 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusDamage * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier);
         }
 
         ResetCommandData();
@@ -24,11 +24,11 @@ public class EffectCommand_BonusDamage : CardEffectCommand<ICardStatusEffectComm
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusDamage * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusDamage * valueModifier);
         }
     }
 }
