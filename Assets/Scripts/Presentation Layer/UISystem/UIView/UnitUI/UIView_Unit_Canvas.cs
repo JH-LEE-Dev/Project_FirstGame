@@ -79,4 +79,9 @@ public class UIView_Unit_Canvas : UIView
         ui.gameObject.SetActive(true);
         ui.Init(_target, ReturnHealthBar);
     }
+
+    public void WaveEnded()
+    {
+
+    }
 }
