@@ -52,6 +52,7 @@ MonoBehaviour:
   layer: 2
   startHidden: 1
   uiRoot: {fileID: 8322860682152375730}
+  healthPool: {fileID: 8966688582622326224}
 --- !u!1 &5663628657376993310
 GameObject:
   m_ObjectHideFlags: 0
