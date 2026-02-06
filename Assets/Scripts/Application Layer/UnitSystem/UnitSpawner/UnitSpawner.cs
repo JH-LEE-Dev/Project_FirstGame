@@ -36,7 +36,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 
     public IPlayerData playerData => playerUnit;
 
-    public List<IEnemyData> enemiesData => enemiesData;
+    public List<IEnemyData> enemiesData => enemyData;
 
     [Header("Wave Spawn Settings")]
     [SerializeField] private GameObject waveSpawnPoint;
@@ -75,7 +75,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 
     private void OnGetEnemy(Enemy enemy)
     {
-        enemy.ActivateEnemy();
+
     }
 
     private void OnReleaseEnemy(Enemy enemy)

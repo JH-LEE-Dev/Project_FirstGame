@@ -27,6 +27,9 @@ public class GameplayUIManager : UIManager
             hudUI.DataInjection(waveSystemData,unitSpawnSystemData.playerData,unitSpawnSystemData.characterData);
 
         if (view is UIView_Unit_World unitWorldUI)
-            unitWorldUI.DataInjection(unitSpawnSystemData.characterData);
+            unitWorldUI.DataInjection(unitSpawnSystemData.characterData,unitSpawnSystemData.enemiesData);
+
+        if (view is UIView_Unit_Canvas unitCanvasUI)
+            unitCanvasUI.DataInjection(unitSpawnSystemData.characterData, unitSpawnSystemData.enemiesData);
     }
 }

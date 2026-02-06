@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
-public class HealthComponent : EntityComponent, IStatusEffectReceiver
+public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthComponentProvider
 {
     public event Action UnitIsDeadEvent;
+    public event Action TakeDamageEvent;
 
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
@@ -12,7 +13,14 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
     private float prevHealth;
     private float prevShield;
 
-    bool bWeakness = false;
+    private bool bWeakness = false;
+
+    float IHealthComponentProvider.maxHealth => maxHealth;
+    float IHealthComponentProvider.currentHealth => currentHealth;
+    float IHealthComponentProvider.currentShield => currentShield;
+    float IHealthComponentProvider.prevHealth => prevHealth;
+    float IHealthComponentProvider.prevShield => prevShield;
+    bool IHealthComponentProvider.bWeakness => bWeakness;
 
     protected override void Awake()
     {
@@ -65,7 +73,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
         bWeakness = boolean;
     }
 
-    public void TakeDamange(float damage)
+    public void TakeDamage(float damage)
     {
         if(bWeakness)
         {
@@ -96,7 +104,9 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver
         {
             UnitIsDeadEvent?.Invoke();
             currentHealth = 0;
-        } 
+        }
+
+        TakeDamageEvent?.Invoke();
     }
 
     public float GetMaxHealth()
