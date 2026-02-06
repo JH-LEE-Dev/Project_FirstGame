@@ -65,6 +65,7 @@ public class GameplayUICoordinator
     public void PlayerAttacked()
     {
         unitWorldUISystem.UnEquipBulletCardForShoot();
+        unitWorldUISystem.SetAiming(false);
         gameplayUISystem.PlayerAttackFinished();
     }
 
@@ -81,6 +82,7 @@ public class GameplayUICoordinator
     public void WaveStarted(int waveIdx)
     {
         hudUISystem.WaveStarted(waveIdx);
+        unitWorldUISystem.WaveStarted();
     }
 
     public void GameStarted()
@@ -92,6 +94,7 @@ public class GameplayUICoordinator
     {
         hudUISystem.WaveEnded();
         unitCanvasUISystem.WaveEnded();
+        unitWorldUISystem.WaveEnded();
     }
 
     public void EnemyIsDead(Vector2 position)
@@ -177,5 +180,15 @@ public class GameplayUICoordinator
     public void PlayerIsDead()
     {
 
+    }
+
+    public void CardUsePhaseStarted()
+    {
+        unitWorldUISystem.SetAiming(false);
+    }
+
+    public void CharacterReadyToAttack()
+    {
+        unitWorldUISystem.SetAiming(true);
     }
 }

@@ -26,6 +26,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action CharacterStatChangedEvent;
     public event Action PlayerIsDeadEvent;
+    public event Action CharacterReadyToAttackEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -101,6 +102,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
         characterUnit.CharacterStatChangedEvent += CharacterStatChanged;
+
+        characterUnit.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
+        characterUnit.CharacterReadyToAttackEvent += CharacterReadyToAttack;
     }
 
     private void ReleaseEvent_Character()
@@ -110,6 +114,8 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.PlayerAttackEvent -= PlayerAttacked;
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
+
+        characterUnit.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
     }
 
     private void BindEvent_Enemy()
@@ -302,5 +308,10 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void PlayerMoneyUsed(int amount)
     {
         playerUnit.UseMoney(amount);
+    }
+
+    public void CharacterReadyToAttack()
+    {
+        CharacterReadyToAttackEvent?.Invoke();
     }
 }

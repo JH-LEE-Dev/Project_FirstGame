@@ -85,7 +85,15 @@ public class UIView_Unit_World : UIView
         base.OnHide();
     }
 
+    public void WaveStarted()
+    {
+        SetAiming(false);
+    }
 
+    public void WaveEnded()
+    {
+
+    }
 
 
     // For ClickCatchSystem

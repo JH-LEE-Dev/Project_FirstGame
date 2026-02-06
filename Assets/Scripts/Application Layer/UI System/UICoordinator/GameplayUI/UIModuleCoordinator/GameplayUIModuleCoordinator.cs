@@ -62,6 +62,7 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
         signalHub.Subscribe<CharacterStatChangedSignal>(CharacterStatChanged);
         signalHub.Subscribe<AdditionalEnemySpawnedSignal>(AdditionalEnemySpawned);
+        signalHub.Subscribe<CharacterReadyToAttackSignal>(CharacterReadyToAttack);
     }
 
     private void UnSubscribeEvents()
@@ -93,6 +94,7 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
         signalHub.UnSubscribe<CharacterStatChangedSignal>(CharacterStatChanged);
         signalHub.UnSubscribe<AdditionalEnemySpawnedSignal>(AdditionalEnemySpawned);
+        signalHub.UnSubscribe<CharacterReadyToAttackSignal>(CharacterReadyToAttack);
     }
 
     public void BindEvents()
@@ -178,6 +180,7 @@ public class GameplayUIModuleCoordinator
     public void CardUsePhaseStarted(CardUsePhaseStartedSignal cardDrawFinishedSignal)
     {
         cardUICoordinator.CardUsePhaseStarted();
+        gameplayUICoordinator.CardUsePhaseStarted();
     }
 
     private void UICommandComplete(int idx)
@@ -291,5 +294,10 @@ public class GameplayUIModuleCoordinator
     private void WaveEndRewardReceived(WaveCompleteRewardSignal waveCompleteRewardSignal)
     {
         gameplayUICoordinator.WaveRewardReceived(waveCompleteRewardSignal.moneyAmount);
+    }
+
+    private void CharacterReadyToAttack(CharacterReadyToAttackSignal characterReadyToAttackSignal)
+    {
+        gameplayUICoordinator.CharacterReadyToAttack();
     }
 }

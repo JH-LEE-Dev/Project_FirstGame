@@ -69,6 +69,9 @@ public class UnitSystem
 
         unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
         unitLogicSystem.PlayerIsDeadEvent += PlayerIsDead;
+
+        unitLogicSystem.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
+        unitLogicSystem.CharacterReadyToAttackEvent += CharacterReadyToAttack;
     }
 
     private void ReleaseEvents()
@@ -100,6 +103,8 @@ public class UnitSystem
         unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
 
         unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
+
+        unitLogicSystem.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
     }
 
     private void SubscribeEvents()
@@ -223,5 +228,10 @@ public class UnitSystem
     private void PlayerMoneyUsed(ShopBillingSignal shopBillingSignal)
     {
         unitLogicSystem.PlayerMoneyUsed(shopBillingSignal.usedMoney); 
+    }
+
+    private void CharacterReadyToAttack()
+    {
+        signalHub.Publish(new CharacterReadyToAttackSignal());
     }
 }

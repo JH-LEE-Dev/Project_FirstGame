@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 //Character 고유의 방식으로 각 컴포넌트와 통신해야 할 경우 이 구체 클래스에 작성.
 public class PVisualComponentCoordinator : VisualComponentCoordinator
@@ -6,6 +7,8 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
     /// <summary>
     /// 시스템 속성 존. -----------------------------------------
     /// </summary>
+
+    public event Action CharacterTurnEndCutSceneEndEvent;
 
     private PCombatComponent combatComponent;
     private PMoveComponent moveComponent;
@@ -129,6 +132,9 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
                 characterVisualComponent.StartBlink();
                 // 캐릭터의 위치를 초기화 시킴.
                 moveComponent.ResetCharacterPosition();
+
+                CharacterTurnEndCutSceneEndEvent?.Invoke();
+
                 break;
         }
     }
