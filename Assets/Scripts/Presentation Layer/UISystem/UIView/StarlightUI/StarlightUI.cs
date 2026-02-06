@@ -70,6 +70,14 @@ public class StarlightUI : MonoBehaviour
     private int hitCounter = 0;
     private Coroutine waveRoutine;
 
+    // 람다 , 캡쳐절 방지
+    private StarlightSubUI pendingArriveUI;
+    private int pendingArriveMoney;
+    private bool pendingArriveIsLast;
+    private bool pendingLastArrivedFlag;
+    private readonly Queue<(StarlightSubUI ui, int money, bool isLast)> arriveQueue = new();
+
+
     private void Awake()
     {
         for (int i = 0; i < starlightSubUIs.Count; i++)
@@ -207,17 +215,17 @@ public class StarlightUI : MonoBehaviour
         int end = Mathf.Max(0, target);
 
         starAddNumberTween = DOTween.To(
-            () => starAddDisplayed,
-            v =>
-            {
-                starAddDisplayed = v;
-                if (starlightAddCountTM && starAddTotal > 0)
-                    starlightAddCountTM.text = $"+{starAddDisplayed}";
-            },
-            end,
-            totalNumberDur
-        ).SetEase(totalNumberEase);
+            () => starAddDisplayed, SetStarAddDisplayed, end, totalNumberDur)
+                            .SetEase(totalNumberEase);
     }
+
+    private void SetStarAddDisplayed(int v)
+    {
+        starAddDisplayed = v;
+        if (starlightAddCountTM && starAddTotal > 0)
+            starlightAddCountTM.text = $"+{starAddDisplayed}";
+    }
+
 
     private void PlayStarAddColorPulse()
     {
@@ -255,7 +263,12 @@ public class StarlightUI : MonoBehaviour
             totalAddShakeRandomness,
             snapping: false,
             fadeOut: true
-        ).OnComplete(() => starAddRT.anchoredPosition = starAddBasePos);
+        ).OnComplete(OnStarAddShakeComplete);
+    }
+
+    private void OnStarAddShakeComplete()
+    {
+        if (starAddRT) starAddRT.anchoredPosition = starAddBasePos;
     }
 
     private void HideStarAdd()
@@ -327,16 +340,14 @@ public class StarlightUI : MonoBehaviour
         starBaseNumberTween?.Kill();
         int end = Mathf.Max(0, target);
 
-        starBaseNumberTween = DOTween.To(
-            () => starBaseDisplayed,
-            v =>
-            {
-                starBaseDisplayed = v;
-                if (starlightTM) starlightTM.text = starBaseDisplayed.ToString();
-            },
-            end,
-            totalNumberDur
-        ).SetEase(totalNumberEase);
+        starBaseNumberTween = DOTween.To(() => starBaseDisplayed, SetStarBaseDisplayed, end, totalNumberDur)
+                                     .SetEase(totalNumberEase);
+    }
+
+    private void SetStarBaseDisplayed(int v)
+    {
+        starBaseDisplayed = v;
+        if (starlightTM) starlightTM.text = starBaseDisplayed.ToString();
     }
 
     private void PlayStarBasePulseAndHit()
@@ -358,31 +369,27 @@ public class StarlightUI : MonoBehaviour
         List<StarlightSubUI> ordered = GetActiveUIsInPivotOrder();
         if (ordered.Count == 0) yield break;
 
-        bool lastArrived = false;
+        pendingLastArrivedFlag = false;
 
         for (int i = 0; i < ordered.Count; i++)
         {
             var ui = ordered[i];
-            int baseMoney = ui.GetBaseCount();
-
             bool isLast = (i == ordered.Count - 1);
 
             ui.WaveFoldToY0(
+                owner: this,
+                money: ui.GetBaseCount(),
+                isLast: isLast,
                 moveDur: 0.20f,
                 fadeDur: 0.20f,
-                ease: Ease.InCubic,
-                onArrive: () =>
-                {
-                    AddToStarlightAdd(baseMoney);
-                    ui.ResetAllCounts();
-                    if (isLast) lastArrived = true;
-                });
+                ease: Ease.InCubic
+            );
 
             yield return new WaitForSeconds(waveFoldGap);
         }
 
         float safety = 2.0f;
-        while (!lastArrived && safety > 0f)
+        while (!pendingLastArrivedFlag && safety > 0f)
         {
             safety -= Time.deltaTime;
             yield return null;
@@ -397,6 +404,13 @@ public class StarlightUI : MonoBehaviour
 
         waveRoutine = null;
     }
+    public void OnSubUIWaveArrive(StarlightSubUI ui, int money, bool isLast)
+    {
+        AddToStarlightAdd(money);
+        ui.ResetAllCounts();
+        if (isLast) pendingLastArrivedFlag = true;
+    }
+
 
     private List<StarlightSubUI> GetActiveUIsInPivotOrder()
     {
