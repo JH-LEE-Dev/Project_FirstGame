@@ -169,6 +169,7 @@ public class UnitSystem
     private void EnemyIsKilled(IEnemyData _enemyData)
     {
         signalHub.Publish(new EnemyIsKilledSignal(_enemyData));
+        PlayerEarnMoney(_enemyData.enemyTypeData.rewardWhenKilled);
     }
 
     public void Release()
@@ -209,5 +210,10 @@ public class UnitSystem
     {
         unitSpawner.ReleaseAllEnemy();
         signalHub.Publish(new PlayerIsDeadSignal());
+    }
+
+    private void PlayerEarnMoney(int amount)
+    {
+        signalHub.Publish(new PlayerEarnMoneySignal(amount));
     }
 }

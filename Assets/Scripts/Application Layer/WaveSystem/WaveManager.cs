@@ -19,6 +19,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     private int numberOfEnemiesToKill = 0;
     private int spawnEnemyCnt = 0;
     private int currentEnemyThreshold = 0;
+    private int currentWaveReward = 0;
     private bool bIsWaveEnded = false;
 
     bool bDontProceedWave = false;
@@ -80,6 +81,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
             remainkilledEnemyCnt = curWaveData.numberOfEnemiesToKill;
             currentEnemyThreshold = curWaveData.currentEnemyThreshold;
             spawnEnemyCnt = curWaveData.spawnEnemyCnt;
+            currentWaveReward = curWaveData.waveRewardMoneyAmount;
             signalHub.Publish(new SpawnWaveSignal(currentEnemyCount));
         }
     }
@@ -126,6 +128,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         {
             bIsWaveEnded = true;
             signalHub.Publish(new AllEnemyDeadSignal());
+            signalHub.Publish(new WaveCompleteRewardSignal(spawnEnemyCnt));
             return;
         }
 

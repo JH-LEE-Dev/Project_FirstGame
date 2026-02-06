@@ -22,7 +22,7 @@ public class Enemy : Unit, IEnemyData
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
     [SerializeField] private LayerMask gravityLayerMask;
-    private EnemyTypeData enemyTypeData;
+    public EnemyTypeData enemyTypeData {  get; private set; }
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;

@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Audio;
-
 [System.Serializable]
 public class WaveData
 {
@@ -10,4 +6,5 @@ public class WaveData
     public int InitialEnemyCnt = 0;
     public int currentEnemyThreshold = 0;
     public int numberOfEnemiesToKill = 0;
+    public int waveRewardMoneyAmount = 1000;
 }

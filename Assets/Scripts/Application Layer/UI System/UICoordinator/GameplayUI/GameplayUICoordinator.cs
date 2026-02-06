@@ -148,6 +148,16 @@ public class GameplayUICoordinator
         hudUISystem.EnemyIsKilled(_enemyData.GetTransform().position);
     }
 
+    public void PlayerEarnMoney(int amount)
+    {
+        hudUISystem.PlayerEarnMoney(amount);
+    }
+
+    public void WaveRewardReceived(int amount)
+    {
+        hudUISystem.WaveRewardRecieved(amount);
+    }
+
     public void ResetPlayerShield()
     {
         hudUISystem.ResetPlayerShield();

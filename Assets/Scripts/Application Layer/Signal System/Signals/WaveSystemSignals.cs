@@ -14,5 +14,13 @@ namespace WaveSystemSignals
     public struct WaveMoveEndSignal  { }
     public struct WaveEndSignal  { }
     public struct AllEnemyDeadSignal  { }
+    public struct WaveCompleteRewardSignal
+    {
+        public int moneyAmount;
+        public WaveCompleteRewardSignal(int _moneyAmount)
+        {
+            moneyAmount = _moneyAmount;
+        }
+    }
 }
 

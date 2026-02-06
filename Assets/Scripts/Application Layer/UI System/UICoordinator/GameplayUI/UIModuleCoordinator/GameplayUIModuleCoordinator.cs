@@ -40,6 +40,8 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.Subscribe<PlayerIsDeadSignal>(PlayerIsDead);
+        signalHub.Subscribe<WaveCompleteRewardSignal>(WaveEndRewardReceived);
+        signalHub.Subscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
 
         //For GameplayUICoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -73,6 +75,8 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.UnSubscribe<PlayerIsDeadSignal>(PlayerIsDead);
+        signalHub.UnSubscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
+        signalHub.UnSubscribe<WaveCompleteRewardSignal>(WaveEndRewardReceived);
 
         //For GameplayUICoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
@@ -280,5 +284,15 @@ public class GameplayUIModuleCoordinator
     private void PlayerIsDead(PlayerIsDeadSignal playerIsDeadSignal)
     {
         gameplayUICoordinator.PlayerIsDead();
+    }
+
+    private void PlayerEarnMoney(PlayerEarnMoneySignal playerEarnMoneySignal)
+    {
+        gameplayUICoordinator.PlayerEarnMoney(playerEarnMoneySignal.amount);
+    }
+
+    private void WaveEndRewardReceived(WaveCompleteRewardSignal waveCompleteRewardSignal)
+    {
+        gameplayUICoordinator.WaveRewardReceived(waveCompleteRewardSignal.moneyAmount);
     }
 }

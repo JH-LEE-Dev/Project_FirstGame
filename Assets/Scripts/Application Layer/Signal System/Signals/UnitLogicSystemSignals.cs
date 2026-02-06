@@ -81,4 +81,12 @@ namespace UnitLogicSystemSignals
         }
     }
     public struct PlayerIsDeadSignal { }
+    public struct PlayerEarnMoneySignal 
+    {
+        public int amount;
+        public PlayerEarnMoneySignal(int _amount)
+        {
+            amount = _amount;
+        }
+    }
 }

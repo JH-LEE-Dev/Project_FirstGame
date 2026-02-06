@@ -9,6 +9,7 @@ public class UIView_Shop : UIView
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
     public event Action<List<ICardDataInstanceProvider>,ShopBehaviorType> ShopUIOutputEvent;
+    public event Action<int> ShopBillingEvent;
 
     //외부 의존성
     private IShopSystemData shopSystemData;
