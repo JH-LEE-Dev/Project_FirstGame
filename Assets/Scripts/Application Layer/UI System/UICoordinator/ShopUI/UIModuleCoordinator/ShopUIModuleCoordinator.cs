@@ -42,6 +42,9 @@ public class ShopUIModuleCoordinator
 
         shopUICoordinator.ShopOutputEvent -= ShopOutput;
         shopUICoordinator.ShopOutputEvent += ShopOutput;
+
+        shopUICoordinator.ShopBillingEvent -= ShopBilling;
+        shopUICoordinator.ShopBillingEvent += ShopBilling;
     }
 
     private void ReleaseEvents()
@@ -49,6 +52,8 @@ public class ShopUIModuleCoordinator
         shopUICoordinator.ShopIsClosedEvent -= ShopIsClosed;
 
         shopUICoordinator.CardPackRerollEvent -= CardPackReroll;
+
+        shopUICoordinator.ShopBillingEvent -= ShopBilling;
     }
 
     private void ShopOpened(ShopIsReadySignal shopOpenedSignal)
@@ -69,5 +74,10 @@ public class ShopUIModuleCoordinator
     private void ShopOutput(List<ICardDataInstanceProvider> _cards,ShopBehaviorType _shopBehaviorType)
     {
         signalHub.Publish(new ShopOutputSignal(_cards,_shopBehaviorType));
+    }
+
+    private void ShopBilling(int usedMoney)
+    {
+        signalHub.Publish(new ShopBillingSignal(usedMoney));
     }
 }

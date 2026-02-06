@@ -107,12 +107,15 @@ public class UIView_HUD : UIView
 
     public void WaveEnded()
     {
+        WaveAdjustment();
         waveStateDeclareText.gameObject.SetActive(true);
         waveStateDeclareText.text = "Prepare For Next Wave!!";
     }
 
     public void PlayerTurnStarted()
     {
+        TurnAdjustment();
+
         waveStateDeclareText?.gameObject.SetActive(false); 
         waveText.text = "Wave : " + (0 + 1).ToString();
         turnIndicatorText.text = "PlayerTurn";
@@ -135,6 +138,17 @@ public class UIView_HUD : UIView
     public void EnemyIsKilled(Vector2 deadPosition)
     {
         Target_BarUpdate(deadPosition);
+    }
+
+    public void PlayerEarnMoney(int amount)
+    {
+        ActivateSubUI(StarLightAcquisitionType.Kill, amount);
+        Debug.Log(amount);
+    }
+
+    public void WaveRewardRecieved(int amount)
+    {
+        ActivateSubUI(StarLightAcquisitionType.OverKill, amount);
     }
 
     public void PlayerGetShield(float amount)

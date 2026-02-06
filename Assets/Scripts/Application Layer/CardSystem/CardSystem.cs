@@ -1,4 +1,4 @@
-using CardEffectSystemSignal;
+using EffectSystemSignal;
 using CardSystemSignals;
 using GameControlSignals;
 using System;
@@ -48,6 +48,7 @@ public class CardSystem
         signalHub.Subscribe<WaveEndSignal>(WaveEnd);
         signalHub.Subscribe<UICardSelectionEndSignal>(CardSelectionEnd);
         signalHub.Subscribe<ShopOutputSignal>(HandleShopOutput);
+        signalHub.Subscribe<ArtifactEffectCommandDispatchSignal>(ArtifactCommandReceived);
     }
 
     private void UnSubscribeEvents()
@@ -62,6 +63,7 @@ public class CardSystem
         signalHub.UnSubscribe<WaveEndSignal>(WaveEnd);
         signalHub.UnSubscribe<UICardSelectionEndSignal>(CardSelectionEnd);
         signalHub.UnSubscribe<ShopOutputSignal>(HandleShopOutput);
+        signalHub.UnSubscribe<ArtifactEffectCommandDispatchSignal>(ArtifactCommandReceived);
     }
 
     private void BindEvents()
@@ -69,14 +71,14 @@ public class CardSystem
         cardManager.cardSystemEventInvoker.CardManagerEvent -= PublishCardLogicSystemEvent;
         cardManager.cardSystemEventInvoker.CardManagerEvent += PublishCardLogicSystemEvent;
 
-        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent -= PublishCardDataControlSystemEvent;
-        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent += PublishCardDataControlSystemEvent;
-
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
         cardSystemController.CardDrawStartEvent += CardDrawStarted;
 
         cardSystemController.StartCardUsePhaseEvent -= CardUsePhaseStarted;
         cardSystemController.StartCardUsePhaseEvent += CardUsePhaseStarted;
+
+        cardSystemController.StartAfterCardUsePhaseEvent -= AfterCardUsePhaseStarted;
+        cardSystemController.StartAfterCardUsePhaseEvent += AfterCardUsePhaseStarted;
 
         cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
         cardSystemController.CardLogicSystemCommandDispatchEvent += cardManager.ExecuteCommand;
@@ -86,6 +88,9 @@ public class CardSystem
 
         cardSystemController.CardStatusCommandDispatchEvent -= CardStatusEffectDispatch;
         cardSystemController.CardStatusCommandDispatchEvent += CardStatusEffectDispatch;
+
+        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent -= PublishCardDataControlSystemEvent;
+        cardDataControlManager.cardSystemEventInvoker.CardDataControlManagerEvent += PublishCardDataControlSystemEvent;
 
         cardSystemController.CardSelectionSystemCommandDispatchEvent -= cardSelectionManager.ExecuteCommand;
         cardSystemController.CardSelectionSystemCommandDispatchEvent += cardSelectionManager.ExecuteCommand;
@@ -111,9 +116,6 @@ public class CardSystem
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
         cardSystemController.PlayerTurnFinishedEvent += PlayerTurnFinished;
 
-        cardSystemController.IsInherenceCardEquippedEvent -= IsInherenceCardEquipped;
-        cardSystemController.IsInherenceCardEquippedEvent += IsInherenceCardEquipped;
-
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent += cardSystemController.RequestCardDataControlSystemActionCommand;
     }
@@ -127,6 +129,8 @@ public class CardSystem
         cardSystemController.CardDrawStartEvent -= CardDrawStarted;
 
         cardSystemController.StartCardUsePhaseEvent -= CardUsePhaseStarted;
+
+        cardSystemController.StartAfterCardUsePhaseEvent -= AfterCardUsePhaseStarted;
 
         cardSystemController.CardLogicSystemCommandDispatchEvent -= cardManager.ExecuteCommand;
 
@@ -149,8 +153,6 @@ public class CardSystem
         cardSelectionManager.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
 
         cardSystemController.PlayerTurnFinishedEvent -= PlayerTurnFinished;
-
-        cardSystemController.IsInherenceCardEquippedEvent -= IsInherenceCardEquipped;
 
         shopBehaviorHandler.RequestCardDataControlSystemActionEvent -= cardSystemController.RequestCardDataControlSystemActionCommand;
     }
@@ -196,7 +198,12 @@ public class CardSystem
 
     private void CardUsePhaseStarted()
     {
-        signalHub.Publish(new CardUsePhaseStarted());
+        signalHub.Publish(new CardUsePhaseStartedSignal());
+    }
+
+    private void AfterCardUsePhaseStarted()
+    {
+        signalHub.Publish(new AfterCardUsePhaseStartedSignal());
     }
 
     private void PlayerTurnFinished()
@@ -262,8 +269,28 @@ public class CardSystem
         shopBehaviorHandler.AnalysisShopBehavior(shopOutputSignal.cards, shopOutputSignal.behaviorType);
     }
 
-    private void IsInherenceCardEquipped(bool boolean)
+    private void ArtifactCommandReceived(ArtifactEffectCommandDispatchSignal artifactEffectCommandDispatchSignal)
     {
-        signalHub.Publish(new IsInherenceCardEquippedSignal(boolean));
+        var command = artifactEffectCommandDispatchSignal.command;
+        var bUndo = artifactEffectCommandDispatchSignal.bUndo;
+
+        switch (artifactEffectCommandDispatchSignal.type)
+        {
+            case EffectApplyType.System:
+                cardManager.ExecuteCommand(command, bUndo);
+                break;
+            case EffectApplyType.SlotSystem:
+                cardSystemController.GetCardSlotManager().ExecuteCommand(command, bUndo);
+                break;
+            case EffectApplyType.SelectionSystem:
+                cardSelectionManager.ExecuteCommand(command, bUndo);
+                break;
+            case EffectApplyType.ComplexSystem:
+                complexCardEffectResolver.ExecuteCommand(command, bUndo);
+                break;
+            case EffectApplyType.DataControlSystem:
+                cardDataControlManager.ExecuteCommand(command, bUndo);
+                break;
+        }
     }
 }

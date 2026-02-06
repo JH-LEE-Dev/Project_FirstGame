@@ -9,6 +9,7 @@ public class UIView_Shop : UIView
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
     public event Action<List<ICardDataInstanceProvider>,ShopBehaviorType> ShopUIOutputEvent;
+    public event Action<int> ShopBillingEvent;
 
     //외부 의존성
     private IShopSystemData shopSystemData;
@@ -18,13 +19,18 @@ public class UIView_Shop : UIView
     IReadOnlyList<ICardDataInstanceProvider> deckCards;
     List<ICardDataInstanceProvider> possibleList = new(50);
 
+    [Header("Starlight Settings")]
+    [SerializeField] private int pickupPrice = 10;
+    [SerializeField] private int upgradePrice = 20;
+    [SerializeField] private int deletePrice = 20;
+    [SerializeField] private string failPayment = "보유 중인 스타라이트가 부족합니다.";
+
     [Header("Buttons")]
     [SerializeField] private Button pickUpCardButton;
     [SerializeField] private Button enforceCardButton;
     [SerializeField] private Button deleteCardButton;
     [SerializeField] private Button viewDeckButton;
     [SerializeField] private Button nextStageButton;
-
 
     private int pickUpCardCount = 2;
     private bool pickUpCardForce = false;
@@ -55,7 +61,13 @@ public class UIView_Shop : UIView
 
     ///////// Basic Values
     private Vector3 pannelCardScale = new Vector3(5f, 5f, 1f);
+    private int currentPrice = 0;
+    private int pickupPayCnt = 1;
 
+    private void OnEnable()
+    {
+        
+    }
 
     public override void Initialize(UIViewContext ctx)
     {
@@ -102,8 +114,7 @@ public class UIView_Shop : UIView
 
     public void OpenShop()
     {
-
-
+        pickupPayCnt = 1;
     }
 
     public void PlayerSpawned(IPlayerData _playerData)
@@ -111,10 +122,8 @@ public class UIView_Shop : UIView
         playerData = _playerData;
     }
 
+    #region CardPannel & Deck System
 
-
-    /////////////// Pannel & Deck
-    
     private void CheckUpgradeCardList()
     {
         if (ShopBehaviorType.Upgrade == prevSelectMode)
@@ -187,19 +196,9 @@ public class UIView_Shop : UIView
         return true;
     }
 
-    public void DeactivatePannel()
-    {
+    #endregion
 
-    }
-
-    [Button]
-    private void TestCall_PannelSelectMode()
-    {
-        StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, 2, true);
-    }
-
-
-    ////////////// PoolingCard
+    #region Pooling Card System
 
     public ShopCardInstance RentCard(ICardDataInstanceProvider data, Transform attachTransform, Vector3 cardSize)
     {
@@ -236,8 +235,9 @@ public class UIView_Shop : UIView
         shopPoolingSystem?.ReturnCard(card);
     }
 
+    #endregion
 
-    ////////////// SelectSystem
+    #region SelectSystem
 
     public void ToggleSelect(ShopCardInstance card)
     {
@@ -249,13 +249,17 @@ public class UIView_Shop : UIView
         return selectSystem.SelectComplete();
     }
 
+    #endregion
 
-
-    ////////////// Click
+    #region Click Events
     ///
     private void OnClick_PickUpCard()
     {
-        Debug.Log("[Shop] PickUpCard clicked");
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), pickupPrice * pickupPayCnt))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
 
         CardPackRerollEvent?.Invoke();
         selectSystem?.SetSelectMode(ShopBehaviorType.PickUp, pickUpCardCount, pickUpCardForce
@@ -271,7 +275,12 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        Debug.Log("[Shop] EnforceCard clicked");
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), upgradePrice))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
+
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Upgrade, enforceCardCount, true))
         {
             // 강화 카드가 더 이상 존재하지 않을 경우
@@ -286,7 +295,12 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        Debug.Log("[Shop] DeleteCard clicked");
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), deletePrice))
+        {
+            warningUI?.Play(failPayment);
+            return;
+        }
+
         if (!StartCardSelectModefromPannel(ShopBehaviorType.Delete, deleteCardCount, true))
         {
             // 삭제 카드가 더 이상 존재하지 않을 경우
@@ -306,6 +320,7 @@ public class UIView_Shop : UIView
         Debug.Log("[Shop] NextStage clicked");
 
         ShopIsClosedEvent?.Invoke();
+        warningUI.Allkill();
     }
 
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
@@ -314,15 +329,40 @@ public class UIView_Shop : UIView
             prevSelectMode = ShopBehaviorType.None;
 
         ShopUIOutputEvent?.Invoke(cards, type);
+
+        if (ShopBehaviorType.PickUp != type)
+            Payment(type);
     }
 
-    // For PickUpCard
+    #endregion
 
-    // For EnforceCard
+    #region Payment Functions
 
-    // For DeleteCard
+    private bool CheckPayment(int _haveCoin, int _needCoin) => _needCoin <= _haveCoin;
 
-    // For ViewDeck
+    public void Payment(ShopBehaviorType type)
+    {
+        switch(type)
+        {
+            case ShopBehaviorType.PickUp:
+                currentPrice = pickupPrice * pickupPayCnt++;
+                break;
 
-    // For NextStage
+            case ShopBehaviorType.Upgrade:
+                currentPrice = upgradePrice;
+                upgradePrice *= 2;
+                break;
+
+            case ShopBehaviorType.Delete:
+                currentPrice = deletePrice;
+                deletePrice *= 2;
+                break;
+        }
+
+        ShopBillingEvent.Invoke(currentPrice);
+        Debug.Log("지불:"+currentPrice);
+        Debug.Log(playerData.GetPlayerCurrentMoney());
+    }
+
+    #endregion
 }

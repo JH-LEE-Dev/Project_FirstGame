@@ -91,6 +91,7 @@ public class GameplayUICoordinator
     public void WaveEnded()
     {
         hudUISystem.WaveEnded();
+        unitCanvasUISystem.WaveEnded();
     }
 
     public void EnemyIsDead(Vector2 position)
@@ -148,6 +149,16 @@ public class GameplayUICoordinator
         hudUISystem.EnemyIsKilled(_enemyData.GetTransform().position);
     }
 
+    public void PlayerEarnMoney(int amount)
+    {
+        hudUISystem.PlayerEarnMoney(amount);
+    }
+
+    public void WaveRewardReceived(int amount)
+    {
+        hudUISystem.WaveRewardRecieved(amount);
+    }
+
     public void ResetPlayerShield()
     {
         hudUISystem.ResetPlayerShield();
@@ -161,5 +172,10 @@ public class GameplayUICoordinator
     public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> enemyDatas)
     {
         unitCanvasUISystem.AdditionalEnemySpawned(enemyDatas);
+    }
+
+    public void PlayerIsDead()
+    {
+
     }
 }

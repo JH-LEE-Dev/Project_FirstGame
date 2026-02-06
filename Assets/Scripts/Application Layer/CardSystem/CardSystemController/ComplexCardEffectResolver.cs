@@ -14,7 +14,7 @@ using UnityEngine;
 public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
 {
     private ICardLogicSystemActionCommandHandler cardSystemActionCommandHandler;
-    private ICardStatusEffectCommandHandler cardStatusEffectCommandHandler;
+    private IStatusEffectCommandHandler cardStatusEffectCommandHandler;
     private ICardSlotSystemActionCommandHandler slotSystemActionCommandHandler;
     private ICardSystemControlActionCommandHandler cardSystemControlActionCommandHandler;
     private ICardSelectionSystemActionCommandHandler cardSelectionSystemActionCommandHandler;
@@ -22,7 +22,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     private ICardFlowDataActionCommandHandler cardFlowDataActionCommandHandler;
 
     public void Initialize(ICardLogicSystemActionCommandHandler _cardSystemActionCommandHandler,
-        ICardStatusEffectCommandHandler _cardStatusEffectCommandHandler,
+        IStatusEffectCommandHandler _cardStatusEffectCommandHandler,
         ICardSlotSystemActionCommandHandler _cardSlotSystemActionCommandHandler,
         ICardSystemControlActionCommandHandler _cardSystemControlActionCommandHandler,
         ICardSelectionSystemActionCommandHandler _cardSelectionSystemActionCommandHandler,
@@ -83,7 +83,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(attack);
     }
 
-    public void ApplyAttackModifier(int attack, GameSystemActionContextType cardSystemContextType)
+    public void ApplyAttackModifier(float attack, GameSystemActionContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
     }
@@ -209,5 +209,20 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void ApplyTotalDamageValueModifier(float bonusValue)
     {
         cardStatusEffectCommandHandler.ApplyTotalDamageValueModifier(bonusValue);
+    }
+
+    public void UndoTotalDamageModifier(float bonusDamage)
+    {
+        cardStatusEffectCommandHandler.UndoTotalDamageModifier(bonusDamage);
+    }
+
+    public void SetCharacterCanAttackState(bool boolean)
+    {
+        cardStatusEffectCommandHandler.SetCharacterCanAttackState(boolean);
+    }
+
+    public bool IsInherenceCardEquipped()
+    {
+        return slotSystemActionCommandHandler.IsInherenceCardEquipped();
     }
 }

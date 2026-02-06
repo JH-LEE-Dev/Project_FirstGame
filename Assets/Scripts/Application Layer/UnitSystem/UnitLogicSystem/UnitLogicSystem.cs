@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using CardEffectSystemSignal;
+using EffectSystemSignal;
 using GameControlSignals;
 using CardSystemSignals;
 using WaveSystemSignals;
@@ -11,7 +11,7 @@ using CardSystemUISignal;
 
 //캐릭터를 상위 모듈에 노출할 때 인터페이스로 묶어서 노출할 것. 이때 CombatReceiver도 private으로 해서 
 //캐릭터를 Facade로 사용할 것.
-public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
+public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 {
     public event Action<IEnemyData> EnemyIsKilledEvent;
     public event Action EnemySpawnedEvent;
@@ -25,6 +25,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public event Action<float> PlayerGetHPEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action CharacterStatChangedEvent;
+    public event Action PlayerIsDeadEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -38,9 +39,6 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     public void CharacterCreated(Character _character)
     {
         characterUnit = _character;
-
-        if (characterUnit.characterType == CharacterType.Rumy)
-            characterUnit.SetbCanAttack(true);
 
         BindEvent_Character();
     }
@@ -81,11 +79,16 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
     {
         playerUnit.TakeDamageEvent -= PlayerTakeDamage;
         playerUnit.TakeDamageEvent += PlayerTakeDamage;
+
+        playerUnit.PlayerDeadEvent -= PlayerIsDead;
+        playerUnit.PlayerDeadEvent += PlayerIsDead;
     }
 
     private void ReleaseEvent_Player()
     {
         playerUnit.TakeDamageEvent -= PlayerTakeDamage;
+
+        playerUnit.PlayerDeadEvent -= PlayerIsDead;
     }
 
     private void BindEvent_Character()
@@ -170,7 +173,7 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
         }
     }
 
-    public void CardUsePhaseStarted(CardUsePhaseStarted cardUsePhaseStarted)
+    public void CardUsePhaseStarted(CardUsePhaseStartedSignal cardUsePhaseStarted)
     {
         characterUnit.PlayerTurnStarted();
     }
@@ -270,19 +273,34 @@ public class UnitLogicSystem : MonoBehaviour, ICardStatusEffectCommandHandler
 
     public void SetCharacterCanAttackState(bool bCanAttack)
     {
-        if (characterUnit.characterType == CharacterType.Rumy)
-            characterUnit.SetbCanAttack(true);
-        else
-            characterUnit.SetbCanAttack(bCanAttack);
+        characterUnit.SetbCanAttack(bCanAttack);
     }
 
     public void ApplyTotalDamageModifier(float bonusDamage)
     {
         characterUnit.combatEffectReceiver.ApplyTotalDamageModifier(bonusDamage);
+        CharacterStatChanged();
     }
 
     public void ApplyTotalDamageValueModifier(float bonusValue)
     {
         characterUnit.combatEffectReceiver.ApplyTotalDamageValueModifier(bonusValue);
+        CharacterStatChanged();
+    }
+
+    public void UndoTotalDamageModifier(float bonusDamage)
+    {
+        characterUnit.combatEffectReceiver.UndoTotalDamageModifier(bonusDamage);
+        CharacterStatChanged();
+    }
+
+    private void PlayerIsDead()
+    {
+        PlayerIsDeadEvent?.Invoke();
+    }
+
+    public void PlayerMoneyUsed(int amount)
+    {
+        playerUnit.UseMoney(amount);
     }
 }

@@ -1,9 +1,11 @@
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 public class Earth : MonoBehaviour, IDamageable, IPlayerData
 {
     public event Action<float> TakeDamageEvent;
+    public event Action PlayerDeadEvent;
 
     public IStatusEffectReceiver statusEffectReceiver => healthComponent;
 
@@ -13,7 +15,36 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
 
     private void Awake()
     {
+
+    }
+
+    public void Initialize()
+    {
         healthComponent = GetComponent<HealthComponent>();
+
+        BindEvents();
+    }
+
+    private void BindEvents()
+    {
+        healthComponent.UnitIsDeadEvent -= PlayerIsDead;
+        healthComponent.UnitIsDeadEvent += PlayerIsDead;
+    }
+
+    private void ReleaseEvents()
+    {
+        healthComponent.UnitIsDeadEvent -= PlayerIsDead;
+    }
+
+    private void PlayerIsDead()
+    {
+        PlayerDeadEvent?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        TakeDamageEvent = null;
+        ReleaseEvents();
     }
 
     public void TakeDamage(float damage, bool bCritical)
@@ -40,11 +71,6 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     public float GetCurrentShield()
     {
         return healthComponent.GetCurrentShield();
-    }
-
-    private void OnDestroy()
-    {
-        TakeDamageEvent = null;
     }
 
     public float GetPrevHealth()
@@ -80,6 +106,11 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     public void EarnMoney(int amount)
     {
         money += amount;
+    }
+
+    public void UseMoney(int amount)
+    {
+        money -= amount;
     }
 
     public int GetPlayerCurrentMoney()

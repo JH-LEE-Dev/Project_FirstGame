@@ -6,7 +6,6 @@ using static UnityEngine.Rendering.GPUSort;
 public class CardSlotManager : ICardSlotSystemActionCommandHandler
 {
     public event Action<int> CardSlotCntChangedEvent;
-    public event Action<bool> InherenceCardEquippedEvent;
 
     private const int defaultSlotCnt = 0;
     private const int maxSlotCnt = 5;
@@ -47,8 +46,6 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             }
 
             bInherenceCardEquipped = true;
-
-            InherenceCardEquippedEvent?.Invoke(true);
         }
 
         for (int i = 0; i < bulletCardSlotCnt; ++i)
@@ -112,7 +109,6 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
         if (bulletCardSlot[slotIdx][0].GetCardData().cardType == CardType.Inherence)
         {
-            InherenceCardEquippedEvent?.Invoke(false);
             bInherenceCardEquipped = false;
         }
 
@@ -213,5 +209,10 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public void SetCardSystemContext(GameSystemActionContextType cardSystemContextType)
     {
 
+    }
+
+    public bool IsInherenceCardEquipped()
+    {
+        return bInherenceCardEquipped;
     }
 }

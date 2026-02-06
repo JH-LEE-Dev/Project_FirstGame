@@ -3,7 +3,7 @@ using WaveSystemSignals;
 
 public class GS_WaveEnded : GameState
 {
-    private float nextWaveDelay =1f;
+    private float nextWaveDelay =3f;
 
     public override void Enter()
     {

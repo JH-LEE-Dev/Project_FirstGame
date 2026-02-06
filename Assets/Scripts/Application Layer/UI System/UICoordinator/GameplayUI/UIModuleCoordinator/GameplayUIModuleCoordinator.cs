@@ -34,16 +34,19 @@ public class GameplayUIModuleCoordinator
         //For CardUICoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.Subscribe<CardUsePhaseStarted>(CardUsePhaseStarted);
+        signalHub.Subscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
         signalHub.Subscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
         signalHub.Subscribe<CardUsedSignal>(CardUsed);
         signalHub.Subscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.Subscribe<PlayerIsDeadSignal>(PlayerIsDead);
+        signalHub.Subscribe<WaveCompleteRewardSignal>(WaveEndRewardReceived);
+        signalHub.Subscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
 
         //For GameplayUICoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.Subscribe<CardUsePhaseStarted>(CardUsePhaseStarted);
+        signalHub.Subscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
         signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.Subscribe<PlayerGetShieldSignal>(PlayerGetShield);
@@ -66,16 +69,16 @@ public class GameplayUIModuleCoordinator
         //For CardUICoordinator
         signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardUsePhaseStarted>(CardUsePhaseStarted);
+        signalHub.UnSubscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
         signalHub.UnSubscribe<CardSystem_ActionDispatchSignal>(RecieveUIJob);
         signalHub.UnSubscribe<CardUsedSignal>(CardUsed);
         signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.UnSubscribe<PlayerIsDeadSignal>(PlayerIsDead);
+        signalHub.UnSubscribe<WaveCompleteRewardSignal>(WaveEndRewardReceived);
+        signalHub.UnSubscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
 
         //For GameplayUICoordinator
-        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
-        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardUsePhaseStarted>(CardUsePhaseStarted);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
@@ -172,7 +175,7 @@ public class GameplayUIModuleCoordinator
         cardUICoordinator.RecieveUIJob(cardSystem_JobDispatchSignal.actionDataBatch);
     }
 
-    public void CardUsePhaseStarted(CardUsePhaseStarted cardDrawFinishedSignal)
+    public void CardUsePhaseStarted(CardUsePhaseStartedSignal cardDrawFinishedSignal)
     {
         cardUICoordinator.CardUsePhaseStarted();
     }
@@ -273,5 +276,20 @@ public class GameplayUIModuleCoordinator
     private void AdditionalEnemySpawned(AdditionalEnemySpawnedSignal additionalEnemySpawnedSignal)
     {
         gameplayUICoordinator.AdditionalEnemySpawned(additionalEnemySpawnedSignal.enemyData);
+    }
+
+    private void PlayerIsDead(PlayerIsDeadSignal playerIsDeadSignal)
+    {
+        gameplayUICoordinator.PlayerIsDead();
+    }
+
+    private void PlayerEarnMoney(PlayerEarnMoneySignal playerEarnMoneySignal)
+    {
+        gameplayUICoordinator.PlayerEarnMoney(playerEarnMoneySignal.amount);
+    }
+
+    private void WaveEndRewardReceived(WaveCompleteRewardSignal waveCompleteRewardSignal)
+    {
+        gameplayUICoordinator.WaveRewardReceived(waveCompleteRewardSignal.moneyAmount);
     }
 }

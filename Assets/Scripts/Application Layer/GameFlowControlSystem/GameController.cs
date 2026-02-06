@@ -1,21 +1,25 @@
-using GameControlSignals;
-using System;
+using System.Collections;
+using UnitLogicSystemSignals;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using WaveSystemSignals;
 
 public class GameController : MonoBehaviour
 {
     //외부 의존성.
     private SignalHub signalHub;
+    private IBootStrapProvider bootStrapProvider;
 
     //내부 의존성
     private GameStateMachine gameStateMachine;
 
-    public void Initialize(SignalHub _signalHub)
+
+    private float gameEndDelay = 2f;
+
+    public void Initialize(SignalHub _signalHub,IBootStrapProvider _bootStrapProvider)
     {
         signalHub = _signalHub; 
         gameStateMachine = new GameStateMachine();
+        bootStrapProvider =_bootStrapProvider;
 
         SetupGameState();
 
@@ -25,11 +29,13 @@ public class GameController : MonoBehaviour
     private void SubscribeEvents()
     {
         signalHub.Subscribe<WaveMoveEndSignal>(ChangeGameStateToPlayerTurn);
+        signalHub.Subscribe<PlayerIsDeadSignal>(PlayerIsDead);
     }
 
     private void UnSubscribeEvents()
     {
         signalHub.UnSubscribe<WaveMoveEndSignal>(ChangeGameStateToPlayerTurn);
+        signalHub.UnSubscribe<PlayerIsDeadSignal>(PlayerIsDead);
     }
 
     public void SetupGameController()
@@ -117,5 +123,17 @@ public class GameController : MonoBehaviour
     private void ReleaseAllState()
     {
 
+    }
+
+    private void PlayerIsDead(PlayerIsDeadSignal playerIsDeadSignal)
+    {
+        StartCoroutine(GameEnd());
+    }
+
+    private IEnumerator GameEnd()
+    {
+        yield return new WaitForSeconds(gameEndDelay);
+
+        bootStrapProvider.GoToMainMenuScene();
     }
 }

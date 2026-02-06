@@ -16,5 +16,14 @@ namespace ShopSystemUISignals
             behaviorType = _behaviorType;
         }
     }
+    public struct ShopBillingSignal
+    {
+        public int usedMoney;
+        public ShopBillingSignal(int _usedMoney)
+        {
+            usedMoney = _usedMoney;
+        }
+    }
+
 }
 

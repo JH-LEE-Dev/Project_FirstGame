@@ -21,6 +21,8 @@ public class WarningUI : MonoBehaviour
         motion?.PlayMotion(CompletedCallback);
     }
 
+    public void Allkill() => motion?.AllKill();
+
     private void CompletedCallback()
     {
         gameObject.SetActive(false);

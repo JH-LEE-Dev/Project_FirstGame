@@ -10,4 +10,5 @@ public interface IEnemyData
     IEnemyStatProvider enemyStatProvider { get; }
     event Action EnemySpawnedEvent;
     event Action EnemyIsDeadEvent;
+    EnemyTypeData enemyTypeData { get; }
 }

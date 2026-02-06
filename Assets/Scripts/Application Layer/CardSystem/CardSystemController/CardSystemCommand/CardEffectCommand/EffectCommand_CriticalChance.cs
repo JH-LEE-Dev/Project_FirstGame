@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/CriticalChance")]
-public class EffectCommand_CriticalChance : CardEffectCommand<ICardStatusEffectCommandHandler>
+public class EffectCommand_CriticalChance : CardEffectCommand<IStatusEffectCommandHandler>
 {
     [SerializeField] private int bonusChance = 0;
     [SerializeField] private int upgradedBonusChance = 0;
 
-    protected override void Execute(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier);
@@ -15,7 +15,7 @@ public class EffectCommand_CriticalChance : CardEffectCommand<ICardStatusEffectC
 
         ResetCommandData();
     }
-    protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
+    protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * valueModifier);

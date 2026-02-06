@@ -194,13 +194,10 @@ public class Character : Unit, ICharacterData
     //발사하는 함수, 공격턴에 마우스 좌클릭을 누르면 호출됨.
     private void Fire()
     {
-        if(bCanAttack == false)
-        {
-            Debug.LogWarning("고유 카드가 장착되지 않으면 발사할 수 없습니다.");
+        if (bCanAction == false)
             return;
-        }
 
-        if (bCanAction == true && bCanAttack)
+        if (bCanAttack)
         {
             //발사가 끝나면 움직임을 제한해야 하므로 zero를 넣어줌.
             moveComponent.SetMoveDirection(Vector2.zero);
@@ -211,6 +208,12 @@ public class Character : Unit, ICharacterData
             PlayerAttackEvent?.Invoke();
 
             //Sound.Play("Fire", transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("고유 카드가 장착되지 않으면 발사할 수 없습니다.");
+            combatComponent.BulletEffectIsFinished();
+            return;
         }
     }
 

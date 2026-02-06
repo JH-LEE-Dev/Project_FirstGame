@@ -65,8 +65,11 @@ public class GameInstaller : MonoBehaviour
         artifactSystem = new ArtifactSystem();
         artifactManager = GetComponent<ArtifactManager>();
 
-        gameController.Initialize(signalHub);
+        gameController.Initialize(signalHub,bootStrapProvider);
         gameServiceLocator.Initialize(cameraController);
+
+        artifactManager.Initialize();
+        artifactSystem.Initialize(artifactManager,signalHub);
 
         unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
         waveManager.Initialize(signalHub, waveDatabase);
@@ -89,8 +92,6 @@ public class GameInstaller : MonoBehaviour
 
         shopManager.Initialize(cardManager);
         shopSystem.Initialize(signalHub, shopManager);
-
-        artifactSystem.Initialize(artifactManager);
 
         SetupGamePlayScene();
     }
@@ -121,6 +122,8 @@ public class GameInstaller : MonoBehaviour
         shopSystem.Release();
         shopManager.Release();
         environmentManager.Release();
+        artifactManager.Release();
+        artifactSystem.Release();
     }
 
     private void Awake()
