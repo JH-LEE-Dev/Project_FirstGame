@@ -20,9 +20,14 @@ public class DamageInfo_Enemy : MonoBehaviour
         owner = _owner;
         mediator = _mediator;
 
-        if (null != owner)
-        {
-            damageText.text = "없";
-        }
+        UpdateInfo();
+    }
+
+    private void UpdateInfo()
+    {
+        if (null == owner)
+            return;
+
+        damageText.text = Mathf.RoundToInt(owner.enemyStatProvider.attack).ToString();
     }
 }
