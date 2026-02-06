@@ -75,13 +75,10 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<CardSelectionModeStartSignal>(CardSelectionModeStarted);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.UnSubscribe<PlayerIsDeadSignal>(PlayerIsDead);
-        signalHub.UnSubscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
         signalHub.UnSubscribe<WaveCompleteRewardSignal>(WaveEndRewardReceived);
+        signalHub.UnSubscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
 
         //For GameplayUICoordinator
-        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
-        signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
-        signalHub.UnSubscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
