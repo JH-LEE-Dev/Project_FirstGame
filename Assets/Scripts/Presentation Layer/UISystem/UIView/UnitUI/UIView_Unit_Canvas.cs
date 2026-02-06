@@ -8,6 +8,9 @@ public class UIView_Unit_Canvas : UIView
     [Header("UI References")]
     [SerializeField] private Transform uiRoot;
 
+    [Header("Pooling System")]
+    [SerializeField] private ObjectPoolingSystem healthPool;
+
     ICharacterData characterData;
     IReadOnlyList<IEnemyData> enemyDatas;
 
@@ -39,6 +42,41 @@ public class UIView_Unit_Canvas : UIView
 
     public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> _enemyDatas)
     {
+        foreach (IEnemyData data in _enemyDatas)
+        {
+            Enemy script = data.GetTransform().GetComponent<Enemy>();
+            if (null == script)
+                continue;
 
+            BindingEnemy(script);
+        }
+    }
+
+    private EnemyUI GetEnemyUI()
+    {
+        GameObject obj = healthPool.Pool.Get();
+        EnemyUI ui = obj?.GetComponent<EnemyUI>();
+        if (null == ui)
+            return null;
+
+        return ui;
+    }
+
+    private void ReturnHealthBar(GameObject target)
+    {
+        if (!target.activeSelf)
+            return;
+
+        healthPool.Pool.Release(target);
+    }
+
+    private void BindingEnemy(Enemy _target)
+    {
+        EnemyUI ui = GetEnemyUI();
+        if (null == ui)
+            return;
+
+        ui.gameObject.SetActive(true);
+        ui.Init(_target, ReturnHealthBar);
     }
 }
