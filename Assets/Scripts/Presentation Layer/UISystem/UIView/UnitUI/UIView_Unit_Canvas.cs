@@ -52,14 +52,14 @@ public class UIView_Unit_Canvas : UIView
         }
     }
 
-    private HealthBar_Enemy GetHealthBar()
+    private EnemyUI GetEnemyUI()
     {
         GameObject obj = healthPool.Pool.Get();
-        HealthBar_Enemy bar = obj?.GetComponent<HealthBar_Enemy>();
-        if (null == bar)
+        EnemyUI ui = obj?.GetComponent<EnemyUI>();
+        if (null == ui)
             return null;
 
-        return bar;
+        return ui;
     }
 
     private void ReturnHealthBar(GameObject target)
@@ -72,11 +72,11 @@ public class UIView_Unit_Canvas : UIView
 
     private void BindingEnemy(Enemy _target)
     {
-        HealthBar_Enemy hpBar = GetHealthBar();
-        if (null == hpBar)
+        EnemyUI ui = GetEnemyUI();
+        if (null == ui)
             return;
 
-        hpBar.gameObject.SetActive(true);
-        hpBar.Init(_target, ReturnHealthBar);
+        ui.gameObject.SetActive(true);
+        ui.Init(_target, ReturnHealthBar);
     }
 }
