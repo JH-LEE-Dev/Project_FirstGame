@@ -22,6 +22,10 @@ public class UIView_Unit_World : UIView
     [SerializeField] private GameObject clickCatchSystemPrefab;
     private ClickCatchSystem clickCatchSystem;
 
+    [SerializeField] private GameObject bulletLineSystemPrefab;
+    private BulletLineSystem bulletLineSystem;
+
+
     [Header("DamageNumSystem Settings")]
     [SerializeField] private DamageNumberSystem damageNumberSystem;
 
@@ -38,6 +42,7 @@ public class UIView_Unit_World : UIView
 
         InitializeBulletSocketSystem();
         InitializeClickCatchSystem();
+        //InitializeBulletLineSystem();
     }
 
     private void InitializeBulletSocketSystem()
@@ -46,7 +51,7 @@ public class UIView_Unit_World : UIView
         bulletsocketSystem = go.GetComponent<BulletSocketSystem>();
 
         // ¿”Ω√ 2∞≥
-        bulletsocketSystem.Init(2, this, viewCtx.cardLocalizationSystem);
+        bulletsocketSystem.Init(this, viewCtx.cardLocalizationSystem);
     }
 
     private void InitializeClickCatchSystem()
@@ -57,6 +62,12 @@ public class UIView_Unit_World : UIView
         clickCatchSystem.Init(this);
     }
 
+    private void InitializeBulletLineSystem()
+    {
+        GameObject go = Instantiate(bulletLineSystemPrefab, this.transform);
+        bulletLineSystem = go.GetComponent<BulletLineSystem>();
+        bulletLineSystem.Init(this, characterData.GetTransform());
+    }
 
 
     public override void Update()
