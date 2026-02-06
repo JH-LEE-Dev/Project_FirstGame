@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPBar_Enemy : MonoBehaviour
+public class HealthBar_Enemy : MonoBehaviour
 {
     [Header("Main Settings")]
     private Enemy owner;

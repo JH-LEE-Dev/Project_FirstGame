@@ -34,10 +34,10 @@ public class UIView_Unit_Canvas : UIView
         base.OnHide();
     }
 
-    private HPBar_Enemy GetHealthBar()
+    private HealthBar_Enemy GetHealthBar()
     {
         GameObject obj = healthPool.Pool.Get();
-        HPBar_Enemy bar = obj?.GetComponent<HPBar_Enemy>();
+        HealthBar_Enemy bar = obj?.GetComponent<HealthBar_Enemy>();
         if (null == bar)
             return null;
 
@@ -48,7 +48,7 @@ public class UIView_Unit_Canvas : UIView
 
     private void BindingEnemy(Enemy _target)
     {
-        HPBar_Enemy hpBar = GetHealthBar();
+        HealthBar_Enemy hpBar = GetHealthBar();
         if (null == hpBar)
             return;
 
