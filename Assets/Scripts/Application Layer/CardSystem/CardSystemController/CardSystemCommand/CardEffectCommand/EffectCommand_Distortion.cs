@@ -17,13 +17,13 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
         {
             cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit * valueModifier);
-            cardStatusEffectCommandHandler.ApplyAttackModifier(bonusDamage * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusCrit  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedBonusDamage  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusDamage  * valueModifier);
         }
 
         ResetCommandData();
@@ -35,13 +35,13 @@ public class EffectCommand_Distortion : CardEffectCommand<ICardStatusEffectComma
         {
             cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusCrit  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-bonusDamage  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusDamage  * valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusCrit  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedBonusDamage  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusDamage  * valueModifier);
         }
     }
 }

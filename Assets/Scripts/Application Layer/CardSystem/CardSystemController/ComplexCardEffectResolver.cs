@@ -78,6 +78,11 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemActionCommandHandler.CardsToExtinction(cardPile);
     }
 
+    public void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType)
+    {
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(attack);
+    }
+
     public void ApplyAttackModifier(int attack, GameSystemActionContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAttackModifier(attack);
@@ -194,5 +199,15 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType)
     {
         cardSystemControlActionCommandHandler.UndoUseCards_AfterAttackEffects(cardPile);
+    }
+
+    public void ApplyTotalDamageModifier(float bonusDamage)
+    {
+        cardStatusEffectCommandHandler.ApplyTotalDamageModifier(bonusDamage);
+    }
+
+    public void ApplyTotalDamageValueModifier(float bonusValue)
+    {
+        cardStatusEffectCommandHandler.ApplyTotalDamageValueModifier(bonusValue);
     }
 }

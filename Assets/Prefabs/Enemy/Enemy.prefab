@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5376237342784183121}
   - component: {fileID: -5027583622691338037}
   - component: {fileID: -5589540889224555357}
+  - component: {fileID: 7341641961094845762}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -304,7 +305,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e3bf9fc08b7b14fa2d6b23c3456e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ECombatComponent
-  attack: 0
+--- !u!114 &7341641961094845762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624792059011753228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e8fe3543d0f924ba14743cf429fb3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EStatComponent
 --- !u!1 &4011026226218750539
 GameObject:
   m_ObjectHideFlags: 0

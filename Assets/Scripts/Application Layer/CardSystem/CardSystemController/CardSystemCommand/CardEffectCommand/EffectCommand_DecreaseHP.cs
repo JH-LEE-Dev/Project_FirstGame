@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/DecreaseHP")]
 public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectCommandHandler>
@@ -18,6 +16,7 @@ public class EffectCommand_DecreaseHP : CardEffectCommand<ICardStatusEffectComma
 
         ResetCommandData();
     }
+
     protected override void Undo(ICardStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
 

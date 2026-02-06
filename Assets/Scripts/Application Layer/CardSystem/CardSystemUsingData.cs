@@ -49,4 +49,6 @@ public enum CardName
     HandEnhancement,
     HalleysComet,
     Scan,
+    PrismBolt,
+    ArcDischarge,
 }
