@@ -255,7 +255,7 @@ public class UIView_Shop : UIView
     ///
     private void OnClick_PickUpCard()
     {
-        if (!CheckPayment(1, pickupPrice * pickupPayCnt))
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), pickupPrice * pickupPayCnt))
         {
             warningUI?.Play(failPayment);
             return;
@@ -275,7 +275,7 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        if (!CheckPayment(1, upgradePrice))
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), upgradePrice))
         {
             warningUI?.Play(failPayment);
             return;
@@ -295,7 +295,7 @@ public class UIView_Shop : UIView
         if (DeletedComplete || EnforcedComplete)
             return;
 
-        if (!CheckPayment(1, deletePrice))
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), deletePrice))
         {
             warningUI?.Play(failPayment);
             return;
@@ -320,6 +320,7 @@ public class UIView_Shop : UIView
         Debug.Log("[Shop] NextStage clicked");
 
         ShopIsClosedEvent?.Invoke();
+        warningUI.Allkill();
     }
 
     public void OutputSelectedCards(List<ICardDataInstanceProvider> cards, ShopBehaviorType type)
@@ -358,7 +359,9 @@ public class UIView_Shop : UIView
                 break;
         }
 
-        ShopBillingEvent.Invoke(0);
+        ShopBillingEvent.Invoke(currentPrice);
+        Debug.Log("ม๖บา:"+currentPrice);
+        Debug.Log(playerData.GetPlayerCurrentMoney());
     }
 
     #endregion

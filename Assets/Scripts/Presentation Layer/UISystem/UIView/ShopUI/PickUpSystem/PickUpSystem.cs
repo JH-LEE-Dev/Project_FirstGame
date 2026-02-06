@@ -93,6 +93,11 @@ public class PickUpSystem : MonoBehaviour
         RevealAndLayoutCards();
 
         pickUpButton.SetState(ButtonInstance.VisualState.VisibleEnabled);
+
+        if (null != uIView_Shop)
+        {
+            uIView_Shop.Payment(ShopBehaviorType.PickUp);
+        }
     }
 
     private void RevealAndLayoutCards()

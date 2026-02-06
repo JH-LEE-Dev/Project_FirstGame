@@ -59,6 +59,16 @@ public class WarningMotion : MonoBehaviour
         seq.SetUpdate(false);
     }
 
+    public void AllKill()
+    {
+        Color tempColor = mainImage.color;
+        tempColor.a = 0f;
+        mainImage.color = tempColor;
+
+        mainText.alpha = 0f;
+        seq.Kill();
+    }
+
     private void OnCompleted()
     {
         callback?.Invoke();
