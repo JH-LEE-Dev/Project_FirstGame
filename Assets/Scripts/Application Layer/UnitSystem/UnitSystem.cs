@@ -6,6 +6,7 @@ using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using WaveSystemSignals;
 using CardSystemUISignal;
+using System.Collections.Generic;
 
 public class UnitSystem
 {
@@ -14,7 +15,7 @@ public class UnitSystem
     private UnitSpawner unitSpawner;
     private UnitLogicSystem unitLogicSystem;
 
-    public void Initialize(SignalHub _signalHub,UnitSpawner _unitSpawner,UnitLogicSystem _unitLogicSystem)
+    public void Initialize(SignalHub _signalHub, UnitSpawner _unitSpawner, UnitLogicSystem _unitLogicSystem)
     {
         signalHub = _signalHub;
         unitSpawner = _unitSpawner;
@@ -61,6 +62,9 @@ public class UnitSystem
 
         unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
         unitLogicSystem.CharacterStatChangedEvent += CharacterStatChanged;
+
+        unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
+        unitSpawner.AdditionalEnemySpawnedEvent += AdditionalEnemySpawned;
     }
 
     private void ReleaseEvents()
@@ -88,6 +92,8 @@ public class UnitSystem
         unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
 
         unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
+
+        unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
     }
 
     private void SubscribeEvents()
@@ -139,7 +145,7 @@ public class UnitSystem
 
     private void PlayerAttacked()
     {
-        signalHub.Publish(new PlayerAttackedSignal());  
+        signalHub.Publish(new PlayerAttackedSignal());
     }
 
     private void PlayerGetShield(float amount)
@@ -152,7 +158,7 @@ public class UnitSystem
         signalHub.Publish(new PlayerGetHPSignal(amount));
     }
 
-    private void EnemyTakeDamage(IEnemyData enemyData,float damage,bool bCritical)
+    private void EnemyTakeDamage(IEnemyData enemyData, float damage, bool bCritical)
     {
         signalHub.Publish(new EnemyTakeDamageSignal(enemyData, damage, bCritical));
     }
@@ -188,5 +194,10 @@ public class UnitSystem
     private void IsInherenceCardEquipped(IsInherenceCardEquippedSignal inherenceCardEquippedSignal)
     {
         unitLogicSystem.SetCharacterCanAttackState(inherenceCardEquippedSignal.bEquipped);
+    }
+
+    private void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> enemyDatas)
+    {
+        signalHub.Publish(new AdditionalEnemySpawnedSignal(enemyDatas));
     }
 }

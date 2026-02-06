@@ -9,6 +9,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
     public event Action<Character> CharacterCreatedEvent;
     public event Action<Earth> PlayerCreatedEvent;
     public event Action<List<Enemy>> EnemyCreatedEvent;
+    public event Action<List<IEnemyData>> AdditionalEnemySpawnedEvent;
 
     [Header("Enemy Pool Settings")]
     [SerializeField] const int enemyMaxCount = 40;
@@ -50,6 +51,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 
     private List<Enemy> enemies = new List<Enemy>(40);
     private List<IEnemyData> enemyData = new List<IEnemyData>(40);
+    private List<IEnemyData> additionalSpawnedEnemy = new List<IEnemyData>(40);
 
     // Enemy Ǯ
     ObjectPool<Enemy> enemyPool;
@@ -178,6 +180,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 
     public void SpawnWave(SpawnWaveSignal spawnWaveSignal)
     {
+        additionalSpawnedEnemy.Clear();
+
         curUnitCnt = spawnWaveSignal.waveIdx;
 
         for (uint i = 0; i < curUnitCnt; ++i)
@@ -200,10 +204,12 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
                 {
                     enemyData.Add(spawnedUnit);
                     enemies.Add(spawnedUnit);
+                    additionalSpawnedEnemy.Add(spawnedUnit);
                 }
             }
         }
 
+        AdditionalEnemySpawnedEvent?.Invoke(additionalSpawnedEnemy);
         EnemyCreatedEvent?.Invoke(enemies);
     }
 
