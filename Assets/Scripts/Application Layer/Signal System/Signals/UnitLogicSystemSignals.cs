@@ -89,5 +89,4 @@ namespace UnitLogicSystemSignals
             amount = _amount;
         }
     }
-    public struct CharacterReadyToAttackSignal { }
 }

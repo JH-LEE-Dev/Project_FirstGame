@@ -12,7 +12,6 @@ public class Character : Unit, ICharacterData
     public event Action PlayerAttackEvent;
     public event Action PlayerAttackFinishedEvent;
     public event Action CharacterStatChangedEvent;
-    public event Action CharacterReadyToAttackEvent;
 
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;
@@ -83,9 +82,6 @@ public class Character : Unit, ICharacterData
 
         combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
         combatComponent.BulletEffectIsFinishedEvent += PlayerAttackFinished;
-
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent -= CharacterReadyToAttack;
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent += CharacterReadyToAttack;
     }
 
     private void ReleaseEvent()
@@ -94,7 +90,6 @@ public class Character : Unit, ICharacterData
         inputManager.inputReader.PointerPositionEvent -= SetMousePos;
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
         combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent -= CharacterReadyToAttack;
     }
 
     public Transform GetTransform()
@@ -117,11 +112,6 @@ public class Character : Unit, ICharacterData
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
-    }
-
-    public void CharacterReadyToAttack()
-    {
-        CharacterReadyToAttackEvent?.Invoke();
     }
 
     protected override void OnDestroy()
