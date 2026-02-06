@@ -137,8 +137,15 @@
       "id": 19,
       "name": "<5>탐색",
       "upgradedName": "<5><rb>탐색+</rb>",
-      "description": "<5>웜홀에 있는 카드 중 1장을 선택해 패에 넣습니다. \n<wb>소멸</wb>",
-      "upgradedDescription": "<5>웜홀에 있는 카드 중 2장을 선택해 패에 넣습니다. \n<wb>소멸</wb>"
+      "description": "<5>웜홀에 있는 카드 중 1장을 선택해 패에 넣습니다.\n<wb>소멸</wb>",
+      "upgradedDescription": "<5>웜홀에 있는 카드 중 2장을 선택해 패에 넣습니다.\n<wb>소멸</wb>"
+    }
+    {
+      "id": 20,
+      "name": "<5>프리즘 볼트",
+      "upgradedName": "<5><rb>프리즘 볼트+</rb>",
+      "description": "<5>기본 피해 10의 원형 구체를 발사합니다.\n적중 시 폭발하며, 작은 프리즘 볼트가 연이어 터집니다.\n<wb>고유</wb>",
+      "upgradedDescription": "<5>기본 피해 20의 원형 구체를 발사합니다.\n적중 시 폭발하며, 작은 프리즘 볼트가 연이어 터집니다.\n<wb>고유</wb>"
     }
   ]
 }

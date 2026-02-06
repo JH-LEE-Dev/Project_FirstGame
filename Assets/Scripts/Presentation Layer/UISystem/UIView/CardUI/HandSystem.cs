@@ -53,7 +53,6 @@ public class HandSystem : MonoBehaviour
     [SerializeField] private List<MainCardInstance> cards = new();
 
     [Header("Bullet Slots (Temp)")]
-    [SerializeField] private List<RectTransform> BulletRoots = new();
     private readonly List<MainCardInstance> equippedBullets = new();
 
     // 호버된 카드 인덱스
@@ -188,17 +187,13 @@ public class HandSystem : MonoBehaviour
 
         hoveredCard = null;
 
-        // 재정렬 방어로직
-        //if (_card.cardState == CardState.InHand || _card.cardState == CardState.Selecting || _card.cardState == CardState.Preview)
-        //    _card.SetUIState(CardState.Other);
-
         computeArc();
         ComputeSelectedPositions();
 
         CardType type = _card.CardData.GetCardDataProvider().cardType;
 
         // 장착 연출하러 고고씽
-        if (type == CardType.Bullet) EquipBullet(_card, socketIndex, transform);
+        if (type == CardType.Bullet || type == CardType.Inherence) EquipBullet(_card, socketIndex, transform);
 
     }
     private void EquipBullet(MainCardInstance card, int socketIndex, Transform transform)
