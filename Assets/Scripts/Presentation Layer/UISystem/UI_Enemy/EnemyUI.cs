@@ -27,6 +27,11 @@ public class EnemyUI : MonoBehaviour
     private void OnDisable()
     {
         returnEvent = null;
+
+        if (null != owner)
+        {
+            owner.EnemyIsDeadEvent -= ReturnObject;
+        }
     }
 
     public void Init(IEnemyData target, Action<GameObject> _returnEvent)
@@ -36,7 +41,13 @@ public class EnemyUI : MonoBehaviour
         returnEvent -= _returnEvent;
         returnEvent += _returnEvent;
 
-        if(null != healthBar)
+        if (null != owner)
+        {
+            owner.EnemyIsDeadEvent -= ReturnObject;
+            owner.EnemyIsDeadEvent += ReturnObject;
+        }
+
+        if (null != healthBar)
         {
             healthBar.Init(target, this);
         }
