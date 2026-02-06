@@ -10,6 +10,8 @@ public class Enemy : Unit, IEnemyData
     public event Action<IEnemyData, EnemyTypeData> EnemyIsKilledEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
+    public event Action EnemyIsDeadEvent;
+
     public IHealthComponentProvider healthComponentProvider => healthComponent;
     public IEnemyStatProvider enemyStatProvider => statComponent;
 
@@ -259,6 +261,8 @@ public class Enemy : Unit, IEnemyData
             gameServiceLocator.PlayCameraShake();
 
             combatComponent.ApplyAttack(other);
+
+            EnemyIsDeadEvent?.Invoke();
 
             return;
         }
