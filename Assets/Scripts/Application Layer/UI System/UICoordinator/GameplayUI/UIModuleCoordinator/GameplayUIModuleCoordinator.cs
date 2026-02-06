@@ -47,7 +47,6 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.Subscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
-        signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.Subscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.Subscribe<PlayerGetShieldSignal>(PlayerGetShield);
         signalHub.Subscribe<PlayerGetHPSignal>(PlayerGetHP);
@@ -80,7 +79,6 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<PlayerEarnMoneySignal>(PlayerEarnMoney);
 
         //For GameplayUICoordinator
-        signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<PlayerTakeDamageSignal>(OnPlayerHit);
         signalHub.UnSubscribe<PlayerGetShieldSignal>(PlayerGetShield);
         signalHub.UnSubscribe<PlayerGetHPSignal>(PlayerGetHP);
@@ -158,6 +156,7 @@ public class GameplayUIModuleCoordinator
     public void CardUsingFinished()
     {
         signalHub.Publish(new CardUsingFinishedSignal());
+        gameplayUICoordinator.CardUsingFinished();
     }
 
     public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
@@ -223,11 +222,6 @@ public class GameplayUIModuleCoordinator
     public void PlayerAttacked(PlayerAttackedSignal playerAttackedSignal)
     {
         gameplayUICoordinator.PlayerAttacked();
-    }
-
-    public void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
-    {
-        gameplayUICoordinator.CardUsingFinished();
     }
 
     public void OnPlayerHit(PlayerTakeDamageSignal playerTakeDamageSignal)

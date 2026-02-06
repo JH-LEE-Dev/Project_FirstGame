@@ -72,6 +72,7 @@ public class GameplayUICoordinator
     public void CardUsingFinished()
     {
         gameplayUISystem.CardUsingFinished();
+        unitWorldUISystem.SetAiming(true);
     }
 
     public void OnPlayerHit(float damage)
@@ -189,6 +190,6 @@ public class GameplayUICoordinator
 
     public void CharacterReadyToAttack()
     {
-        unitWorldUISystem.SetAiming(true);
+        //unitWorldUISystem.SetAiming(true);
     }
 }
