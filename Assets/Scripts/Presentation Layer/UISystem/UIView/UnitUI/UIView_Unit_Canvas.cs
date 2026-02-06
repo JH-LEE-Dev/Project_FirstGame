@@ -40,6 +40,11 @@ public class UIView_Unit_Canvas : UIView
         base.OnHide();
     }
 
+    public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> _enemyDatas)
+    {
+
+    }
+
     private HealthBar_Enemy GetHealthBar()
     {
         GameObject obj = healthPool.Pool.Get();

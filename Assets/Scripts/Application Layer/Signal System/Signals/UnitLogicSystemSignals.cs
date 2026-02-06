@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnitLogicSystemSignals
@@ -71,4 +72,12 @@ namespace UnitLogicSystemSignals
     }
     public struct ResetPlayerShieldSignal { }
     public struct CharacterStatChangedSignal { }
+    public struct  AdditionalEnemySpawnedSignal
+    {
+        public IReadOnlyList<IEnemyData> enemyData;
+        public AdditionalEnemySpawnedSignal(IReadOnlyList<IEnemyData> _enemyData)
+        {
+            enemyData = _enemyData;
+        }
+    }
 }
