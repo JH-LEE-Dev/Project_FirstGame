@@ -2,6 +2,7 @@ using CardSystemSignals;
 using CardSystemUISignal;
 using GameControlSignals;
 using System;
+using System.Collections.Generic;
 using UnitLogicSystemSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
@@ -155,5 +156,10 @@ public class GameplayUICoordinator
     public void CharacterStatChanged()
     {
         hudUISystem.CharacterStatChanged();
+    }
+
+    public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> enemyDatas)
+    {
+        unitCanvasUISystem.AdditionalEnemySpawned(enemyDatas);
     }
 }

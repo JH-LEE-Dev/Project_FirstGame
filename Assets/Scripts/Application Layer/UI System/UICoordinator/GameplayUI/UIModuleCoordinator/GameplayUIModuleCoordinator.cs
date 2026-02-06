@@ -58,6 +58,7 @@ public class GameplayUIModuleCoordinator
         signalHub.Subscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
         signalHub.Subscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
         signalHub.Subscribe<CharacterStatChangedSignal>(CharacterStatChanged);
+        signalHub.Subscribe<AdditionalEnemySpawnedSignal>(AdditionalEnemySpawned);
     }
 
     private void UnSubscribeEvents()
@@ -88,6 +89,7 @@ public class GameplayUIModuleCoordinator
         signalHub.UnSubscribe<WaveProgressUpdatedSignal>(EnemyIsKilled);
         signalHub.UnSubscribe<ResetPlayerShieldSignal>(ResetPlayerShield);
         signalHub.UnSubscribe<CharacterStatChangedSignal>(CharacterStatChanged);
+        signalHub.UnSubscribe<AdditionalEnemySpawnedSignal>(AdditionalEnemySpawned);
     }
 
     public void BindEvents()
@@ -266,5 +268,10 @@ public class GameplayUIModuleCoordinator
     private void ShopTimeStarted(ShopTimeStartedSignal shopTimeStartedSignal)
     {
         cardUICoordinator.ShopTimeStarted();
+    }
+
+    private void AdditionalEnemySpawned(AdditionalEnemySpawnedSignal additionalEnemySpawnedSignal)
+    {
+        gameplayUICoordinator.AdditionalEnemySpawned(additionalEnemySpawnedSignal.enemyData);
     }
 }
