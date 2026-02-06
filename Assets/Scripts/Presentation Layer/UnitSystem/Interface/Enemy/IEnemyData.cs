@@ -9,4 +9,5 @@ public interface IEnemyData
     IHealthComponentProvider healthComponentProvider { get; }
     IEnemyStatProvider enemyStatProvider { get; }
     event Action EnemySpawnedEvent;
+    event Action EnemyIsDeadEvent;
 }
