@@ -92,6 +92,18 @@ public class StarlightSubUI : MonoBehaviour
     [SerializeField] private float countNumberDur = 0.40f;
     [SerializeField] private Ease countNumberEase = Ease.OutCubic;
 
+
+    // 람다 , 캡쳐절 방지
+    private int pendingEndBase;
+    private System.Action pendingAdjustmentComplete;
+    private System.Action pendingWaveArrive;
+
+    private StarlightUI waveOwner;
+    private int waveMoney;
+    private bool waveIsLast;
+    private bool waveArriveInvoked; // 중복 호출 방지
+
+
     public void Init()
     {
         bActive = false;
@@ -272,10 +284,12 @@ public class StarlightSubUI : MonoBehaviour
             snapping: false,
             fadeOut: true
         )
-        .OnComplete(() =>
-        {
-            addTMRT.anchoredPosition = addTMBasePos;
-        });
+        .OnComplete(OnAddShakeComplete);
+    }
+
+    private void OnAddShakeComplete()
+    {
+        if (addTMRT) addTMRT.anchoredPosition = addTMBasePos;
     }
 
     private void KillAddTweens()
@@ -379,25 +393,31 @@ public class StarlightSubUI : MonoBehaviour
 
         baseCount = endBase;
 
-        adjustSeq.OnComplete(() =>
-        {
-            addTotal = 0;
-            addDisplayed = 0;
+        pendingEndBase = endBase;
+        pendingAdjustmentComplete = onComplete;
 
-            addCountTM.gameObject.SetActive(false);
+        adjustSeq.OnComplete(OnAdjustmentComplete);
+    }
 
-            addTMRT.anchoredPosition = addTMBasePos;
-            addTMRT.localScale = addTMBaseScale;
+    private void OnAdjustmentComplete()
+    {
+        addTotal = 0;
+        addDisplayed = 0;
 
-            var c2 = addCountTM.color; c2.a = 0f; addCountTM.color = c2;
+        addCountTM.gameObject.SetActive(false);
 
-            isAdjusting = false;
+        addTMRT.anchoredPosition = addTMBasePos;
+        addTMRT.localScale = addTMBaseScale;
 
-            TweenBaseNumberTo(endBase);
-            PlayCountPulseAndShake();
+        var c2 = addCountTM.color; c2.a = 0f; addCountTM.color = c2;
 
-            onComplete?.Invoke();
-        });
+        isAdjusting = false;
+
+        TweenBaseNumberTo(pendingEndBase);
+        PlayCountPulseAndShake();
+
+        pendingAdjustmentComplete?.Invoke();
+        pendingAdjustmentComplete = null;
     }
 
     private void TweenBaseNumberTo(int target)
@@ -434,17 +454,32 @@ public class StarlightSubUI : MonoBehaviour
 
 
     // Final adjustment
-    public Tween WaveFoldToY0(float moveDur = 0.20f, float fadeDur = 0.20f, Ease ease = Ease.OutCubic, System.Action onArrive = null)
+    public Tween WaveFoldToY0(
+        StarlightUI owner,
+        int money,
+        bool isLast,
+        float moveDur = 0.20f,
+        float fadeDur = 0.20f,
+        Ease ease = Ease.OutCubic
+    )
     {
-        // 이미 비활성이면 스킵
+        // 컨텍스트 저장
+        waveOwner = owner;
+        waveMoney = money;
+        waveIsLast = isLast;
+        waveArriveInvoked = false;
+
+        // 이미 비활성이면 즉시 도착 처리
         if (!bActive)
         {
-            onArrive?.Invoke();
+            NotifyWaveOwnerArrivedOnce();
+            gameObject.SetActive(false);
             return null;
         }
 
         bActive = false;
 
+        // 기존 트윈 정리
         moveTween?.Kill();
         fadeTween?.Kill();
         KillAddTweens();
@@ -456,16 +491,36 @@ public class StarlightSubUI : MonoBehaviour
         seq.Join(rt.DOAnchorPos(new Vector2(x, 0f), moveDur).SetEase(ease));
         seq.Join(abilityGroup.DOFade(0f, fadeDur).SetEase(Ease.OutCubic));
 
-        seq.OnComplete(() =>
-        {
-            onArrive?.Invoke();
-            gameObject.SetActive(false);
-        });
+        // 완료 시 owner에게 알리고 숨김
+        seq.OnComplete(OnWaveFoldComplete);
+
+        // (선택) 중간에 Kill돼도 누락 방지하고 싶으면 아래도 추가 가능
+        // seq.OnKill(OnWaveFoldKilled);
 
         return seq;
     }
 
+    private void OnWaveFoldComplete()
+    {
+        NotifyWaveOwnerArrivedOnce();
+        gameObject.SetActive(false);
+    }
 
+    private void NotifyWaveOwnerArrivedOnce()
+    {
+        if (waveArriveInvoked) return;
+        waveArriveInvoked = true;
+
+        if (waveOwner != null)
+            waveOwner.OnSubUIWaveArrive(this, waveMoney, waveIsLast);
+
+        waveOwner = null;
+        waveMoney = 0;
+        waveIsLast = false;
+    }
+
+
+    // 리셋
     public void ResetBaseCount()
     {
         baseCount = 0;
