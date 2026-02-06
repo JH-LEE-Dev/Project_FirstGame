@@ -7,6 +7,7 @@ using UnitSpawnSystemSignals;
 using WaveSystemSignals;
 using CardSystemUISignal;
 using System.Collections.Generic;
+using ShopSystemUISignals;
 
 public class UnitSystem
 {
@@ -115,6 +116,7 @@ public class UnitSystem
         signalHub.Subscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.Subscribe<ShopBillingSignal>(PlayerMoneyUsed);
     }
 
     private void UnSubscribeEvents()
@@ -129,6 +131,7 @@ public class UnitSystem
         signalHub.UnSubscribe<GameStartedSignal>(unitLogicSystem.ActivatePlayerAndCharacter);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
+        signalHub.UnSubscribe<ShopBillingSignal>(PlayerMoneyUsed);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -215,5 +218,10 @@ public class UnitSystem
     private void PlayerEarnMoney(int amount)
     {
         signalHub.Publish(new PlayerEarnMoneySignal(amount));
+    }
+
+    private void PlayerMoneyUsed(ShopBillingSignal shopBillingSignal)
+    {
+        unitLogicSystem.PlayerMoneyUsed(shopBillingSignal.usedMoney); 
     }
 }

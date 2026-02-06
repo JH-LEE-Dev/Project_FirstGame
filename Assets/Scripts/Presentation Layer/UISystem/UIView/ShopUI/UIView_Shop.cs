@@ -358,7 +358,7 @@ public class UIView_Shop : UIView
                 break;
         }
 
-
+        ShopBillingEvent.Invoke(0);
     }
 
     #endregion

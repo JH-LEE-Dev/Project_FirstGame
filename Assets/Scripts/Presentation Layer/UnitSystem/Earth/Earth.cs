@@ -108,6 +108,11 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
         money += amount;
     }
 
+    public void UseMoney(int amount)
+    {
+        money -= amount;
+    }
+
     public int GetPlayerCurrentMoney()
     {
         return money;

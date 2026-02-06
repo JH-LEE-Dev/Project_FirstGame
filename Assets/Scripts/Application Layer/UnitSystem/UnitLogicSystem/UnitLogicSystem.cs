@@ -298,4 +298,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     {
         PlayerIsDeadEvent?.Invoke();
     }
+
+    public void PlayerMoneyUsed(int amount)
+    {
+        playerUnit.UseMoney(amount);
+    }
 }

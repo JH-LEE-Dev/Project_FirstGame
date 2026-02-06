@@ -7,6 +7,7 @@ public class ShopUICoordinator
     public event Action<List<ICardDataInstanceProvider>, ShopBehaviorType> ShopOutputEvent;
     public event Action ShopIsClosedEvent;
     public event Action CardPackRerollEvent;
+    public event Action<int> ShopBillingEvent;
 
     private UIView_Shop shopUI;
 
@@ -27,6 +28,9 @@ public class ShopUICoordinator
 
         shopUI.ShopUIOutputEvent -= ShopOutput;
         shopUI.ShopUIOutputEvent += ShopOutput;
+
+        shopUI.ShopBillingEvent -= ShopBilling;
+        shopUI.ShopBillingEvent += ShopBilling;
     }
 
     private void ReleaseEvents()
@@ -36,6 +40,8 @@ public class ShopUICoordinator
         shopUI.CardPackRerollEvent -= CardPackReroll;
 
         shopUI.ShopUIOutputEvent -= ShopOutput;
+
+        shopUI.ShopBillingEvent -= ShopBilling;
     }
 
     public void ShopOpened()
@@ -63,5 +69,10 @@ public class ShopUICoordinator
     private void ShopOutput(List<ICardDataInstanceProvider> _cards, ShopBehaviorType _type)
     {
         ShopOutputEvent?.Invoke(_cards, _type);
+    }
+
+    private void ShopBilling(int usedMoney)
+    {
+        ShopBillingEvent?.Invoke(usedMoney);
     }
 }
