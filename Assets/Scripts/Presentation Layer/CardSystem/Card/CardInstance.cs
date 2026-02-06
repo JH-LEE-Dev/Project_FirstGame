@@ -57,6 +57,11 @@ public class CardInstance : MonoBehaviour
     private readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
     private readonly Color magicAOColor = Hex("#0025CD", 0.15f);
 
+    private readonly Color inherenceFrameColor = Hex("#FF3131", 1f);
+    private readonly Color inherenceTextFrameColor = Hex("#FFAB94", 1f);
+    private readonly Color inherenceGlowColor = new Color32(183, 35, 34, 190);
+    private readonly Color inherenceAOColor = Hex("#4E0303", 0.15f);
+
     private float nameBaseAlpha = 1f;
     private float descBaseAlpha = 1f;
     private float aoBaseAlpha = 1f;
@@ -165,6 +170,13 @@ public class CardInstance : MonoBehaviour
                 cardTextFrame.color = magicTextFrameColor;
                 CardAO.color = magicAOColor;
                 glowFilter.Color = magicGlowColor;
+                break;
+            case CardType.Inherence:
+                // Todo : 올바른 색상 구현
+                cardFrame.color = inherenceFrameColor;
+                cardTextFrame.color = inherenceTextFrameColor;
+                CardAO.color = inherenceAOColor;
+                glowFilter.Color = inherenceGlowColor;
                 break;
         }
     }
