@@ -97,7 +97,7 @@ public class Enemy : Unit, IEnemyData
     public void DeActivateEnemy()
     {
         SetEnemyState(false);
-
+        EnemyIsDeadEvent?.Invoke();
         healthComponent.ResetHealthComponent();
     }
 
