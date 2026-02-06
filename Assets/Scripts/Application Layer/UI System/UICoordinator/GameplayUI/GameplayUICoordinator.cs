@@ -91,6 +91,7 @@ public class GameplayUICoordinator
     public void WaveEnded()
     {
         hudUISystem.WaveEnded();
+        unitCanvasUISystem.WaveEnded();
     }
 
     public void EnemyIsDead(Vector2 position)
