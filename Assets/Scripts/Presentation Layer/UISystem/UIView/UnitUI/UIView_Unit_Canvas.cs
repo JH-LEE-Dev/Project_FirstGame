@@ -42,7 +42,14 @@ public class UIView_Unit_Canvas : UIView
 
     public void AdditionalEnemySpawned(IReadOnlyList<IEnemyData> _enemyDatas)
     {
+        foreach (IEnemyData data in _enemyDatas)
+        {
+            Enemy script = data.GetTransform().GetComponent<Enemy>();
+            if (null == script)
+                continue;
 
+            BindingEnemy(script);
+        }
     }
 
     private HealthBar_Enemy GetHealthBar()
@@ -52,9 +59,15 @@ public class UIView_Unit_Canvas : UIView
         if (null == bar)
             return null;
 
-        obj.SetActive(true);
-
         return bar;
+    }
+
+    private void ReturnHealthBar(GameObject target)
+    {
+        if (!target.activeSelf)
+            return;
+
+        healthPool.Pool.Release(target);
     }
 
     private void BindingEnemy(Enemy _target)
@@ -63,6 +76,7 @@ public class UIView_Unit_Canvas : UIView
         if (null == hpBar)
             return;
 
-        hpBar.Init(_target);
+        hpBar.gameObject.SetActive(true);
+        hpBar.Init(_target, ReturnHealthBar);
     }
 }
