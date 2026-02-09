@@ -103,4 +103,21 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     {
         --attackCnt;
     }
+
+    public float CalcBaseDamage(out bool bCritical)
+    {
+        bCritical = false;
+
+        int critical = UnityEngine.Random.Range(0, 100);
+
+        float criticalDamage = 0f;
+
+        if (critical < criticalChance)
+        {
+            bCritical = true;
+            criticalDamage = totalDamage * 2 * totalDamageValue;
+        }
+
+        return criticalDamage;
+    }
 }

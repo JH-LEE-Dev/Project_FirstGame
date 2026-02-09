@@ -94,7 +94,8 @@ public class Normal_Fly : BulletBehavior
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
-        bool bCritical = CalcCurrentDamage_WithoutElemExplosion();
+        bool bCritical = false;
+        characterStatProvider.CalcBaseDamage(out bCritical);
 
         if (hit != null)
         {
@@ -102,23 +103,6 @@ public class Normal_Fly : BulletBehavior
             hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             ApplyKnockBack(hit, other.transform.position);
         }
-    }
-
-    protected bool CalcCurrentDamage_WithoutElemExplosion() //원소 폭발을 적용하기 전 치명타 여부 및 데미지 계산 함수.
-    {
-        bool bCritical = false;
-
-        int critical = UnityEngine.Random.Range(0, 100);
-
-        baseDamage = characterStatProvider.resultDamage;
-
-        if (critical < characterStatProvider.criticalChance)
-        {
-            bCritical = true;
-            baseDamage = characterStatProvider.totalDamage * 2 * characterStatProvider.totalDamageValue;
-        }
-
-        return bCritical;
     }
 
     private void ApplyKnockBack(IDamageable enemy, Vector2 enemyPos) //직격,범위 데미지에 맞은 적들을 넉백시키는 함수.
