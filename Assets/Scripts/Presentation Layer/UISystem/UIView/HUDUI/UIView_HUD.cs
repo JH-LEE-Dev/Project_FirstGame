@@ -143,7 +143,6 @@ public class UIView_HUD : UIView
     public void PlayerEarnMoney(int amount)
     {
         ActivateSubUI(StarLightAcquisitionType.Kill, amount);
-        Debug.Log(amount);
     }
 
     public void WaveRewardRecieved(int amount)

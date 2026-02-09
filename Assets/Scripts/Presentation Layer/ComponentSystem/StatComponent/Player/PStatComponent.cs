@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterStatProvider

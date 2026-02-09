@@ -117,4 +117,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
     {
         return money;
     }
+
+    public void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
+    {
+
+    }
 }

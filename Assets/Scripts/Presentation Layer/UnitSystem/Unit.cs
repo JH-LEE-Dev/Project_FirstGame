@@ -27,6 +27,8 @@ public class Unit : MonoBehaviour, IDamageable
     protected EffectComponent effectComponent;
     protected HealthComponent healthComponent;
 
+    protected List<DebuffElementData> currentAppliedDebuff = new List<DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+
     public Animator animator { get; private set; }
 
     protected Vector2 moveDirection;
@@ -146,6 +148,11 @@ public class Unit : MonoBehaviour, IDamageable
 
     public virtual void ApplyWeakness(int turnCnt)
     {
-        throw new NotImplementedException();
+
+    }
+
+    public virtual void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
+    {
+
     }
 }

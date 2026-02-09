@@ -37,4 +37,10 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UndoTotalDamageModifier(float bonusDamage);
     void SetCharacterCanAttackState(bool boolean);
     bool IsInherenceCardEquipped();
+    void ApplyBulletElementType(BulletElementData effectElementData);
+    void SetBulletType(BulletType bulletType,bool bUpgraded);
+    void ResetBulletType();
+    void UndoBulletElementApply(BulletElementData _effectElementData);
+    void ApplyDebuffElementType(DebuffElementData _debuffElementData);
+    void UndoDebuffElementApply(DebuffElementData _debuffElementData);
 }

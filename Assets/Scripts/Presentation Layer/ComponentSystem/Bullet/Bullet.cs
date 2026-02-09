@@ -7,45 +7,61 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    /// <summary>
+    /// 시스템 속성 존 ----------------------------------------------
+    /// </summary>
+
+    //이벤트
     public event Action BulletEffectIsFinishedEvent;
 
     //외부 의존성
-    ICharacterStatProvider characterStatProvider;
+    ICharacterStatProvider characterStatProvider; //속성,스탯을 가져오는 컴포넌트
+    IBulletEffectProvider bulletEffectProvider; //총알 타입을 가져오는 컴포넌트
 
-    //statComponent로 기능 분리할 것.
-    [SerializeField] float speed = 1f;
-    [SerializeField] float knockBackPower = 1f;
-    [SerializeField] private LayerMask targetMask;
-    [SerializeField] private LayerMask outOfRangeMask;
+    //내부 의존성
+    public EffectComponent effectComponent {  get; private set; }
+    public SpriteRenderer sr { get; private set; }
+    private BulletStateMachine stateMachine;
 
-    private EffectComponent effectComponent;
+    [SerializeField] public CircleCollider2D circleCollider;
+    [SerializeField] public CircleCollider2D explosionRangeCollider;
+    [SerializeField] public LayerMask targetMask;
+    [SerializeField] public LayerMask outOfRangeMask;
 
-    private SpriteRenderer sr;
-    [SerializeField] private CircleCollider2D circleCollider;
-    [SerializeField] private CircleCollider2D explosionRangeCollider;
+    public float range { get; private set; }
 
-    private Vector2 flyDir;
-    private Vector2 prevPosition;
 
-    private bool bFired = false;
+    /// <summary>
+    /// 구현 속성 존 --------------------------------------------------------
+    /// </summary>
 
-    private Collider2D directHitObject;
+    public Vector2 flyDir { get; private set; }
+    public Vector2 prevPosition { get; private set; }
 
-    private float range = 0f;
+
+    /// <summary>
+    /// 시스템 코드 존 --------------------------------------------------------
+    /// </summary>
 
     private void Awake()
     {
+
+    }
+
+    public void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider)
+    {
+        characterStatProvider = _characterStatProvider;
+        bulletEffectProvider = _bulletEffectProvider;
+
         sr = GetComponentInChildren<SpriteRenderer>();
         effectComponent = GetComponentInChildren<EffectComponent>();
+        stateMachine = GetComponent<BulletStateMachine>();
+
+        stateMachine.Initialize(characterStatProvider,bulletEffectProvider,this);
 
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;
         range = explosionRangeCollider.radius;
-    }
-
-    public void Initialize(ICharacterStatProvider _characterStatProvider)
-    {
-        characterStatProvider = _characterStatProvider;
     }
 
     private void OnDestroy()
@@ -55,133 +71,12 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        Fly();
+        stateMachine.Update();
     }
 
-    private void Fly()
-    {
-        if (bFired == false)
-            return;
-
-        Vector2 currentPosition = (Vector2)transform.position + flyDir * speed * Time.deltaTime;
-        transform.position = currentPosition;
-        Vector2 delta = currentPosition - prevPosition;
-        float distance = delta.magnitude;
-
-        if (CheckCollision_Enemy(delta, distance) == true)
-            return;
-
-        if (CheckCollision_OutofRange(delta, distance) == true)
-            return;
-
-        transform.position = currentPosition;
-        prevPosition = currentPosition;
-    }
-
-    private bool CheckCollision_Enemy(Vector2 delta, float distance)
-    {
-        RaycastHit2D hit = Physics2D.CircleCast(
-            prevPosition,
-            circleCollider.radius,
-            delta.normalized,
-            distance,
-            targetMask
-        );
-
-        if (hit.collider != null)
-        {
-            ApplyDamage(hit.collider);
-            bFired = false;
-
-            Sound.Play("Impact", transform.position);
-            DeActivateBullet();
-
-            CheckExplosion();
-
-            BulletEffectIsFinished();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private void CheckExplosion()
-    {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position,
-            range + range * (characterStatProvider.attackRange * 0.01f), targetMask);
-
-        foreach (var enemy in hitEnemies)
-        {
-            if (enemy == directHitObject)
-                continue;
-
-            ApplyDamage(enemy);
-        }
-    }
-
-    private bool CheckCollision_OutofRange(Vector2 delta, float distance)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(
-            prevPosition,
-            delta.normalized,
-            distance,
-            outOfRangeMask
-        );
-
-        if (hit.collider != null)
-        {
-            DeActivateBullet();
-            bFired = false;
-            BulletEffectIsFinished();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private void ApplyDamage(Collider2D other)
-    {
-        directHitObject = other;
-
-        // 데미지 처리
-        effectComponent.PlayImpactEffect();
-
-        IDamageable hit = other.GetComponent<IDamageable>();
-
-        bool bCritical = false;
-
-        int critical = UnityEngine.Random.Range(0, 100);
-
-        float totalDamage = characterStatProvider.resultDamage;
-
-        if (critical < characterStatProvider.criticalChance)
-        {
-            bCritical = true;
-            totalDamage = characterStatProvider.totalDamage * 2 * characterStatProvider.totalDamageValue;
-        }
-
-        if (hit != null)
-        {
-            hit.TakeDamage(totalDamage, bCritical);
-            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
-            ApplyKnockBack(hit, other.transform.position);
-        }
-    }
-
-    private void ApplyKnockBack(IDamageable enemy, Vector2 enemyPos)
-    {
-        Vector2 dir = enemyPos - (Vector2)transform.position;
-
-        enemy.KnockBack(dir.normalized, knockBackPower);
-    }
-
-    public void Fire(Vector2 dir)
+    public void Fire(Vector2 dir) //발사하는 함수.
     {
         ActivateBullet();
-
-        bFired = true;
 
         dir.Normalize();
         flyDir = dir;
@@ -189,10 +84,13 @@ public class Bullet : MonoBehaviour
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
         prevPosition = transform.position;
+
+        stateMachine.ChangeState<BS_BeforeFire>();
     }
 
-    public void BulletEffectIsFinished()
+    public void BulletEffectIsFinished() //총알의 공격 과정이 모두 끝났을 때 호출.
     {
+        DeActivateBullet();
         BulletEffectIsFinishedEvent?.Invoke();
     }
 
@@ -213,4 +111,12 @@ public class Bullet : MonoBehaviour
         circleCollider.enabled = true;
         explosionRangeCollider.enabled = true;
     }
+
+
+
+
+
+    /// <summary>
+    /// 구현 코드 존 --------------------------------------------------------
+    /// </summary>
 }
