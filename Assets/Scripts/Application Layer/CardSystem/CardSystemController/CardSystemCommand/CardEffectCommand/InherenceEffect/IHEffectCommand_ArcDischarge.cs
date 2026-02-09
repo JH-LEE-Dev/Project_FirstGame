@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Inherence/Arc Discharge")]
@@ -12,10 +13,15 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
     {
         cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded);
 
-        BulletElementData data;
-        data.bulletElementType = BulletElementType.Electric;
+        foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
+        {
+            cardStatusEffectCommandHandler.ApplyBulletElementType(pair.Value);
+        }
 
-        cardStatusEffectCommandHandler.ApplyBulletElementType(data);
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffTypes)
+        {
+            cardStatusEffectCommandHandler.ApplyDebuffElementType(pair.Value);
+        }
 
         if (bUpgraded == false)
         {
@@ -33,10 +39,17 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
     {
         cardStatusEffectCommandHandler.ResetBulletType();
 
-        BulletElementData data;
-        data.bulletElementType = BulletElementType.Electric;
 
-        cardStatusEffectCommandHandler.UndoBulletElementApply(data);
+        foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
+        {
+            cardStatusEffectCommandHandler.UndoBulletElementApply(pair.Value);
+        }
+
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffTypes)
+        {
+            cardStatusEffectCommandHandler.UndoDebuffElementApply(pair.Value);
+        }
+
 
         if (bUpgraded == false)
         {

@@ -5,7 +5,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
 {
     void ApplyAttackCntModifier(int attckCnt,GameSystemActionContextType cardSystemContextType);
     IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards();
-    IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards();
+    IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentCardSlot();
     void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
     void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
     IReadOnlyList<CardDataInstance> GetHandPile();
@@ -15,7 +15,8 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
-    void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType);
+    void ApplyAdditionalAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
+    void ApplyCriticalChanceModifier(int chance, GameSystemActionContextType cardSystemContextType);
     void ApplyAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
     int GetPrevUsedBulletCardCnt();
     int GetPrevUsedCardCnt();
@@ -43,4 +44,11 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
     void UndoDebuffElementApply(DebuffElementData _debuffElementData);
+    CardDataInstance GetCurrentInherenceCard();
+    void ObserveElementExplosionEvent(Action<ElementExplosionType> handler);
+    void CancelObserveElementExplosionEvent(Action<ElementExplosionType> handler);
+    void ReserveCardEffect(CardEffectCommand command);
+    IPlayerHandler GetPlayerHandler();
+    IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
+    void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType);
 }

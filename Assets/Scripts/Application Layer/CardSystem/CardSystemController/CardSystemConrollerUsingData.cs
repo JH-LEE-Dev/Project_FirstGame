@@ -82,6 +82,9 @@ public enum CardStatusEffectType
     OvercompensationHPIncrease,
     OvercompensationShield,
     Distortion,
+    AquaBurst,
+    WaterFog,
+    AirBust,
 }
 
 public enum CardLogicSystemActionType
@@ -138,6 +141,11 @@ public enum ComplexSystemEffectType
     Scan,
     Amplify,
     Pluto,
+    BattlePrep,
+    BatteryCharge,
+    NaturalCycle,
+    Cleanse,
+    ElementalBoost,
 }
 
 public enum CardSelectionSystemEffectType
@@ -192,6 +200,7 @@ public enum GameSystemActionContextType
     UpgradeCardsFromHand,
     UpgradeCardsFromExtinction,
     UpgradeCardsFromGrave,
+    HandCardsToDeck,
     MAX,
     NoContext,
 }

@@ -15,6 +15,12 @@ public class CardDataInstance : ICardDataInstanceProvider
     public int valueModifier = 1;
     public bool bPermanent = false;
 
+    public Dictionary<BulletElementType,BulletElementData> elementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
+    public Dictionary<DebuffElementEffectType, DebuffElementData> debuffTypes = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+
+    public Dictionary<BulletElementType, BulletElementData> initialElementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
+    public Dictionary<DebuffElementEffectType, DebuffElementData> initialDebuffTypes = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+
     private List<CardEffectCommand> cardLogicSystemEffects = new List<CardEffectCommand>(3);
     private List<CardEffectCommand> cardDataControlSystemEffects = new List<CardEffectCommand>(3);
     private List<CardEffectCommand> cardStatusEffects = new List<CardEffectCommand>(3);
@@ -41,6 +47,15 @@ public class CardDataInstance : ICardDataInstanceProvider
 
     private void ReadyEffects()
     {
+        for (int i = 0; i < cardData.defaultElementTypes.Count; ++i)
+        {
+            elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+            initialElementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+
+            debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
+            initialDebuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
+        }
+
         for (int i = 0; i < cardData.cardLogicSystemEffects_Prefab.Count; ++i)
         {
             var commands = UnityEngine.Object.Instantiate(cardData.cardLogicSystemEffects_Prefab[i]);
@@ -87,10 +102,22 @@ public class CardDataInstance : ICardDataInstanceProvider
             HandPileExistEffect = UnityEngine.Object.Instantiate(cardData.HandPileExistEffect_Prefab);
     }
 
+    public void ResetElement_Debuff()
+    {
+        elementTypes.Clear();
+        debuffTypes.Clear();
+
+        for (int i = 0; i < cardData.defaultElementTypes.Count; ++i)
+        {
+            elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+
+            debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
+        }
+    }
+
     public void ResetState()
     {
-        // 사용 중 변한 값 전부 초기화
-        // 예: cost, cooldown, tempModifier 등
+        ResetElement_Debuff();
     }
 
     public ICardDataProvider GetCardDataProvider()

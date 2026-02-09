@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletEffectProvider
@@ -15,8 +16,8 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     ICharacterStatProvider characterStatProvider;
 
     //인터페이스 선언부
-    List<BulletElementData> IBulletEffectProvider.currentBulletElementTypes => currentEffectElements;
-    List<DebuffElementData> IBulletEffectProvider.currentDebuffElementTypes => throw new NotImplementedException();
+    IReadOnlyDictionary<BulletElementType, BulletElementData> IBulletEffectProvider.currentEffectElements => currentEffectElements;
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IBulletEffectProvider.currentDebuffElementTypes => currentDebuffElementTypes;
 
     [SerializeField] private Bullet bulletPrefab;
     private Bullet bulletObject;
@@ -26,8 +27,12 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     bool IBulletEffectProvider.bUpgraded => bUpgraded;
 
 
-    private List<BulletElementData> currentEffectElements = new List<BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
-    private List<DebuffElementData> currentDebuffElementTypes = new List<DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+
+    protected Dictionary<DebuffElementEffectType, DebuffElementData> currentDebuffElementTypes =
+        new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+
+    protected Dictionary<BulletElementType, BulletElementData> currentEffectElements =
+        new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
     /// <summary>
     /// 구현 속성 존. ---------------------------------------------
@@ -114,22 +119,58 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
 
     public void ApplyBulletElementType(BulletElementData _effectElementData)
     {
-        currentEffectElements.Add(_effectElementData);
+        if (currentEffectElements.ContainsKey(_effectElementData.bulletElementType))
+        {
+            var data = currentEffectElements[_effectElementData.bulletElementType];
+            data.nestingCnt += _effectElementData.nestingCnt;
+            currentEffectElements[_effectElementData.bulletElementType] = data;
+        }
+        else
+        {
+            currentEffectElements[_effectElementData.bulletElementType] = _effectElementData;
+        }
     }
 
     public void UndoBulletElementApply(BulletElementData _effectElementData)
     {
-        currentEffectElements.Remove(_effectElementData);
+        if (currentEffectElements[_effectElementData.bulletElementType].nestingCnt > _effectElementData.nestingCnt)
+        {
+            var data = currentEffectElements[_effectElementData.bulletElementType];
+            data.nestingCnt -= _effectElementData.nestingCnt;
+            currentEffectElements[_effectElementData.bulletElementType] = data;
+        }
+        else
+        {
+            currentEffectElements.Remove(_effectElementData.bulletElementType);
+        }
     }
 
     public void ApplyDebuffElementType(DebuffElementData _debuffElementData)
     {
-        currentDebuffElementTypes.Add(_debuffElementData);
+        if (currentDebuffElementTypes.ContainsKey(_debuffElementData.debuffElementType))
+        {
+            var data = currentDebuffElementTypes[_debuffElementData.debuffElementType];
+            data.turnCnt += _debuffElementData.turnCnt;
+            currentDebuffElementTypes[_debuffElementData.debuffElementType] = data;
+        }
+        else
+        {
+            currentDebuffElementTypes[_debuffElementData.debuffElementType] = _debuffElementData;
+        }
     }
 
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
-        currentDebuffElementTypes.Remove(_debuffElementData);
+        if (currentDebuffElementTypes[_debuffElementData.debuffElementType].turnCnt > _debuffElementData.turnCnt)
+        {
+            var data = currentDebuffElementTypes[_debuffElementData.debuffElementType];
+            data.turnCnt -= _debuffElementData.turnCnt;
+            currentDebuffElementTypes[_debuffElementData.debuffElementType] = data;
+        }
+        else
+        {
+            currentDebuffElementTypes.Remove(_debuffElementData.debuffElementType);
+        }
     }
 
     /// <summary>

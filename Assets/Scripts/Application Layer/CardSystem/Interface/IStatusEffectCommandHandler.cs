@@ -1,4 +1,5 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public interface IStatusEffectCommandHandler : ICommandHandler
 {
@@ -21,4 +22,8 @@ public interface IStatusEffectCommandHandler : ICommandHandler
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
     void UndoDebuffElementApply(DebuffElementData _debuffElementData);
+
+    public event Action<ElementExplosionType> ElementExplosionOccuredEvent;
+    IPlayerHandler GetPlayerHandler();
+    IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
 }

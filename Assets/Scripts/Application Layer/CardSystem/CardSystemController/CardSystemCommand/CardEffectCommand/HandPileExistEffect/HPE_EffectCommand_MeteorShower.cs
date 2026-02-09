@@ -7,7 +7,7 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
     {
         var handPile = complexSystemActionCommand.GetHandPile();
 
-        var bulletCardSlot = complexSystemActionCommand.GetCurrentBulletCards();
+        var bulletCardSlot = complexSystemActionCommand.GetCurrentCardSlot();
 
         bool bCondition_1 = false;
         for(int i = 0;i<bulletCardSlot.Count;++i)

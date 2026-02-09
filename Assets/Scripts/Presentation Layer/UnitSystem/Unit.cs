@@ -27,7 +27,8 @@ public class Unit : MonoBehaviour, IDamageable
     protected EffectComponent effectComponent;
     protected HealthComponent healthComponent;
 
-    protected List<DebuffElementData> currentAppliedDebuff = new List<DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
+    protected Dictionary<DebuffElementEffectType,DebuffElementData> currentAppliedDebuff = 
+        new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
     public Animator animator { get; private set; }
 
@@ -87,8 +88,6 @@ public class Unit : MonoBehaviour, IDamageable
     {
         return bDead;
     }
-
-
 
     /// <summary>
     /// 구현 코드 존.----------------------------------------------

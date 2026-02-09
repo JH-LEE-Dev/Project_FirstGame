@@ -18,6 +18,8 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
     bool bInherenceCardEquipped = false;
 
+    private CardDataInstance currentInherenceCard;
+
     public void Initialize()
     {
         for (int i = 0; i < maxSlotCnt; ++i)
@@ -44,6 +46,8 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
                 return result;
             }
+
+            currentInherenceCard = usedCard;
 
             bInherenceCardEquipped = true;
         }
@@ -109,6 +113,8 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
 
         if (bulletCardSlot[slotIdx][0].GetCardData().cardType == CardType.Inherence)
         {
+            currentInherenceCard = null;
+
             bInherenceCardEquipped = false;
         }
 
@@ -184,7 +190,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
         return prevBulletCardSlot;
     }
 
-    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentCardSlot()
     {
         return bulletCardSlot;
     }
@@ -214,5 +220,10 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public bool IsInherenceCardEquipped()
     {
         return bInherenceCardEquipped;
+    }
+
+    public CardDataInstance GetCurrentInherenceCard()
+    {
+        return currentInherenceCard;
     }
 }

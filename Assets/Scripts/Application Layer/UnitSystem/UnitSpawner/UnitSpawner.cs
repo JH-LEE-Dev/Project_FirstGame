@@ -11,9 +11,6 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
     public event Action<List<Enemy>> EnemyCreatedEvent;
     public event Action<List<IEnemyData>> AdditionalEnemySpawnedEvent;
 
-    [Header("Enemy Pool Settings")]
-    [SerializeField] const int enemyMaxCount = 40;
-
     [Header("Unit Prefabs")]
     private GameObject unitPrefab;
     [SerializeField] private Character characterPrefab;
@@ -49,9 +46,9 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
     [SerializeField] private GameObject enemyTargetPoint;
 
 
-    private List<Enemy> enemies = new List<Enemy>(40);
-    private List<IEnemyData> enemyData = new List<IEnemyData>(40);
-    private List<IEnemyData> additionalSpawnedEnemy = new List<IEnemyData>(40);
+    private List<Enemy> enemies = new List<Enemy>(SYSTEM_VAR.maxEnemyCount);
+    private List<IEnemyData> enemyData = new List<IEnemyData>(SYSTEM_VAR.maxEnemyCount);
+    private List<IEnemyData> additionalSpawnedEnemy = new List<IEnemyData>(SYSTEM_VAR.maxEnemyCount);
 
     // Enemy Ǯ
     ObjectPool<Enemy> enemyPool;
@@ -64,8 +61,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
             actionOnRelease: OnReleaseEnemy,
             actionOnDestroy: OnDestroyEnemy,
             collectionCheck: false,
-            defaultCapacity: 40,
-            maxSize: 40
+            defaultCapacity: SYSTEM_VAR.maxEnemyCount,
+            maxSize: SYSTEM_VAR.maxEnemyCount
         );
     }
 

@@ -78,7 +78,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemActionCommandHandler.CardsToExtinction(cardPile);
     }
 
-    public void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType)
+    public void ApplyAdditionalAttackModifier(float attack, GameSystemActionContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(attack);
     }
@@ -152,9 +152,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardDataControlActionCommandHandler.RevertCardsUpgrade(cards, bPermenant);
     }
 
-    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentCardSlot()
     {
-        return slotSystemActionCommandHandler.GetCurrentBulletCards();
+        return slotSystemActionCommandHandler.GetCurrentCardSlot();
     }
 
     public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, GameSystemActionContextType cardSystemContextType)
@@ -254,5 +254,47 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
         cardStatusEffectCommandHandler.UndoDebuffElementApply(_debuffElementData);
+    }
+
+    public CardDataInstance GetCurrentInherenceCard()
+    {
+       return slotSystemActionCommandHandler.GetCurrentInherenceCard();
+    }
+
+    public void ObserveElementExplosionEvent(Action<ElementExplosionType> handler)
+    {
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent -= handler;
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent += handler;
+    }
+
+    public void CancelObserveElementExplosionEvent(Action<ElementExplosionType> handler)
+    {
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent -= handler;
+    }
+
+    public void ReserveCardEffect(CardEffectCommand command)
+    {
+        cardSystemControlActionCommandHandler.ReserveCardEffect(command);
+    }
+
+    public IPlayerHandler GetPlayerHandler()
+    {
+        return cardStatusEffectCommandHandler.GetPlayerHandler();
+    }
+
+    public IReadOnlyList<IEnemyHandler> GetEnemyHandlers()
+    {
+        return cardStatusEffectCommandHandler.GetEnemyHandlers();
+    }
+
+    public void ApplyCriticalChanceModifier(int chance, GameSystemActionContextType cardSystemContextType)
+    {
+        cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(chance);
+    }
+
+    public void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType)
+    {
+        cardSystemActionCommandHandler.SetCardSystemContext(gameSystemActionContextType);
+        cardSystemActionCommandHandler.CardsToDeck(cards);
     }
 }

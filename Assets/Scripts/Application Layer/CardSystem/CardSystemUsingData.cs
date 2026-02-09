@@ -9,6 +9,8 @@ public static class SYSTEM_VAR
     public const int maxArtifactCount = 5;
 
     public const int maxDebuffElementCount = (int)BulletElementType.MAX;
+
+    public const int maxEnemyCount = 50;
 }
 
 public enum CardType
@@ -16,6 +18,7 @@ public enum CardType
     Bullet,
     Magic,
     Inherence,
+    Debuff,
 }
 
 public enum ElementType
@@ -55,6 +58,14 @@ public enum CardName
     Scan,
     PrismBolt,
     ArcDischarge,
+    AquaBurst,
+    WaterFog,
+    BattlePrep,
+    BatteryCharge,
+    NaturalCycle,
+    Cleanse,
+    ElementalBoost,
+    AirBust,
 }
 
 public enum BulletElementType
@@ -72,25 +83,30 @@ public enum BulletType
     Normal,
     PrismBolt,
     ArcDischarge,
+    AquaBurst,
 }
 
 public struct BulletElementData
 {
     public BulletElementType bulletElementType;
+    public int nestingCnt;
 
-    public BulletElementData(BulletElementType _effectElementType)
+    public BulletElementData(BulletElementType _effectElementType, int _nestingCnt)
     {
         bulletElementType = _effectElementType;
+        nestingCnt = _nestingCnt;
     }
 }
 
 public struct DebuffElementData
 {
     public DebuffElementEffectType debuffElementType;
+    public int turnCnt;
 
-    public DebuffElementData(DebuffElementEffectType _effectElementType)
+    public DebuffElementData(DebuffElementEffectType _effectElementType,int _turnCnt)
     {
         debuffElementType = _effectElementType;
+        turnCnt = _turnCnt;
     }
 }
 
@@ -101,4 +117,12 @@ public enum DebuffElementEffectType
     Oxidation, //ªÍ»≠
     Wet, //Ω¿¿± §ª
 }
+
+public enum ElementExplosionType
+{
+    Steam,
+    Flame,
+    Spark,
+}
+
 
