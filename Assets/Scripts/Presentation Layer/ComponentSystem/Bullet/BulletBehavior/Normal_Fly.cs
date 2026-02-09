@@ -94,28 +94,28 @@ public class Normal_Fly : BulletBehavior
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
-        bool bCritical = CalcCurrentDamage();
+        bool bCritical = CalcCurrentDamage_WithoutElemExplosion();
 
         if (hit != null)
         {
-            hit.TakeDamage(currentDamage, bCritical);
+            hit.TakeDamage(baseDamage, bCritical);
             hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             ApplyKnockBack(hit, other.transform.position);
         }
     }
 
-    protected bool CalcCurrentDamage() //치명타 여부 및 데미지 계산 함수.
+    protected bool CalcCurrentDamage_WithoutElemExplosion() //원소 폭발을 적용하기 전 치명타 여부 및 데미지 계산 함수.
     {
         bool bCritical = false;
 
         int critical = UnityEngine.Random.Range(0, 100);
 
-        currentDamage = characterStatProvider.resultDamage;
+        baseDamage = characterStatProvider.resultDamage;
 
         if (critical < characterStatProvider.criticalChance)
         {
             bCritical = true;
-            currentDamage = characterStatProvider.totalDamage * 2 * characterStatProvider.totalDamageValue;
+            baseDamage = characterStatProvider.totalDamage * 2 * characterStatProvider.totalDamageValue;
         }
 
         return bCritical;

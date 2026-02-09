@@ -16,7 +16,8 @@ public abstract class BulletBehavior : ScriptableObject
     [SerializeField] protected float knockBackPower = 1f;
     protected Collider2D directHitObject;
     protected Vector2 prevPosition;
-    protected float currentDamage = 0f;
+    protected float baseDamage = 0f;
+    protected float elemExplosionDamage = 0f;
     protected bool bBehaviorEnd = false;
 
     public void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
