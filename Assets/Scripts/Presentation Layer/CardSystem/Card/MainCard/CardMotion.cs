@@ -208,8 +208,10 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardState != CardState.InHand) return;
 
+        // 다른 연출들 정리
+        AllKillTweens(false);
 
-        hoverTween?.Kill();
+
         hoverTween = transform.DOScale(originScale * hoverScale, hoverDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
@@ -219,7 +221,9 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardState != CardState.InHand) return;
 
-        hoverTween?.Kill();
+        // 다른 연출들 정리
+        AllKillTweens(false);
+
         hoverTween = transform.DOScale(originScale, hoverDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
@@ -229,7 +233,9 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardState != CardState.InHand) return;
 
-        hoverTween?.Kill();
+        // 다른 연출들 정리
+        AllKillTweens(false);
+
         hoverTween = transform.DOScale(SelectScale * hoverScale, hoverDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
@@ -239,7 +245,9 @@ public class CardMotion : MonoBehaviour
     {
         if (owner.cardState != CardState.InHand) return;
 
-        hoverTween?.Kill();
+        // 다른 연출들 정리
+        AllKillTweens(false);
+
         hoverTween = transform.DOScale(SelectScale, hoverDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
