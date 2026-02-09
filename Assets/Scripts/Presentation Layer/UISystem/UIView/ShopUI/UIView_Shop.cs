@@ -48,6 +48,7 @@ public class UIView_Shop : UIView
 
     [Header("Other UI")]
     [SerializeField] private WarningUI warningUI;
+    [SerializeField] private UIText_ShopStarlight uiStarlight;
 
     [Header("PickUpSystem")]
     [SerializeField] private PickUpSystem pickUpSystem;
@@ -62,7 +63,7 @@ public class UIView_Shop : UIView
     ///////// Basic Values
     private Vector3 pannelCardScale = new Vector3(5f, 5f, 1f);
     private int currentPrice = 0;
-    private int pickupPayCnt = 1;
+    private int currentPickupPrice = 0;
 
     private void OnEnable()
     {
@@ -114,7 +115,8 @@ public class UIView_Shop : UIView
 
     public void OpenShop()
     {
-        pickupPayCnt = 1;
+        currentPickupPrice = pickupPrice;
+        uiStarlight?.UpdateText(playerData.GetPlayerCurrentMoney());
     }
 
     public void PlayerSpawned(IPlayerData _playerData)
@@ -255,7 +257,7 @@ public class UIView_Shop : UIView
     ///
     private void OnClick_PickUpCard()
     {
-        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), pickupPrice * pickupPayCnt))
+        if (!CheckPayment(playerData.GetPlayerCurrentMoney(), currentPickupPrice))
         {
             warningUI?.Play(failPayment);
             return;
@@ -345,7 +347,8 @@ public class UIView_Shop : UIView
         switch(type)
         {
             case ShopBehaviorType.PickUp:
-                currentPrice = pickupPrice * pickupPayCnt++;
+                currentPrice = currentPickupPrice;
+                currentPickupPrice *= 2;
                 break;
 
             case ShopBehaviorType.Upgrade:
@@ -360,8 +363,7 @@ public class UIView_Shop : UIView
         }
 
         ShopBillingEvent.Invoke(currentPrice);
-        Debug.Log("ม๖บา:"+currentPrice);
-        Debug.Log(playerData.GetPlayerCurrentMoney());
+        uiStarlight?.UpdateText(playerData.GetPlayerCurrentMoney());
     }
 
     #endregion
