@@ -10,7 +10,6 @@ public class NormalBehavior : BulletBehavior
     protected Vector2 prevPosition;
     protected float baseDamage = 0f;
     protected float elemExplosionDamage = 0f;
-    protected bool bBehaviorEnd = false;
 
     public override void End()
     {

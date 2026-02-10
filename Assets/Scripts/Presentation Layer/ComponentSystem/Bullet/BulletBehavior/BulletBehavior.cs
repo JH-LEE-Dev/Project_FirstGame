@@ -12,7 +12,11 @@ public abstract class BulletBehavior : ScriptableObject
     protected ICharacterStatProvider characterStatProvider;
     protected IBulletEffectProvider bulletEffectProvider;
     protected IDamageSystem damageSystem;
+    protected bool bBehaviorEnd = false;
+
     protected Bullet bullet;
+
+    protected Transform bulletTransform;
 
     public void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
     IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
@@ -23,8 +27,59 @@ public abstract class BulletBehavior : ScriptableObject
         damageSystem = _damageSystem;
     }
 
-    public abstract void Enter();
+    public virtual void Enter()
+    {
+        bBehaviorEnd = false;
+    }
+
+
     public abstract void Update();
-    public abstract void End();
-    public abstract void Exit();
+
+
+    public virtual void End()
+    {
+        bBehaviorEnd = true;
+        BulletBehaviorEndEvent?.Invoke();
+    }
+
+
+    public virtual void Exit()
+    {
+        bBehaviorEnd = true;
+        BulletEffectEndEvent?.Invoke();
+    }
+
+    // 범위 체크
+    protected Collider2D[] CheckExplosion()
+    {
+        return Physics2D.OverlapCircleAll(bullet.transform.position,
+            bullet.range + bullet.range * (characterStatProvider.attackRange * 0.01f), bullet.targetMask);
+    }
+
+    // 데미지 및 상태이상을 주는 함수
+    protected virtual void ApplyDamage(Collider2D other)
+    {
+        // 데미지 처리
+        bullet.effectComponent.PlayImpactEffect();
+
+        IDamageable hit = other.GetComponent<IDamageable>();
+
+        bool bCritical = false;
+        float damage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
+
+        if (hit != null)
+        {
+            hit.TakeDamage(damage, bCritical);
+            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
+        }
+    }
+
+    // 해당 적에게 넉백을 주는 함수
+    protected virtual void ApplyKnockBack(Collider2D other, float knockBackPower = 0f)
+    {
+        IDamageable enemy = other.GetComponent<IDamageable>();
+
+        Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
+        enemy.KnockBack(dir.normalized, knockBackPower);
+    }
 }

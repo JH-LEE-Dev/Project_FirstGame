@@ -1,19 +1,12 @@
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/Normal_Hit")]
-public class Normal_Hit : BulletBehavior_ProjectileHit
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Hit")]
+public class PrismBolt_Hit : BulletBehavior_ProjectileHit
 {
     public override void Enter()
     {
         base.Enter();
-
-        var colliders = CheckExplosion();
-        foreach(var collider in colliders)
-        {
-            ApplyDamage(collider);
-            ApplyKnockBack(collider);
-        }
     }
+
 
     public override void Update()
     {
@@ -22,6 +15,7 @@ public class Normal_Hit : BulletBehavior_ProjectileHit
 
         End();
     }
+
 
     public override void End()
     {
