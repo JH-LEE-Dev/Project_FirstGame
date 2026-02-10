@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge_BeforeFire")]
 public class ArcDischarge_BeforeFire : ArcDischargeBehavior
 {
     public override void Enter()
