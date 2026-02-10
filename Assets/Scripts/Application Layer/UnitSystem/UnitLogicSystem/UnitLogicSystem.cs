@@ -287,9 +287,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.SetbCanAttack(bCanAttack);
     }
 
-    public void ApplyTotalDamageModifier(float bonusDamage)
+    public void ApplyAdditionalAttackValueModifier(float bonusDamage)
     {
-        characterUnit.combatEffectReceiver.ApplyTotalDamageModifier(bonusDamage);
+        characterUnit.combatEffectReceiver.ApplyAdditionalAttackValueModifier(bonusDamage);
         CharacterStatChanged();
     }
 
@@ -299,9 +299,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         CharacterStatChanged();
     }
 
-    public void UndoTotalDamageModifier(float bonusDamage)
+    public void UndoAdditionalAttackValueModifier(float bonusDamage)
     {
-        characterUnit.combatEffectReceiver.UndoTotalDamageModifier(bonusDamage);
+        characterUnit.combatEffectReceiver.UndoAdditionalAttackValueModifier(bonusDamage);
         CharacterStatChanged();
     }
 
@@ -320,9 +320,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
     {
-        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded);
+        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded,_additionalAttackStat);
     }
 
     public void ResetBulletType()

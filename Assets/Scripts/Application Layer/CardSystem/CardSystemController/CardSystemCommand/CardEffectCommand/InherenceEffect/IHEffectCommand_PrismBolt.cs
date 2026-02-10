@@ -11,7 +11,18 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
+        AdditionalAttackStat additionalAttackStat;
+
+        if (bUpgraded)
+        {
+            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1);
+        }
+        else
+        {
+            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1);
+        }
+
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded,additionalAttackStat);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -26,12 +37,12 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(attackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedAttackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 
@@ -54,12 +65,12 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-attackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedAttackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 }

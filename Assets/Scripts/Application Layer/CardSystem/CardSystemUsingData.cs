@@ -1,3 +1,4 @@
+using System;
 
 public static class SYSTEM_VAR
 {
@@ -86,6 +87,7 @@ public enum BulletType
     AquaBurst,
 }
 
+[Serializable]
 public struct BulletElementData
 {
     public BulletElementType bulletElementType;
@@ -98,6 +100,7 @@ public struct BulletElementData
     }
 }
 
+[Serializable]
 public struct DebuffElementData
 {
     public DebuffElementEffectType debuffElementType;
@@ -125,4 +128,16 @@ public enum ElementExplosionType
     Spark,
 }
 
+public struct AdditionalAttackStat
+{
+    public float attack;
+    public float additionalAttackValue;
+    public float totalDamageValue;
+    public AdditionalAttackStat(float _attack, float _additionalAttackValue, float _totalDamageValue)
+    {
+        attack = _attack;
+        additionalAttackValue = _additionalAttackValue;
+        totalDamageValue = _totalDamageValue;
+    }
+}
 

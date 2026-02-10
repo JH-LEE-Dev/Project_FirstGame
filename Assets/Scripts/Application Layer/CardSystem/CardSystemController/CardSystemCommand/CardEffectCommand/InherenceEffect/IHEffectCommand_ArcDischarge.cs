@@ -11,7 +11,7 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded,default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -26,12 +26,12 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(attackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedAttackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 
@@ -54,12 +54,12 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-attackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedAttackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 }

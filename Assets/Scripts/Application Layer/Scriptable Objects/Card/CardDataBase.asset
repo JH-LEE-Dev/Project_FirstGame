@@ -23,6 +23,8 @@ MonoBehaviour:
     usingType: 0
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -41,6 +43,8 @@ MonoBehaviour:
     usingType: 0
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -59,6 +63,8 @@ MonoBehaviour:
     usingType: 0
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -77,6 +83,8 @@ MonoBehaviour:
     usingType: 1
     priority: 0
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -95,6 +103,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -113,6 +123,8 @@ MonoBehaviour:
     usingType: 1
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab:
     - {fileID: 11400000, guid: 5fdbbf50f0367f04f98bb83d3995c183, type: 2}
     cardDataControlSystemEffects_Prefab: []
@@ -132,6 +144,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab:
     - {fileID: 11400000, guid: 1f9b2abbc091b6c4fa0c1525569139ce, type: 2}
     cardDataControlSystemEffects_Prefab: []
@@ -151,6 +165,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 0
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -169,6 +185,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab:
     - {fileID: 11400000, guid: 55c6aaf15fe6f1e46ad6b29c50b8a996, type: 2}
     cardDataControlSystemEffects_Prefab: []
@@ -188,6 +206,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -206,6 +226,8 @@ MonoBehaviour:
     usingType: 0
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -224,6 +246,8 @@ MonoBehaviour:
     usingType: 1
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -242,6 +266,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 0
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -260,6 +286,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -279,6 +307,8 @@ MonoBehaviour:
     usingType: 0
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -297,6 +327,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -315,6 +347,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -333,6 +367,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -351,6 +387,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 0
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -369,6 +407,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -387,6 +427,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -405,6 +447,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -423,6 +467,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -441,6 +487,8 @@ MonoBehaviour:
     usingType: 1
     priority: 3
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -459,6 +507,8 @@ MonoBehaviour:
     usingType: 1
     priority: 3
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -477,6 +527,8 @@ MonoBehaviour:
     usingType: 1
     priority: 3
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -495,6 +547,8 @@ MonoBehaviour:
     usingType: 1
     priority: 3
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -513,6 +567,8 @@ MonoBehaviour:
     usingType: 1
     priority: 3
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []
@@ -531,6 +587,8 @@ MonoBehaviour:
     usingType: 0
     priority: 1
     bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab: []

@@ -34,6 +34,10 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     protected Dictionary<BulletElementType, BulletElementData> currentEffectElements =
         new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
+    public AdditionalAttackStat additionalAttackStat { get; private set; }
+
+    private DamageCalcComponent damageCalcComponent;
+
     /// <summary>
     /// 구현 속성 존. ---------------------------------------------
     /// </summary>
@@ -52,15 +56,17 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     /// 시스템 코드 존. ---------------------------------------------
     /// </summary>
 
-    public void Initialize(UnitContext _ctx, ICombatSignalHandler _combatSignalHandler, ICharacterStatProvider _characterStatProvider)
+    public void Initialize(UnitContext _ctx, ICombatSignalHandler _combatSignalHandler, ICharacterStatProvider _characterStatProvider,
+        DamageCalcComponent _damageCalcComponent)
     {
         base.Initialize(_ctx, _combatSignalHandler);
 
+        damageCalcComponent = _damageCalcComponent;
         characterStatProvider = _characterStatProvider;
 
         bulletObject = Instantiate(bulletPrefab, transform);
         bulletObject.gameObject.SetActive(false);
-        bulletObject.Initialize(characterStatProvider,this);
+        bulletObject.Initialize(characterStatProvider,this, damageCalcComponent);
 
         BindEvent();
     }
@@ -106,15 +112,18 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
         ResetBulletType();
     }
 
-    public void SetBulletType(BulletType _type, bool bUpgraded)
+    public void SetBulletType(BulletType _type, bool _bUpgraded, AdditionalAttackStat _additionalAttackStat)
     {
         bulletType =_type;
+        bUpgraded = _bUpgraded;
+        additionalAttackStat = _additionalAttackStat;
     }
 
     public void ResetBulletType()
     {
         bulletType = BulletType.Normal;
         bUpgraded = false;
+        additionalAttackStat = default;
     }
 
     public void ApplyBulletElementType(BulletElementData _effectElementData)

@@ -13,7 +13,7 @@ public interface ICombatEffectReceiver
     void ApplyWeaknessModifier(int turnCnt);
 
     void ApplyAttackCntModifier(int cnt);
-    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyAdditionalAttackValueModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
-    void UndoTotalDamageModifier(float bonusDamage);
+    void UndoAdditionalAttackValueModifier(float bonusDamage);
 }

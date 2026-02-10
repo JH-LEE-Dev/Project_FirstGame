@@ -10,14 +10,14 @@ public interface IStatusEffectCommandHandler : ICommandHandler
     void ApplyAttackCntModifier(int cnt);
     void ApplyCriticalChanceModifier(int chance);
     void ApplyWeaknessModifier(int turnCnt);
-    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyAdditionalAttackValueModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
-    void UndoTotalDamageModifier(float bonusDamage);
+    void UndoAdditionalAttackValueModifier(float bonusDamage);
     void HPDecrease(float amount);
     void HPIncrease(float amount);
     void SetCharacterCanAttackState(bool bCanAttack);
     void ApplyBulletElementType(BulletElementData effectElementData);
-    void SetBulletType(BulletType bulletType, bool bUpgraded);
+    void SetBulletType(BulletType bulletType, bool bUpgraded,AdditionalAttackStat _additionalAttackStat);
     void ResetBulletType();
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);

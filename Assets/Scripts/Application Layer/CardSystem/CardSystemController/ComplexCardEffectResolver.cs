@@ -201,9 +201,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler.UndoUseCards_AfterAttackEffects(cardPile);
     }
 
-    public void ApplyTotalDamageModifier(float bonusDamage)
+    public void ApplyAddifionalAttackValueModifier(float bonusDamage)
     {
-        cardStatusEffectCommandHandler.ApplyTotalDamageModifier(bonusDamage);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(bonusDamage);
     }
 
     public void ApplyTotalDamageValueModifier(float bonusValue)
@@ -211,9 +211,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyTotalDamageValueModifier(bonusValue);
     }
 
-    public void UndoTotalDamageModifier(float bonusDamage)
+    public void UndoAdditionalAttackValueModifier(float bonusDamage)
     {
-        cardStatusEffectCommandHandler.UndoTotalDamageModifier(bonusDamage);
+        cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(bonusDamage);
     }
 
     public void SetCharacterCanAttackState(bool boolean)
@@ -231,9 +231,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
     {
-        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded);
+        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded,_additionalAttackStat);
     }
 
     public void ResetBulletType()
@@ -296,5 +296,15 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     {
         cardSystemActionCommandHandler.SetCardSystemContext(gameSystemActionContextType);
         cardSystemActionCommandHandler.CardsToDeck(cards);
+    }
+
+    public void ApplySlotCntModifier(int _slotCnt)
+    {
+        slotSystemActionCommandHandler.ApplySlotCntModifier(_slotCnt);
+    }
+
+    public void ApplyAdditionalAttackValueModifier(float value)
+    {
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
     }
 }

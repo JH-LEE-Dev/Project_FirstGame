@@ -16,6 +16,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
     void ApplyAdditionalAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
+    void ApplyAdditionalAttackValueModifier(float value);
     void ApplyCriticalChanceModifier(int chance, GameSystemActionContextType cardSystemContextType);
     void ApplyAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
     int GetPrevUsedBulletCardCnt();
@@ -33,13 +34,13 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards();
     void ApplyCardUsePhaseCntModifier(int cnt, GameSystemActionContextType cardSystemContextType);
     void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    void ApplyTotalDamageModifier(float bonusDamage);
+    void ApplyAddifionalAttackValueModifier(float bonusDamage);
     void ApplyTotalDamageValueModifier(float bonusValue);
-    void UndoTotalDamageModifier(float bonusDamage);
+    void UndoAdditionalAttackValueModifier(float bonusDamage);
     void SetCharacterCanAttackState(bool boolean);
     bool IsInherenceCardEquipped();
     void ApplyBulletElementType(BulletElementData effectElementData);
-    void SetBulletType(BulletType bulletType,bool bUpgraded);
+    void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat);
     void ResetBulletType();
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
@@ -51,4 +52,5 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     IPlayerHandler GetPlayerHandler();
     IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType);
+    void ApplySlotCntModifier(int _slotCnt);
 }

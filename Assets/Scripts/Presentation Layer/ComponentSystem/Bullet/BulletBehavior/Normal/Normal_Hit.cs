@@ -4,12 +4,6 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/Normal_Hit")]
 public class Normal_Hit : BulletBehavior
 {
-    //필요하다면 사용.
-    //public void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider)
-    //{
-    //    base.Initialize(_bullet, _characterStatProvider, _bulletEffectProvider);
-    //}
-
     public override void Enter()
     {
         bBehaviorEnd = false;
@@ -40,7 +34,7 @@ public class Normal_Hit : BulletBehavior
         IDamageable hit = other.GetComponent<IDamageable>();
 
         bool bCritical = false;
-        characterStatProvider.CalcBaseDamage(out bCritical);
+        baseDamage = characterStatProvider.CalcBaseDamage(out bCritical);
 
         if (hit != null)
         {

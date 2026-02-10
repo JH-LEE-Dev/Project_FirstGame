@@ -6,7 +6,7 @@ public class IHEffectCommand_AirBust : CardEffectCommand<IStatusEffectCommandHan
 {
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded, default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
