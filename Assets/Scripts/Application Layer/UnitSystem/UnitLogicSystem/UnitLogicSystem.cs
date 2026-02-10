@@ -33,9 +33,24 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     private Earth playerUnit;
     private IReadOnlyList<Enemy> enemyUnits;
     private List<IEnemyHandler> enemyHandlers = new List<IEnemyHandler>(SYSTEM_VAR.maxEnemyCount);
+    private ElementExplosionSystem elementExplosionSystem;
 
-    public void Initialize()
+    public void Initialize(ElementExplosionSystem _elementExplosionSystem)
     {
+        elementExplosionSystem = _elementExplosionSystem;
+
+        BindEvents();
+    }
+
+    private void BindEvents()
+    {
+        elementExplosionSystem.ElementExplosionOccuredEvent -= ElementExplosionOccured;
+        elementExplosionSystem.ElementExplosionOccuredEvent += ElementExplosionOccured;
+    }
+
+    private void ReleaseEvents()
+    {
+        elementExplosionSystem.ElementExplosionOccuredEvent -= ElementExplosionOccured;
     }
 
     public void CharacterCreated(Character _character)
@@ -77,6 +92,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     public void Release()
     {
+        ReleaseEvents();    
         ReleaseEvent_Character();
         ReleaseEvent_Enemy();
         ReleaseEvent_Player();
@@ -89,6 +105,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
         playerUnit.PlayerDeadEvent -= PlayerIsDead;
         playerUnit.PlayerDeadEvent += PlayerIsDead;
+
+        playerUnit.PlayerHitEvent -= PlayerHit;
+        playerUnit.PlayerHitEvent += PlayerHit;
     }
 
     private void ReleaseEvent_Player()
@@ -96,6 +115,8 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         playerUnit.TakeDamageEvent -= PlayerTakeDamage;
 
         playerUnit.PlayerDeadEvent -= PlayerIsDead;
+
+        playerUnit.PlayerHitEvent -= PlayerHit;
     }
 
     private void BindEvent_Character()
@@ -132,8 +153,11 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
             enemyUnits[i].EnemyTakeDamageEvent -= EnemyTakeDamage;
             enemyUnits[i].EnemyTakeDamageEvent += EnemyTakeDamage;
 
-            enemyUnits[i].ElementExplosionOccuredEvent -= ElementExplosionOccured;
-            enemyUnits[i].ElementExplosionOccuredEvent += ElementExplosionOccured;
+            enemyUnits[i].EnemyCollideEvent -= EnemyCollide;
+            enemyUnits[i].EnemyCollideEvent += EnemyCollide;
+
+            enemyUnits[i].EnemyHitEvent -= EnemyHit;
+            enemyUnits[i].EnemyHitEvent += EnemyHit;
         }
     }
 
@@ -147,7 +171,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
                 enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
 
-                enemyUnits[i].ElementExplosionOccuredEvent -= ElementExplosionOccured;
+                enemyUnits[i].EnemyCollideEvent -= EnemyCollide;
+
+                enemyUnits[i].EnemyHitEvent -= EnemyHit;
             }
         }
     }
@@ -249,7 +275,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     public void HPDecrease(float amount)
     {
-        playerUnit.TakeDamage(amount, false);
+        playerUnit.TakeCollideDamage(amount, false);
     }
 
     public void ApplyCriticalChanceModifier(int chance)
@@ -374,5 +400,20 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat)
     {
         characterUnit.combatEffectReceiver.ApplyAdditionalAttackStat(_additionalAttackStat);
+    }
+
+    private void PlayerHit(IPlayerData _data, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _elements)
+    {
+        elementExplosionSystem.PlayerCollide(_data, _elements);
+    }
+
+    private void EnemyHit(IEnemyData _data, IReadOnlyDictionary<BulletElementType, BulletElementData> _elements)
+    {
+        elementExplosionSystem.EnemyHit(_data, _elements);
+    }
+
+    private void EnemyCollide(IEnemyData _data1, IEnemyData _data2)
+    {
+        elementExplosionSystem.EnemyCollide(_data1, _data2);
     }
 }

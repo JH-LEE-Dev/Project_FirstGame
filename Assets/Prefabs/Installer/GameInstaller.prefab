@@ -5458,6 +5458,7 @@ GameObject:
   - component: {fileID: 4970203025210532969}
   - component: {fileID: 1573170377193865263}
   - component: {fileID: 6976975151167113222}
+  - component: {fileID: -1843471121977323400}
   m_Layer: 0
   m_Name: GameInstaller
   m_TagString: Untagged
@@ -5634,6 +5635,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArtifactManager
   artifactDataBase: {fileID: 11400000, guid: a9c10c2b9d612914380bbf2bca40502a, type: 2}
+--- !u!114 &-1843471121977323400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132615358195672310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89161999e31ba3a47a69d0e87b219cf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElementExplosionSystem
 --- !u!1 &3851426605135345241
 GameObject:
   m_ObjectHideFlags: 0

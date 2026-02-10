@@ -105,5 +105,4 @@ namespace UnitLogicSystemSignals
             enemyData = _enemyData;
         }
     }
-
 }

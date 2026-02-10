@@ -12,8 +12,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
-    public event Action<ElementExplosionType> ElementExplosionOccuredEvent; //원소 폭발 발생 시 Invoke
     public event Action EnemyDebuffChangedEvent;
+    public event Action<IEnemyData, IEnemyData> EnemyCollideEvent;
+    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>> EnemyHitEvent;
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
@@ -201,7 +202,10 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (bDead == true)
             return;
 
-        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements,damage));
+        if (_bulletElements != null)
+            EnemyHitEvent?.Invoke(this, _bulletElements);
+
+        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements, damage));
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 
@@ -242,6 +246,13 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     {
         if (!other.isTrigger || bDead || rb.simulated == false)
             return;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            EnemyCollideEvent?.Invoke(this, other as IEnemyData);
+
+            return;
+        }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Earth"))
         {

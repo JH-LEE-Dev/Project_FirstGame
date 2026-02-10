@@ -94,7 +94,7 @@ public class Normal_Fly : NormalBehavior
 
         bool bCritical = false;
         baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
-        
+
         if (hit != null)
         {
             hit.TakeDamage(baseDamage, bCritical);

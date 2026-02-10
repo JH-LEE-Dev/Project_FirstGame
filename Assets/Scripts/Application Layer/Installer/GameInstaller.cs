@@ -31,6 +31,7 @@ public class GameInstaller : MonoBehaviour
     private CardFlowDataManager cardFlowDataManager;
     private ArtifactSystem artifactSystem;
     private ArtifactManager artifactManager;
+    private ElementExplosionSystem elementExplosionSystem;
 
     [SerializeField] private WaveDatabase waveDatabase;
 
@@ -64,17 +65,19 @@ public class GameInstaller : MonoBehaviour
         cardFlowDataManager = new CardFlowDataManager();
         artifactSystem = new ArtifactSystem();
         artifactManager = GetComponent<ArtifactManager>();
+        elementExplosionSystem = GetComponent<ElementExplosionSystem>();
 
-        gameController.Initialize(signalHub,bootStrapProvider);
+        gameController.Initialize(signalHub, bootStrapProvider);
         gameServiceLocator.Initialize(cameraController);
 
         artifactManager.Initialize();
-        artifactSystem.Initialize(artifactManager,signalHub);
+        artifactSystem.Initialize(artifactManager, signalHub);
 
-        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem);
+        elementExplosionSystem.Initialize();
+        unitSystem.Initialize(signalHub, unitSpawner, unitLogicSystem, elementExplosionSystem);
         waveManager.Initialize(signalHub, waveDatabase);
         unitSpawner.Initiallize(inputManager, gameServiceLocator, environmentManager);
-        unitLogicSystem.Initialize();
+        unitLogicSystem.Initialize(elementExplosionSystem);
 
         cardFlowDataManager.Initialize();
         cardDataControlManager.Initialize();
