@@ -89,4 +89,21 @@ namespace UnitLogicSystemSignals
             amount = _amount;
         }
     }
+    public struct PlayerDebuffChangedSignal
+    {
+        public IPlayerData _data;
+        public PlayerDebuffChangedSignal(IPlayerData _playerData)
+        {
+            _data = _playerData;
+        }
+    }
+    public struct EnemyDebuffChangedSignal
+    {
+        public IEnemyData enemyData;
+        public EnemyDebuffChangedSignal(IEnemyData _enemyData)
+        {
+            enemyData = _enemyData;
+        }
+    }
+
 }

@@ -13,4 +13,5 @@ public interface IEnemyData
     event Action EnemyIsDeadEvent;
     EnemyTypeData enemyTypeData { get; }
     IReadOnlyDictionary<DebuffElementEffectType,DebuffElementData> currentAppliedDebuff { get; }
+    event Action EnemyDebuffChangedEvent;
 }

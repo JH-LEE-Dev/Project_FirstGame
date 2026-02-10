@@ -74,7 +74,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthCo
         bWeakness = boolean;
     }
 
-    public void TakeDamage(float damage, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    public void TakeDamage(float damage)
     {
         if(bWeakness)
         {

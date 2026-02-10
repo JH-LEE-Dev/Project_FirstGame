@@ -7,15 +7,19 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 {
     public event Action<float> TakeDamageEvent;
     public event Action PlayerDeadEvent;
+    public event Action PlayerDebuffChangedEvent;
 
     //인터페이스 선언부
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerData.currentAppliedDebuff => currentAppliedDebuff;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerHandler.currentAppliedDebuff => currentAppliedDebuff;
+
+
     private Dictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
     public IStatusEffectReceiver statusEffectReceiver => healthComponent;
 
 
     protected HealthComponent healthComponent;
+    protected ElementDamageHandleComponent elementDamageHandleComponent;
 
     private int money = 0;
 
@@ -27,6 +31,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
     public void Initialize()
     {
         healthComponent = GetComponent<HealthComponent>();
+        elementDamageHandleComponent = new ElementDamageHandleComponent();
+
+        elementDamageHandleComponent.Initialize(currentAppliedDebuff);
 
         BindEvents();
     }
@@ -134,16 +141,20 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 
             currentAppliedDebuff[debuffElementEffectType] = data;
         }
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 
     public void ClearDebuff()
     {
         currentAppliedDebuff.Clear();
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 
     public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
-        healthComponent.TakeDamage(damage,_bulletElements);
+        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements,damage));
         TakeDamageEvent?.Invoke(damage);
     }
 
@@ -162,5 +173,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
                 currentAppliedDebuff[pair.Key] = data;
             }
         }
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 }
