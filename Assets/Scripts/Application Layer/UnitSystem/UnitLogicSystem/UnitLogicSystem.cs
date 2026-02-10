@@ -26,11 +26,13 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action CharacterStatChangedEvent;
     public event Action PlayerIsDeadEvent;
+    public event Action<ElementExplosionType> ElementExplosionOccuredEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
     private Earth playerUnit;
-    private List<Enemy> enemyUnits;
+    private IReadOnlyList<Enemy> enemyUnits;
+    private List<IEnemyHandler> enemyHandlers = new List<IEnemyHandler>(SYSTEM_VAR.maxEnemyCount);
 
     public void Initialize()
     {
@@ -50,11 +52,16 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         BindEvent_Player();
     }
 
-    public void EnemyCreated(List<Enemy> _enemies)
+    public void EnemyCreated(IReadOnlyList<Enemy> _enemies)
     {
         enemyUnits = _enemies;
 
         BindEvent_Enemy();
+
+        for(int i = 0;i<enemyUnits.Count;++i)
+        {
+            enemyHandlers.Add(enemyUnits[i]);
+        }
 
         EnemySpawnedEvent?.Invoke();
     }
@@ -124,6 +131,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
             enemyUnits[i].EnemyTakeDamageEvent -= EnemyTakeDamage;
             enemyUnits[i].EnemyTakeDamageEvent += EnemyTakeDamage;
+
+            enemyUnits[i].ElementExplosionOccuredEvent -= ElementExplosionOccured;
+            enemyUnits[i].ElementExplosionOccuredEvent += ElementExplosionOccured;
         }
     }
 
@@ -135,6 +145,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
             {
                 enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
                 enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
+                enemyUnits[i].ElementExplosionOccuredEvent -= ElementExplosionOccured;
             }
         }
     }
@@ -276,9 +287,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.SetbCanAttack(bCanAttack);
     }
 
-    public void ApplyTotalDamageModifier(float bonusDamage)
+    public void ApplyAdditionalAttackValueModifier(float bonusDamage)
     {
-        characterUnit.combatEffectReceiver.ApplyTotalDamageModifier(bonusDamage);
+        characterUnit.combatEffectReceiver.ApplyAdditionalAttackValueModifier(bonusDamage);
         CharacterStatChanged();
     }
 
@@ -288,9 +299,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         CharacterStatChanged();
     }
 
-    public void UndoTotalDamageModifier(float bonusDamage)
+    public void UndoAdditionalAttackValueModifier(float bonusDamage)
     {
-        characterUnit.combatEffectReceiver.UndoTotalDamageModifier(bonusDamage);
+        characterUnit.combatEffectReceiver.UndoAdditionalAttackValueModifier(bonusDamage);
         CharacterStatChanged();
     }
 
@@ -309,9 +320,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
     {
-        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded);
+        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded,_additionalAttackStat);
     }
 
     public void ResetBulletType()
@@ -332,5 +343,20 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
         characterUnit.bulletEffectReceiver.UndoDebuffElementApply(_debuffElementData);
+    }
+
+    private void ElementExplosionOccured(ElementExplosionType _type)
+    {
+        ElementExplosionOccuredEvent?.Invoke(_type);
+    }
+
+    public IPlayerHandler GetPlayerHandler()
+    {
+        return playerUnit;
+    }
+
+    public IReadOnlyList<IEnemyHandler> GetEnemyHandlers()
+    {
+        return enemyHandlers;
     }
 }

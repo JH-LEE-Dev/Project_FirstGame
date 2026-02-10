@@ -7,6 +7,7 @@ public class BulletStateMachine : MonoBehaviour
     //외부 의존성
     ICharacterStatProvider characterStatProvider;
     IBulletEffectProvider bulletEffectProvider;
+    DamageCalcComponent damageCalcComponent;
     Bullet bullet;
 
     private BulletState currentState;
@@ -15,14 +16,15 @@ public class BulletStateMachine : MonoBehaviour
     private BulletStateCtx ctx;
 
     public void Initialize(ICharacterStatProvider _characterStatProvider,IBulletEffectProvider _bulletEffectReceiver,
-        Bullet _bullet)
+        Bullet _bullet,DamageCalcComponent _damageCalcComponent)
     {
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectReceiver;
         bullet = _bullet;
+        damageCalcComponent = _damageCalcComponent;
 
         ctx = new BulletStateCtx();
-        ctx.Initialize(this,characterStatProvider,bulletEffectProvider,bullet);
+        ctx.Initialize(this,characterStatProvider,bulletEffectProvider,bullet,damageCalcComponent);
 
         for(int i = 0;i< bulletStates.Count;++i)
         {

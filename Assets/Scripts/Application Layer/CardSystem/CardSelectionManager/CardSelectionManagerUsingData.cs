@@ -11,6 +11,7 @@ public enum CardSelectionMode
     ExtinctionCardsToHand,
     GraveCardsToDeck,
     GraveCardsToHand,
+    HandCardsToDeck,
 }
 
 public enum SelectCardPileType

@@ -17,7 +17,8 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     private float initialCriticalChange = 10f;
     private float initialAttack = 0f;
     private float initialTotalDamageValue = 1f;
-    private float additionalAttack = 0;
+    private float additionalAttack = 0f;
+    private float additionalAttackModifier = 0f;
 
     public void Initialize()
     {
@@ -41,16 +42,16 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         CalcResultDamage();
     }
 
-    public void ApplyTotalDamageModifier(float bonusDamage)
+    public void ApplyAdditionalAttackValueModifier(float bonusDamage)
     {
-        additionalAttack *= bonusDamage;
+        additionalAttackModifier *= bonusDamage;
 
         CalcResultDamage();
     }
 
-    public void UndoTotalDamageModifier(float bonusDamage)
+    public void UndoAdditionalAttackValueModifier(float bonusDamage)
     {
-        additionalAttack /= bonusDamage;
+        additionalAttackModifier /= bonusDamage;
         CalcResultDamage();
     }
 
@@ -62,8 +63,16 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 
     public void CalcResultDamage()
     {
-        totalDamage = attack + additionalAttack;
+        totalDamage = attack + (additionalAttack * additionalAttackModifier);
         resultDamage = totalDamage * totalDamageValue;
+    }
+
+    public float CalcResultDamage_Optional(float _attack, float _additionalAttackValue, float _totalDamageValue)
+    {
+        float tempTotalDamage = _attack + (additionalAttack * _additionalAttackValue);
+        tempTotalDamage *= _totalDamageValue;
+
+        return tempTotalDamage;
     }
 
     public void ApplyRangeModifier(float bonusRange)
@@ -110,7 +119,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 
         int critical = UnityEngine.Random.Range(0, 100);
 
-        float criticalDamage = 0f;
+        float criticalDamage = resultDamage;
 
         if (critical < criticalChance)
         {

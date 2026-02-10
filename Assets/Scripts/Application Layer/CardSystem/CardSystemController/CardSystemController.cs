@@ -1,9 +1,6 @@
-using CardSystemUISignal;
 using System;
 using System.Collections.Generic;
-using UnitLogicSystemSignals;
 using UnityEngine;
-using static UICommandFactory_CardSystem;
 
 public class CardSystemController : MonoBehaviour, ICardSystemControlActionCommandHandler
 {
@@ -320,7 +317,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
             Debug.Log(usedCard.IsUpgraded());
@@ -330,7 +327,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -340,7 +337,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -350,7 +347,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -360,7 +357,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -381,7 +378,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
@@ -391,7 +388,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -401,7 +398,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -411,7 +408,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -421,7 +418,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -615,7 +612,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier,usedCard.IsUpgraded());
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier,usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardStatusEffects[i]);
@@ -623,7 +620,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardLogicSystemEffects[i]);
@@ -631,7 +628,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardSlotSystemEffects[i]);
@@ -639,7 +636,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, complexSystemEffects[i]);
@@ -647,7 +644,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, selectionSystemEffects[i]);
@@ -666,7 +663,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
@@ -676,7 +673,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -686,7 +683,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -696,7 +693,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -706,7 +703,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -727,7 +724,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
 
@@ -737,7 +734,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardLogicSystemEffects.Count; ++i)
         {
-            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardLogicSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardLogicSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -747,7 +744,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardSlotSystemEffects.Count; ++i)
         {
-            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            cardSlotSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardSlotSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -757,7 +754,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < complexSystemEffects.Count; ++i)
         {
-            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            complexSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = complexSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -767,7 +764,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < selectionSystemEffects.Count; ++i)
         {
-            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded());
+            selectionSystemEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = selectionSystemEffects[i].GetGameSystemActionTimingType();
 
@@ -949,6 +946,11 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardActionEndScopeEvent?.Invoke();
     }
 
+    public void ReserveCardEffect(CardEffectCommand command)
+    {
+        InsertCommandToList(command.GetGameSystemActionTimingType(),command);
+    }
+
     public int GetPrevUsedCardCnt()
     {
         return prevUsedCardCnt;
@@ -974,7 +976,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             if (command == null)
                 continue;
 
-            command.InitializeCommand(cards[i].valueModifier, cards[i].IsUpgraded());
+            command.InitializeCommand(cards[i].valueModifier, cards[i].IsUpgraded(), cards[i].elementTypes, cards[i].debuffTypes);
 
             //OCP À§¹Ý.
             if (command.GetEffectApplyType() == EffectApplyType.System)

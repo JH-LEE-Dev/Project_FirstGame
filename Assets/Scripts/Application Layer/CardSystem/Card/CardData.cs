@@ -15,6 +15,8 @@ public class CardData : ICardDataProvider
     public UsingType usingType;
     public CardEffectPriority priority = CardEffectPriority.Normal;
     public bool bUpgradable = false;
+    public List<BulletElementData> defaultElementTypes = new List<BulletElementData>();
+    public List<DebuffElementData> defaultdebuffTypes = new List<DebuffElementData>();
 
     [Space]
     [Header("Card Effects")]

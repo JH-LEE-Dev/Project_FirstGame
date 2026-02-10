@@ -10,4 +10,5 @@ public interface ICardSystemControlActionCommandHandler : ICommandHandler
     void ApplyCardUsePhaseCntModifier(int cnt);
     void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards);
     void UndoUseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> usingCards);
+    void ReserveCardEffect(CardEffectCommand _command);
 }

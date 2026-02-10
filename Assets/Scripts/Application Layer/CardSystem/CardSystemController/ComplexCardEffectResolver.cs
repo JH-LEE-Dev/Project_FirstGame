@@ -78,7 +78,7 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemActionCommandHandler.CardsToExtinction(cardPile);
     }
 
-    public void ApplyAdditionalAttackModifier(int attack, GameSystemActionContextType cardSystemContextType)
+    public void ApplyAdditionalAttackModifier(float attack, GameSystemActionContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(attack);
     }
@@ -152,9 +152,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardDataControlActionCommandHandler.RevertCardsUpgrade(cards, bPermenant);
     }
 
-    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentBulletCards()
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentCardSlot()
     {
-        return slotSystemActionCommandHandler.GetCurrentBulletCards();
+        return slotSystemActionCommandHandler.GetCurrentCardSlot();
     }
 
     public void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, GameSystemActionContextType cardSystemContextType)
@@ -201,9 +201,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardSystemControlActionCommandHandler.UndoUseCards_AfterAttackEffects(cardPile);
     }
 
-    public void ApplyTotalDamageModifier(float bonusDamage)
+    public void ApplyAddifionalAttackValueModifier(float bonusDamage)
     {
-        cardStatusEffectCommandHandler.ApplyTotalDamageModifier(bonusDamage);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(bonusDamage);
     }
 
     public void ApplyTotalDamageValueModifier(float bonusValue)
@@ -211,9 +211,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyTotalDamageValueModifier(bonusValue);
     }
 
-    public void UndoTotalDamageModifier(float bonusDamage)
+    public void UndoAdditionalAttackValueModifier(float bonusDamage)
     {
-        cardStatusEffectCommandHandler.UndoTotalDamageModifier(bonusDamage);
+        cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(bonusDamage);
     }
 
     public void SetCharacterCanAttackState(bool boolean)
@@ -231,9 +231,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
     {
-        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded);
+        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded,_additionalAttackStat);
     }
 
     public void ResetBulletType()
@@ -254,5 +254,57 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
         cardStatusEffectCommandHandler.UndoDebuffElementApply(_debuffElementData);
+    }
+
+    public CardDataInstance GetCurrentInherenceCard()
+    {
+       return slotSystemActionCommandHandler.GetCurrentInherenceCard();
+    }
+
+    public void ObserveElementExplosionEvent(Action<ElementExplosionType> handler)
+    {
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent -= handler;
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent += handler;
+    }
+
+    public void CancelObserveElementExplosionEvent(Action<ElementExplosionType> handler)
+    {
+        cardStatusEffectCommandHandler.ElementExplosionOccuredEvent -= handler;
+    }
+
+    public void ReserveCardEffect(CardEffectCommand command)
+    {
+        cardSystemControlActionCommandHandler.ReserveCardEffect(command);
+    }
+
+    public IPlayerHandler GetPlayerHandler()
+    {
+        return cardStatusEffectCommandHandler.GetPlayerHandler();
+    }
+
+    public IReadOnlyList<IEnemyHandler> GetEnemyHandlers()
+    {
+        return cardStatusEffectCommandHandler.GetEnemyHandlers();
+    }
+
+    public void ApplyCriticalChanceModifier(int chance, GameSystemActionContextType cardSystemContextType)
+    {
+        cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(chance);
+    }
+
+    public void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType)
+    {
+        cardSystemActionCommandHandler.SetCardSystemContext(gameSystemActionContextType);
+        cardSystemActionCommandHandler.CardsToDeck(cards);
+    }
+
+    public void ApplySlotCntModifier(int _slotCnt)
+    {
+        slotSystemActionCommandHandler.ApplySlotCntModifier(_slotCnt);
+    }
+
+    public void ApplyAdditionalAttackValueModifier(float value)
+    {
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
     }
 }

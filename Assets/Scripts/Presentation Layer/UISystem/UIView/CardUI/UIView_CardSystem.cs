@@ -411,6 +411,11 @@ public class UIView_CardSystem : UIView
             //복사된 카드가 덱으로 들어옴.
         }
 
+        if (uiActionData.cardSystemContextType == GameSystemActionContextType.HandCardsToDeck)
+        {
+            Debug.Log("패의 카드가 덱으로 감");
+        }
+
         return turnWaitTime;
     }
 

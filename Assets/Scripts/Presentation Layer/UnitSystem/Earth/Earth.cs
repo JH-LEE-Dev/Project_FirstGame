@@ -1,13 +1,19 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine;
 
-public class Earth : MonoBehaviour, IDamageable, IPlayerData
+public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 {
     public event Action<float> TakeDamageEvent;
     public event Action PlayerDeadEvent;
 
+    //인터페이스 선언부
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerData.currentAppliedDebuff => currentAppliedDebuff;
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerHandler.currentAppliedDebuff => currentAppliedDebuff;
+    private Dictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
     public IStatusEffectReceiver statusEffectReceiver => healthComponent;
+
 
     protected HealthComponent healthComponent;
 
@@ -120,6 +126,24 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData
 
     public void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
     {
+        if (currentAppliedDebuff.ContainsKey(debuffElementEffectType))
+        {
+            var data = currentAppliedDebuff[debuffElementEffectType];
+            data.turnCnt += turnCnt;
+            currentAppliedDebuff[debuffElementEffectType] = data;
+        }
+        else
+        {
+            DebuffElementData data;
+            data.debuffElementType = debuffElementEffectType;
+            data.turnCnt = turnCnt;
 
+            currentAppliedDebuff[debuffElementEffectType] = data;
+        }
+    }
+
+    public void ClearDebuff()
+    {
+        currentAppliedDebuff.Clear();
     }
 }

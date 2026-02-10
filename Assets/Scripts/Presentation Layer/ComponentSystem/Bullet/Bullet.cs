@@ -28,6 +28,8 @@ public class Bullet : MonoBehaviour
     [SerializeField] public LayerMask targetMask;
     [SerializeField] public LayerMask outOfRangeMask;
 
+    private DamageCalcComponent damageCalcComponent;
+
     public float range { get; private set; }
 
 
@@ -48,16 +50,18 @@ public class Bullet : MonoBehaviour
 
     }
 
-    public void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider)
+    public void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider,
+        DamageCalcComponent _damageCalculator)
     {
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
+        damageCalcComponent = _damageCalculator;
 
         sr = GetComponentInChildren<SpriteRenderer>();
         effectComponent = GetComponentInChildren<EffectComponent>();
         stateMachine = GetComponent<BulletStateMachine>();
 
-        stateMachine.Initialize(characterStatProvider,bulletEffectProvider,this);
+        stateMachine.Initialize(characterStatProvider,bulletEffectProvider,this,damageCalcComponent);
 
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;

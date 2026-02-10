@@ -9,7 +9,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        var bulletCards = complexSystemActionCommandHandler.GetCurrentBulletCards();
+        var bulletCards = complexSystemActionCommandHandler.GetCurrentCardSlot();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -58,7 +58,7 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
 
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
-        var bulletCards = complexSystemActionCommandHandler.GetCurrentBulletCards();
+        var bulletCards = complexSystemActionCommandHandler.GetCurrentCardSlot();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;

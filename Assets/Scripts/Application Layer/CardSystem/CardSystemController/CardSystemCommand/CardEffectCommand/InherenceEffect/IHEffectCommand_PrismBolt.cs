@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Inherence/Prism Bolt")]
@@ -10,22 +11,38 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
+        AdditionalAttackStat additionalAttackStat;
 
-        BulletElementData data;
-        data.bulletElementType = BulletElementType.Electric;
+        if (bUpgraded)
+        {
+            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1);
+        }
+        else
+        {
+            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1);
+        }
 
-        cardStatusEffectCommandHandler.ApplyBulletElementType(data);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded,additionalAttackStat);
+
+        foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
+        {
+            cardStatusEffectCommandHandler.ApplyBulletElementType(pair.Value);
+        }
+
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffTypes)
+        {
+            cardStatusEffectCommandHandler.ApplyDebuffElementType(pair.Value);
+        }
 
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(attackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(upgradedAttackValue);
-            cardStatusEffectCommandHandler.ApplyTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 
@@ -33,20 +50,27 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
     {
         cardStatusEffectCommandHandler.ResetBulletType();
 
-        BulletElementData data;
-        data.bulletElementType = BulletElementType.Electric;
 
-        cardStatusEffectCommandHandler.UndoBulletElementApply(data);
+        foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
+        {
+            cardStatusEffectCommandHandler.UndoBulletElementApply(pair.Value);
+        }
+
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffTypes)
+        {
+            cardStatusEffectCommandHandler.UndoDebuffElementApply(pair.Value);
+        }
+
 
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-attackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(value);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(value);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-upgradedAttackValue);
-            cardStatusEffectCommandHandler.UndoTotalDamageModifier(upgradedvalue);
+            cardStatusEffectCommandHandler.UndoAdditionalAttackValueModifier(upgradedvalue);
         }
     }
 }

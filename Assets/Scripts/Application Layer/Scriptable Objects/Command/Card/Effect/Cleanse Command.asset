@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ce1bd1c3fd3dd94a929f80838013bfb, type: 3}
-  m_Name: Rumy's Satellite
-  m_EditorClassIdentifier: Assembly-CSharp::ACommand_RumysSatellite
-  gameSystemActionTimingType: 5
+  m_Script: {fileID: 11500000, guid: 5453a37b42bbbc349a6b5491b8beb60a, type: 3}
+  m_Name: Cleanse Command
+  m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_Cleanse
+  gameSystemActionTimingType: 0
   effectApplyType: 3
+  followUpEffectCommand_Prefab: {fileID: 0}
+  valueModifier: 1
   bUpgraded: 0
-  value: 1
-  attackValue: 10
-  upgradedvalue: 1.5
-  upgradedAttackValue: 20

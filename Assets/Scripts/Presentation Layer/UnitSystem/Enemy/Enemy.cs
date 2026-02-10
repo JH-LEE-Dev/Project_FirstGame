@@ -1,22 +1,24 @@
-using System.Collections.Generic;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.VersionControl.Asset;
 
 
-public class Enemy : Unit, IEnemyData
+public class Enemy : Unit, IEnemyData, IEnemyHandler
 {
     //이벤트
     public event Action<IEnemyData, EnemyTypeData> EnemyIsKilledEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
+    public event Action<ElementExplosionType> ElementExplosionOccuredEvent; //원소 폭발 발생 시 Invoke
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
     public IEnemyStatProvider enemyStatProvider => statComponent;
-    List<DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
-
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyHandler.currentAppliedDebuff => currentAppliedDebuff;
 
 
     //내부 의존성
@@ -29,9 +31,10 @@ public class Enemy : Unit, IEnemyData
     /// <summary>
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
-    
+
     [SerializeField] private LayerMask gravityLayerMask;
-    public EnemyTypeData enemyTypeData {  get; private set; }
+    public EnemyTypeData enemyTypeData { get; private set; }
+
 
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
@@ -143,7 +146,7 @@ public class Enemy : Unit, IEnemyData
         if (bInitialized == false)
         {
             base.Initialize(_inputManager, _gameServiceLocator);
-            
+
             combatComponent = GetComponent<ECombatComponent>();
             moveComponent = GetComponent<EMoveComponent>();
             visualComponentCoordinator = new EVisualComponentCoordinator();
@@ -262,6 +265,36 @@ public class Enemy : Unit, IEnemyData
         moveComponent.ApplyKnockBack(dir, power);
     }
 
+    public override void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
+    {
+        if (currentAppliedDebuff.ContainsKey(debuffElementEffectType))
+        {
+            var data = currentAppliedDebuff[debuffElementEffectType];
+            data.turnCnt += turnCnt;
+            currentAppliedDebuff[debuffElementEffectType] = data;
+        }
+        else
+        {
+            DebuffElementData data;
+            data.debuffElementType = debuffElementEffectType;
+            data.turnCnt = turnCnt;
+
+            currentAppliedDebuff[debuffElementEffectType] = data;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// <summary>
     /// 구현 코드 존. ------------------------------------------
     /// </summary>
@@ -308,5 +341,11 @@ public class Enemy : Unit, IEnemyData
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
+    }
+
+    public void ClearDebuff()
+    {
+        if (bDead == false)
+            currentAppliedDebuff.Clear();
     }
 }

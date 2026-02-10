@@ -25,7 +25,7 @@ public class Character : Unit, ICharacterData
     private PCombatComponent combatComponent;
     private CutsceneComponent cutsceneComponent;
     private PStatComponent statComponent;
-
+    private DamageCalcComponent damageCalcComponent;
 
 
 
@@ -69,13 +69,15 @@ public class Character : Unit, ICharacterData
         cutsceneComponent = GetComponent<CutsceneComponent>();
         visualComponentCoordinator = new PVisualComponentCoordinator();
         statComponent = GetComponent<PStatComponent>();
+        damageCalcComponent = new DamageCalcComponent();
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         statComponent.Initialize();
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
-        combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent);
+        combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent, damageCalcComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
+        damageCalcComponent.Initialize(statComponent, combatComponent);
 
         BindEvent();
 

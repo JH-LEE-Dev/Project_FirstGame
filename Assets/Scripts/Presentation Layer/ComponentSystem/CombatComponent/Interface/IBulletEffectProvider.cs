@@ -5,6 +5,6 @@ public interface IBulletEffectProvider
 {
     BulletType bulletType { get; }
     bool bUpgraded { get; }
-    List<BulletElementData> currentBulletElementTypes { get; }
-    List<DebuffElementData> currentDebuffElementTypes { get; }
+    IReadOnlyDictionary<BulletElementType, BulletElementData> currentEffectElements {  get; }   
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentDebuffElementTypes { get; }
 }

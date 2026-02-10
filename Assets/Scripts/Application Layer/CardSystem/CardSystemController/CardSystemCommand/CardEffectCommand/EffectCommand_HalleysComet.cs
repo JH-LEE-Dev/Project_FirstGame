@@ -11,9 +11,11 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
 
     private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
+    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
+      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+      GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _cardSystemContextType);
+        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
 
         if (forbiddenCards.Count == 0)
             forbiddenCards.Add(CardName.HalleysComet);
