@@ -225,4 +225,34 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     {
         return slotSystemActionCommandHandler.IsInherenceCardEquipped();
     }
+
+    public void ApplyBulletElementType(BulletElementData effectElementData)
+    {
+        cardStatusEffectCommandHandler.ApplyBulletElementType(effectElementData);
+    }
+
+    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    {
+        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded);
+    }
+
+    public void ResetBulletType()
+    {
+        cardStatusEffectCommandHandler.ResetBulletType();
+    }
+
+    public void UndoBulletElementApply(BulletElementData _effectElementData)
+    {
+        cardStatusEffectCommandHandler.UndoBulletElementApply(_effectElementData);
+    }
+
+    public void ApplyDebuffElementType(DebuffElementData _debuffElementData)
+    {
+        cardStatusEffectCommandHandler.ApplyDebuffElementType(_debuffElementData);
+    }
+
+    public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
+    {
+        cardStatusEffectCommandHandler.UndoDebuffElementApply(_debuffElementData);
+    }
 }

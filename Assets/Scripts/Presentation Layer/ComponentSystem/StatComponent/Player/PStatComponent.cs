@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterStatProvider
@@ -101,5 +102,22 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     public void DecreaseAttackCnt()
     {
         --attackCnt;
+    }
+
+    public float CalcBaseDamage(out bool bCritical)
+    {
+        bCritical = false;
+
+        int critical = UnityEngine.Random.Range(0, 100);
+
+        float criticalDamage = 0f;
+
+        if (critical < criticalChance)
+        {
+            bCritical = true;
+            criticalDamage = totalDamage * 2 * totalDamageValue;
+        }
+
+        return criticalDamage;
     }
 }

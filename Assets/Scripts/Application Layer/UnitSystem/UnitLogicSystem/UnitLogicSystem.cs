@@ -26,7 +26,6 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action CharacterStatChangedEvent;
     public event Action PlayerIsDeadEvent;
-    public event Action CharacterReadyToAttackEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -102,9 +101,6 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
         characterUnit.CharacterStatChangedEvent += CharacterStatChanged;
-
-        characterUnit.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
-        characterUnit.CharacterReadyToAttackEvent += CharacterReadyToAttack;
     }
 
     private void ReleaseEvent_Character()
@@ -114,8 +110,6 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.PlayerAttackEvent -= PlayerAttacked;
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
-
-        characterUnit.CharacterReadyToAttackEvent -= CharacterReadyToAttack;
     }
 
     private void BindEvent_Enemy()
@@ -310,8 +304,33 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         playerUnit.UseMoney(amount);
     }
 
-    public void CharacterReadyToAttack()
+    public void ApplyBulletElementType(BulletElementData effectElementData)
     {
-        CharacterReadyToAttackEvent?.Invoke();
+        characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
+    }
+
+    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    {
+        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded);
+    }
+
+    public void ResetBulletType()
+    {
+        characterUnit.bulletEffectReceiver.ResetBulletType();
+    }
+
+    public void UndoBulletElementApply(BulletElementData _effectElementData)
+    {
+        characterUnit.bulletEffectReceiver.UndoBulletElementApply(_effectElementData);
+    }
+
+    public void ApplyDebuffElementType(DebuffElementData _debuffElementData)
+    {
+        characterUnit.bulletEffectReceiver.ApplyDebuffElementType(_debuffElementData);
+    }
+
+    public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
+    {
+        characterUnit.bulletEffectReceiver.UndoDebuffElementApply(_debuffElementData);
     }
 }

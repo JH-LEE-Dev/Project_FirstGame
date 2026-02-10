@@ -7,6 +7,8 @@ public static class SYSTEM_VAR
     public const int maxHandPileCount = 12;
 
     public const int maxArtifactCount = 5;
+
+    public const int maxDebuffElementCount = (int)BulletElementType.MAX;
 }
 
 public enum CardType
@@ -54,3 +56,49 @@ public enum CardName
     PrismBolt,
     ArcDischarge,
 }
+
+public enum BulletElementType
+{
+    Normal,
+    Electric,
+    Water,
+    Fire,
+    Poison,
+    MAX,
+}
+
+public enum BulletType
+{
+    Normal,
+    PrismBolt,
+    ArcDischarge,
+}
+
+public struct BulletElementData
+{
+    public BulletElementType bulletElementType;
+
+    public BulletElementData(BulletElementType _effectElementType)
+    {
+        bulletElementType = _effectElementType;
+    }
+}
+
+public struct DebuffElementData
+{
+    public DebuffElementEffectType debuffElementType;
+
+    public DebuffElementData(DebuffElementEffectType _effectElementType)
+    {
+        debuffElementType = _effectElementType;
+    }
+}
+
+public enum DebuffElementEffectType
+{
+    Combustion, //연소
+    ElectricShock, //감전
+    Oxidation, //산화
+    Wet, //습윤 ㅋ
+}
+

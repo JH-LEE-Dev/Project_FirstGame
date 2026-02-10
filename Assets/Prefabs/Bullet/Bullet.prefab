@@ -147,6 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7221749239256632975}
   - component: {fileID: 9064703793281689335}
+  - component: {fileID: -8849476707663685425}
   m_Layer: 10
   m_Name: Bullet
   m_TagString: Untagged
@@ -185,18 +186,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35aef5158ebe91741b19329905507687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  speed: 20
-  knockBackPower: 1
-  range: 1
-  attack: 1
+  circleCollider: {fileID: 8830781631137681458}
+  explosionRangeCollider: {fileID: 1933481032429901366}
   targetMask:
     serializedVersion: 2
     m_Bits: 64
   outOfRangeMask:
     serializedVersion: 2
     m_Bits: 2048
-  circleCollider: {fileID: 8830781631137681458}
-  explosionRangeCollider: {fileID: 1933481032429901366}
+  speed: 20
+  knockBackPower: 1
+--- !u!114 &-8849476707663685425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4322636066908474576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a728ad27caafe0546a2bb1a60392cc4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletStateMachine
+  bulletStates:
+  - {fileID: 8240799226233961524, guid: 13dd199ea28ce664cb11f6b7c9a35783, type: 3}
+  - {fileID: 4338800064139819658, guid: 7c42d1f9d04b768499b2b1cb9fc7cb30, type: 3}
+  - {fileID: 463688537314933752, guid: 21c64a1d891abb7478527eec886d9be3, type: 3}
 --- !u!1 &4855813227552774735
 GameObject:
   m_ObjectHideFlags: 0

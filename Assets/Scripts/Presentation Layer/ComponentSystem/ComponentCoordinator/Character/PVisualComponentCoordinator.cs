@@ -8,8 +8,6 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
     /// 시스템 속성 존. -----------------------------------------
     /// </summary>
 
-    public event Action CharacterTurnEndCutSceneEndEvent;
-
     private PCombatComponent combatComponent;
     private PMoveComponent moveComponent;
     private Character_Visual characterVisualComponent;
@@ -132,8 +130,6 @@ public class PVisualComponentCoordinator : VisualComponentCoordinator
                 characterVisualComponent.StartBlink();
                 // 캐릭터의 위치를 초기화 시킴.
                 moveComponent.ResetCharacterPosition();
-
-                CharacterTurnEndCutSceneEndEvent?.Invoke();
 
                 break;
         }

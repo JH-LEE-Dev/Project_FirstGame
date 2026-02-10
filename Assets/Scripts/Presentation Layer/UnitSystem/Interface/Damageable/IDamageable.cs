@@ -7,4 +7,5 @@ public interface IDamageable
     void KnockBack(Vector2 dir,float power);
 
     void ApplyWeakness(int turnCnt);
+    void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType,int turnCnt);
 }

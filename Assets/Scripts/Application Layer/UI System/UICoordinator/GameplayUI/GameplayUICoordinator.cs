@@ -187,9 +187,4 @@ public class GameplayUICoordinator
     {
         unitWorldUISystem.SetAiming(false);
     }
-
-    public void CharacterReadyToAttack()
-    {
-        //unitWorldUISystem.SetAiming(true);
-    }
 }

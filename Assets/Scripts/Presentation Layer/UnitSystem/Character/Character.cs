@@ -7,23 +7,30 @@ public class Character : Unit, ICharacterData
     /// <summary>
     /// 시스템 속성 존.----------------------------------
     /// </summary>
+    
+    //인터페이스 선언부.
     public ICombatEffectReceiver combatEffectReceiver => statComponent;
+    public IBulletEffectReceiver bulletEffectReceiver => combatComponent;
 
     public event Action PlayerAttackEvent;
     public event Action PlayerAttackFinishedEvent;
     public event Action CharacterStatChangedEvent;
-    public event Action CharacterReadyToAttackEvent;
 
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;
 
     //내부 의존성
     PVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
-
     private PMoveComponent moveComponent;
     private PCombatComponent combatComponent;
     private CutsceneComponent cutsceneComponent;
     private PStatComponent statComponent;
+
+
+
+
+
+
 
     /// <summary>
     /// 구현 속성 존 ------------------------------------------
@@ -35,6 +42,12 @@ public class Character : Unit, ICharacterData
     private Vector2 fireDir;
 
     [SerializeField] private Character_Visual character_Visual;
+
+
+
+
+
+
 
     /// <summary>
     ///  시스템 코드 존.-----------------------------------------
@@ -83,9 +96,6 @@ public class Character : Unit, ICharacterData
 
         combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
         combatComponent.BulletEffectIsFinishedEvent += PlayerAttackFinished;
-
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent -= CharacterReadyToAttack;
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent += CharacterReadyToAttack;
     }
 
     private void ReleaseEvent()
@@ -94,7 +104,6 @@ public class Character : Unit, ICharacterData
         inputManager.inputReader.PointerPositionEvent -= SetMousePos;
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
         combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
-        visualComponentCoordinator.CharacterTurnEndCutSceneEndEvent -= CharacterReadyToAttack;
     }
 
     public Transform GetTransform()
@@ -107,21 +116,6 @@ public class Character : Unit, ICharacterData
         if (cutsceneComponent == null) return false;
 
         return cutsceneComponent.IsCutscene;
-    }
-
-    public float GetMaxHealth()
-    {
-        return healthComponent.GetMaxHealth();
-    }
-
-    public float GetCurrentHealth()
-    {
-        return healthComponent.GetCurrentHealth();
-    }
-
-    public void CharacterReadyToAttack()
-    {
-        CharacterReadyToAttackEvent?.Invoke();
     }
 
     protected override void OnDestroy()
@@ -148,17 +142,6 @@ public class Character : Unit, ICharacterData
         bCanAttack = boolean;
     }
 
-    /// <summary>
-    /// 구현 코드 존.--------------------------------------------
-    /// </summary>
-
-    protected override void Update()
-    {
-        base.Update();
-
-        UpdateAimLine();
-    }
-
     //입력 시스템에 의해서 호출되는 움직임 함수.
     private void OnMove(Vector2 move)
     {
@@ -178,6 +161,48 @@ public class Character : Unit, ICharacterData
     public override void TakeDamage(float damage, bool bCritical)
     {
 
+    }
+
+    public float GetMaxHealth()
+    {
+        return healthComponent.GetMaxHealth();
+    }
+
+    public float GetCurrentHealth()
+    {
+        return healthComponent.GetCurrentHealth();
+    }
+
+    //combatComponent에서 총알의 공격 작업이 모두 끝나면 호출됨.
+    //그리고 이 신호를 상위 모듈로 전파함.
+    private void PlayerAttackFinished()
+    {
+        combatComponent.ResetComponent();
+        statComponent.DecreaseAttackCnt();
+
+        if (statComponent.attackCnt == 0)
+        {
+            PlayerAttackFinishedEvent?.Invoke();
+            statComponent.ResetStat();
+            CharacterStatChangedEvent?.Invoke();
+        }
+        else
+        {
+            bCanAction = true;
+        }
+    }
+
+
+
+    /// <summary>
+    /// 구현 코드 존.--------------------------------------------
+    /// </summary>
+
+    protected override void Update()
+    {
+        base.Update();
+
+        UpdateAimLine();
     }
 
     // 캐릭터 조준선 그리는 함수
@@ -225,24 +250,6 @@ public class Character : Unit, ICharacterData
             Debug.LogWarning("고유 카드가 장착되지 않으면 발사할 수 없습니다.");
             combatComponent.BulletEffectIsFinished();
             return;
-        }
-    }
-
-    //combatComponent에서 총알의 공격 작업이 모두 끝나면 호출됨.
-    //그리고 이 신호를 상위 모듈로 전파함.
-    private void PlayerAttackFinished()
-    {
-        statComponent.DecreaseAttackCnt();
-
-        if (statComponent.attackCnt == 0)
-        {
-            PlayerAttackFinishedEvent?.Invoke();
-            statComponent.ResetStat();
-            CharacterStatChangedEvent?.Invoke();
-        }
-        else
-        {
-            bCanAction = true;
         }
     }
 

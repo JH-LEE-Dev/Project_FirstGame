@@ -10,6 +10,13 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
+
+        BulletElementData data;
+        data.bulletElementType = BulletElementType.Electric;
+
+        cardStatusEffectCommandHandler.ApplyBulletElementType(data);
+
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(attackValue);
@@ -24,6 +31,13 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        cardStatusEffectCommandHandler.ResetBulletType();
+
+        BulletElementData data;
+        data.bulletElementType = BulletElementType.Electric;
+
+        cardStatusEffectCommandHandler.UndoBulletElementApply(data);
+
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackModifier(-attackValue);

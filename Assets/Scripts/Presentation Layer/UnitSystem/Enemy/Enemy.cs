@@ -1,47 +1,66 @@
+using System.Collections.Generic;
 using System;
 using System.Collections;
-using System.Net;
 using UnityEngine;
-using WaveSystemSignals;
 
 
 public class Enemy : Unit, IEnemyData
 {
+    //이벤트
     public event Action<IEnemyData, EnemyTypeData> EnemyIsKilledEvent;
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
 
+    //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
     public IEnemyStatProvider enemyStatProvider => statComponent;
+    List<DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
+
+
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
 
+
+
+
+
     /// <summary>
     /// 시스템 속성 존 .-----------------------------------
     /// </summary>
+    
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData {  get; private set; }
+
+
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;
     private EStatComponent statComponent;
-    private int weaknessTurn = 0;
+    bool bInitialized = false;
+    private float activateDelay = 1f;
+    private Vector2 targetPoint; //지구를 뜻함.
+
+
+
 
     /// <summary>
     /// 구현 속성 존. ------------------------------------
     /// </summary>
-    private Vector2 targetPoint; //지구를 뜻함.
+
     private bool bAccelerate = false; // true -> 지구로 돌진할 때를 의미.
-    [SerializeField] private ParticleSystem vfxDeadImpact;
-
-    bool bInitialized = false;
-
-    private float activateDelay = 1f;
-
     private float initialDamping = 5f; // 원래 마찰력 저장용
     private float initialAngularDamping = 1.5f; // 원래 마찰력 저장용
+    private int weaknessTurn = 0; // 현재 적용된 약화 턴 수.
+    [SerializeField] private ParticleSystem vfxDeadImpact;
+
+
+
+
+
+
+
 
     /// <summary>
     /// 시스템 코드 존. -------------------------------------
@@ -77,11 +96,6 @@ public class Enemy : Unit, IEnemyData
         rb.angularVelocity = 0f;
     }
 
-    public void ActivateEnemy()
-    {
-        SetEnemyState(true);
-    }
-
     public IEnumerator SetEnemyState_Delayed(bool boolean)
     {
         yield return new WaitForSeconds(activateDelay);
@@ -94,7 +108,7 @@ public class Enemy : Unit, IEnemyData
         SetEnemyState(boolean);
     }
 
-    public void DeActivateEnemy()
+    public void DeActivate()
     {
         SetEnemyState(false);
         EnemyIsDeadEvent?.Invoke();
@@ -187,15 +201,6 @@ public class Enemy : Unit, IEnemyData
         vfxDeadImpact.Play(true);
     }
 
-    //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
-    public void OnMove()
-    {
-        if (bDead == false)
-        {
-            moveComponent.ApplyImpulse();
-        }
-    }
-
     public void ResetState()
     {
         if (weaknessTurn > 0)
@@ -217,31 +222,6 @@ public class Enemy : Unit, IEnemyData
         weaknessTurn = turnCnt;
         if (weaknessTurn > 0)
             healthComponent.SetWeakness(true);
-    }
-
-
-    /// <summary>
-    /// 구현 코드 존. ------------------------------------------
-    /// </summary>
-
-    protected override void Update()
-    {
-        base.Update();
-    }
-
-
-    protected override void OnDestroy()
-    {
-
-    }
-
-    public void SetTargetPoint(Vector2 _targetPoint)
-    {
-        targetPoint = _targetPoint;
-        Vector2 targetDir = targetPoint - (Vector2)transform.position;
-        targetDir.Normalize();
-
-        moveComponent.SetMoveDirection(targetDir);
     }
 
     //지구에 충돌했을 때 호출됨.
@@ -277,6 +257,44 @@ public class Enemy : Unit, IEnemyData
         }
     }
 
+    public override void KnockBack(Vector2 dir, float power)
+    {
+        moveComponent.ApplyKnockBack(dir, power);
+    }
+
+    /// <summary>
+    /// 구현 코드 존. ------------------------------------------
+    /// </summary>
+
+    //Enemy Turn이 시작되면 상위 모듈에서 호출해줌.
+    public void OnMove()
+    {
+        if (bDead == false)
+        {
+            moveComponent.ApplyImpulse();
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+
+    protected override void OnDestroy()
+    {
+
+    }
+
+    public void SetTargetPoint(Vector2 _targetPoint)
+    {
+        targetPoint = _targetPoint;
+        Vector2 targetDir = targetPoint - (Vector2)transform.position;
+        targetDir.Normalize();
+
+        moveComponent.SetMoveDirection(targetDir);
+    }
+
     public Transform GetTransform()
     {
         return transform;
@@ -290,10 +308,5 @@ public class Enemy : Unit, IEnemyData
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
-    }
-
-    public override void KnockBack(Vector2 dir, float power)
-    {
-        moveComponent.ApplyKnockBack(dir, power);
     }
 }

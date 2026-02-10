@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public interface IEnemyData
 {
@@ -11,4 +12,5 @@ public interface IEnemyData
     event Action EnemySpawnedEvent;
     event Action EnemyIsDeadEvent;
     EnemyTypeData enemyTypeData { get; }
+    List<DebuffElementData> currentAppliedDebuff { get; }
 }
