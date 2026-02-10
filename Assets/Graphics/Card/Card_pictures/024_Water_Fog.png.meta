@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 28da859fc4c39f64cb14ca2bb202c484
+guid: 0d658baa2281f894f9b591b9f5629549
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4948924725966553950
-    second: 021_Prism_Bolt_0
+      213: -8925929717891158265
+    second: 024_Water_Fog_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 021_Prism_Bolt_0
+      name: 024_Water_Fog_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2acbd98ae23e15bb0800000000000000
-      internalID: -4948924725966553950
+      spriteID: 70faef2963ab02480800000000000000
+      internalID: -8925929717891158265
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      021_Prism_Bolt_0: -4948924725966553950
+      024_Water_Fog_0: -8925929717891158265
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
