@@ -108,6 +108,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         totalDamageValue = initialTotalDamageValue;
         totalDamage = 0;
         resultDamage = 0;
+        additionalAttackModifier = 1f;
         additionalAttackStat = default;
     }
 
