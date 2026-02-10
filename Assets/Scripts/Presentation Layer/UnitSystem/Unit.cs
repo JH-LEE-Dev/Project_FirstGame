@@ -153,4 +153,9 @@ public class Unit : MonoBehaviour, IDamageable
     {
         healthComponent.TakeDamage(damage);
     }
+
+    public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
+    {
+        throw new NotImplementedException();
+    }
 }

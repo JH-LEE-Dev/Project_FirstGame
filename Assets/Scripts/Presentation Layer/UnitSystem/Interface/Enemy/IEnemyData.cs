@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public interface IEnemyData
 {
+    int enemyID { get; }
     Transform GetTransform();
     float GetMaxHealth();
     float GetCurrentHealth();

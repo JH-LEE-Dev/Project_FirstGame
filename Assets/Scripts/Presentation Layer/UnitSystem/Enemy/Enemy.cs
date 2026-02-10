@@ -12,8 +12,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action<IEnemyData, float, bool> EnemyTakeDamageEvent;
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
-    public event Action<ElementExplosionType> ElementExplosionOccuredEvent; //원소 폭발 발생 시 Invoke
     public event Action EnemyDebuffChangedEvent;
+    public event Action<IEnemyData, IEnemyData> EnemyCollideEvent;
+    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>> EnemyHitEvent;
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
@@ -24,7 +25,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
-
+    ElementDamageHandleComponent elementDamageHandleComponent;
 
 
 
@@ -35,7 +36,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData { get; private set; }
-
+    public int enemyID { get; private set; }
 
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
@@ -154,10 +155,12 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             moveComponent = GetComponent<EMoveComponent>();
             visualComponentCoordinator = new EVisualComponentCoordinator();
             statComponent = GetComponent<EStatComponent>();
+            elementDamageHandleComponent = new ElementDamageHandleComponent();
 
             //Visual 로직에 필요한 의존성을 추가해주면 됨.
             visualComponentCoordinator.Initialize(combatComponent, moveComponent);
             moveComponent.Initialize(ctx, visualComponentCoordinator);
+            elementDamageHandleComponent.Initialize(currentAppliedDebuff);
 
             //trail 임시 코드.
             trailRenderer = GetComponent<TrailRenderer>();
@@ -172,6 +175,11 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         SetupEnemyType();
 
         bInitialized = true;
+    }
+
+    public void SetEnemyID(int _id)
+    {
+        enemyID = _id;
     }
 
     private void SetupEnemyType()
@@ -194,7 +202,10 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (bDead == true)
             return;
 
-        healthComponent.TakeDamage(damage);
+        if (_bulletElements != null)
+            EnemyHitEvent?.Invoke(this, _bulletElements);
+
+        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements, damage));
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 
@@ -235,6 +246,13 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     {
         if (!other.isTrigger || bDead || rb.simulated == false)
             return;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            EnemyCollideEvent?.Invoke(this, other as IEnemyData);
+
+            return;
+        }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Earth"))
         {

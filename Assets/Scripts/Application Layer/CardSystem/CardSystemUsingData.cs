@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public static class SYSTEM_VAR
 {
@@ -114,19 +115,30 @@ public struct DebuffElementData
     }
 }
 
+public struct ExplosionComparer : IComparer<ExplosionBehavior>
+{
+    public int Compare(ExplosionBehavior x, ExplosionBehavior y)
+    {
+        return x.elementExplosionType.CompareTo(y.elementExplosionType);
+    }
+}
+
 public enum DebuffElementEffectType
 {
     Combustion, //연소
     ElectricShock, //감전
     Oxidation, //산화
     Wet, //습윤 ㅋ
+    MAX,
 }
+
 
 public enum ElementExplosionType
 {
     Steam,
     Flame,
     Spark,
+    MAX,
 }
 
 public struct AdditionalAttackStat

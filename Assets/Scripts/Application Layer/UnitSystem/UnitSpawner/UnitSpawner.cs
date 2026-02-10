@@ -53,6 +53,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
     // Enemy Ǯ
     ObjectPool<Enemy> enemyPool;
 
+    private int activatedEnemyCnt = 0;
+
     private void Awake()
     {
         enemyPool = new ObjectPool<Enemy>(
@@ -182,7 +184,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
 
         curUnitCnt = spawnWaveSignal.waveIdx;
 
-        for (uint i = 0; i < curUnitCnt; ++i)
+        for (int i = 0; i < curUnitCnt; ++i)
         {
             Vector3 spawnPosition = GetRandomPointInEllipse();
 
@@ -203,6 +205,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
                     enemyData.Add(spawnedUnit);
                     enemies.Add(spawnedUnit);
                     additionalSpawnedEnemy.Add(spawnedUnit);
+                    enemies[i].SetEnemyID(activatedEnemyCnt);
+                    ++activatedEnemyCnt;
                 }
             }
         }

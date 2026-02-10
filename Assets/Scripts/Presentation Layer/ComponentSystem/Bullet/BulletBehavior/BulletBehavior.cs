@@ -18,7 +18,7 @@ public abstract class BulletBehavior : ScriptableObject
 
     protected Transform bulletTransform;
 
-    public void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
+    public virtual void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
     IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
     {
         bullet = _bullet;

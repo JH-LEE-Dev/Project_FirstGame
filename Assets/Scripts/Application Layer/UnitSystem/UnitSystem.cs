@@ -15,12 +15,15 @@ public class UnitSystem
     private SignalHub signalHub;
     private UnitSpawner unitSpawner;
     private UnitLogicSystem unitLogicSystem;
+    private ElementExplosionSystem elementExplosionSystem;
 
-    public void Initialize(SignalHub _signalHub, UnitSpawner _unitSpawner, UnitLogicSystem _unitLogicSystem)
+    public void Initialize(SignalHub _signalHub, UnitSpawner _unitSpawner, UnitLogicSystem _unitLogicSystem,
+        ElementExplosionSystem _elementExplosionSystem)
     {
         signalHub = _signalHub;
         unitSpawner = _unitSpawner;
         unitLogicSystem = _unitLogicSystem;
+        elementExplosionSystem = _elementExplosionSystem;
 
         BindEvents();
         SubscribeEvents();
@@ -224,7 +227,7 @@ public class UnitSystem
 
     private void PlayerMoneyUsed(ShopBillingSignal shopBillingSignal)
     {
-        unitLogicSystem.PlayerMoneyUsed(shopBillingSignal.usedMoney); 
+        unitLogicSystem.PlayerMoneyUsed(shopBillingSignal.usedMoney);
     }
 
     private void EnemyTurnEnd(WaveMoveEndSignal waveMoveEndSignal)

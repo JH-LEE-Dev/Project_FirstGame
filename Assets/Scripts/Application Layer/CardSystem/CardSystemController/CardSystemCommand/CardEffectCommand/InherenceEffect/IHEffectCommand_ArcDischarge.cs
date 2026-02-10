@@ -13,6 +13,7 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
     {
         cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded);
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.SetCharacterCanAttackState(true);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -40,6 +41,7 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
     {
         cardStatusEffectCommandHandler.ResetBulletType();
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.SetCharacterCanAttackState(false);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {

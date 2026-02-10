@@ -25,6 +25,7 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
 
         cardStatusEffectCommandHandler.SetBulletType(BulletType.AquaBurst, bUpgraded);
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(additionalAttackStat);
+        cardStatusEffectCommandHandler.SetCharacterCanAttackState(true);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -52,6 +53,7 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
     {
         cardStatusEffectCommandHandler.ResetBulletType();
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.SetCharacterCanAttackState(false);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {

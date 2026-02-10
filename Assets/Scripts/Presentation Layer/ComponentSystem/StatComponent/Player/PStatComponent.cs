@@ -18,7 +18,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     private float initialAttack = 0f;
     private float initialTotalDamageValue = 1f;
     private float additionalAttack = 0f;
-    private float additionalAttackModifier = 0f;
+    private float additionalAttackModifier = 1f;
 
     public AdditionalAttackStat additionalAttackStat { get; private set; }
 
@@ -108,6 +108,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         totalDamageValue = initialTotalDamageValue;
         totalDamage = 0;
         resultDamage = 0;
+        additionalAttackModifier = 1f;
         additionalAttackStat = default;
     }
 
