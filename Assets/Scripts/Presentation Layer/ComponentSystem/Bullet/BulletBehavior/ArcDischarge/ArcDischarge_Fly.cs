@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge_Fly")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge/Fly")]
 public class ArcDischarge_Fly : ArcDischargeBehavior
 {
     public override void Enter()

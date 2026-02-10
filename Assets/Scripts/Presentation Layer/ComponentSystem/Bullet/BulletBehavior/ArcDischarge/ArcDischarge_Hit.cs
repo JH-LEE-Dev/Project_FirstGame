@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge_Hit")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge/Hit")]
 public class ArcDischarge_Hit : ArcDischargeBehavior
 {
     [SerializeField] private int maxTransference = 2;
@@ -14,13 +14,13 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     {
         bUpdateEnd = false;
         EnterHitEnemy(firstTarget, bullet.transform.position);
+        End();
     }
 
     public override void Update()
     {
         if (true == bUpdateEnd)
             return;
-
     }
 
     public override void End()
@@ -119,6 +119,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             return;
 
         Vector2 _startPos = frontCollider.transform.position;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_startPos, finderRadius);
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.targetMask);
         if (0 >= targets.Length)

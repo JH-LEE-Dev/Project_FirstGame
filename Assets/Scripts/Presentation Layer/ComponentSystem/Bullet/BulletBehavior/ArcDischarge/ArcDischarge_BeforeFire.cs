@@ -1,21 +1,18 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge_BeforeFire")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge/BeforeFire")]
 public class ArcDischarge_BeforeFire : ArcDischargeBehavior
 {
     public override void Enter()
     {
         bUpdateEnd = false;
+        Debug.Log("너 들어왔어?");
     }
 
     public override void Update()
     {
         if (true == bUpdateEnd)
             return;
-
-        // TODO: 나중에 연출할 때 사용할 것임
-        // 에너지 모아서 기 방출하는 느낌의 썬더 차지느낌
-
 
         End();
     }
