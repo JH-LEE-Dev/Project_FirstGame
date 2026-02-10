@@ -24,4 +24,9 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
         bUpdateEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
+
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
 }

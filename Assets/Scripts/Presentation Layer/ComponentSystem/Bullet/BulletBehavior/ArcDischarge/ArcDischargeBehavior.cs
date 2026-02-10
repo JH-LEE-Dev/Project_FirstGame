@@ -18,4 +18,9 @@ public class ArcDischargeBehavior : BulletBehavior
     {
 
     }
+
+    public override void Exit()
+    {
+
+    }
 }

@@ -16,4 +16,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     {
         BulletBehaviorEndEvent?.Invoke();
     }
+
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
 }
