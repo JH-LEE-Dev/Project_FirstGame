@@ -10,6 +10,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     private Queue<Collider2D> nextTargets = new(50);
     private HashSet<Collider2D> visits = new(50);
 
+    private Vector2 tempPos;
+
     public override void Enter()
     {
         bUpdateEnd = false;
@@ -70,6 +72,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         if (null == hit)
             return;
 
+        tempPos = startPos;
         Vector2 targetPos = hit.transform.position;
 
         ApplyDamage(hit, startPos);
@@ -78,7 +81,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CreateCircleCollder(hit);
 
         //ÀÌÆåÆ® Àç»ý
-        Debug.DrawLine(startPos, targetPos);
+        Debug.DrawLine(startPos, targetPos, Color.red, 3f);
         //Sound.Play("Impact", bullet.transform.position);
     }
 
@@ -120,9 +123,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 _startPos = frontCollider.transform.position;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_startPos, finderRadius);
-
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.targetMask);
         if (0 >= targets.Length)
             return;
@@ -139,6 +139,12 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             nextTargets.Enqueue(target);
             visits.Add(target);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(tempPos, finderRadius);
     }
 
     #endregion

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ArcDischarge_Hit
   m_EditorClassIdentifier: Assembly-CSharp::ArcDischarge_Hit
   maxTransference: 2
-  finderRadius: 20
+  finderRadius: 0.75

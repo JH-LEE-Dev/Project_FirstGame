@@ -15,7 +15,11 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
         if (true == bUpdateEnd)
             return;
 
-        
+        if (true == CheckCollision_Enemy())
+            return;
+
+        if (true == CheckCollision_OutofRange())
+            return;
     }
 
     public override void End()
