@@ -14,7 +14,7 @@ public abstract class BulletBehavior : ScriptableObject
     protected IDamageSystem damageSystem;
     protected Bullet bullet;
 
-    public void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
+    public virtual void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
     IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
     {
         bullet = _bullet;
