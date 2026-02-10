@@ -53,12 +53,6 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
         ReleaseEvents();
     }
 
-    public void TakeDamage(float damage, bool bCritical)
-    {
-        healthComponent.TakeDamage(damage);
-        TakeDamageEvent?.Invoke(damage);
-    }
-
     public Transform GetTransform()
     {
         return transform;
@@ -145,5 +139,28 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
     public void ClearDebuff()
     {
         currentAppliedDebuff.Clear();
+    }
+
+    public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    {
+        healthComponent.TakeDamage(damage,_bulletElements);
+        TakeDamageEvent?.Invoke(damage);
+    }
+
+    public void PlayerTurnEnd()
+    {
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in currentAppliedDebuff)
+        {
+            if (pair.Value.turnCnt <= 1)
+            {
+                currentAppliedDebuff.Remove(pair.Key);
+            }
+            else
+            {
+                var data = pair.Value;
+                data.turnCnt -= 1;
+                currentAppliedDebuff[pair.Key] = data;
+            }
+        }
     }
 }

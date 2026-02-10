@@ -97,6 +97,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
+
+        currentAppliedDebuff.Clear();
     }
 
     public IEnumerator SetEnemyState_Delayed(bool boolean)
@@ -186,7 +188,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         combatComponent.Initialize(ctx, visualComponentCoordinator, statComponent);
     }
 
-    public override void TakeDamage(float damage, bool bCritical)
+    public override void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         if (bDead == true)
             return;
@@ -283,7 +285,22 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         }
     }
 
-
+    public void EnemyTurnEnd()
+    {
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in currentAppliedDebuff)
+        {
+            if(pair.Value.turnCnt <= 1)
+            {
+                currentAppliedDebuff.Remove(pair.Key);
+            }
+            else
+            {
+                var data = pair.Value;
+                data.turnCnt -= 1;
+                currentAppliedDebuff[pair.Key] = data;
+            }
+        }
+    }
 
 
 

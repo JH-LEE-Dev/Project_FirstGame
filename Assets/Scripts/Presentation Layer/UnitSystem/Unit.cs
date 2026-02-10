@@ -127,12 +127,6 @@ public class Unit : MonoBehaviour, IDamageable
     {
     }
 
-    //체력 깎이는 함수.
-    public virtual void TakeDamage(float damage, bool bCritical)
-    {
-        healthComponent.TakeDamage(damage);
-    }
-
     //RigidBody의 Damping 설정하는 함수. Character는 무관.
     public void ResetDamping()
     {
@@ -153,5 +147,10 @@ public class Unit : MonoBehaviour, IDamageable
     public virtual void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
     {
 
+    }
+
+    public virtual void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    {
+        healthComponent.TakeDamage(damage);
     }
 }

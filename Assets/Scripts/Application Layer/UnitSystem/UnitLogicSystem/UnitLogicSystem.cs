@@ -172,6 +172,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     private void PlayerTurnFinished()
     {
         PlayerTurnFinishedEvent?.Invoke();
+        playerUnit.PlayerTurnEnd();
     }
 
     public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
@@ -358,5 +359,13 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public IReadOnlyList<IEnemyHandler> GetEnemyHandlers()
     {
         return enemyHandlers;
+    }
+
+    public void EnemyTurnEnd()
+    {
+        for (int i = 0; i < enemyUnits.Count; ++i)
+        {
+            enemyUnits[i].EnemyTurnEnd();
+        }
     }
 }

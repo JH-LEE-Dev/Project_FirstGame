@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -160,7 +161,7 @@ public class Character : Unit, ICharacterData
     }
 
     //데미지 입는 함수 - 미구현.
-    public override void TakeDamage(float damage, bool bCritical)
+    public override void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
 
     }

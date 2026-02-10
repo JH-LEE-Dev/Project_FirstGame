@@ -117,6 +117,7 @@ public class UnitSystem
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.Subscribe<ShopBillingSignal>(PlayerMoneyUsed);
+        signalHub.Subscribe<WaveMoveEndSignal>(EnemyTurnEnd);
     }
 
     private void UnSubscribeEvents()
@@ -132,6 +133,7 @@ public class UnitSystem
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStart);
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.UnSubscribe<ShopBillingSignal>(PlayerMoneyUsed);
+        signalHub.UnSubscribe<WaveMoveEndSignal>(EnemyTurnEnd);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -223,5 +225,10 @@ public class UnitSystem
     private void PlayerMoneyUsed(ShopBillingSignal shopBillingSignal)
     {
         unitLogicSystem.PlayerMoneyUsed(shopBillingSignal.usedMoney); 
+    }
+
+    private void EnemyTurnEnd(WaveMoveEndSignal waveMoveEndSignal)
+    {
+        unitLogicSystem.EnemyTurnEnd();
     }
 }

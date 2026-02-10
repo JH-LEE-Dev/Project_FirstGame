@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthComponentProvider
@@ -73,7 +74,7 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthCo
         bWeakness = boolean;
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         if(bWeakness)
         {
