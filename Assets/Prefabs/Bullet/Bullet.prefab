@@ -215,6 +215,10 @@ MonoBehaviour:
     behavior_BeforeFire: {fileID: 11400000, guid: 7ea37191dab5cf64da2218d203dcde11, type: 2}
     behavior_Fly: {fileID: 11400000, guid: 6115e9ad397ac2b43a0808bb80e65558, type: 2}
     behavior_Hit: {fileID: 11400000, guid: d285d5afad1248f4da029ab072724e29, type: 2}
+  - bulletType: 2
+    behavior_BeforeFire: {fileID: 11400000, guid: bc30c5c228d88c44a8d2113f08c748d4, type: 2}
+    behavior_Fly: {fileID: 11400000, guid: e6c082508b1889c4e82b1da5303f2452, type: 2}
+    behavior_Hit: {fileID: 11400000, guid: a97e2a0530a6fdd479b2c50f18851e8d, type: 2}
 --- !u!1 &4855813227552774735
 GameObject:
   m_ObjectHideFlags: 0
