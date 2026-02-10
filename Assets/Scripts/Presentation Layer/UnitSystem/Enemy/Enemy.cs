@@ -24,7 +24,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
-
+    ElementDamageHandleComponent elementDamageHandleComponent;
 
 
 
@@ -154,10 +154,12 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             moveComponent = GetComponent<EMoveComponent>();
             visualComponentCoordinator = new EVisualComponentCoordinator();
             statComponent = GetComponent<EStatComponent>();
+            elementDamageHandleComponent = new ElementDamageHandleComponent();
 
             //Visual 로직에 필요한 의존성을 추가해주면 됨.
             visualComponentCoordinator.Initialize(combatComponent, moveComponent);
             moveComponent.Initialize(ctx, visualComponentCoordinator);
+            elementDamageHandleComponent.Initialize(currentAppliedDebuff);
 
             //trail 임시 코드.
             trailRenderer = GetComponent<TrailRenderer>();
@@ -194,7 +196,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (bDead == true)
             return;
 
-        healthComponent.TakeDamage(damage);
+        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements,damage));
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 

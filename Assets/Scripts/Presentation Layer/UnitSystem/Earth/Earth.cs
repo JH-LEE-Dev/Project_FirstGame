@@ -19,6 +19,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 
 
     protected HealthComponent healthComponent;
+    protected ElementDamageHandleComponent elementDamageHandleComponent;
 
     private int money = 0;
 
@@ -30,6 +31,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
     public void Initialize()
     {
         healthComponent = GetComponent<HealthComponent>();
+        elementDamageHandleComponent = new ElementDamageHandleComponent();
+
+        elementDamageHandleComponent.Initialize(currentAppliedDebuff);
 
         BindEvents();
     }
@@ -150,7 +154,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 
     public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
-        healthComponent.TakeDamage(damage,_bulletElements);
+        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements,damage));
         TakeDamageEvent?.Invoke(damage);
     }
 
