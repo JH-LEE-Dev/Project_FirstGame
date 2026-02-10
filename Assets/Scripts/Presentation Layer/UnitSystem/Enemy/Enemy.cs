@@ -35,7 +35,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData { get; private set; }
-
+    public int enemyID { get; private set; }
 
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
@@ -174,6 +174,11 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         SetupEnemyType();
 
         bInitialized = true;
+    }
+
+    public void SetEnemyID(int _id)
+    {
+        enemyID = _id;
     }
 
     private void SetupEnemyType()
