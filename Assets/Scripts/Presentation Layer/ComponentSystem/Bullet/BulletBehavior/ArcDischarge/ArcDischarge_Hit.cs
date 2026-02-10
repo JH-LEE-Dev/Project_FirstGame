@@ -73,6 +73,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             return;
 
         tempPos = startPos;
+        Debug.Log(tempPos);
+
         Vector2 targetPos = hit.transform.position;
 
         ApplyDamage(hit, startPos);
@@ -123,6 +125,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 _startPos = frontCollider.transform.position;
 
+        DrawDebugCircle(_startPos, finderRadius, Color.red, 3f);
+
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.targetMask);
         if (0 >= targets.Length)
             return;
@@ -141,10 +145,21 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         }
     }
 
-    private void OnDrawGizmos()
+    private void DrawDebugCircle(Vector2 center, float radius, Color color, float duration)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(tempPos, finderRadius);
+        int segments = 36;
+        float angleStep = 360f / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            float a1 = i * angleStep * Mathf.Deg2Rad;
+            float a2 = (i + 1) * angleStep * Mathf.Deg2Rad;
+
+            Vector2 p1 = center + new Vector2(Mathf.Cos(a1), Mathf.Sin(a1)) * radius;
+            Vector2 p2 = center + new Vector2(Mathf.Cos(a2), Mathf.Sin(a2)) * radius;
+
+            Debug.DrawLine(p1, p2, color, duration);
+        }
     }
 
     #endregion
