@@ -6,7 +6,16 @@ using UnityEngine;
 
 public class TMPTextFxController : MonoBehaviour
 {
-    public enum FxType { RB, WB, RY }
+    public enum FxType { 
+        RB,     // ¹«Áö°³.    °­È­·ù
+        WB,     // ¾ÏÈæ ´À³¦. ¼Ò¸ê, °­È­ºÒ°¡
+        RY,     // ³ë¶û »¡°­. ÁßÃ¸
+
+        YB,     // Àü±â: ³ë¶û/ÆÄ¶û
+        BW,     // ¹°: ÆÄ¶û/Èò»ö
+        R,      // È­¿°: »¡°­/´ÙÅ©·¹µå
+        G,      // µ¶: ±×¸°/´ÙÅ©±×¸°
+    }
 
     [SerializeField] private TMP_Text tmp;
 
@@ -30,6 +39,24 @@ public class TMPTextFxController : MonoBehaviour
     private readonly Color32 DARKBLUE = new Color32(65, 0, 172, 255);
     private readonly Color32 RED = new Color32(255, 60, 60, 255);
     private readonly Color32 YELLOW = new Color32(255, 230, 80, 255);
+
+
+    // Electric (Yellow <-> DarkYellow)
+    private readonly Color32 ELECTRIC_YELLOW = new Color32(255, 231, 77, 255);
+    private readonly Color32 ELECTRIC_DARK_YELLOW = new Color32(150, 140, 25, 255);
+
+    // Water (Blue <-> White)
+    private readonly Color32 WATER_BLUE = new Color32(72, 170, 255, 255);
+    private readonly Color32 WATER_WHITE = new Color32(245, 250, 255, 255);
+
+    // Fire (Red <-> Dark Red)
+    private readonly Color32 FIRE_RED = new Color32(255, 80, 65, 255);
+    private readonly Color32 FIRE_DARK_RED = new Color32(150, 25, 25, 255);
+
+    // Poison (Bright Green <-> Dark Green)
+    private readonly Color32 POISON_GREEN = new Color32(130, 255, 90, 255);
+    private readonly Color32 POISON_DARK_GREEN = new Color32(20, 120, 55, 255);
+
 
     private void Awake()
     {
@@ -116,7 +143,14 @@ public class TMPTextFxController : MonoBehaviour
             int wb = src.IndexOf("<wb>", i, System.StringComparison.Ordinal);
             int ry = src.IndexOf("<ry>", i, System.StringComparison.Ordinal);
 
-            int open = MinPositive(rb, wb, ry);
+            int yb = src.IndexOf("<yb>", i, System.StringComparison.Ordinal);
+            int bw = src.IndexOf("<bw>", i, System.StringComparison.Ordinal);
+            int r = src.IndexOf("<r>", i, System.StringComparison.Ordinal);
+            int g = src.IndexOf("<g>", i, System.StringComparison.Ordinal);
+
+            int open = MinPositive(rb, wb, ry, yb, bw, r, g); 
+            
+            
             if (open < 0)
             {
                 sb.Append(src, i, src.Length - i);
@@ -130,7 +164,11 @@ public class TMPTextFxController : MonoBehaviour
 
             if (open == rb) { type = FxType.RB; openTag = "<rb>"; closeTag = "</rb>"; }
             else if (open == wb) { type = FxType.WB; openTag = "<wb>"; closeTag = "</wb>"; }
-            else { type = FxType.RY; openTag = "<ry>"; closeTag = "</ry>"; }
+            else if (open == ry) { type = FxType.RY; openTag = "<ry>"; closeTag = "</ry>"; }
+            else if (open == yb) { type = FxType.YB; openTag = "<yb>"; closeTag = "</yb>"; }
+            else if (open == bw) { type = FxType.BW; openTag = "<bw>"; closeTag = "</bw>"; }
+            else if (open == r) { type = FxType.R; openTag = "<r>"; closeTag = "</r>"; }
+            else { type = FxType.G; openTag = "<g>"; closeTag = "</g>"; }
 
             int contentStart = open + openTag.Length;
             int close = src.IndexOf(closeTag, contentStart, System.StringComparison.Ordinal);
@@ -153,15 +191,16 @@ public class TMPTextFxController : MonoBehaviour
         tmp.text = sb.ToString();
     }
 
-    private static int MinPositive(int a, int b, int c)
+    private static int MinPositive(params int[] values)
     {
         int m = int.MaxValue;
-        if (a >= 0 && a < m) m = a;
-        if (b >= 0 && b < m) m = b;
-        if (c >= 0 && c < m) m = c;
+        for (int i = 0; i < values.Length; i++)
+        {
+            int v = values[i];
+            if (v >= 0 && v < m) m = v;
+        }
         return (m == int.MaxValue) ? -1 : m;
     }
-
 
     private IEnumerator Co_FxLoop()
     {
@@ -219,6 +258,9 @@ public class TMPTextFxController : MonoBehaviour
     {
         float phase = (time * speed) + (charIndexInRange * charPhase);
 
+        // 0~1 ÆÄÇü (ºÎµå·¯¿î ¿Õº¹)
+        float a = 0.5f + 0.5f * Mathf.Sin(phase * Mathf.PI * 2f);
+
         switch (type)
         {
             case FxType.RB:
@@ -229,18 +271,32 @@ public class TMPTextFxController : MonoBehaviour
                 }
             case FxType.WB:
                 {
-                    float a = 0.5f + 0.5f * Mathf.Sin(phase * Mathf.PI * 2f);
                     return Lerp32(GREENBLUE, DARKBLUE, a);
                 }
             case FxType.RY:
+                {
+                    return Lerp32(RED, YELLOW, a);
+                }
+
+            case FxType.YB: // Àü±â
+                {
+                    return Lerp32(ELECTRIC_YELLOW, ELECTRIC_DARK_YELLOW, a);
+                }
+            case FxType.BW: // ¹°
+                {
+                    return Lerp32(WATER_BLUE, WATER_WHITE, a);
+                }
+            case FxType.R: // È­¿°
+                {
+                    return Lerp32(FIRE_RED, FIRE_DARK_RED, a);
+                }
+            case FxType.G: // µ¶
             default:
                 {
-                    float a = 0.5f + 0.5f * Mathf.Sin(phase * Mathf.PI * 2f);
-                    return Lerp32(RED, YELLOW, a);
+                    return Lerp32(POISON_DARK_GREEN, POISON_GREEN, a);
                 }
         }
     }
-
     private static Color32 Lerp32(Color32 a, Color32 b, float t)
     {
         t = Mathf.Clamp01(t);
