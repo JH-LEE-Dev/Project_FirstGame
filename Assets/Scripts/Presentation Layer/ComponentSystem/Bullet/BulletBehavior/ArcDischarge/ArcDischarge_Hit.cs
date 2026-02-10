@@ -13,7 +13,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     public override void Enter()
     {
         bUpdateEnd = false;
-        EnterHitEnemy();
+        EnterHitEnemy(firstTarget, bullet.transform.position);
     }
 
     public override void Update()
@@ -35,6 +35,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         BulletEffectEndEvent?.Invoke();
     }
 
+    #region Damage & Knockback
 
     protected void ApplyDamage(Collider2D other, Vector2 startPos)
     {
@@ -77,6 +78,10 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Debug.DrawLine(startPos, targetPos);
         //Sound.Play("Impact", bullet.transform.position);
     }
+
+    #endregion
+
+    #region BFS Enemy Search 
 
     private void CreateCircleCollder(Collider2D hitColl)
     {
@@ -129,4 +134,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             visits.Add(target);
         }
     }
+
+    #endregion
 }

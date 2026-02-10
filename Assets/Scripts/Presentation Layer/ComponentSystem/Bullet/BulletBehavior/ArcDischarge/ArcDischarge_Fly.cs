@@ -7,6 +7,7 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
     public override void Enter()
     {
         bUpdateEnd = false;
+        firstTarget = null;
     }
 
     public override void Update()
@@ -41,7 +42,9 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
             bullet.targetMask
         );
 
-        if (null != hit.collider)
+        firstTarget = hit.collider;
+
+        if (null != firstTarget)
         {
             End();
             return true;
