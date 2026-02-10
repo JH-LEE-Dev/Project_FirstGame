@@ -15,11 +15,11 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
         if (bUpgraded)
         {
-            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1);
+            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1,default);
         }
         else
         {
-            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1);
+            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, default);
         }
 
         cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded,additionalAttackStat);

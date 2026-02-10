@@ -133,11 +133,15 @@ public struct AdditionalAttackStat
     public float attack;
     public float additionalAttackValue;
     public float totalDamageValue;
-    public AdditionalAttackStat(float _attack, float _additionalAttackValue, float _totalDamageValue)
+    DebuffElementData debuffData;
+
+    public AdditionalAttackStat(float _attack, float _additionalAttackValue, float _totalDamageValue,
+        DebuffElementData _debuffData)
     {
         attack = _attack;
         additionalAttackValue = _additionalAttackValue;
         totalDamageValue = _totalDamageValue;
+        debuffData = _debuffData;
     }
 }
 

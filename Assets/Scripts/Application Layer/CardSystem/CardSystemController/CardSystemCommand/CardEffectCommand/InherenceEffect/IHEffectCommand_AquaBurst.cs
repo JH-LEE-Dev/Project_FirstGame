@@ -12,14 +12,15 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         AdditionalAttackStat additionalAttackStat;
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Wet,2);
 
         if (bUpgraded)
         {
-            additionalAttackStat = new AdditionalAttackStat(10, 0.5f, 1);
+            additionalAttackStat = new AdditionalAttackStat(10, 0.5f, 1, debuffElementData);
         }
         else
         {
-            additionalAttackStat = new AdditionalAttackStat(20, 1f, 1);
+            additionalAttackStat = new AdditionalAttackStat(20, 1f, 1, debuffElementData);
         }
 
         cardStatusEffectCommandHandler.SetBulletType(BulletType.AquaBurst, bUpgraded, additionalAttackStat);

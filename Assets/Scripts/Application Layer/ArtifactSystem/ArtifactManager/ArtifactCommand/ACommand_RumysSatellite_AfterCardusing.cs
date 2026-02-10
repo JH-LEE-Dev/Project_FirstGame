@@ -10,7 +10,7 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
 
         Debug.Log("루미의 위성 효과 적용.");
 
-        AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1);
+        AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1,default);
 
         if (bUpgraded == false)
         {
