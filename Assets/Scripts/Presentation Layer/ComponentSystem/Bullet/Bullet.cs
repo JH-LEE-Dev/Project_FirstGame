@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     IBulletEffectProvider bulletEffectProvider; //총알 타입을 가져오는 컴포넌트
 
     //내부 의존성
-    public EffectComponent effectComponent {  get; private set; }
+    public EffectComponent effectComponent { get; private set; }
     public SpriteRenderer sr { get; private set; }
     private BulletStateMachine stateMachine;
 
@@ -39,6 +39,7 @@ public class Bullet : MonoBehaviour
 
     public Vector2 flyDir { get; private set; }
     public Vector2 prevPosition { get; private set; }
+    private bool bFired = false;
 
 
     /// <summary>
@@ -61,7 +62,7 @@ public class Bullet : MonoBehaviour
         effectComponent = GetComponentInChildren<EffectComponent>();
         stateMachine = GetComponent<BulletStateMachine>();
 
-        stateMachine.Initialize(characterStatProvider,bulletEffectProvider,this,damageCalcComponent);
+        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, this, damageCalcComponent);
 
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;
@@ -75,12 +76,15 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        stateMachine.Update();
+        if (bFired)
+            stateMachine.Update();
     }
 
     public void Fire(Vector2 dir) //발사하는 함수.
     {
         ActivateBullet();
+
+        bFired = true;
 
         dir.Normalize();
         flyDir = dir;
@@ -94,6 +98,7 @@ public class Bullet : MonoBehaviour
 
     public void BulletEffectIsFinished() //총알의 공격 과정이 모두 끝났을 때 호출.
     {
+        bFired = false;
         DeActivateBullet();
         BulletEffectIsFinishedEvent?.Invoke();
     }

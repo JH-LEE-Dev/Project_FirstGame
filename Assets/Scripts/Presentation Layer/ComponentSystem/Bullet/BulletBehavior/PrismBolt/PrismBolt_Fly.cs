@@ -1,8 +1,8 @@
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/Normal_Fly")]
-public class Normal_Fly : BulletBehavior_ProjectileFly
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Fly")]
+public class PrismBolt_Fly : BulletBehavior_ProjectileFly
 {
+
     public override void Enter()
     {
         base.Enter();
@@ -13,6 +13,7 @@ public class Normal_Fly : BulletBehavior_ProjectileFly
     {
         return current + bullet.flyDir * speed * Time.deltaTime;
     }
+
 
     public override void End()
     {
