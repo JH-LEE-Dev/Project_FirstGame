@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 28da859fc4c39f64cb14ca2bb202c484
+guid: d47322dddb9e6954cbae3ab3d422d46f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4948924725966553950
-    second: 021_Prism_Bolt_0
+      213: 7994624130455716513
+    second: 031_WeaknessHarvest_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 021_Prism_Bolt_0
+      name: 031_WeaknessHarvest_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2acbd98ae23e15bb0800000000000000
-      internalID: -4948924725966553950
+      spriteID: 1a244901a4c92fe60800000000000000
+      internalID: 7994624130455716513
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      021_Prism_Bolt_0: -4948924725966553950
+      031_WeaknessHarvest_0: 7994624130455716513
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

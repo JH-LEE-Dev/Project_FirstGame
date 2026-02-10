@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 28da859fc4c39f64cb14ca2bb202c484
+guid: ae1543aae39d21743a3e0790091764c7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4948924725966553950
-    second: 021_Prism_Bolt_0
+      213: 4334859165211669415
+    second: 023_Aqua_Burst_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 021_Prism_Bolt_0
+      name: 023_Aqua_Burst_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2acbd98ae23e15bb0800000000000000
-      internalID: -4948924725966553950
+      spriteID: 7a3b9c59173882c30800000000000000
+      internalID: 4334859165211669415
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      021_Prism_Bolt_0: -4948924725966553950
+      023_Aqua_Burst_0: 4334859165211669415
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
