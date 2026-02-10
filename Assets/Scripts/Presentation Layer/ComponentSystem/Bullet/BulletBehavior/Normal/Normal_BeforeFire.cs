@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/Normal_BeforeFire")]
-public class Normal_BeforeFire : BulletBehavior
+public class Normal_BeforeFire : NormalBehavior
 {
     public override void Enter()
     {

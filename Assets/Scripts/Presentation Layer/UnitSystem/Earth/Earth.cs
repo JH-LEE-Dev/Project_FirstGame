@@ -12,6 +12,8 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
     //인터페이스 선언부
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerData.currentAppliedDebuff => currentAppliedDebuff;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerHandler.currentAppliedDebuff => currentAppliedDebuff;
+
+
     private Dictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
     public IStatusEffectReceiver statusEffectReceiver => healthComponent;
 
@@ -168,6 +170,6 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
             }
         }
 
-        PlayerDebuffChangedEvent.Invoke();
+        PlayerDebuffChangedEvent?.Invoke();
     }
 }
