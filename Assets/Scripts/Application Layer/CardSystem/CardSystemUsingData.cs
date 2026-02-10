@@ -85,6 +85,7 @@ public enum BulletType
     PrismBolt,
     ArcDischarge,
     AquaBurst,
+    MAX
 }
 
 [Serializable]
@@ -133,7 +134,7 @@ public struct AdditionalAttackStat
     public float attack;
     public float additionalAttackValue;
     public float totalDamageValue;
-    DebuffElementData debuffData;
+    public DebuffElementData debuffData;
 
     public AdditionalAttackStat(float _attack, float _additionalAttackValue, float _totalDamageValue,
         DebuffElementData _debuffData)
@@ -144,4 +145,14 @@ public struct AdditionalAttackStat
         debuffData = _debuffData;
     }
 }
+
+public enum InherenceCardType
+{ 
+    PrismBolt,
+    ArcDischarge,
+    AquaBurst,
+    AirBust,
+    MAX,
+}
+
 

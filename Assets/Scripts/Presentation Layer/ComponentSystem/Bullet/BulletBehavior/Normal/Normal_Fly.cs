@@ -35,6 +35,11 @@ public class Normal_Fly : BulletBehavior
         bBehaviorEnd = true;
     }
 
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
+
     private bool CheckCollision_Enemy(Vector2 delta, float distance) //총알에 직격한 적이 있는지 체크.
     {
         RaycastHit2D hit = Physics2D.CircleCast(
@@ -70,7 +75,7 @@ public class Normal_Fly : BulletBehavior
 
         if (hit.collider != null)
         {
-            End();
+            Exit();
 
             return true;
         }
@@ -88,8 +93,8 @@ public class Normal_Fly : BulletBehavior
         IDamageable hit = other.GetComponent<IDamageable>();
 
         bool bCritical = false;
-        baseDamage = characterStatProvider.CalcBaseDamage(out bCritical);
-
+        baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
+        
         if (hit != null)
         {
             hit.TakeDamage(baseDamage, bCritical);

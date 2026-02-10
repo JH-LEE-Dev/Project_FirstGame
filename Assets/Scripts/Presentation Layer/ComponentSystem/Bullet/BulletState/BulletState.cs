@@ -1,23 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public abstract class BulletState : MonoBehaviour
+public abstract class BulletState
 {
-    [SerializeField] protected BulletBehavior bulletBehavior;
-
     protected BulletStateCtx ctx;
+    protected BulletBehavior behavior;
 
     public void Initialize(BulletStateCtx _ctx)
     {
         ctx = _ctx;
-
-        bulletBehavior.Initialize(ctx.bullet, ctx.characterStatProvider, ctx.bulletEffectProvider);
-
-        bulletBehavior.BulletBehaviorEndEvent -= CurrentStateIsEnd;
-        bulletBehavior.BulletBehaviorEndEvent += CurrentStateIsEnd;
     }
 
     public abstract void Enter();
     public abstract void Exit();
     public abstract void UpdateState();
     public abstract void CurrentStateIsEnd();
+    public abstract void BulletFireIsFinished();
 }

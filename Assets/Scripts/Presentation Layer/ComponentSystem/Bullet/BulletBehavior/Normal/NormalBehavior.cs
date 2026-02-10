@@ -8,6 +8,11 @@ public class NormalBehavior : BulletBehavior
 
     }
 
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
+
     public override void Enter()
     {
 

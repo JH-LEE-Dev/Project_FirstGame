@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/Normal_Hit")]
 public class Normal_Hit : BulletBehavior
@@ -24,6 +23,11 @@ public class Normal_Hit : BulletBehavior
         BulletBehaviorEndEvent?.Invoke();
     }
 
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
+
     protected void ApplyDamage(Collider2D other) //적에게 데미지를 입히는 함수.
     {
         directHitObject = other;
@@ -34,11 +38,11 @@ public class Normal_Hit : BulletBehavior
         IDamageable hit = other.GetComponent<IDamageable>();
 
         bool bCritical = false;
-        baseDamage = characterStatProvider.CalcBaseDamage(out bCritical);
+        baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
         if (hit != null)
         {
-            hit.TakeDamage(baseDamage, bCritical);
+            hit.TakeDamage(baseDamage, bCritical,bulletEffectProvider.currentEffectElements);
             hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             ApplyKnockBack(hit, other.transform.position);
         }

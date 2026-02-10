@@ -34,8 +34,6 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     protected Dictionary<BulletElementType, BulletElementData> currentEffectElements =
         new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
-    public AdditionalAttackStat additionalAttackStat { get; private set; }
-
     private DamageCalcComponent damageCalcComponent;
 
     /// <summary>
@@ -112,18 +110,16 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
         ResetBulletType();
     }
 
-    public void SetBulletType(BulletType _type, bool _bUpgraded, AdditionalAttackStat _additionalAttackStat)
+    public void SetBulletType(BulletType _type, bool _bUpgraded)
     {
         bulletType =_type;
         bUpgraded = _bUpgraded;
-        additionalAttackStat = _additionalAttackStat;
     }
 
     public void ResetBulletType()
     {
         bulletType = BulletType.Normal;
         bUpgraded = false;
-        additionalAttackStat = default;
     }
 
     public void ApplyBulletElementType(BulletElementData _effectElementData)

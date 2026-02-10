@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IAquaBurstDamageCalculator
 {
-    float GetDefaultDamage();
+    float GetDefaultDamage(out bool bCritical);
 
-    float GetAquaEffectDamage();
+    AdditionalAttackData GetAquaEffectDamage();
 }
