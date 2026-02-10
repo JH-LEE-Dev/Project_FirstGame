@@ -144,7 +144,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
             for (int i = 0; i < enemyUnits.Count; ++i)
             {
                 enemyUnits[i].UnitIsDeadEvent -= EnemyIsDead;
+
                 enemyUnits[i].EnemyIsKilledEvent -= EnemyIsKilled;
+
                 enemyUnits[i].ElementExplosionOccuredEvent -= ElementExplosionOccured;
             }
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public interface IPlayerData
 {
@@ -12,5 +13,6 @@ public interface IPlayerData
 
     float GetPrevShield();
     int GetPlayerCurrentMoney();
-    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; } 
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
+    event Action PlayerDebuffChangedEvent;
 }

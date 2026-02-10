@@ -7,6 +7,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 {
     public event Action<float> TakeDamageEvent;
     public event Action PlayerDeadEvent;
+    public event Action PlayerDebuffChangedEvent;
 
     //인터페이스 선언부
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerData.currentAppliedDebuff => currentAppliedDebuff;
@@ -134,11 +135,15 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
 
             currentAppliedDebuff[debuffElementEffectType] = data;
         }
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 
     public void ClearDebuff()
     {
         currentAppliedDebuff.Clear();
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 
     public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
@@ -162,5 +167,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData , IPlayerHandler
                 currentAppliedDebuff[pair.Key] = data;
             }
         }
+
+        PlayerDebuffChangedEvent.Invoke();
     }
 }

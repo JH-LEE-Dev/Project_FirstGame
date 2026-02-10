@@ -13,6 +13,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
     public event Action<ElementExplosionType> ElementExplosionOccuredEvent; //원소 폭발 발생 시 Invoke
+    public event Action EnemyDebuffChangedEvent;
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
@@ -283,13 +284,15 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
             currentAppliedDebuff[debuffElementEffectType] = data;
         }
+
+        EnemyDebuffChangedEvent?.Invoke();
     }
 
     public void EnemyTurnEnd()
     {
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in currentAppliedDebuff)
         {
-            if(pair.Value.turnCnt <= 1)
+            if (pair.Value.turnCnt <= 1)
             {
                 currentAppliedDebuff.Remove(pair.Key);
             }
@@ -300,6 +303,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
                 currentAppliedDebuff[pair.Key] = data;
             }
         }
+
+        EnemyDebuffChangedEvent?.Invoke();
     }
 
 
@@ -363,6 +368,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public void ClearDebuff()
     {
         if (bDead == false)
+        {
             currentAppliedDebuff.Clear();
+            EnemyDebuffChangedEvent?.Invoke();
+        }
     }
 }
