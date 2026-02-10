@@ -12,6 +12,8 @@ public abstract class BulletBehavior : ScriptableObject
     protected ICharacterStatProvider characterStatProvider;
     protected IBulletEffectProvider bulletEffectProvider;
     protected IDamageSystem damageSystem;
+    protected bool bBehaviorEnd = false;
+
     protected Bullet bullet;
 
     public virtual void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
@@ -23,8 +25,52 @@ public abstract class BulletBehavior : ScriptableObject
         damageSystem = _damageSystem;
     }
 
-    public abstract void Enter();
+    public virtual void Enter()
+    {
+        bBehaviorEnd = false;
+    }
+
+
     public abstract void Update();
-    public abstract void End();
-    public abstract void Exit();
+
+
+    public virtual void End()
+    {
+        bBehaviorEnd = true;
+        BulletBehaviorEndEvent?.Invoke();
+    }
+
+
+    public virtual void Exit()
+    {
+        bBehaviorEnd = true;
+        BulletEffectEndEvent?.Invoke();
+    }
+
+    // 콜라이더 주인장한테 데미지 및 상태이상을 주는 함수
+    protected virtual void ApplyDamage(Collider2D other)
+    {
+        // 데미지 처리
+        bullet.effectComponent.PlayImpactEffect();
+
+        IDamageable hit = other.GetComponent<IDamageable>();
+
+        bool bCritical = false;
+        float damage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
+
+        if (hit != null)
+        {
+            hit.TakeDamage(damage, bCritical);
+            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
+        }
+    }
+
+    // 콜라이더 주인장한테, 원하는 넉백을 주는 함수 (충돌 지점 기준..)
+    protected virtual void ApplyKnockBack(Collider2D other, float knockBackPower = 0f)
+    {
+        IDamageable enemy = other.GetComponent<IDamageable>();
+
+        Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
+        enemy.KnockBack(dir.normalized, knockBackPower);
+    }
 }

@@ -47,20 +47,20 @@ public class CardInstance : MonoBehaviour
         return c;
     }
 
-    private readonly Color bulletFrameColor = Hex("#DEAB48", 1f);
-    private readonly Color bulletTextFrameColor = Hex("#FAE1AA", 1f);
-    private readonly Color bulletGlowColor = new Color32(145, 181, 32, 72);
-    private readonly Color bulletAOColor = Hex("#7B6D21", 0.15f);
+    private static readonly Color bulletFrameColor = Hex("#DEAB48", 1f);
+    private static readonly Color bulletTextFrameColor = Hex("#FAE1AA", 1f);
+    private static readonly Color bulletGlowColor = new Color32(145, 181, 32, 72);
+    private static readonly Color bulletAOColor = Hex("#7B6D21", 0.15f);
 
-    private readonly Color magicFrameColor = Hex("#696EC2", 1f);
-    private readonly Color magicTextFrameColor = Hex("#DAD5ED", 1f);
-    private readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
-    private readonly Color magicAOColor = Hex("#0025CD", 0.15f);
+    private static readonly Color magicFrameColor = Hex("#696EC2", 1f);
+    private static readonly Color magicTextFrameColor = Hex("#DAD5ED", 1f);
+    private static readonly Color magicGlowColor = new Color32(5, 93, 176, 109);
+    private static readonly Color magicAOColor = Hex("#0025CD", 0.15f);
 
-    private readonly Color inherenceFrameColor = Hex("#FF3131", 1f);
-    private readonly Color inherenceTextFrameColor = Hex("#FFAB94", 1f);
-    private readonly Color inherenceGlowColor = new Color32(183, 35, 34, 190);
-    private readonly Color inherenceAOColor = Hex("#4E0303", 0.15f);
+    private static readonly Color inherenceFrameColor = Hex("#FF3131", 1f);
+    private static readonly Color inherenceTextFrameColor = Hex("#FFAB94", 1f);
+    private static readonly Color inherenceGlowColor = new Color32(183, 35, 34, 190);
+    private static readonly Color inherenceAOColor = Hex("#4E0303", 0.15f);
 
     private float nameBaseAlpha = 1f;
     private float descBaseAlpha = 1f;
