@@ -67,6 +67,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     private void EnterHitEnemy(Collider2D hit, Vector2 startPos, bool first = true)
     {
+        if (null == hit)
+            return;
+
         Vector2 targetPos = hit.transform.position;
 
         ApplyDamage(hit, startPos);
