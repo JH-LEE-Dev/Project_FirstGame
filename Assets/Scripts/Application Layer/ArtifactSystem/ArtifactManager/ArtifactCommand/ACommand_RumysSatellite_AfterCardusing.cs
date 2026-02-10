@@ -14,14 +14,16 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
 
         if (bUpgraded == false)
         {
-            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false, additionalAttackStat);
+            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false);
+            complexSystemActionCommand.ApplyAdditionalAttackStat(additionalAttackStat);
 
             complexSystemActionCommand.ApplyAttackModifier(10,GameSystemActionContextType.MAX);
             complexSystemActionCommand.ApplyAdditionalAttackValueModifier(1);
         }
         else
         {
-            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false, additionalAttackStat);
+            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false);
+            complexSystemActionCommand.ApplyAdditionalAttackStat(additionalAttackStat);
 
             complexSystemActionCommand.ApplyAttackModifier(20, GameSystemActionContextType.MAX);
             complexSystemActionCommand.ApplyAdditionalAttackValueModifier(2);
@@ -35,6 +37,7 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
         if (complexSystemActionCommand.IsInherenceCardEquipped() == true)
             return;
 
+        complexSystemActionCommand.ApplyAdditionalAttackStat(default);
         complexSystemActionCommand.ResetBulletType();
 
         complexSystemActionCommand.SetCharacterCanAttackState(false);

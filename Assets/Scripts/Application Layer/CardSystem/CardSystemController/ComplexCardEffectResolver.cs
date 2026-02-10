@@ -231,9 +231,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
         cardStatusEffectCommandHandler.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded)
     {
-        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded,_additionalAttackStat);
+        cardStatusEffectCommandHandler.SetBulletType(bulletType,bUpgraded);
     }
 
     public void ResetBulletType()
@@ -306,5 +306,10 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     public void ApplyAdditionalAttackValueModifier(float value)
     {
         cardStatusEffectCommandHandler.ApplyAdditionalAttackValueModifier(value);
+    }
+
+    public void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat)
+    {
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(_additionalAttackStat);
     }
 }

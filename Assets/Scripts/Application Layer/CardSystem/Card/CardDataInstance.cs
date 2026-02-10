@@ -15,7 +15,7 @@ public class CardDataInstance : ICardDataInstanceProvider
     public int valueModifier = 1;
     public bool bPermanent = false;
 
-    public Dictionary<BulletElementType,BulletElementData> elementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
+    public Dictionary<BulletElementType, BulletElementData> elementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
     public Dictionary<DebuffElementEffectType, DebuffElementData> debuffTypes = new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
     public Dictionary<BulletElementType, BulletElementData> initialElementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
@@ -51,7 +51,10 @@ public class CardDataInstance : ICardDataInstanceProvider
         {
             elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
             initialElementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+        }
 
+        for (int i = 0; i < cardData.defaultdebuffTypes.Count; ++i)
+        {
             debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
             initialDebuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
         }
@@ -109,9 +112,13 @@ public class CardDataInstance : ICardDataInstanceProvider
 
         for (int i = 0; i < cardData.defaultElementTypes.Count; ++i)
         {
-            elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
-
-            debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
+            if (elementTypes.ContainsKey(cardData.defaultElementTypes[i].bulletElementType))
+                elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+        }
+        for (int i = 0; i < cardData.defaultdebuffTypes.Count; ++i)
+        {
+            if (debuffTypes.ContainsKey(cardData.defaultdebuffTypes[i].debuffElementType))
+                debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
         }
     }
 

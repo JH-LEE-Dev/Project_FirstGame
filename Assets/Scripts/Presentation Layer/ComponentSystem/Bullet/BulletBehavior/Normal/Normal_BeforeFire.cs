@@ -22,4 +22,9 @@ public class Normal_BeforeFire : BulletBehavior
 
         BulletBehaviorEndEvent?.Invoke();
     }
+
+    public override void Exit()
+    {
+        BulletEffectEndEvent?.Invoke();
+    }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IPrismBoltDamageCalculator
 {
-    float GetDefaultDamage();
+    float GetDefaultDamage(out bool bCritical);
 
-    float GetPrismEffectDamage();
+    AdditionalAttackData GetPrismEffectDamage();
 }

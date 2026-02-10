@@ -321,9 +321,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat)
+    public void SetBulletType(BulletType bulletType,bool bUpgraded)
     {
-        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded,_additionalAttackStat);
+        characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded);
     }
 
     public void ResetBulletType()
@@ -367,5 +367,10 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         {
             enemyUnits[i].EnemyTurnEnd();
         }
+    }
+
+    public void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat)
+    {
+        characterUnit.combatEffectReceiver.ApplyAdditionalAttackStat(_additionalAttackStat);
     }
 }

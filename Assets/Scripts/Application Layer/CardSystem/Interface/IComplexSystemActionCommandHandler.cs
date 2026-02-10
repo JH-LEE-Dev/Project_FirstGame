@@ -40,7 +40,7 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void SetCharacterCanAttackState(bool boolean);
     bool IsInherenceCardEquipped();
     void ApplyBulletElementType(BulletElementData effectElementData);
-    void SetBulletType(BulletType bulletType,bool bUpgraded, AdditionalAttackStat _additionalAttackStat);
+    void SetBulletType(BulletType bulletType,bool bUpgraded);
     void ResetBulletType();
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
@@ -53,4 +53,5 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType);
     void ApplySlotCntModifier(int _slotCnt);
+    void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
 }

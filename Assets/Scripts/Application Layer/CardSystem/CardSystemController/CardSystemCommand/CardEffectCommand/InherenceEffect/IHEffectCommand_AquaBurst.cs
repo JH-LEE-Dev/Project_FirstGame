@@ -23,7 +23,8 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
             additionalAttackStat = new AdditionalAttackStat(20, 1f, 1, debuffElementData);
         }
 
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.AquaBurst, bUpgraded, additionalAttackStat);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.AquaBurst, bUpgraded);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(additionalAttackStat);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -50,6 +51,7 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.ResetBulletType();
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {

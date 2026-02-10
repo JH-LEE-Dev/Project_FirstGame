@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DamageCalcComponent : IPrismBoltDamageCalculator, IAquaBurstDamageCalculator
+public class DamageCalcComponent : IPrismBoltDamageCalculator, IAquaBurstDamageCalculator, IDamageSystem
 {
     private PStatComponent statComponent;
     private PCombatComponent combatComponent;
@@ -11,20 +11,29 @@ public class DamageCalcComponent : IPrismBoltDamageCalculator, IAquaBurstDamageC
         combatComponent = _combatComponent;
     }
 
-    public float GetDefaultDamage()
+    public T GetDamageCalc<T>() where T : class
     {
-        return statComponent.resultDamage;
+        return this as T;
     }
 
-    public float GetPrismEffectDamage()
+    public float GetDefaultDamage(out bool bCritical)
     {
-        var additionalAttackStat = combatComponent.additionalAttackStat;
-        return statComponent.CalcResultDamage_Optional(additionalAttackStat.attack, additionalAttackStat.additionalAttackValue, additionalAttackStat.totalDamageValue);
+        return statComponent.CalcBaseDamage(out bCritical);
     }
 
-    public float GetAquaEffectDamage()
+    public AdditionalAttackData GetPrismEffectDamage()
     {
-        var additionalAttackStat = combatComponent.additionalAttackStat;
-        return statComponent.CalcResultDamage_Optional(additionalAttackStat.attack, additionalAttackStat.additionalAttackValue, additionalAttackStat.totalDamageValue);
+        AdditionalAttackData data = new AdditionalAttackData(statComponent.additionalAttackStat.debuffData,
+            statComponent.CalcResultDamage_Optional());
+
+        return data;
+    }
+
+    public AdditionalAttackData GetAquaEffectDamage()
+    {
+        AdditionalAttackData data = new AdditionalAttackData(statComponent.additionalAttackStat.debuffData,
+           statComponent.CalcResultDamage_Optional());
+
+        return data;
     }
 }

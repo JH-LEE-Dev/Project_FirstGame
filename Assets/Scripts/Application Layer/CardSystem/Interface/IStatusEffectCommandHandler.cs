@@ -17,7 +17,7 @@ public interface IStatusEffectCommandHandler : ICommandHandler
     void HPIncrease(float amount);
     void SetCharacterCanAttackState(bool bCanAttack);
     void ApplyBulletElementType(BulletElementData effectElementData);
-    void SetBulletType(BulletType bulletType, bool bUpgraded,AdditionalAttackStat _additionalAttackStat);
+    void SetBulletType(BulletType bulletType, bool bUpgraded);
     void ResetBulletType();
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
@@ -26,4 +26,5 @@ public interface IStatusEffectCommandHandler : ICommandHandler
     public event Action<ElementExplosionType> ElementExplosionOccuredEvent;
     IPlayerHandler GetPlayerHandler();
     IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
+    void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
 }

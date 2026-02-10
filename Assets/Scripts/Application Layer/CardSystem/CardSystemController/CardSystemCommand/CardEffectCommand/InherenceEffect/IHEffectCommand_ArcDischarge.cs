@@ -11,7 +11,8 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded,default);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -38,7 +39,7 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.ResetBulletType();
-
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {

@@ -22,7 +22,8 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
             additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, default);
         }
 
-        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded,additionalAttackStat);
+        cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(additionalAttackStat);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
@@ -49,7 +50,7 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         cardStatusEffectCommandHandler.ResetBulletType();
-
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
