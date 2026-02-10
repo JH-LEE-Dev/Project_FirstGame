@@ -6,15 +6,12 @@ public class PrismBolt_Fly : BulletBehavior_ProjectileFly
     public override void Enter()
     {
         base.Enter();
+        speed = 1f;
     }
 
-    public override void Update()
+    protected override Vector2 ComputeNextPosition(Vector2 current)
     {
-        if (bBehaviorEnd)
-            return;
-
-
-
+        return current + bullet.flyDir * speed * Time.deltaTime;
     }
 
 

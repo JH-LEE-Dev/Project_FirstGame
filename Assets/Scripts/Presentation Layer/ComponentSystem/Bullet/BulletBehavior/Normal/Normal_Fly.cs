@@ -6,35 +6,12 @@ public class Normal_Fly : BulletBehavior_ProjectileFly
     public override void Enter()
     {
         base.Enter();
-
         speed = 1f;
-        prevPosition = bullet.prevPosition;
     }
 
-    public override void Update()
+    protected override Vector2 ComputeNextPosition(Vector2 current)
     {
-        if (bBehaviorEnd)
-            return;
-
-        Vector2 currentPosition = (Vector2)bullet.transform.position + bullet.flyDir * speed * Time.deltaTime;
-        bullet.transform.position = currentPosition;
-        Vector2 delta = currentPosition - prevPosition;
-        float distance = delta.magnitude;
-
-        if (CheckCollision_Enemy(delta, distance) != null)
-        {
-            End();
-            return;
-        }
-
-        if (CheckCollision_OutofRange(delta, distance))
-        {
-            Exit();
-            return;
-        }
-
-        bullet.transform.position = currentPosition;
-        prevPosition = currentPosition;
+        return current + bullet.flyDir * speed * Time.deltaTime;
     }
 
     public override void End()

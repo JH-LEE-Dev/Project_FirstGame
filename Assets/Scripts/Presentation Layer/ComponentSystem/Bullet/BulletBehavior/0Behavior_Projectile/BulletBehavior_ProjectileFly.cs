@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using UnityEngine;
 
 public abstract class BulletBehavior_ProjectileFly : BulletBehavior
@@ -8,24 +9,58 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
     public override void Enter()
     {
         base.Enter();
+        prevPosition = bullet.prevPosition;
     }
 
-    public override void End()
+    public sealed override void Update()
     {
-        base.End();
-    }
-    public override void Exit()
-    {
-        base.Exit();
+        if (bBehaviorEnd) 
+            return;
+
+        Vector2 current = (Vector2)bullet.transform.position;
+        Vector2 next = ComputeNextPosition(current);
+
+        Vector2 delta = next - prevPosition;
+        float distance = delta.magnitude;
+
+        if (distance < 0.00001f)
+        {
+            bullet.transform.position = next;
+            prevPosition = next;
+            return;
+        }
+
+        Vector2 dir = delta / distance;
+
+        if (CheckCollision_Enemy(dir, distance, out var hit) != null)
+        {
+            Vector2 impactPoint = hit.point;
+            bullet.transform.position = impactPoint;
+            End();
+            return;
+        }
+
+        if (CheckCollision_OutofRange(dir, distance))
+        {
+            Exit();
+            return;
+        }
+
+        bullet.transform.position = next;
+        prevPosition = next;
     }
 
-    // 총알에 직격한 적이 있는지 체크.
-    protected virtual Collider2D CheckCollision_Enemy(Vector2 delta, float distance)
+    protected abstract Vector2 ComputeNextPosition(Vector2 currentPosition);
+
+
+
+    // 날아가다가 직격한 적이 있는지 체크.
+    protected virtual Collider2D CheckCollision_Enemy(Vector2 dir, float distance, out RaycastHit2D hit)
     {
-        RaycastHit2D hit = Physics2D.CircleCast(
+        hit = Physics2D.CircleCast(
             prevPosition,
             bullet.range,
-            delta.normalized,
+            dir,
             distance,
             bullet.targetMask
         );
@@ -34,9 +69,10 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
         {
             return hit.collider;
         }
+
         return null;
     }
-    // 총알이 범위를 벗어났는지 체크.
+    // 날아가다가 범위를 벗어났는지 체크.
     protected virtual bool CheckCollision_OutofRange(Vector2 delta, float distance)
     {
         RaycastHit2D hit = Physics2D.Raycast(
@@ -51,4 +87,14 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
 
         return false;
     }
+
+    public override void End()
+    {
+        base.End();
+    }
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
 }

@@ -16,8 +16,6 @@ public abstract class BulletBehavior : ScriptableObject
 
     protected Bullet bullet;
 
-    protected Transform bulletTransform;
-
     public virtual void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
     IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
     {
@@ -49,14 +47,7 @@ public abstract class BulletBehavior : ScriptableObject
         BulletEffectEndEvent?.Invoke();
     }
 
-    // 범위 체크
-    protected Collider2D[] CheckExplosion()
-    {
-        return Physics2D.OverlapCircleAll(bullet.transform.position,
-            bullet.range + bullet.range * (characterStatProvider.attackRange * 0.01f), bullet.targetMask);
-    }
-
-    // 데미지 및 상태이상을 주는 함수
+    // 콜라이더 주인장한테 데미지 및 상태이상을 주는 함수
     protected virtual void ApplyDamage(Collider2D other)
     {
         // 데미지 처리
@@ -74,7 +65,7 @@ public abstract class BulletBehavior : ScriptableObject
         }
     }
 
-    // 해당 적에게 넉백을 주는 함수
+    // 콜라이더 주인장한테, 원하는 넉백을 주는 함수 (충돌 지점 기준..)
     protected virtual void ApplyKnockBack(Collider2D other, float knockBackPower = 0f)
     {
         IDamageable enemy = other.GetComponent<IDamageable>();

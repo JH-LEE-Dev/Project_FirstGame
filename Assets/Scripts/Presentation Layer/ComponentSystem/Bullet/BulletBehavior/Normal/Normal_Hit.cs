@@ -11,7 +11,7 @@ public class Normal_Hit : BulletBehavior_ProjectileHit
         foreach(var collider in colliders)
         {
             ApplyDamage(collider);
-            ApplyKnockBack(collider);
+            ApplyKnockBack(collider, 5f);
         }
     }
 
