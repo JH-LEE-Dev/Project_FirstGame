@@ -6,13 +6,13 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 {
     public override void Enter()
     {
-        bUpdateEnd = false;
+        bBehaviorEnd = false;
         firstTarget = null;
     }
 
     public override void Update()
     {
-        if (true == bUpdateEnd)
+        if (true == bBehaviorEnd)
             return;
 
         if (true == CheckCollision_Enemy())
@@ -24,27 +24,28 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     public override void End()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
 
     public override void Exit()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
 
 
     private bool CheckCollision_Enemy() //총알에 직격한 적이 있는지 체크.
     {
-        Vector2 bulletStartPos = bullet.transform.position;
+        //Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.targetMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.targetMask
+        //);
 
         firstTarget = hit.collider;
 
@@ -59,14 +60,15 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     private bool CheckCollision_OutofRange()
     {
-        Vector2 bulletStartPos = bullet.transform.position;
+        //Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.outOfRangeMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.outOfRangeMask
+        //);
 
         if (null != hit.collider)
         {

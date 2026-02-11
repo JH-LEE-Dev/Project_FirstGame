@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ArcDischarge_Hit
   maxTransference: 2
   finderRadius: 1.5
+  chainDelay: 0.4

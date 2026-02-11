@@ -1,39 +1,40 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge/Hit")]
 public class ArcDischarge_Hit : ArcDischargeBehavior
 {
     [SerializeField] private int maxTransference = 2;
     [SerializeField] private float finderRadius = 20f;
-
-    private Queue<Collider2D> nextTargets = new(50);
-    private HashSet<Collider2D> visits = new(50);
+    [SerializeField] private float chainDelay = 0.1f;
 
     private Vector2 tempPos;
 
     public override void Enter()
     {
-        bUpdateEnd = false;
+        bBehaviorEnd = false;
+
         EnterHitEnemy(firstTarget, bullet.transform.position);
         End();
     }
 
     public override void Update()
     {
-        if (true == bUpdateEnd)
+        if (true == bBehaviorEnd)
             return;
     }
 
     public override void End()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
 
     public override void Exit()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
 
@@ -44,7 +45,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Collider2D directHitObject = other;
 
         // 데미지 처리
-        bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
+        //bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
@@ -59,7 +60,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         }
     }
 
-    private void ApplyKnockBack(IDamageable enemy, Vector2 startPos, Vector2 enemyPos) //직격,범위 데미지에 맞은 적들을 넉백시키는 함수.
+    private void ApplyKnockBack(IDamageable enemy, Vector2 startPos, Vector2 enemyPos)
     {
         Vector2 dir = enemyPos - startPos;
         float tempPower = 1f;
@@ -91,33 +92,52 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     #region BFS Enemy Search 
 
+    private IEnumerator ChainLightningRoutine(Collider2D firstTarget)
+    {
+        Queue<Collider2D> nextTargets = CollectionPool<Collider2D>.GetQueue(30);
+        HashSet<Collider2D> visits = CollectionPool<Collider2D>.GetSet(30);
+
+        visits.Add(firstTarget);
+        nextTargets.Enqueue(firstTarget);
+
+        int currentTransferStep = 0;
+
+        try
+        {
+            while (0 < nextTargets.Count && currentTransferStep < maxTransference)
+            {
+                //if (0 < currentTransferStep)
+                yield return new WaitForSeconds(chainDelay);
+
+                if (bullet == null || !bullet.gameObject.activeInHierarchy)
+                    yield break;
+
+                int currentWaveCount = nextTargets.Count;
+
+                for (int i = 0; i < currentWaveCount; i++)
+                    ProcessOneEnemy(nextTargets, visits);
+
+                currentTransferStep++;
+            }
+        }
+        finally
+        {
+            CollectionPool<Collider2D>.ReturnCollection(nextTargets);
+            CollectionPool<Collider2D>.ReturnCollection(visits);
+
+            End();
+        }
+    }
+
     private void CreateCircleCollder(Collider2D hitColl)
     {
-        if (null == hitColl)
+        if (hitColl == null) 
             return;
 
-        nextTargets.Clear();
-        visits.Clear();
-
-        visits.Add(hitColl);
-        nextTargets.Enqueue(hitColl);
-
-        int _currentTransference = 0;
-        while (0 < nextTargets.Count && _currentTransference < maxTransference)
-            EnterTransference(ref _currentTransference);
+        bullet.StartCoroutine(ChainLightningRoutine(hitColl));
     }
 
-    private void EnterTransference(ref int _currentTransference)
-    {
-        int currentCnt = nextTargets.Count;
-
-        for (int i = 0; i < currentCnt; ++i)
-            ProcessOneEnemy();
-
-        _currentTransference++;
-    }
-
-    private void ProcessOneEnemy()
+    private void ProcessOneEnemy(Queue<Collider2D> nextTargets, HashSet<Collider2D> visits)
     {
         Collider2D frontCollider = nextTargets.Dequeue();
         if (null == frontCollider)
@@ -125,6 +145,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 _startPos = frontCollider.transform.position;
 
+        // TODO: 추후 제거
         DrawDebugCircle(_startPos, finderRadius, Color.red, 3f);
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.nonProjectileObj.targetMask);
@@ -139,7 +160,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             // 탐색 성공한 애들 바로 데미지 및 이펙트 연출
             EnterHitEnemy(target, _startPos, false);
 
-            // 다음 대상 추가 및 방문자 추가
             nextTargets.Enqueue(target);
             visits.Add(target);
         }

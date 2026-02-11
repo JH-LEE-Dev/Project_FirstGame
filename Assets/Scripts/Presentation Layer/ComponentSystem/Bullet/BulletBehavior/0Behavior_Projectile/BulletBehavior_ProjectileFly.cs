@@ -23,12 +23,14 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
         if (bBehaviorEnd)
             return;
 
-        if (TryStop() == ProjectileState.End)
+        ProjectileState currState = TryStop();
+
+        if (currState == ProjectileState.End)
         {
             End();
             return;
         }
-        else if (TryStop() == ProjectileState.Exit)
+        else if (currState == ProjectileState.Exit)
         {
             Exit();
             return;

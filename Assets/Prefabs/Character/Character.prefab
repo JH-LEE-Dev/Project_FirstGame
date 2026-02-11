@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: -1876821194239025316}
   - component: {fileID: 985420965116964591}
   - component: {fileID: 2986526590610894594}
+  - component: {fileID: 8168408728619996357}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -222,7 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f462a1410b591d84d8428c5d65aab35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatComponent
-  bulletPrefab: {fileID: 9064703793281689335, guid: 45696ffbb254fc745ab4994327b0c114, type: 3}
 --- !u!114 &7987698377607979650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +389,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829a5c1e86449f847852762bc93ba495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PStatComponent
+--- !u!114 &8168408728619996357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179902501351162253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 016f36fd873be7e4e9d9bf02fa77a122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
+  prismBolt_Prefab: {fileID: 6235347253760606445, guid: 05fb3c28453d0d04484c88f7028f34fa, type: 3}
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
