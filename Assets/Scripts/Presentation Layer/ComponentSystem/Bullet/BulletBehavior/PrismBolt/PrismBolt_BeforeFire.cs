@@ -7,6 +7,7 @@ public class PrismBolt_BeforeFire : BulletBehavior_ProjectileBeforeFire
     {
         base.Enter();
     }
+
     public override void Update()
     {
         if (bBehaviorEnd)
@@ -19,9 +20,9 @@ public class PrismBolt_BeforeFire : BulletBehavior_ProjectileBeforeFire
     {
         base.End();
     }
+
     public override void Exit()
     {
         base.Exit();
     }
-
 }

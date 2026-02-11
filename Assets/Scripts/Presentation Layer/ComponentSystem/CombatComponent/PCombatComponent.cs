@@ -10,17 +10,20 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     /// </summary>
 
     //이벤트
-    public event Action BulletEffectIsFinishedEvent;
+    public event Action AttackFinishedEvent;
 
     //외부 의존성
     ICharacterStatProvider characterStatProvider;
+    private AttackComponent attackComponent;
+
+    //내부 의존성
+    private DamageCalcComponent damageCalcComponent;
+
 
     //인터페이스 선언부
     IReadOnlyDictionary<BulletElementType, BulletElementData> IBulletEffectProvider.currentEffectElements => currentEffectElements;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IBulletEffectProvider.currentDebuffElementTypes => currentDebuffElementTypes;
 
-    [SerializeField] private Bullet bulletPrefab;
-    private Bullet bulletObject;
     private BulletType bulletType;
     private bool bUpgraded = false;
     BulletType IBulletEffectProvider.bulletType => bulletType;
@@ -34,7 +37,7 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     protected Dictionary<BulletElementType, BulletElementData> currentEffectElements =
         new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
 
-    private DamageCalcComponent damageCalcComponent;
+
 
     /// <summary>
     /// 구현 속성 존. ---------------------------------------------
@@ -55,15 +58,13 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     /// </summary>
 
     public void Initialize(UnitContext _ctx, ICombatSignalHandler _combatSignalHandler, ICharacterStatProvider _characterStatProvider,
-        DamageCalcComponent _damageCalcComponent)
+        DamageCalcComponent _damageCalcComponent,AttackComponent _attackComponent)
     {
         base.Initialize(_ctx, _combatSignalHandler);
 
         damageCalcComponent = _damageCalcComponent;
         characterStatProvider = _characterStatProvider;
-
-        bulletObject = Instantiate(bulletPrefab, transform);
-        bulletObject.Initialize(characterStatProvider,this, damageCalcComponent);
+        attackComponent = _attackComponent;
 
         BindEvent();
     }
@@ -81,35 +82,35 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
 
     private void BindEvent()
     {
-        bulletObject.BulletEffectIsFinishedEvent -= BulletEffectIsFinished;
-        bulletObject.BulletEffectIsFinishedEvent += BulletEffectIsFinished;
+        attackComponent.AttackFinishedEvent -= AttackFinished;
+        attackComponent.AttackFinishedEvent += AttackFinished;
     }
 
     private void ReleaseEvent()
     {
-        bulletObject.BulletEffectIsFinishedEvent -= BulletEffectIsFinished;
+        attackComponent.AttackFinishedEvent -= AttackFinished;
     }
 
     protected override void OnDestroy()
     {
         ReleaseEvent();
-        BulletEffectIsFinishedEvent = null;
+        AttackFinishedEvent = null;
     }
 
     public virtual void Fire(Vector2 dir)
     {
-        bulletObject.Fire(dir,transform.position);
+        attackComponent.Fire(bulletType, 1, dir, transform.position);
     }
 
-    public void BulletEffectIsFinished()
+    public void AttackFinished()
     {
-        BulletEffectIsFinishedEvent?.Invoke();
+        AttackFinishedEvent?.Invoke();
         ResetBulletType();
     }
 
     public void SetBulletType(BulletType _type, bool _bUpgraded)
     {
-        bulletType =_type;
+        bulletType = _type;
         bUpgraded = _bUpgraded;
     }
 

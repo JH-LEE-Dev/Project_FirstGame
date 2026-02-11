@@ -11,7 +11,8 @@ public class Normal_Fly : BulletBehavior_ProjectileFly
 
     protected override Vector2 ComputeNextPosition(Vector2 current)
     {
-        return current + bullet.flyDir * speed * Time.deltaTime;
+        return default;
+        //return current + bullet.flyDir * speed * Time.deltaTime;
     }
 
     protected override ProjectileState TryStop()

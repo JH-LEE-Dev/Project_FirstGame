@@ -37,14 +37,15 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     private bool CheckCollision_Enemy() //총알에 직격한 적이 있는지 체크.
     {
-        Vector2 bulletStartPos = bullet.transform.position;
+        //Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.targetMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.targetMask
+        //);
 
         firstTarget = hit.collider;
 
@@ -59,14 +60,15 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     private bool CheckCollision_OutofRange()
     {
-        Vector2 bulletStartPos = bullet.transform.position;
+        //Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.outOfRangeMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.outOfRangeMask
+        //);
 
         if (null != hit.collider)
         {

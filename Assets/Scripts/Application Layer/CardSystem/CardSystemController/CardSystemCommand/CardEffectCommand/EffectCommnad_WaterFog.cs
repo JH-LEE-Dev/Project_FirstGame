@@ -14,17 +14,49 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
         {
             if (enemies[i].currentAppliedDebuff.ContainsKey(targetDebuff))
             {
-                IDamageable target = (IDamageable)enemies[i];
+                IEnemyHandler target = enemies[i];
 
-                if(target != null)
+                if (target != null)
                 {
                     if (bUpgraded == false)
-                        target.ApplyElementDebuff(targetDebuff, 1);
+                    {
+                        var targets = GetCollider(target,bUpgraded);
+
+                        if (targets == null)
+                            return;
+
+                        for(int j = 0;j<targets.Count();++j)
+                        {
+
+                        }
+                    }
                     else
-                        target.ApplyElementDebuff(targetDebuff, 2);
+                    {
+                        var targets = GetCollider(target, bUpgraded);
+
+                        if (targets == null)
+                            return;
+
+                        for (int j = 0; j < targets.Count(); ++j)
+                        {
+
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private Collider2D[] GetCollider(IEnemyHandler _enemyHandler,bool _bUpgraded)
+    {
+        float radius = _enemyHandler.statusCollider.radius;
+        if (_bUpgraded)
+            radius *= 2;
+
+        return Physics2D.OverlapCircleAll(
+            _enemyHandler.GetTransform().position,
+            radius,
+           LayerMask.GetMask("Enemy"));
     }
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)

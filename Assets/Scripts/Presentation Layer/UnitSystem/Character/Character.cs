@@ -27,6 +27,7 @@ public class Character : Unit, ICharacterData
     private CutsceneComponent cutsceneComponent;
     private PStatComponent statComponent;
     private DamageCalcComponent damageCalcComponent;
+    private AttackComponent attackComponent;
 
 
 
@@ -71,12 +72,13 @@ public class Character : Unit, ICharacterData
         visualComponentCoordinator = new PVisualComponentCoordinator();
         statComponent = GetComponent<PStatComponent>();
         damageCalcComponent = new DamageCalcComponent();
+        attackComponent = GetComponent<AttackComponent>();
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
         statComponent.Initialize();
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
-        combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent, damageCalcComponent);
+        combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent, damageCalcComponent,attackComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
         damageCalcComponent.Initialize(statComponent, combatComponent);
 
@@ -97,8 +99,8 @@ public class Character : Unit, ICharacterData
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
         inputManager.inputReader.FireButtonPressedEvent += Fire;
 
-        combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
-        combatComponent.BulletEffectIsFinishedEvent += PlayerAttackFinished;
+        combatComponent.AttackFinishedEvent -= PlayerAttackFinished;
+        combatComponent.AttackFinishedEvent += PlayerAttackFinished;
     }
 
     private void ReleaseEvent()
@@ -106,7 +108,7 @@ public class Character : Unit, ICharacterData
         inputManager.inputReader.MoveEvent -= OnMove;
         inputManager.inputReader.PointerPositionEvent -= SetMousePos;
         inputManager.inputReader.FireButtonPressedEvent -= Fire;
-        combatComponent.BulletEffectIsFinishedEvent -= PlayerAttackFinished;
+        combatComponent.AttackFinishedEvent -= PlayerAttackFinished;
     }
 
     public Transform GetTransform()
@@ -251,7 +253,7 @@ public class Character : Unit, ICharacterData
         else
         {
             Debug.LogWarning("고유 카드가 장착되지 않으면 발사할 수 없습니다.");
-            combatComponent.BulletEffectIsFinished();
+            combatComponent.AttackFinished();
             return;
         }
     }

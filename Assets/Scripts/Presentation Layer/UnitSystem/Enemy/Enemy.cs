@@ -37,6 +37,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData { get; private set; }
     public int enemyID { get; private set; }
+    public CircleCollider2D statusCollider {  get; private set; }
 
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
@@ -76,6 +77,39 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         base.Awake();
     }
 
+    public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
+     , EnemyTypeData _enemyTypeData)
+    {
+        if (bInitialized == false)
+        {
+            base.Initialize(_inputManager, _gameServiceLocator);
+
+            combatComponent = GetComponent<ECombatComponent>();
+            moveComponent = GetComponent<EMoveComponent>();
+            visualComponentCoordinator = new EVisualComponentCoordinator();
+            statComponent = GetComponent<EStatComponent>();
+            elementDamageHandleComponent = new ElementDamageHandleComponent();
+            statusCollider = GetComponentInChildren<CircleCollider2D>();
+
+            //Visual 로직에 필요한 의존성을 추가해주면 됨.
+            visualComponentCoordinator.Initialize(combatComponent, moveComponent);
+            moveComponent.Initialize(ctx, visualComponentCoordinator);
+            elementDamageHandleComponent.Initialize(currentAppliedDebuff);
+
+            //trail 임시 코드.
+            trailRenderer = GetComponent<TrailRenderer>();
+            trailRenderer.material = sr.material;
+            trailRenderer.material.mainTexture = sr.sprite.texture;
+            Color c = trailRenderer.material.color;
+            c.a = 0.3f;
+            trailRenderer.material.color = c;
+        }
+
+        enemyTypeData = _enemyTypeData;
+        SetupEnemyType();
+
+        bInitialized = true;
+    }
     private void SetEnemyState(bool boolean)
     {
         bAccelerate = false;
@@ -142,39 +176,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         StartCoroutine(SetEnemyState_Delayed(true));
 
         EnemySpawnedEvent?.Invoke();
-    }
-
-    public void Initialize_Enemy(InputManager _inputManager, GameServiceLocator _gameServiceLocator
-        , EnemyTypeData _enemyTypeData)
-    {
-        if (bInitialized == false)
-        {
-            base.Initialize(_inputManager, _gameServiceLocator);
-
-            combatComponent = GetComponent<ECombatComponent>();
-            moveComponent = GetComponent<EMoveComponent>();
-            visualComponentCoordinator = new EVisualComponentCoordinator();
-            statComponent = GetComponent<EStatComponent>();
-            elementDamageHandleComponent = new ElementDamageHandleComponent();
-
-            //Visual 로직에 필요한 의존성을 추가해주면 됨.
-            visualComponentCoordinator.Initialize(combatComponent, moveComponent);
-            moveComponent.Initialize(ctx, visualComponentCoordinator);
-            elementDamageHandleComponent.Initialize(currentAppliedDebuff);
-
-            //trail 임시 코드.
-            trailRenderer = GetComponent<TrailRenderer>();
-            trailRenderer.material = sr.material;
-            trailRenderer.material.mainTexture = sr.sprite.texture;
-            Color c = trailRenderer.material.color;
-            c.a = 0.3f;
-            trailRenderer.material.color = c;
-        }
-
-        enemyTypeData = _enemyTypeData;
-        SetupEnemyType();
-
-        bInitialized = true;
     }
 
     public void SetEnemyID(int _id)
