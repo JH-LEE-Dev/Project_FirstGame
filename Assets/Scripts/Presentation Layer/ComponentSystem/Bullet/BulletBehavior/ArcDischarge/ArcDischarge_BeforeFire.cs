@@ -6,7 +6,6 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
     public override void Enter()
     {
         bUpdateEnd = false;
-        Debug.Log("너 들어왔어?");
     }
 
     public override void Update()

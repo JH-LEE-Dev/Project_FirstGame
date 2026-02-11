@@ -6,18 +6,37 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
     protected float speed;
     protected Vector2 prevPosition;
 
+    protected enum ProjectileState
+    {
+        None,
+        End, // Hit로 넘어감.
+        Exit, // 폭발 안하고 종료.
+    }
+
     public override void Enter()
     {
         base.Enter();
-        prevPosition = bullet.projectileObj.prevPosition;
+        prevPosition = bullet.prevPosition;
     }
 
     public sealed override void Update()
     {
-        if (bBehaviorEnd) 
+        if (bBehaviorEnd)
             return;
 
-        Vector2 current = (Vector2)bullet.projectileObj.transform.position;
+        if (PlayStop() == ProjectileState.End)
+        {
+            End();
+            return;
+        }
+        else if (PlayStop() == ProjectileState.Exit)
+        {
+            Exit();
+            return;
+        }
+
+
+        Vector2 current = (Vector2)bullet.transform.position;
         Vector2 next = ComputeNextPosition(current);
 
         Vector2 delta = next - prevPosition;
@@ -25,7 +44,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
 
         if (distance < 0.00001f)
         {
-            bullet.projectileObj.transform.position = next;
+            bullet.transform.position = next;
             prevPosition = next;
             return;
         }
@@ -35,7 +54,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
         if (CheckCollision_Enemy(dir, distance, out var hit) != null)
         {
             Vector2 impactPoint = hit.point;
-            bullet.projectileObj.transform.position = impactPoint;
+            bullet.transform.position = impactPoint;
             End();
             return;
         }
@@ -46,23 +65,23 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
             return;
         }
 
-        bullet.projectileObj.transform.position = next;
+        bullet.transform.position = next;
         prevPosition = next;
     }
 
     protected abstract Vector2 ComputeNextPosition(Vector2 currentPosition);
 
-
+    protected abstract ProjectileState PlayStop();
 
     // 날아가다가 직격한 적이 있는지 체크.
     protected virtual Collider2D CheckCollision_Enemy(Vector2 dir, float distance, out RaycastHit2D hit)
     {
         hit = Physics2D.CircleCast(
             prevPosition,
-            bullet.projectileObj.range,
+            bullet.range,
             dir,
             distance,
-            bullet.projectileObj.targetMask
+            bullet.targetMask
         );
 
         if (hit.collider != null)
@@ -79,7 +98,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
             prevPosition,
             delta.normalized,
             distance,
-            bullet.projectileObj.outOfRangeMask
+            bullet.outOfRangeMask
         );
 
         if (hit.collider != null)

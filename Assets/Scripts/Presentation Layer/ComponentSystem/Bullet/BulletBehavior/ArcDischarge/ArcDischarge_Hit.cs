@@ -10,6 +10,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     private Queue<Collider2D> nextTargets = new(50);
     private HashSet<Collider2D> visits = new(50);
 
+    private Vector2 tempPos;
+
     public override void Enter()
     {
         bUpdateEnd = false;
@@ -70,6 +72,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         if (null == hit)
             return;
 
+        tempPos = startPos;
+        Debug.Log(tempPos);
+
         Vector2 targetPos = hit.transform.position;
 
         ApplyDamage(hit, startPos);
@@ -78,7 +83,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CreateCircleCollder(hit);
 
         //이펙트 재생
-        Debug.DrawLine(startPos, targetPos);
+        Debug.DrawLine(startPos, targetPos, Color.red, 3f);
         //Sound.Play("Impact", bullet.transform.position);
     }
 
@@ -120,8 +125,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 _startPos = frontCollider.transform.position;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_startPos, finderRadius);
+        DrawDebugCircle(_startPos, finderRadius, Color.red, 3f);
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.nonProjectileObj.targetMask);
         if (0 >= targets.Length)
@@ -138,6 +142,23 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             // 다음 대상 추가 및 방문자 추가
             nextTargets.Enqueue(target);
             visits.Add(target);
+        }
+    }
+
+    private void DrawDebugCircle(Vector2 center, float radius, Color color, float duration)
+    {
+        int segments = 36;
+        float angleStep = 360f / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            float a1 = i * angleStep * Mathf.Deg2Rad;
+            float a2 = (i + 1) * angleStep * Mathf.Deg2Rad;
+
+            Vector2 p1 = center + new Vector2(Mathf.Cos(a1), Mathf.Sin(a1)) * radius;
+            Vector2 p2 = center + new Vector2(Mathf.Cos(a2), Mathf.Sin(a2)) * radius;
+
+            Debug.DrawLine(p1, p2, color, duration);
         }
     }
 
