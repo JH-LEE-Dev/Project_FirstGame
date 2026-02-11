@@ -122,8 +122,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         }
         finally
         {
-            CollectionPool.ReturnCollection(nextTargets);
-            CollectionPool.ReturnCollection(visits);
+            CollectionPool<Collider2D>.ReturnCollection(nextTargets);
+            CollectionPool<Collider2D>.ReturnCollection(visits);
         }
 
         End();
