@@ -8,7 +8,6 @@ public class Projectile : MonoBehaviour
     /// </summary>
 
     //내부 의존성
-    public BulletVisualEffectComponent effectComponent { get; private set; }    
 
     [SerializeField] public CircleCollider2D circleCollider;
     [SerializeField] public CircleCollider2D explosionRangeCollider;
@@ -36,7 +35,6 @@ public class Projectile : MonoBehaviour
     public void Initialize()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
-        effectComponent = GetComponentInChildren<BulletVisualEffectComponent>();
 
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;

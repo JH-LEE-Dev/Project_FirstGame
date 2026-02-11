@@ -52,6 +52,12 @@ public class Bullet : MonoBehaviour
         projectileObj = Instantiate(projectileObj_prefab);
         nonProjectileObj = Instantiate(nonProjectileObj_prefab);
 
+        projectileObj.Initialize();
+        nonProjectileObj.Initialize();
+
+        projectileObj.gameObject.SetActive(false);
+        nonProjectileObj.gameObject.SetActive(false);
+
         stateMachine.Initialize(characterStatProvider, bulletEffectProvider, this, damageCalcComponent);
     }
 
