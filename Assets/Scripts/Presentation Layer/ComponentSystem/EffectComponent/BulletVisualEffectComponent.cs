@@ -7,7 +7,12 @@ public class BulletVisualEffectComponent : EntityComponent
 
     protected override void Awake()
     {
-        animator = effectObject.GetComponentInChildren<Animator>();    
+
+    }
+
+    public void Initialize()
+    {
+        animator = effectObject.GetComponentInChildren<Animator>();
     }
 
     public void PlayExplosionEffect()

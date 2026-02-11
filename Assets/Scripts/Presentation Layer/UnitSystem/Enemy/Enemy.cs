@@ -95,6 +95,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             visualComponentCoordinator.Initialize(combatComponent, moveComponent);
             moveComponent.Initialize(ctx, visualComponentCoordinator);
             elementDamageHandleComponent.Initialize(currentAppliedDebuff);
+            effectComponent.Initialize();
 
             //trail 임시 코드.
             trailRenderer = GetComponent<TrailRenderer>();
