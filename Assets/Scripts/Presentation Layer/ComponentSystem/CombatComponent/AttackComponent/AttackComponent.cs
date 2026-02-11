@@ -24,7 +24,8 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private PrismBolt prismBolt_Prefab;
     private PrismBolt prismBolt;
 
-
+    [SerializeField] private ArcDischarge arcDischarge_Prefab;
+    private ArcDischarge arcDischarge;
 
 
 
@@ -46,12 +47,28 @@ public class AttackComponent : MonoBehaviour
         bulletEffectProvider = _bulletEffectProvider;
         damageSystem = _damageSystem;
 
+        PoolingBullets();
+    }
+    
+    private void PoolingBullets()
+    {
         prismBolt = Instantiate(prismBolt_Prefab);
-        prismBolt.Initialize(_characterStatProvider,_bulletEffectProvider,damageSystem);
+        prismBolt.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
+        prismBolt.BulletEffectIsFinishedEvent -= AttackFinished;
+        prismBolt.BulletEffectIsFinishedEvent += AttackFinished;
+
+
+        //arcDischarge = Instantiate(arcDischarge_Prefab);
+        //arcDischarge.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
+        //arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
+        //arcDischarge.BulletEffectIsFinishedEvent += AttackFinished;
     }
 
     private void OnDestroy()
     {
+        prismBolt.BulletEffectIsFinishedEvent -= AttackFinished;
+        //arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
+
         AttackFinishedEvent = null;
     }
 
@@ -62,16 +79,25 @@ public class AttackComponent : MonoBehaviour
 
     public void Fire(BulletType _bulletType,int cnt, Vector2 dir, Vector2 firePos) //발사하는 함수.
     {
-        
+        switch(_bulletType)
+        {
+            case BulletType.PrismBolt:
+                {
+                    prismBolt.Fire(dir, firePos);
+                }
+                break;
+            case BulletType.ArcDischarge:
+                {
+                    arcDischarge.Fire(dir, firePos);
+                }
+                break;
+        }
     }
 
     public void AttackFinished() //총알의 공격 과정이 모두 끝났을 때 호출.
     {
         AttackFinishedEvent?.Invoke();
     }
-
-
-
 
 
     /// <summary>

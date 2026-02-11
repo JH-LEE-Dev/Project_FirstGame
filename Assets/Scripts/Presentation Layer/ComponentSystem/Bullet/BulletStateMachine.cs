@@ -16,11 +16,12 @@ public class BulletStateMachine : MonoBehaviour
 
     public void Initialize(ICharacterStatProvider _characterStatProvider,
         IBulletEffectProvider _bulletEffectReceiver, IDamageSystem _damageSystem,
-        Bullet _bullet)
+        Bullet _bullet, BulletBehaviorData _data)
     {
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectReceiver;
         damageSystem = _damageSystem;
+        bulletBehaviorData = _data;
 
         ctx = new BulletStateCtx();
         ctx.Initialize(this, characterStatProvider, bulletEffectProvider, bulletBehaviorData, _bullet);
@@ -52,11 +53,6 @@ public class BulletStateMachine : MonoBehaviour
     public void Update()
     {
         currentState?.UpdateState();
-    }
-
-    public void SetBulletBehaviors(BulletBehaviorData _bulletBehaviorData)
-    {
-        bulletBehaviorData = _bulletBehaviorData;
     }
 
     public bool IsState<T>() where T : BulletState

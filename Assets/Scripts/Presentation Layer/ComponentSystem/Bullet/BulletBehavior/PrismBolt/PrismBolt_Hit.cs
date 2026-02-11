@@ -1,10 +1,17 @@
 using UnityEngine;
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Hit")]
-public class PrismBolt_Hit : BulletBehavior_ProjectileHit
+public class PrismBolt_Hit : PrismBoltBehavior
 {
     public override void Enter()
     {
         base.Enter();
+
+        var enemys = CheckExplosion();
+        foreach (var enemy in enemys)
+        {
+            ApplyDamage(enemy);
+            ApplyKnockBack(enemy);
+        }
     }
 
 
@@ -13,7 +20,7 @@ public class PrismBolt_Hit : BulletBehavior_ProjectileHit
         if (bBehaviorEnd)
             return;
 
-        End();
+        Exit();
     }
 
 

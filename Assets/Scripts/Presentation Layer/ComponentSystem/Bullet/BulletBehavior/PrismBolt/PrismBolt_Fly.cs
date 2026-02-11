@@ -1,18 +1,26 @@
 using UnityEngine;
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Fly")]
-public class PrismBolt_Fly : BulletBehavior_ProjectileFly
+public class PrismBolt_Fly : PrismBoltBehavior
 {
 
     public override void Enter()
     {
         base.Enter();
-        speed = 1f;
+        SetBulletInitialPosition();
+        prismBolt.speed = 1f;
+    }
+
+    public override void Update()
+    {
+        if (bBehaviorEnd)
+            return;
+
+        BulletUpdate();
     }
 
     protected override Vector2 ComputeNextPosition(Vector2 current)
     {
-        return default;
-        //return current + bullet.flyDir * speed * Time.deltaTime;
+        return current + prismBolt.initDir * prismBolt.speed * Time.deltaTime;
     }
 
     protected override ProjectileState TryStop()
