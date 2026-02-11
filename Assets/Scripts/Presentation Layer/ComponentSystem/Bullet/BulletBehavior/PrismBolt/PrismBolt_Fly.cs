@@ -14,6 +14,10 @@ public class PrismBolt_Fly : BulletBehavior_ProjectileFly
         return current + bullet.flyDir * speed * Time.deltaTime;
     }
 
+    protected override ProjectileState TryStop()
+    {
+        return ProjectileState.None;
+    }
 
     public override void End()
     {

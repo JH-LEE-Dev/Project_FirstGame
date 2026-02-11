@@ -14,6 +14,7 @@ public class PrismBolt_BeforeFire : BulletBehavior_ProjectileBeforeFire
 
         End();
     }
+
     public override void End()
     {
         base.End();

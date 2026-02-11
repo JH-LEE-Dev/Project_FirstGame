@@ -24,7 +24,7 @@ public class Unit : MonoBehaviour, IDamageable
     protected Collider2D col;
     protected SpriteRenderer sr;
     protected UnitContext ctx;
-    protected EffectComponent effectComponent;
+    protected BulletVisualEffectComponent effectComponent;
     protected HealthComponent healthComponent;
 
     protected Dictionary<DebuffElementEffectType,DebuffElementData> currentAppliedDebuff = 
@@ -102,7 +102,7 @@ public class Unit : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
-        effectComponent = GetComponent<EffectComponent>();
+        effectComponent = GetComponent<BulletVisualEffectComponent>();
         healthComponent = GetComponent<HealthComponent>();
 
 

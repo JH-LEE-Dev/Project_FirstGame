@@ -51,7 +51,6 @@ public abstract class BulletBehavior : ScriptableObject
     protected virtual void ApplyDamage(Collider2D other)
     {
         // 데미지 처리
-        bullet.effectComponent.PlayImpactEffect();
 
         IDamageable hit = other.GetComponent<IDamageable>();
 

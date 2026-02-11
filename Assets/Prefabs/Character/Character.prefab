@@ -146,7 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6646c0fde83234298bf0f8ea566504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  aimLength: 1
   character_Visual: {fileID: 8944357440580461192}
 --- !u!58 &-3339691030104686882
 CircleCollider2D:
@@ -802,7 +801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 33954171644444635}
-  - component: {fileID: 5097166743639477619}
+  - component: {fileID: 8684740085375940862}
   m_Layer: 8
   m_Name: FireEffect
   m_TagString: Untagged
@@ -826,7 +825,7 @@ Transform:
   - {fileID: 3654188157911357398}
   m_Father: {fileID: 8588578799951745214}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5097166743639477619
+--- !u!114 &8684740085375940862
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -835,9 +834,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5880904374570772843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf67570f87043154dabbadfb4b0fd4e7, type: 3}
+  m_Script: {fileID: 11500000, guid: b4de28114f400234d99b4ae8972f6495, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EffectComponent
+  m_EditorClassIdentifier: Assembly-CSharp::BulletVisualEffectComponent
   effectObject: {fileID: 5880904374570772843}
 --- !u!1 &6254465555008172684
 GameObject:

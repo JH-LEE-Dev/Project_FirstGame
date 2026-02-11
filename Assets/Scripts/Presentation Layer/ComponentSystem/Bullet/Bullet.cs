@@ -1,8 +1,4 @@
-using Mono.Cecil.Cil;
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -19,28 +15,21 @@ public class Bullet : MonoBehaviour
     IBulletEffectProvider bulletEffectProvider; //총알 타입을 가져오는 컴포넌트
 
     //내부 의존성
-    public EffectComponent effectComponent { get; private set; }
-    public SpriteRenderer sr { get; private set; }
     private BulletStateMachine stateMachine;
-
-    [SerializeField] public CircleCollider2D circleCollider;
-    [SerializeField] public CircleCollider2D explosionRangeCollider;
-    [SerializeField] public LayerMask targetMask;
-    [SerializeField] public LayerMask outOfRangeMask;
-
     private DamageCalcComponent damageCalcComponent;
 
-    public float range { get; private set; }
+    [SerializeField] private Projectile projectileObj_prefab;
+    [SerializeField] private NonProjectile nonProjectileObj_prefab;
+    public Projectile projectileObj;
+    public NonProjectile nonProjectileObj;
 
 
     /// <summary>
     /// 구현 속성 존 --------------------------------------------------------
     /// </summary>
 
-    public Vector2 flyDir { get; private set; }
-    public Vector2 prevPosition { get; private set; }
     private bool bFired = false;
-
+    public Vector2 flyDir {  get; private set; }
 
     /// <summary>
     /// 시스템 코드 존 --------------------------------------------------------
@@ -58,15 +47,18 @@ public class Bullet : MonoBehaviour
         bulletEffectProvider = _bulletEffectProvider;
         damageCalcComponent = _damageCalculator;
 
-        sr = GetComponentInChildren<SpriteRenderer>();
-        effectComponent = GetComponentInChildren<EffectComponent>();
         stateMachine = GetComponent<BulletStateMachine>();
 
-        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, this, damageCalcComponent);
+        projectileObj = Instantiate(projectileObj_prefab);
+        nonProjectileObj = Instantiate(nonProjectileObj_prefab);
 
-        circleCollider.enabled = false;
-        explosionRangeCollider.enabled = false;
-        range = explosionRangeCollider.radius;
+        projectileObj.Initialize();
+        nonProjectileObj.Initialize();
+
+        projectileObj.gameObject.SetActive(false);
+        nonProjectileObj.gameObject.SetActive(false);
+
+        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, this, damageCalcComponent);
     }
 
     private void OnDestroy()
@@ -80,7 +72,7 @@ public class Bullet : MonoBehaviour
             stateMachine.Update();
     }
 
-    public void Fire(Vector2 dir) //발사하는 함수.
+    public void Fire(Vector2 dir,Vector2 firePos) //발사하는 함수.
     {
         ActivateBullet();
 
@@ -89,9 +81,8 @@ public class Bullet : MonoBehaviour
         dir.Normalize();
         flyDir = dir;
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        prevPosition = transform.position;
+        projectileObj.transform.position = firePos;
+        nonProjectileObj.transform.position = firePos;
 
         stateMachine.ChangeState<BS_BeforeFire>();
     }
@@ -105,20 +96,12 @@ public class Bullet : MonoBehaviour
 
     private void DeActivateBullet()
     {
-        sr.gameObject.SetActive(false);
-        effectComponent.gameObject.SetActive(false);
 
-        circleCollider.enabled = false;
-        explosionRangeCollider.enabled = false;
     }
 
     private void ActivateBullet()
     {
-        sr.gameObject.SetActive(true);
-        effectComponent.gameObject.SetActive(true);
 
-        circleCollider.enabled = true;
-        explosionRangeCollider.enabled = true;
     }
 
 

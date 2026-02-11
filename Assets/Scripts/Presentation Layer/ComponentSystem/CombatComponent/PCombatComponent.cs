@@ -63,7 +63,6 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
         characterStatProvider = _characterStatProvider;
 
         bulletObject = Instantiate(bulletPrefab, transform);
-        bulletObject.gameObject.SetActive(false);
         bulletObject.Initialize(characterStatProvider,this, damageCalcComponent);
 
         BindEvent();
@@ -99,9 +98,7 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
 
     public virtual void Fire(Vector2 dir)
     {
-        bulletObject.transform.position = transform.position;
-        bulletObject.gameObject.SetActive(true);
-        bulletObject.Fire(dir);
+        bulletObject.Fire(dir,transform.position);
     }
 
     public void BulletEffectIsFinished()
