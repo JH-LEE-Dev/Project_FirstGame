@@ -8,7 +8,26 @@ public class ConditionUI : MonoBehaviour
     [SerializeField] private Dictionary<DebuffElementEffectType, Sprite> initDatas;
     [SerializeField] private List<ConditionUI_Unit> units;
 
-    public void Init(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currDebuffs)
+    public void UpdateConditions(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currDebuffs)
+    {
+        ClearUnits();
+
+        int i = 0;
+
+        foreach (var item in currDebuffs)
+        {
+            DebuffElementEffectType tpye = item.Key;
+            int remainCnt = item.Value.turnCnt;
+
+            if (i < units.Count && initDatas.TryGetValue(tpye, out Sprite getSprite))
+            {
+                units[i].gameObject.SetActive(true);
+                units[i].UpdateUnit(getSprite, remainCnt);
+            }
+        }
+    }
+
+    private void ClearUnits()
     {
         if (null != units)
         {
@@ -17,8 +36,5 @@ public class ConditionUI : MonoBehaviour
                 unit.gameObject.SetActive(false);
             }
         }
-
-        // 여기서 키랑 
-
     }
 }
