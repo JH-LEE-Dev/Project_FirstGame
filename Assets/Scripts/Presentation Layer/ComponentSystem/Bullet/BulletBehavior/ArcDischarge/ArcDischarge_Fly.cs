@@ -43,7 +43,7 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
             bulletStartPos,
             bullet.flyDir,
             Mathf.Infinity,
-            bullet.targetMask
+            bullet.nonProjectileObj.targetMask
         );
 
         firstTarget = hit.collider;
@@ -65,7 +65,7 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
             bulletStartPos,
             bullet.flyDir,
             Mathf.Infinity,
-            bullet.outOfRangeMask
+            bullet.nonProjectileObj.outOfRangeMask
         );
 
         if (null != hit.collider)

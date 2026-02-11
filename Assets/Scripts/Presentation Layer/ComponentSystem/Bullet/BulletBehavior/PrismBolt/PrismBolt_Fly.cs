@@ -28,4 +28,9 @@ public class PrismBolt_Fly : BulletBehavior_ProjectileFly
     {
         base.Exit();
     }
+
+    protected override ProjectileState PlayStop()
+    {
+        throw new System.NotImplementedException();
+    }
 }
