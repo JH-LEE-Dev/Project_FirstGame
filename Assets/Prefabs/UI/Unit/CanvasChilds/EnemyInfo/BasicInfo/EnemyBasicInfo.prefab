@@ -54,6 +54,7 @@ MonoBehaviour:
   tempOffset: 0.55
   healthBar: {fileID: 125210596917829458}
   damageInfo: {fileID: 1141968230056130176}
+  conditionUI: {fileID: 1541365789416404148}
 --- !u!1 &1182501433166471147
 GameObject:
   m_ObjectHideFlags: 0

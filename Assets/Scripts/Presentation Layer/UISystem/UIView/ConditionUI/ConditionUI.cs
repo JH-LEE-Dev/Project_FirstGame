@@ -31,6 +31,9 @@ public class ConditionUI : MonoBehaviour
     {
         ClearUnits();
 
+        if (null == currDebuffs)
+            return;
+
         int i = 0;
 
         foreach (var item in currDebuffs)
@@ -48,6 +51,8 @@ public class ConditionUI : MonoBehaviour
 
     private void ClearUnits()
     {
+        Debug.Log("너 불리고 있어?");
+
         if (null != units)
         {
             foreach (ConditionUI_Unit unit in units)

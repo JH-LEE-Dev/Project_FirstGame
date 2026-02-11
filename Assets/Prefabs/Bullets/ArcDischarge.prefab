@@ -68,5 +68,5 @@ MonoBehaviour:
   behavior_Fly_prefab: {fileID: 11400000, guid: e6c082508b1889c4e82b1da5303f2452, type: 2}
   behavior_Hit_prefab: {fileID: 11400000, guid: a97e2a0530a6fdd479b2c50f18851e8d, type: 2}
   <maxTransference>k__BackingField: 2
-  <finderRadius>k__BackingField: 0.5
+  <finderRadius>k__BackingField: 1.25
   <chainDelay>k__BackingField: 0.35
