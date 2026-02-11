@@ -1,4 +1,3 @@
-using Mono.Cecil;
 using UnityEngine;
 
 public abstract class BulletBehavior_ProjectileFly : BulletBehavior
@@ -24,12 +23,12 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
         if (bBehaviorEnd)
             return;
 
-        if (PlayStop() == ProjectileState.End)
+        if (TryStop() == ProjectileState.End)
         {
             End();
             return;
         }
-        else if (PlayStop() == ProjectileState.Exit)
+        else if (TryStop() == ProjectileState.Exit)
         {
             Exit();
             return;
@@ -71,7 +70,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
 
     protected abstract Vector2 ComputeNextPosition(Vector2 currentPosition);
 
-    protected abstract ProjectileState PlayStop();
+    protected abstract ProjectileState TryStop();
 
     // 날아가다가 직격한 적이 있는지 체크.
     protected virtual Collider2D CheckCollision_Enemy(Vector2 dir, float distance, out RaycastHit2D hit)
