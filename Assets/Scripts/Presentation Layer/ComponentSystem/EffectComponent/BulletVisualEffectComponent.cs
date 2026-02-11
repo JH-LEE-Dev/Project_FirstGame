@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EffectComponent : EntityComponent
+public class BulletVisualEffectComponent : EntityComponent
 {
     private Animator animator;
     [SerializeField] private GameObject effectObject;

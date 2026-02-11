@@ -42,7 +42,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Collider2D directHitObject = other;
 
         // 데미지 처리
-        bullet.effectComponent.PlayImpactEffect();
+        bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
@@ -123,7 +123,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_startPos, finderRadius);
 
-        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.targetMask);
+        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.nonProjectileObj.targetMask);
         if (0 >= targets.Length)
             return;
 

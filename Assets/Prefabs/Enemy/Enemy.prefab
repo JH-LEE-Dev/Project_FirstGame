@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 7192030136068839274}
   - component: {fileID: 8124109600452967104}
   - component: {fileID: -4829429257693180806}
-  - component: {fileID: 5376237342784183121}
   - component: {fileID: -5027583622691338037}
   - component: {fileID: -5589540889224555357}
   - component: {fileID: 7341641961094845762}
@@ -265,19 +264,6 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &5376237342784183121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 624792059011753228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf67570f87043154dabbadfb4b0fd4e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EffectComponent
-  effectObject: {fileID: 4953203537071482943}
 --- !u!114 &-5027583622691338037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2933127412793690321}
+  - component: {fileID: 7794482606944635151}
   m_Layer: 6
   m_Name: EffectObject
   m_TagString: Untagged
@@ -440,6 +427,19 @@ Transform:
   - {fileID: 4608200311675850581}
   m_Father: {fileID: 1639103010898621764}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7794482606944635151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4953203537071482943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4de28114f400234d99b4ae8972f6495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletVisualEffectComponent
+  effectObject: {fileID: 4953203537071482943}
 --- !u!1 &6852925597445524858
 GameObject:
   m_ObjectHideFlags: 0

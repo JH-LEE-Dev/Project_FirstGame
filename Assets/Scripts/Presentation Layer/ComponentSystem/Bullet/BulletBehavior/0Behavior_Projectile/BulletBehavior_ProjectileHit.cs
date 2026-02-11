@@ -19,14 +19,14 @@ public abstract class BulletBehavior_ProjectileHit : BulletBehavior
     protected Collider2D[] CheckExplosion()
     {
         return Physics2D.OverlapCircleAll(
-            bullet.transform.position,
+            bullet.projectileObj.transform.position,
             GetRangeRadius(),
-            bullet.targetMask);
+            bullet.projectileObj.targetMask);
     }
 
     protected float GetRangeRadius()
     {
-        return bullet.range + bullet.range * (characterStatProvider.attackRange * 0.01f);
+        return bullet.projectileObj.range + bullet.projectileObj.range * (characterStatProvider.attackRange * 0.01f);
     }
 
 }
