@@ -6,6 +6,13 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
     protected float speed;
     protected Vector2 prevPosition;
 
+    protected enum ProjectileState
+    {
+        None,
+        End, // Hit로 넘어감.
+        Exit, // 폭발 안하고 종료.
+    }
+
     public override void Enter()
     {
         base.Enter();
@@ -14,8 +21,20 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
 
     public sealed override void Update()
     {
-        if (bBehaviorEnd) 
+        if (bBehaviorEnd)
             return;
+
+        if (PlayStop() == ProjectileState.End)
+        {
+            End();
+            return;
+        }
+        else if (PlayStop() == ProjectileState.Exit)
+        {
+            Exit();
+            return;
+        }
+
 
         Vector2 current = (Vector2)bullet.transform.position;
         Vector2 next = ComputeNextPosition(current);
@@ -52,7 +71,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
 
     protected abstract Vector2 ComputeNextPosition(Vector2 currentPosition);
 
-
+    protected abstract ProjectileState PlayStop();
 
     // 날아가다가 직격한 적이 있는지 체크.
     protected virtual Collider2D CheckCollision_Enemy(Vector2 dir, float distance, out RaycastHit2D hit)

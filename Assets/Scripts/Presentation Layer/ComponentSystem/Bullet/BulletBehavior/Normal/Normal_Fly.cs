@@ -14,6 +14,11 @@ public class Normal_Fly : BulletBehavior_ProjectileFly
         return current + bullet.flyDir * speed * Time.deltaTime;
     }
 
+    protected override ProjectileState PlayStop()
+    {
+        return ProjectileState.None;
+    }
+
     public override void End()
     {
         base.End();
