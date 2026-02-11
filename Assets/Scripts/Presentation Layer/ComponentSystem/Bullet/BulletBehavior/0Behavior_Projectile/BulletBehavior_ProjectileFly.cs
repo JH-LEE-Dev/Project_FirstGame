@@ -16,7 +16,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
     public override void Enter()
     {
         base.Enter();
-        prevPosition = bullet.prevPosition;
+        prevPosition = bullet.projectileObj.transform.position;
     }
 
     public sealed override void Update()
@@ -78,10 +78,10 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
     {
         hit = Physics2D.CircleCast(
             prevPosition,
-            bullet.range,
+            bullet.projectileObj.range,
             dir,
             distance,
-            bullet.targetMask
+            bullet.projectileObj.targetMask
         );
 
         if (hit.collider != null)
@@ -98,7 +98,7 @@ public abstract class BulletBehavior_ProjectileFly : BulletBehavior
             prevPosition,
             delta.normalized,
             distance,
-            bullet.outOfRangeMask
+            bullet.projectileObj.outOfRangeMask
         );
 
         if (hit.collider != null)
