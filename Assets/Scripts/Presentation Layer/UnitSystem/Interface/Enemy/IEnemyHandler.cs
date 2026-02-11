@@ -14,4 +14,5 @@ public interface IEnemyHandler
     EnemyTypeData enemyTypeData { get; }
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
     void ClearDebuff();
+    CircleCollider2D statusCollider { get; }
 }

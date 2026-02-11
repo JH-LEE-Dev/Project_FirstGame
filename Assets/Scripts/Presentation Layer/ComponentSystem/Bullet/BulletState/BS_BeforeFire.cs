@@ -14,7 +14,7 @@ public class BS_BeforeFire : BulletState
 
     public override void Enter()
     {
-        behavior = ctx.bulletBehaviors[ctx.bulletEffectProvider.bulletType].behavior_BeforeFire;
+        behavior = ctx.behaviorData.behavior_BeforeFire;
 
         if (behavior != null)
         {

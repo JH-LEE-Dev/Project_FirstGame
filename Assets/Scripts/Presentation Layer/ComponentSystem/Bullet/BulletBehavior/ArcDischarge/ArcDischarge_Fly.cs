@@ -39,12 +39,13 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
     {
         Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.targetMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.targetMask
+        //);
 
         firstTarget = hit.collider;
 
@@ -61,12 +62,13 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
     {
         Vector2 bulletStartPos = bullet.transform.position;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            bulletStartPos,
-            bullet.flyDir,
-            Mathf.Infinity,
-            bullet.nonProjectileObj.outOfRangeMask
-        );
+        RaycastHit2D hit = default;
+        //RaycastHit2D hit = Physics2D.Raycast(
+        //    bulletStartPos,
+        //    bullet.flyDir,
+        //    Mathf.Infinity,
+        //    bullet.nonProjectileObj.outOfRangeMask
+        //);
 
         if (null != hit.collider)
         {

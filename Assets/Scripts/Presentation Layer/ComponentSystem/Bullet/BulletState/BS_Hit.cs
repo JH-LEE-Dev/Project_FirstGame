@@ -14,7 +14,7 @@ public class BS_Hit : BulletState
 
     public override void Enter()
     {
-        behavior = ctx.bulletBehaviors[ctx.bulletEffectProvider.bulletType].behavior_Hit;
+        behavior = ctx.behaviorData.behavior_Hit;
 
         if (behavior != null)
         {

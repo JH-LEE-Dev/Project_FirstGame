@@ -6,21 +6,17 @@ public class BulletStateCtx
     public BulletStateMachine stateMachine;
     public ICharacterStatProvider characterStatProvider;
     public IBulletEffectProvider bulletEffectProvider;
-    public IReadOnlyDictionary<BulletType, BulletBehaviorData> bulletBehaviors;
     public Bullet bullet;
-
-    private DamageCalcComponent damageCalcComponent;
+    public BulletBehaviorData behaviorData;
 
 
     public void Initialize(BulletStateMachine _bulletStateMachine,ICharacterStatProvider _characterStatProvider,
-        IBulletEffectProvider _bulletEffectProvider,Bullet _bullet,DamageCalcComponent _damageCalcComponent,
-        IReadOnlyDictionary<BulletType, BulletBehaviorData> _bulletBehaviors)
+        IBulletEffectProvider _bulletEffectProvider,BulletBehaviorData _data,Bullet _bullet)
     {
         stateMachine = _bulletStateMachine;
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
+        behaviorData = _data;
         bullet = _bullet;
-        damageCalcComponent = _damageCalcComponent;
-        bulletBehaviors = _bulletBehaviors;
     }
 }

@@ -19,6 +19,9 @@ public class ElementExplosionSystem : MonoBehaviour
 
     public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2)
     {
+        if (_enemy1 == null || _enemy2 == null)
+            return;
+
         if (_enemy1.enemyID > _enemy2.enemyID)
             return;
 

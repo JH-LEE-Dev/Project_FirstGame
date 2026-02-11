@@ -44,7 +44,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Collider2D directHitObject = other;
 
         // 데미지 처리
-        bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
+        //bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
@@ -127,7 +127,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         DrawDebugCircle(_startPos, finderRadius, Color.red, 3f);
 
-        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.nonProjectileObj.targetMask);
+        //Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.nonProjectileObj.targetMask);
+        Collider2D[] targets = default;
         if (0 >= targets.Length)
             return;
 

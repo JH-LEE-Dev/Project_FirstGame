@@ -13,23 +13,38 @@ public class Bullet : MonoBehaviour
     //외부 의존성
     ICharacterStatProvider characterStatProvider; //속성,스탯을 가져오는 컴포넌트
     IBulletEffectProvider bulletEffectProvider; //총알 타입을 가져오는 컴포넌트
+    protected IDamageSystem damageSystem;
 
     //내부 의존성
-    private BulletStateMachine stateMachine;
-    private DamageCalcComponent damageCalcComponent;
+    protected BulletStateMachine stateMachine;
 
-    [SerializeField] private Projectile projectileObj_prefab;
-    [SerializeField] private NonProjectile nonProjectileObj_prefab;
-    public Projectile projectileObj;
-    public NonProjectile nonProjectileObj;
+
+
+
+
+
+
+
+
 
 
     /// <summary>
     /// 구현 속성 존 --------------------------------------------------------
     /// </summary>
 
-    private bool bFired = false;
-    public Vector2 flyDir {  get; private set; }
+    protected bool bFired = false;
+    public Vector2 flyDir { get; private set; }
+
+
+
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// 시스템 코드 존 --------------------------------------------------------
@@ -40,25 +55,16 @@ public class Bullet : MonoBehaviour
 
     }
 
-    public void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider,
-        DamageCalcComponent _damageCalculator)
+    public virtual void Initialize(ICharacterStatProvider _characterStatProvider,
+        IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
     {
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
-        damageCalcComponent = _damageCalculator;
+        damageSystem = _damageSystem;
 
         stateMachine = GetComponent<BulletStateMachine>();
 
-        projectileObj = Instantiate(projectileObj_prefab);
-        nonProjectileObj = Instantiate(nonProjectileObj_prefab);
-
-        projectileObj.Initialize();
-        nonProjectileObj.Initialize();
-
-        projectileObj.gameObject.SetActive(false);
-        nonProjectileObj.gameObject.SetActive(false);
-
-        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, this, damageCalcComponent);
+        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, damageSystem,this);
     }
 
     private void OnDestroy()
@@ -66,43 +72,28 @@ public class Bullet : MonoBehaviour
         BulletEffectIsFinishedEvent = null;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (bFired)
             stateMachine.Update();
     }
 
-    public void Fire(Vector2 dir,Vector2 firePos) //발사하는 함수.
+    public virtual void Fire(Vector2 dir, Vector2 firePos) //발사하는 함수.
     {
-        ActivateBullet();
-
-        bFired = true;
-
-        dir.Normalize();
-        flyDir = dir;
-
-        projectileObj.transform.position = firePos;
-        nonProjectileObj.transform.position = firePos;
-
         stateMachine.ChangeState<BS_BeforeFire>();
     }
 
     public void BulletEffectIsFinished() //총알의 공격 과정이 모두 끝났을 때 호출.
     {
         bFired = false;
-        DeActivateBullet();
         BulletEffectIsFinishedEvent?.Invoke();
     }
 
-    private void DeActivateBullet()
-    {
 
-    }
 
-    private void ActivateBullet()
-    {
 
-    }
+
+
 
 
 
