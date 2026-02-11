@@ -6,6 +6,7 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
     public override void Enter()
     {
         bBehaviorEnd = false;
+        Debug.Log("1");
     }
 
     public override void Update()

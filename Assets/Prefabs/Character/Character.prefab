@@ -402,6 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
   prismBolt_Prefab: {fileID: 6235347253760606445, guid: 05fb3c28453d0d04484c88f7028f34fa, type: 3}
+  arcDischarge_Prefab: {fileID: 6314381514516721546, guid: 73f9f47613ccec24e8275fd63dce741e, type: 3}
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
