@@ -15,7 +15,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     public override void Enter()
     {
         bUpdateEnd = false;
-        EnterHitEnemy(firstTarget, bullet.transform.position);
+        //EnterHitEnemy(firstTarget, bullet.transform.position);
         End();
     }
 

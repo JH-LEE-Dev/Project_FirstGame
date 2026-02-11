@@ -14,12 +14,9 @@ public abstract class BulletBehavior : ScriptableObject
     protected IDamageSystem damageSystem;
     protected bool bBehaviorEnd = false;
 
-    protected Bullet bullet;
-
-    public virtual void Initialize(Bullet _bullet, ICharacterStatProvider _characterStatProvider,
+    public virtual void Initialize(ICharacterStatProvider _characterStatProvider,
     IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
     {
-        bullet = _bullet;
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
         damageSystem = _damageSystem;
@@ -69,7 +66,7 @@ public abstract class BulletBehavior : ScriptableObject
     {
         IDamageable enemy = other.GetComponent<IDamageable>();
 
-        Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
-        enemy.KnockBack(dir.normalized, knockBackPower);
+        //Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
+        //enemy.KnockBack(dir.normalized, knockBackPower);
     }
 }

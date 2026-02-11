@@ -67,6 +67,11 @@ public class Bullet : MonoBehaviour
         stateMachine.Initialize(characterStatProvider, bulletEffectProvider, damageSystem,this);
     }
 
+    protected virtual void ReadyBulletAttributes(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
+    {
+
+    }
+
     private void OnDestroy()
     {
         BulletEffectIsFinishedEvent = null;

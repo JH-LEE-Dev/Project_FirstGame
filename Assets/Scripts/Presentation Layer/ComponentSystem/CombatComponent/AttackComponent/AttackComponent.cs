@@ -15,15 +15,14 @@ public class AttackComponent : MonoBehaviour
     IBulletEffectProvider bulletEffectProvider; //총알 타입을 가져오는 컴포넌트
     private IDamageSystem damageSystem;
 
-    //내부 의존성
-    [SerializeField] private PrismBolt prismBolt_Prefab;
-    private PrismBolt prismBolt;
-
-
 
     /// <summary>
     /// 구현 속성 존 --------------------------------------------------------
     /// </summary>
+
+    //내부 의존성
+    [SerializeField] private PrismBolt prismBolt_Prefab;
+    private PrismBolt prismBolt;
 
 
 
