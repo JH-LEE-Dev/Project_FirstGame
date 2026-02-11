@@ -86,15 +86,15 @@ public class AttackComponent : MonoBehaviour
             case BulletType.PrismBolt:
                 {
                     currentBullet = prismBolt;
-                    prismBolt.Fire(dir, firePos);
                     prismBolt.SetActive(true);
+                    prismBolt.Fire(dir, firePos);
                 }
                 break;
             case BulletType.ArcDischarge:
                 {
                     currentBullet = arcDischarge;
-                    arcDischarge.Fire(dir, firePos);
                     arcDischarge.SetActive(true);
+                    arcDischarge.Fire(dir, firePos);
                 }
                 break;
         }
