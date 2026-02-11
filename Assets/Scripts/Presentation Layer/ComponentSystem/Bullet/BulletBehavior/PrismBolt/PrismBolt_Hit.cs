@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Hit")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt/PrismBolt_Hit")]
 public class PrismBolt_Hit : PrismBoltBehavior
 {
     public override void Enter()

@@ -28,7 +28,7 @@ public class AttackComponent : MonoBehaviour
     private ArcDischarge arcDischarge;
 
 
-
+    private Bullet currentBullet;
 
 
     /// <summary>
@@ -56,12 +56,14 @@ public class AttackComponent : MonoBehaviour
         prismBolt.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
         prismBolt.BulletEffectIsFinishedEvent -= AttackFinished;
         prismBolt.BulletEffectIsFinishedEvent += AttackFinished;
+        prismBolt.SetActive(false);
 
 
         arcDischarge = Instantiate(arcDischarge_Prefab);
         arcDischarge.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
         arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
         arcDischarge.BulletEffectIsFinishedEvent += AttackFinished;
+        arcDischarge.SetActive(false);
     }
 
     private void OnDestroy()
@@ -83,12 +85,16 @@ public class AttackComponent : MonoBehaviour
         {
             case BulletType.PrismBolt:
                 {
+                    currentBullet = prismBolt;
                     prismBolt.Fire(dir, firePos);
+                    prismBolt.SetActive(true);
                 }
                 break;
             case BulletType.ArcDischarge:
                 {
+                    currentBullet = arcDischarge;
                     arcDischarge.Fire(dir, firePos);
+                    arcDischarge.SetActive(true);
                 }
                 break;
         }
@@ -96,6 +102,7 @@ public class AttackComponent : MonoBehaviour
 
     public void AttackFinished() //총알의 공격 과정이 모두 끝났을 때 호출.
     {
+        currentBullet.SetActive(false);
         AttackFinishedEvent?.Invoke();
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_BeforeFire")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt/PrismBolt_BeforeFire")]
 public class PrismBolt_BeforeFire : PrismBoltBehavior
 {
     public override void Enter()

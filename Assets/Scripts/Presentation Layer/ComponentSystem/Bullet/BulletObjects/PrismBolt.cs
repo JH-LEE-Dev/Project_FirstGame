@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class PrismBolt : Bullet
 {
-    public SpriteRenderer sr { get; private set; }
 
     public float speed;
+
+    [HideInInspector] public Animator animator;
+
 
     public override void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
@@ -13,5 +15,10 @@ public class PrismBolt : Bullet
 
         originRange = 0.05f;
         originExplosionRange = 1f;
+        speed = 1f;
+
+        animator = GetComponentInChildren<Animator>();
     }
+
+
 }
