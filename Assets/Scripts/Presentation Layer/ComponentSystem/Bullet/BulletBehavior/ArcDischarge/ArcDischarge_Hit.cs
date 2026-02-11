@@ -14,7 +14,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     public override void Enter()
     {
-        bUpdateEnd = false;
+        bBehaviorEnd = false;
 
         EnterHitEnemy(firstTarget, bullet.transform.position);
         End();
@@ -22,19 +22,19 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     public override void Update()
     {
-        if (true == bUpdateEnd)
+        if (true == bBehaviorEnd)
             return;
     }
 
     public override void End()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
 
     public override void Exit()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
 
@@ -60,7 +60,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         }
     }
 
-    private void ApplyKnockBack(IDamageable enemy, Vector2 startPos, Vector2 enemyPos) //직격,범위 데미지에 맞은 적들을 넉백시키는 함수.
+    private void ApplyKnockBack(IDamageable enemy, Vector2 startPos, Vector2 enemyPos)
     {
         Vector2 dir = enemyPos - startPos;
         float tempPower = 1f;

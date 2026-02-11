@@ -5,12 +5,12 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
 {
     public override void Enter()
     {
-        bUpdateEnd = false;
+        bBehaviorEnd = false;
     }
 
     public override void Update()
     {
-        if (true == bUpdateEnd)
+        if (true == bBehaviorEnd)
             return;
 
         End();
@@ -18,7 +18,7 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
 
     public override void End()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
 

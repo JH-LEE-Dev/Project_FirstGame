@@ -6,13 +6,13 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 {
     public override void Enter()
     {
-        bUpdateEnd = false;
+        bBehaviorEnd = false;
         firstTarget = null;
     }
 
     public override void Update()
     {
-        if (true == bUpdateEnd)
+        if (true == bBehaviorEnd)
             return;
 
         if (true == CheckCollision_Enemy())
@@ -24,13 +24,13 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     public override void End()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletBehaviorEndEvent?.Invoke();
     }
 
     public override void Exit()
     {
-        bUpdateEnd = true;
+        bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
 
