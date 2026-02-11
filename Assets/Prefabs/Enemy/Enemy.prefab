@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -5027583622691338037}
   - component: {fileID: -5589540889224555357}
   - component: {fileID: 7341641961094845762}
+  - component: {fileID: 7056442617215040879}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -33,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 624792059011753228}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.99924, y: -0.84386, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -304,6 +305,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e8fe3543d0f924ba14743cf429fb3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EStatComponent
+--- !u!114 &7056442617215040879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624792059011753228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4de28114f400234d99b4ae8972f6495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletVisualEffectComponent
+  effectObject: {fileID: 4953203537071482943}
 --- !u!1 &2299248305770833256
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,7 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3089659804865495430}
   - component: {fileID: 4305044845098640313}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: StatusRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +486,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2933127412793690321}
-  - component: {fileID: 7794482606944635151}
   m_Layer: 6
   m_Name: EffectObject
   m_TagString: Untagged
@@ -496,19 +509,6 @@ Transform:
   - {fileID: 4608200311675850581}
   m_Father: {fileID: 1639103010898621764}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7794482606944635151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4953203537071482943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4de28114f400234d99b4ae8972f6495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BulletVisualEffectComponent
-  effectObject: {fileID: 4953203537071482943}
 --- !u!1 &6852925597445524858
 GameObject:
   m_ObjectHideFlags: 0
