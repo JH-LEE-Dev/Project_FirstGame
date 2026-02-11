@@ -81,6 +81,7 @@ public class Character : Unit, ICharacterData
         combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent, damageCalcComponent,attackComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
         damageCalcComponent.Initialize(statComponent, combatComponent);
+        attackComponent.Initialize(statComponent, combatComponent, damageCalcComponent);
 
         BindEvent();
 
