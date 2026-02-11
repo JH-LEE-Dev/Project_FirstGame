@@ -149,6 +149,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             bulletCardSlotForUse[i].Clear();
         }
 
+        bInherenceCardEquipped = false;
         SynchronizeCardSlotForUse();
     }
 
