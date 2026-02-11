@@ -36,7 +36,7 @@ public class NonProjectile : MonoBehaviour
     public void Initialize()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
-        effectComponent = GetComponentInChildren<BulletVisualEffectComponent>();
+        //effectComponent = GetComponentInChildren<BulletVisualEffectComponent>();
 
         circleCollider.enabled = false;
         explosionRangeCollider.enabled = false;
