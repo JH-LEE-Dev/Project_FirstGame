@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2590030814603480945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1909306208562268373}
+  - component: {fileID: 2242450919362427624}
+  - component: {fileID: 6314381514516721546}
+  m_Layer: 0
+  m_Name: ArcDischarge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1909306208562268373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2590030814603480945}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2242450919362427624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2590030814603480945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a728ad27caafe0546a2bb1a60392cc4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletStateMachine
+--- !u!114 &6314381514516721546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2590030814603480945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97132387fe7c16b47bd615ed9ff4cf68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArcDischarge
+  circleCollider: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
+  outOfRangeMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  behavior_BeforeFire_prefab: {fileID: 11400000, guid: bc30c5c228d88c44a8d2113f08c748d4, type: 2}
+  behavior_Fly_prefab: {fileID: 11400000, guid: e6c082508b1889c4e82b1da5303f2452, type: 2}
+  behavior_Hit_prefab: {fileID: 11400000, guid: a97e2a0530a6fdd479b2c50f18851e8d, type: 2}
+  <maxTransference>k__BackingField: 2
+  <finderRadius>k__BackingField: 0.5
+  <chainDelay>k__BackingField: 0.35

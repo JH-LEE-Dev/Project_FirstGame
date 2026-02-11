@@ -6,18 +6,13 @@ using UnityEngine.Pool;
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/ArcDischarge/Hit")]
 public class ArcDischarge_Hit : ArcDischargeBehavior
 {
-    [SerializeField] private int maxTransference = 2;
-    [SerializeField] private float finderRadius = 20f;
-    [SerializeField] private float chainDelay = 0.1f;
-
     private Vector2 tempPos;
 
     public override void Enter()
     {
         bBehaviorEnd = false;
 
-        EnterHitEnemy(firstTarget, bullet.transform.position);
-        End();
+        EnterHitEnemy(arcDischarge.firstTarget, bullet.transform.position);
     }
 
     public override void Update()
@@ -74,7 +69,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             return;
 
         tempPos = startPos;
-        Debug.Log(tempPos);
 
         Vector2 targetPos = hit.transform.position;
 
@@ -104,10 +98,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         try
         {
-            while (0 < nextTargets.Count && currentTransferStep < maxTransference)
+            while (0 < nextTargets.Count && currentTransferStep <= arcDischarge.maxTransference)
             {
-                //if (0 < currentTransferStep)
-                yield return new WaitForSeconds(chainDelay);
+                yield return new WaitForSeconds(arcDischarge.chainDelay);
 
                 if (bullet == null || !bullet.gameObject.activeInHierarchy)
                     yield break;
@@ -125,7 +118,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CollectionPool<Collider2D>.ReturnCollection(nextTargets);
             CollectionPool<Collider2D>.ReturnCollection(visits);
 
-            End();
+            Exit();
         }
     }
 
@@ -146,9 +139,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Vector2 _startPos = frontCollider.transform.position;
 
         // TODO: 추후 제거
-        DrawDebugCircle(_startPos, finderRadius, Color.red, 3f);
+        DrawDebugCircle(_startPos, arcDischarge.finderRadius, Color.red, 3f);
 
-        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, finderRadius, bullet.targetMask);
+        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, arcDischarge.finderRadius, bullet.targetMask);
         if (0 >= targets.Length)
             return;
 

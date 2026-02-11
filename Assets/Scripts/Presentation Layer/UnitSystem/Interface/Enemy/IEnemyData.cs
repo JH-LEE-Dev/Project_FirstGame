@@ -13,6 +13,6 @@ public interface IEnemyData
     event Action EnemySpawnedEvent;
     event Action EnemyIsDeadEvent;
     EnemyTypeData enemyTypeData { get; }
-    IReadOnlyDictionary<DebuffElementEffectType,DebuffElementData> currentAppliedDebuff { get; }
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
     event Action EnemyDebuffChangedEvent;
 }

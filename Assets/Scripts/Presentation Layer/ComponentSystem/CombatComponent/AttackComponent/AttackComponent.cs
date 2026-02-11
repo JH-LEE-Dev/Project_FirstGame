@@ -58,16 +58,16 @@ public class AttackComponent : MonoBehaviour
         prismBolt.BulletEffectIsFinishedEvent += AttackFinished;
 
 
-        //arcDischarge = Instantiate(arcDischarge_Prefab);
-        //arcDischarge.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
-        //arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
-        //arcDischarge.BulletEffectIsFinishedEvent += AttackFinished;
+        arcDischarge = Instantiate(arcDischarge_Prefab);
+        arcDischarge.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
+        arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
+        arcDischarge.BulletEffectIsFinishedEvent += AttackFinished;
     }
 
     private void OnDestroy()
     {
         prismBolt.BulletEffectIsFinishedEvent -= AttackFinished;
-        //arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
+        arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
 
         AttackFinishedEvent = null;
     }
