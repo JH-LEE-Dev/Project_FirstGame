@@ -69,7 +69,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             return;
 
         tempPos = startPos;
-        Debug.Log(tempPos);
 
         Vector2 targetPos = hit.transform.position;
 

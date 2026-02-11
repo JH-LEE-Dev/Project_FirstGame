@@ -8,7 +8,8 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
     {
         bBehaviorEnd = false;
         arcDischarge.firstTarget = null;
-        Debug.Log("2");
+
+        Debug.Log("너 내꺼야?" + bullet.initPosition);
     }
 
     public override void Update()
@@ -44,8 +45,6 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     private bool CheckCollision_Enemy() //총알에 직격한 적이 있는지 체크.
     {
-        Vector2 bulletStartPos = bullet.transform.position;
-
         RaycastHit2D hit = Physics2D.Raycast(
             bullet.initPosition,
             bullet.initDir,
@@ -63,8 +62,6 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     private bool CheckCollision_OutofRange()
     {
-        Vector2 bulletStartPos = bullet.transform.position;
-
         RaycastHit2D hit = Physics2D.Raycast(
             bullet.initPosition,
             bullet.initDir,
