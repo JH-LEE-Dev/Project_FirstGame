@@ -45,7 +45,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         Collider2D directHitObject = other;
 
         // 데미지 처리
-        bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
+        //bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
@@ -106,8 +106,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         {
             while (0 < nextTargets.Count && currentTransferStep < maxTransference)
             {
-                if (currentTransferStep > 0)
-                    yield return new WaitForSeconds(chainDelay);
+                //if (0 < currentTransferStep)
+                yield return new WaitForSeconds(chainDelay);
 
                 if (bullet == null || !bullet.gameObject.activeInHierarchy)
                     yield break;
@@ -124,9 +124,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         {
             CollectionPool<Collider2D>.ReturnCollection(nextTargets);
             CollectionPool<Collider2D>.ReturnCollection(visits);
-        }
 
-        End();
+            End();
+        }
     }
 
     private void CreateCircleCollder(Collider2D hitColl)
