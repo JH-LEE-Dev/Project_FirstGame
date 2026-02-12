@@ -161,3 +161,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SparkExplosion
   explosionBehavior_Prefab: {fileID: 11400000, guid: cbfe67da735efbd4ead029091296134e, type: 2}
   elementExplosionType: 2
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
+  EarthMask:
+    serializedVersion: 2
+    m_Bits: 512
+  animator: {fileID: 0}
