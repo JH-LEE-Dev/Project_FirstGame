@@ -25,14 +25,14 @@ public class ElementDamageHandleComponent
         void BindLogic(BulletElementType _type, BulletDamageCalcHandler _action)
             => bulletDamageCalcCreatorMap[(int)_type] = _action;
 
-        bulletDamageCalcCreatorMap = new BulletDamageCalcHandler[(int)DebuffElementEffectType.MAX];
+        collideDamageCalcCreatorMap = new CollideDamageCalcHandler[(int)DebuffElementEffectType.MAX];
 
         //Card Logic System ¸Ê ÇÒ´ç
         BindCollideLogic(DebuffElementEffectType.ElectricShock, CalcElectricDamage);
         BindCollideLogic(DebuffElementEffectType.Wet, CalcWetDamage);
 
-        void BindCollideLogic(DebuffElementEffectType _type, BulletDamageCalcHandler _action)
-            => bulletDamageCalcCreatorMap[(int)_type] = _action;
+        void BindCollideLogic(DebuffElementEffectType _type, CollideDamageCalcHandler _action)
+            => collideDamageCalcCreatorMap[(int)_type] = _action;
     }
 
     public float GetResultDamage(IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements, float _damage)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using static UnityEditor.VersionControl.Asset;
 
@@ -126,6 +127,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
         if (boolean == false)
         {
+            //currentAppliedDebuff.Clear();
             rb.simulated = false;
         }
         else
@@ -135,8 +137,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
-
-        currentAppliedDebuff.Clear();
     }
 
     public IEnumerator SetEnemyState_Delayed(bool boolean)
@@ -262,13 +262,13 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         {
             effectComponent.PlayExplosionEffect();
 
+            gameServiceLocator.PlayCameraShake();
+
+            combatComponent.ApplyAttack(other, currentAppliedDebuff);
+
             SetEnemyState(false);
 
             UnitIsDead();
-
-            gameServiceLocator.PlayCameraShake();
-
-            combatComponent.ApplyAttack(other,currentAppliedDebuff);
 
             EnemyIsDeadEvent?.Invoke();
 

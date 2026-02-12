@@ -14,6 +14,13 @@ public class ElementExplosionSystem : MonoBehaviour
     private Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>> explosionPools
 = new Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>>();
 
+    public delegate void ExplosionHandler(Collider2D[] _colliders);
+    private ExplosionHandler[] explosionHandlerCreator;
+
+    public const int steamDamage = 20;
+    public const int flameDamage = 15;
+    public const int sparkDamage = 30;
+
     public void Initialize()
     {
         ExplosionComparer comparer = new ExplosionComparer();
@@ -51,6 +58,16 @@ public class ElementExplosionSystem : MonoBehaviour
 
             explosionPools.Add(explosionBehaviors[i].explosionType, pool);
         }
+
+
+        explosionHandlerCreator = new ExplosionHandler[(int)ElementExplosionType.MAX];
+
+        BindLogic(ElementExplosionType.Steam, HandleSteamExplosion);
+        BindLogic(ElementExplosionType.Spark, HandleSparkExplosion);
+        BindLogic(ElementExplosionType.Flame, HandleFlameExplosion);
+
+        void BindLogic(ElementExplosionType type, ExplosionHandler action)
+            => explosionHandlerCreator[(int)type] = action;
     }
 
     public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2)
@@ -200,6 +217,30 @@ public class ElementExplosionSystem : MonoBehaviour
 
     private void HandleExplosion(ElementExplosionType _type, Collider2D[] _colliders)
     {
+        explosionHandlerCreator[(int)_type].Invoke(_colliders);
+    }
 
+    private void HandleSteamExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
+    }
+
+    private void HandleSparkExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
+    }
+
+    private void HandleFlameExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
     }
 }

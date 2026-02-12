@@ -17,4 +17,6 @@ public interface IEnemyHandler
     CircleCollider2D statusCollider { get; }
     void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs);
     void ApplyElementDebuff(DebuffElementData debuff);
+    void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null);
+    void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null);
 }
