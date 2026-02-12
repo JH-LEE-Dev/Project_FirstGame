@@ -125,6 +125,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CollectionPool<Collider2D>.ReturnCollection(nextTargets);
             CollectionPool<Collider2D>.ReturnCollection(visits);
 
+            // 지금 이거 끝나자마자 바로 호출 돼서 불릿이 비활성화 되는 건지 이펙트 마지막 전이가 안 나오고 있음
+            // TODO: 나중에 해결
             Exit();
         }
     }
