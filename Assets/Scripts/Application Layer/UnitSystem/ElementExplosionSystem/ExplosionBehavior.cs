@@ -7,6 +7,14 @@ public class ExplosionBehavior : ScriptableObject
     public event Action ExplosionEndEvent;
     public event Action<Collider2D[]> ExplosionApplyRequestEvent;
 
+    protected Explosion explosion;
+
+    public virtual void Initialize(Explosion explosion)
+    {
+        this.explosion = explosion;
+    }
+
+
     public void ApplyExplosion(Collider2D[] colliders)
     {
         ExplosionApplyRequestEvent?.Invoke(colliders);
