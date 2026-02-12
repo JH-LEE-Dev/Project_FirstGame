@@ -25,6 +25,9 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         ExplosionComparer comparer = new ExplosionComparer();
 
+        if (explosionBehaviors.Count == 0)
+            return;
+
         explosionBehaviors.Sort(comparer);
 
         for (int i = 0; i < explosionBehaviors.Count; ++i)
@@ -217,7 +220,8 @@ public class ElementExplosionSystem : MonoBehaviour
 
     private void HandleExplosion(ElementExplosionType _type, Collider2D[] _colliders)
     {
-        explosionHandlerCreator[(int)_type].Invoke(_colliders);
+        if (explosionHandlerCreator[(int)_type] != null)
+            explosionHandlerCreator[(int)_type].Invoke(_colliders);
     }
 
     private void HandleSteamExplosion(Collider2D[] _colliders)
@@ -257,10 +261,10 @@ public class ElementExplosionSystem : MonoBehaviour
 
             if (enemy != null)
             {
-               // Bullet
+                // Bullet
                 enemy.TakeDamage(flameDamage, false);
 
-                DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Combustion,2);
+                DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Combustion, 2);
                 enemy.ApplyElementDebuff(debuffElementData);
             }
         }

@@ -7,7 +7,8 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
 
     public void Initialize()
     {
-
+        orbitPathComponent = GetComponentInChildren<OrbitPathComponent>();
+        fallBoundaryLineComponent = GetComponentInChildren<FallBoundaryComponent>();
     }
 
     public void Release()
@@ -24,11 +25,5 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
     {
         orbitPathComponent.SetPathActive(value);
         fallBoundaryLineComponent.SetPathActive(value);
-    }
-
-    private void Awake()
-    {
-        orbitPathComponent = GetComponentInChildren<OrbitPathComponent>();
-        fallBoundaryLineComponent = GetComponentInChildren<FallBoundaryComponent>();
     }
 }

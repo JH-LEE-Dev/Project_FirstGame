@@ -16,6 +16,11 @@ public class ExplosionBehavior : ScriptableObject
 
     public virtual void Explode()
     {
+
+    }
+
+    protected void ExplosionEnd()
+    {
         ExplosionEndEvent?.Invoke(this);
     }
 }
