@@ -44,7 +44,8 @@ public class ElementDamageHandleComponent
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in _bulletElements)
         {
-            resultDamage += bulletDamageCalcCreatorMap[(int)pair.Key].Invoke(pair.Key, _damage);
+            if (bulletDamageCalcCreatorMap[(int)pair.Key] != null)
+                resultDamage += bulletDamageCalcCreatorMap[(int)pair.Key].Invoke(pair.Key, _damage);
         }
 
         return resultDamage;
@@ -59,7 +60,8 @@ public class ElementDamageHandleComponent
 
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in _debuffs)
         {
-            resultDamage += collideDamageCalcCreatorMap[(int)pair.Key].Invoke(pair.Key, _damage);
+            if (collideDamageCalcCreatorMap[(int)pair.Key] != null)
+                resultDamage += collideDamageCalcCreatorMap[(int)pair.Key].Invoke(pair.Key, _damage);
         }
 
         return resultDamage;
@@ -67,33 +69,37 @@ public class ElementDamageHandleComponent
 
     private float CalcElectricDamage(BulletElementType _type, float _damage)
     {
+        float additionalDamage = 0;
         if (debuffs.ContainsKey(DebuffElementEffectType.ElectricShock))
-            _damage += _damage * 0.5f;
+            additionalDamage += _damage * 0.5f;
 
-        return _damage;
+        return additionalDamage;
     }
 
     private float CalcWetDamage(BulletElementType _type, float _damage)
     {
+        float additionalDamage = 0;
         if (debuffs.ContainsKey(DebuffElementEffectType.Wet))
-            _damage += _damage * 0.5f;
+            additionalDamage += _damage * 0.5f;
 
-        return _damage;
+        return additionalDamage;
     }
 
     private float CalcElectricDamage(DebuffElementEffectType _type, float _damage)
     {
+        float additionalDamage = 0;
         if (debuffs.ContainsKey(DebuffElementEffectType.ElectricShock))
-            _damage += _damage * 0.5f;
+            additionalDamage += _damage * 0.5f;
 
-        return _damage;
+        return additionalDamage;
     }
 
     private float CalcWetDamage(DebuffElementEffectType _type, float _damage)
     {
+        float additionalDamage = 0;
         if (debuffs.ContainsKey(DebuffElementEffectType.Wet))
-            _damage += _damage * 0.5f;
+            additionalDamage += _damage * 0.5f;
 
-        return _damage;
+        return additionalDamage;
     }
 }
