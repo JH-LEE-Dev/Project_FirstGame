@@ -267,7 +267,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
             gameServiceLocator.PlayCameraShake();
 
-            combatComponent.ApplyAttack(other);
+            combatComponent.ApplyAttack(other,currentAppliedDebuff);
 
             EnemyIsDeadEvent?.Invoke();
 
