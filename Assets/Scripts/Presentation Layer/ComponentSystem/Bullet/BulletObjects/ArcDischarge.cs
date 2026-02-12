@@ -31,7 +31,7 @@ public class ArcDischarge : Bullet
                 return;
 
             ParticleSystem particle = vfx.GetComponentInChildren<ParticleSystem>();
-            particle?.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            particle?.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
             vfxPooling.Pool.Release(vfx);
         }
@@ -46,10 +46,9 @@ public class ArcDischarge : Bullet
             return null;
 
         obj.SetActive(true);
-        ParticleSystem particle = obj.GetComponentInChildren<ParticleSystem>();
         activatedVfxList.Add(obj);
 
-        return particle;
+        return obj.GetComponentInChildren<ParticleSystem>();
     }
 
     public void PlayVFX(Vector2 _startPos, Vector2 _endPos)
@@ -58,13 +57,14 @@ public class ArcDischarge : Bullet
         if (null == particle)
             return;
 
+        particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particle.Play(true);
+
         ParticleSystem.EmitParams newEmitter = new ParticleSystem.EmitParams();
         newEmitter.position = _startPos;
         particle.Emit(newEmitter, 1);
 
         newEmitter.position = _endPos;
         particle.Emit(newEmitter, 1);
-
-        particle.Play(true);
     }
 }

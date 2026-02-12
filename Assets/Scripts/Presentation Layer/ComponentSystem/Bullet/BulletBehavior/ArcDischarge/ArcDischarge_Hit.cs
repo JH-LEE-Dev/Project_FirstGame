@@ -7,6 +7,7 @@ using UnityEngine.Pool;
 public class ArcDischarge_Hit : ArcDischargeBehavior
 {
     private Vector2 tempPos;
+    private Coroutine routine;
 
     public override void Enter()
     {
@@ -31,6 +32,12 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     {
         bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
+
+        if (null != routine)
+        {
+            bullet?.StopCoroutine(routine);
+            routine = null;
+        }
     }
 
     #region Damage & Knockback
@@ -80,7 +87,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         //ÀÌÆåÆ® Àç»ý
         Debug.DrawLine(startPos, targetPos, Color.red, 3f);
         arcDischarge?.PlayVFX(startPos, targetPos);
-        //Sound.Play("Impact", bullet.transform.position);
     }
 
     #endregion
@@ -99,7 +105,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         try
         {
-            while (0 < nextTargets.Count && currentTransferStep <= arcDischarge.maxTransference)
+            while (0 < nextTargets.Count && currentTransferStep < arcDischarge.maxTransference)
             {
                 yield return new WaitForSeconds(arcDischarge.chainDelay);
 
@@ -119,8 +125,6 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CollectionPool<Collider2D>.ReturnCollection(nextTargets);
             CollectionPool<Collider2D>.ReturnCollection(visits);
 
-            //arcDischarge?.AllDeActivateVFX();
-
             Exit();
         }
     }
@@ -130,7 +134,13 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         if (hitColl == null) 
             return;
 
-        bullet.StartCoroutine(ChainLightningRoutine(hitColl));
+        if (null != routine)
+        {
+            bullet.StopCoroutine(routine);
+            routine = null;
+        }
+
+        routine = bullet.StartCoroutine(ChainLightningRoutine(hitColl));
     }
 
     private void ProcessOneEnemy(Queue<Collider2D> nextTargets, HashSet<Collider2D> visits)

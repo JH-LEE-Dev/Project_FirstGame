@@ -51,8 +51,6 @@ public class ConditionUI : MonoBehaviour
 
     private void ClearUnits()
     {
-        Debug.Log("너 불리고 있어?");
-
         if (null != units)
         {
             foreach (ConditionUI_Unit unit in units)
