@@ -37,6 +37,4 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
         orbitPathComponent.SetPathActive(value);
         fallBoundaryLineComponent.SetPathActive(value);
     }
-
-    // FallBoundaryComponent
 }

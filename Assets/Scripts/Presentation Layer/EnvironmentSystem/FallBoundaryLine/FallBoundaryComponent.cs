@@ -71,36 +71,6 @@ public class FallBoundaryComponent : MonoBehaviour
         DrawPathLine();
     }
 
-    public void SetMonsters(IReadOnlyList<IEnemyData> list, bool clearBefore)
-    {
-        if (clearBefore) monsters.Clear();
-        if (list == null) return;
-
-        foreach (var t in list)
-            RegisterMonster(t);
-    }
-
-    public void RegisterMonster(Transform monster)
-    {
-        if (!monster) return;
-
-        if (!monsters.Contains(monster))
-            monsters.Add(monster);
-    }
-
-    public bool UnregisterMonster(Transform monster)
-    {
-        if (!monster) return false;
-        return monsters.Remove(monster);
-    }
-    public void CleanupMonsters()
-    {
-        if (monsters == null) return;
-        monsters.RemoveAll(t => !t);
-    }
-
-
-
     private void DrawPathLine()
     {
         float segmentLen = 1f / LineCount;
@@ -158,9 +128,9 @@ public class FallBoundaryComponent : MonoBehaviour
         for (int i = 0; i < monsters.Count; i++)
         {
             var t = monsters[i];
-            if (!t) continue;
+            if (t.bDead) continue;
 
-            float d = Vector3.Distance(worldPos, t.position);
+            float d = Vector3.Distance(worldPos, t.GetTransform().position);
             if (d < minDist) minDist = d;
         }
 
