@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ECombatComponent : CombatComponent
@@ -11,13 +12,13 @@ public class ECombatComponent : CombatComponent
         enemyStatProvider = _enemyStatProvider;
     }
 
-    public void ApplyAttack(Collider2D other)
+    public void ApplyAttack(Collider2D other, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
     {
         IDamageable target = other.GetComponent<IDamageable>();
 
         if(target != null )
         {
-            target.TakeDamage(enemyStatProvider.attack, false);
+            target.TakeCollideDamage(enemyStatProvider.attack, false, debuffs);
         }
     }
 }

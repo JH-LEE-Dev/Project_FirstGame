@@ -135,8 +135,12 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
 
     public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
     {
+        ApplyElementDebuff(_debuffElements);
+
         PlayerHitEvent?.Invoke(this, _debuffElements);
-        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_debuffElements, damage));
+        damage = elementDamageHandleComponent.GetResultDamage(_debuffElements, damage);
+
+        healthComponent.TakeDamage(damage);
         TakeDamageEvent?.Invoke(damage);
     }
 

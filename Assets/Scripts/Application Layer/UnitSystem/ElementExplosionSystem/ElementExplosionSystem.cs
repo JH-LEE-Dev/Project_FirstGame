@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Pool;
 
 public class ElementExplosionSystem : MonoBehaviour
 {
@@ -10,11 +11,42 @@ public class ElementExplosionSystem : MonoBehaviour
 
     private List<ElementExplosionType> explodedTypes = new List<ElementExplosionType>((int)ElementExplosionType.MAX);
 
+    private Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>> explosionPools
+= new Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>>();
+
     public void Initialize()
     {
         ExplosionComparer comparer = new ExplosionComparer();
 
         explosionBehaviors.Sort(comparer);
+
+        for (int i = 0; i < cardDataBase.cardData.Count; ++i)
+        {
+            CardData cardData = cardDataBase.GetCardData(i);
+
+            ObjectPool<CardDataInstance> pool = new ObjectPool<CardDataInstance>(
+                createFunc: () =>
+                {
+                    CardDataInstance instance = new CardDataInstance();
+                    instance.Initialize(cardData);
+                    return instance;
+                },
+                actionOnGet: card =>
+                {
+                    card.ResetState();
+                },
+                actionOnRelease: card =>
+                {
+                    card.ResetState();
+                },
+                actionOnDestroy: null,
+                collectionCheck: false,
+                defaultCapacity: SYSTEM_VAR.maxDeckPileCount,
+                maxSize: SYSTEM_VAR.limitDeckPileCount
+            );
+
+            cardPools.Add(cardData.id, pool);
+        }
     }
 
     public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2)
