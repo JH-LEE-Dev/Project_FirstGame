@@ -224,7 +224,12 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         for (int i = 0; i < _colliders.Length; ++i)
         {
+            var enemy = (IEnemyHandler)_colliders[i];
 
+            if (enemy != null)
+            {
+                enemy.TakeDamage(steamDamage, false);
+            }
         }
     }
 
@@ -232,7 +237,15 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         for (int i = 0; i < _colliders.Length; ++i)
         {
+            var enemy = (IEnemyHandler)_colliders[i];
 
+            if (enemy != null)
+            {
+                enemy.TakeDamage(sparkDamage, false);
+
+                DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
+                enemy.ApplyElementDebuff(debuffElementData);
+            }
         }
     }
 
@@ -240,7 +253,16 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         for (int i = 0; i < _colliders.Length; ++i)
         {
+            var enemy = (IEnemyHandler)_colliders[i];
 
+            if (enemy != null)
+            {
+               // Bullet
+                enemy.TakeDamage(flameDamage, false);
+
+                DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Combustion,2);
+                enemy.ApplyElementDebuff(debuffElementData);
+            }
         }
     }
 }

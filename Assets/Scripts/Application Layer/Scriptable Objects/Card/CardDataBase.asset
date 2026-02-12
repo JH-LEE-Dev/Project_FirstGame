@@ -431,6 +431,8 @@ MonoBehaviour:
     defaultdebuffTypes:
     - debuffElementType: 1
       turnCnt: 10
+    - debuffElementType: 2
+      turnCnt: 10
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
