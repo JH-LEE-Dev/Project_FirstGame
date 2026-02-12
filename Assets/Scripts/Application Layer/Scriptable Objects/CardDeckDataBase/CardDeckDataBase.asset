@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardDeckDataBase
   cardPileData:
   - cardName: 2
-    cnt: 5
+    cnt: 0
     bUpgraded: 1
   - cardName: 22
-    cnt: 0
+    cnt: 2
     bUpgraded: 0
-  - cardName: 22
-    cnt: 0
+  - cardName: 21
+    cnt: 2
     bUpgraded: 0
   - cardName: 29
-    cnt: 0
+    cnt: 1
     bUpgraded: 0
