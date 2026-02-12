@@ -119,6 +119,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
                 currentTransferStep++;
             }
+
+            // 이펙트 끝나는 딜레이를 여기서 해줘야 함
+            yield return new WaitForSeconds(arcDischarge.chainDelay * 2);
         }
         finally
         {
