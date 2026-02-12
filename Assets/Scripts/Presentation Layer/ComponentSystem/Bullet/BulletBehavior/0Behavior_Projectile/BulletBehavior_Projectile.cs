@@ -21,7 +21,6 @@ public abstract class BulletBehavior_Projectile : BulletBehavior
     {
         prevPosition = bullet.transform.position = bullet.initPosition;
         Debug.Log(bullet.transform.position);
-
     }
 
     // 불릿을 앞으로 나아가게 하는 함수.

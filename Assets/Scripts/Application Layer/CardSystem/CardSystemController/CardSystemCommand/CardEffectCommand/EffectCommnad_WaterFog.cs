@@ -20,14 +20,18 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                 {
                     if (bUpgraded == false)
                     {
-                        var targets = GetCollider(target,bUpgraded);
+                        var targets = GetCollider(target, bUpgraded);
 
                         if (targets == null)
                             return;
 
-                        for(int j = 0;j<targets.Count();++j)
+                        for (int j = 0; j < targets.Count(); ++j)
                         {
-
+                            var enemyHandler = (IEnemyHandler)targets[j];
+                            if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
+                            {
+                                enemyHandler.ApplyElementDebuff(DebuffElementEffectType.Wet, 1);
+                            }
                         }
                     }
                     else
@@ -39,7 +43,11 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
                         for (int j = 0; j < targets.Count(); ++j)
                         {
-
+                            var enemyHandler = (IEnemyHandler)targets[j];
+                            if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
+                            {
+                                enemyHandler.ApplyElementDebuff(DebuffElementEffectType.Wet, 2);
+                            }
                         }
                     }
                 }
@@ -47,7 +55,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
         }
     }
 
-    private Collider2D[] GetCollider(IEnemyHandler _enemyHandler,bool _bUpgraded)
+    private Collider2D[] GetCollider(IEnemyHandler _enemyHandler, bool _bUpgraded)
     {
         float radius = _enemyHandler.statusCollider.radius;
         if (_bUpgraded)

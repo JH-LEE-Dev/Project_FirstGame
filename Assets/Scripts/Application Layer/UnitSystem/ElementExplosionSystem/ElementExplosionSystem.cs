@@ -156,4 +156,9 @@ public class ElementExplosionSystem : MonoBehaviour
 
         explodedTypes.Clear();
     }
+
+    private void HandleExplosionResult()
+    {
+
+    }
 }

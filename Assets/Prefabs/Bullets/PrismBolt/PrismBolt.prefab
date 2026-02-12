@@ -60,6 +60,8 @@ MonoBehaviour:
   animator: {fileID: 0}
   prismExplosion: {fileID: 1253749927010912504, guid: b84fdf5911f83494ea085dd181c0f9c3, type: 3}
   prismSubExplosion: {fileID: 3160153605847790332, guid: 4b7b6ba0ce671134c93155db86362a43, type: 3}
+  bigFx: {fileID: 0}
+  subFx: []
 --- !u!114 &2242450919362427624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +102,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.15, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1909306208562268373}

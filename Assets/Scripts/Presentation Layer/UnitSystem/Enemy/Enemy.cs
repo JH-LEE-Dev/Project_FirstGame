@@ -111,6 +111,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
         bInitialized = true;
     }
+
     private void SetEnemyState(bool boolean)
     {
         bAccelerate = false;
