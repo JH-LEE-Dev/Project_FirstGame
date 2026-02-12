@@ -13,7 +13,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     {
         bBehaviorEnd = false;
 
-        EnterHitEnemy(arcDischarge.firstTarget, bullet.initPosition);
+        EnterHitEnemy(arcDischarge.firstTarget, bullet.initPosition, arcDischarge.firstHitPoint);
     }
 
     public override void Update()
@@ -42,14 +42,14 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     #region Damage & Knockback
 
-    protected void ApplyDamage(Collider2D other, Vector2 startPos)
+    protected void ApplyDamage(Collider2D other, Vector2 startPos, Vector2 hitPoint)
     {
         IDamageable hit = other.GetComponent<IDamageable>();
 
         bool bCritical = false;
         float baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
-        base.ApplyDamage(other, baseDamage, bCritical, other.transform.position);
+        base.ApplyDamage(other, baseDamage, bCritical, hitPoint);
 
         ApplyKnockBack(hit, startPos, other.transform.position);
     }
@@ -62,7 +62,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         enemy.KnockBack(dir.normalized, tempPower);
     }
 
-    private void EnterHitEnemy(Collider2D hit, Vector2 startPos, bool first = true)
+    private void EnterHitEnemy(Collider2D hit, Vector2 startPos, Vector2 hitPoint, bool first = true)
     {
         if (null == hit)
             return;
@@ -71,7 +71,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 targetPos = hit.transform.position;
 
-        ApplyDamage(hit, startPos);
+        ApplyDamage(hit, startPos, hitPoint);
 
         if (first)
             CreateCircleCollder(hit);
@@ -159,8 +159,13 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             if (null == target || true == visits.Contains(target))
                 continue;
 
+            Vector2 dir = _startPos - (Vector2)target.transform.position;
+            dir.Normalize();
+
+            Vector2 hitPoint = (Vector2)target.transform.position + (dir * 0.5f);
+
             // 탐색 성공한 애들 바로 데미지 및 이펙트 연출
-            EnterHitEnemy(target, _startPos, false);
+            EnterHitEnemy(target, _startPos, hitPoint, false);
 
             nextTargets.Enqueue(target);
             visits.Add(target);
