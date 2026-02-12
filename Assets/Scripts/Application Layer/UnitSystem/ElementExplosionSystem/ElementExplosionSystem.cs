@@ -7,12 +7,12 @@ public class ElementExplosionSystem : MonoBehaviour
 {
     public event Action<ElementExplosionType> ElementExplosionOccuredEvent; //원소 폭발 발생 시 Invoke
 
-    [SerializeField] private List<ExplosionBehavior> explosionBehaviors = new List<ExplosionBehavior>((int)ElementExplosionType.MAX);
+    [SerializeField] private List<Explosion> explosions = new List<Explosion>((int)ElementExplosionType.MAX);
 
     private List<ElementExplosionType> explodedTypes = new List<ElementExplosionType>((int)ElementExplosionType.MAX);
 
-    private Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>> explosionPools
-= new Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>>();
+    private Dictionary<ElementExplosionType, ObjectPool<Explosion>> explosionPools
+= new Dictionary<ElementExplosionType, ObjectPool<Explosion>>();
 
     public delegate void ExplosionHandler(Collider2D[] _colliders);
     private ExplosionHandler[] explosionHandlerCreator;
@@ -25,17 +25,17 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         ExplosionComparer comparer = new ExplosionComparer();
 
-        if (explosionBehaviors.Count == 0)
+        if (explosions.Count == 0)
             return;
 
-        explosionBehaviors.Sort(comparer);
+        explosions.Sort(comparer);
 
-        for (int i = 0; i < explosionBehaviors.Count; ++i)
+        for (int i = 0; i < explosions.Count; ++i)
         {
-            ObjectPool<ExplosionBehavior> pool = new ObjectPool<ExplosionBehavior>(
+            ObjectPool<Explosion> pool = new ObjectPool<Explosion>(
                 createFunc: () =>
                 {
-                    ExplosionBehavior instance = Instantiate(explosionBehaviors[i]);
+                    Explosion instance = Instantiate(explosions[i]);
 
                     return instance;
                 },
@@ -44,14 +44,14 @@ public class ElementExplosionSystem : MonoBehaviour
                     explosion.ExplosionEndEvent -= ExplosionEnd;
                     explosion.ExplosionEndEvent += ExplosionEnd;
 
-                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
-                    explosion.ExplosionApplyRequestEvent += HandleExplosion;
+                    explosion.ApplyExplosionEvent -= HandleExplosion;
+                    explosion.ApplyExplosionEvent += HandleExplosion;
                 },
                 actionOnRelease: explosion =>
                 {
                     explosion.ExplosionEndEvent -= ExplosionEnd;
 
-                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
+                    explosion.ApplyExplosionEvent -= HandleExplosion;
                 },
                 actionOnDestroy: null,
                 collectionCheck: false,
@@ -59,7 +59,7 @@ public class ElementExplosionSystem : MonoBehaviour
                 maxSize: SYSTEM_VAR.maxExplosionCount
             );
 
-            explosionPools.Add(explosionBehaviors[i].explosionType, pool);
+            explosionPools.Add(explosions[i].elementExplosionType, pool);
         }
 
 
@@ -213,9 +213,9 @@ public class ElementExplosionSystem : MonoBehaviour
         explodedTypes.Clear();
     }
 
-    private void ExplosionEnd(ExplosionBehavior _explosionBehavior)
+    private void ExplosionEnd(Explosion _explosion)
     {
-        explosionPools[_explosionBehavior.explosionType].Release(_explosionBehavior);
+        explosionPools[_explosion.elementExplosionType].Release(_explosion);
     }
 
     private void HandleExplosion(ElementExplosionType _type, Collider2D[] _colliders)

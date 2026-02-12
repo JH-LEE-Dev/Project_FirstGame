@@ -117,11 +117,11 @@ public struct DebuffElementData
     }
 }
 
-public struct ExplosionComparer : IComparer<ExplosionBehavior>
+public struct ExplosionComparer : IComparer<Explosion>
 {
-    public int Compare(ExplosionBehavior x, ExplosionBehavior y)
+    public int Compare(Explosion x, Explosion y)
     {
-        return x.explosionType.CompareTo(y.explosionType);
+        return x.elementExplosionType.CompareTo(y.elementExplosionType);
     }
 }
 

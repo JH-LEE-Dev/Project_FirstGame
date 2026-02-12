@@ -4,14 +4,12 @@ using System;
 public class ExplosionBehavior : ScriptableObject
 {
     //¿Ã∫•∆Æ
-    public event Action<ExplosionBehavior> ExplosionEndEvent;
-    public event Action<ElementExplosionType,Collider2D[]> ExplosionApplyRequestEvent;
-
-    public ElementExplosionType explosionType;
+    public event Action ExplosionEndEvent;
+    public event Action<Collider2D[]> ExplosionApplyRequestEvent;
 
     public void ApplyExplosion(Collider2D[] colliders)
     {
-        ExplosionApplyRequestEvent?.Invoke(explosionType,colliders);
+        ExplosionApplyRequestEvent?.Invoke(colliders);
     }
 
     public virtual void Explode()
@@ -21,6 +19,6 @@ public class ExplosionBehavior : ScriptableObject
 
     protected void ExplosionEnd()
     {
-        ExplosionEndEvent?.Invoke(this);
+        ExplosionEndEvent?.Invoke();
     }
 }
