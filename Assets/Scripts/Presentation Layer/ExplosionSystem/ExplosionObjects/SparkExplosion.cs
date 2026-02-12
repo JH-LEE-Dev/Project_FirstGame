@@ -12,11 +12,11 @@ public class SparkExplosion : Explosion
 
         if (animator)
         {
+            animator.Rebind();
+            animator.Update(0f);
             animator.gameObject.SetActive(false);
             animator.enabled = false;
 
-            animator.Rebind();
-            animator.Update(0f);
         }
     }
 
