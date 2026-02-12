@@ -63,7 +63,7 @@ public class Bullet : MonoBehaviour
         data.behavior_BeforeFire = behavior_BeforeFire;
         data.behavior_Fly = behavior_Fly;
         data.behavior_Hit = behavior_Hit;
-        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, damageSystem,this, data);
+        stateMachine.Initialize(characterStatProvider, bulletEffectProvider, damageSystem, this, data);
     }
 
     protected virtual void ReadyBulletAttributes(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)

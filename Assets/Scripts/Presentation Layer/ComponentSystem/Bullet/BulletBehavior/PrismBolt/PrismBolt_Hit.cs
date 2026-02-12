@@ -24,9 +24,9 @@ public class PrismBolt_Hit : PrismBoltBehavior
             ApplyKnockBack(enemy, 2.8f);
         }
 
-        if (routine != null) 
-            bullet.StopCoroutine(routine);
-        routine = bullet.StartCoroutine(HitFxSequence());
+        if (routine != null)
+            prismBolt.StopCoroutine(routine);
+        routine = prismBolt.StartCoroutine(HitFxSequence());
     }
 
 
@@ -37,13 +37,13 @@ public class PrismBolt_Hit : PrismBoltBehavior
     }
     private IEnumerator HitFxSequence()
     {
-        Vector2 center = bullet.transform.position;
+        Vector2 center = prismBolt.transform.position;
 
         // 큰 폭발 이펙트 1회
         prismBolt.bigFx?.PlayAt(center);        
         
         // 1초 후
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.4f);
 
         // 0.2초 간격으로 5번 (1.5랜덤위치임)
         for (int i = 0; i < 8; i++)

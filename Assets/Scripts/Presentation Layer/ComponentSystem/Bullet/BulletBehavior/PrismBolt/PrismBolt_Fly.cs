@@ -13,7 +13,8 @@ public class PrismBolt_Fly : PrismBoltBehavior
             prismBolt.animator.gameObject.SetActive(true);
             prismBolt.animator.enabled = true;
             prismBolt.animator.Play(0, 0, 0f);
-            prismBolt.animator.speed = 1f;    
+            prismBolt.animator.speed = 1f;
+            prismBolt.animator.Update(0f);
         }
     }
 
@@ -37,16 +38,22 @@ public class PrismBolt_Fly : PrismBoltBehavior
 
     public override void End()
     {
-        if (prismBolt.animator != null)
-        {
-            prismBolt.animator.gameObject.SetActive(false);
-            prismBolt.animator.enabled = false;
-        }
+        StopAnim();
         base.End();
     }
 
     public override void Exit()
     {
+        StopAnim();
         base.Exit();
+    }
+
+    private void StopAnim()
+    {
+        if (prismBolt.animator != null)
+        {
+            prismBolt.animator.enabled = false;
+            prismBolt.animator.gameObject.SetActive(false);
+        }
     }
 }

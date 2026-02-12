@@ -27,6 +27,9 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private ArcDischarge arcDischarge_Prefab;
     private ArcDischarge arcDischarge;
 
+    [SerializeField] private AquaBurst aquaBurst_Prefab;
+    private AquaBurst aquaBurst;
+
 
     private Bullet currentBullet;
 
@@ -64,12 +67,21 @@ public class AttackComponent : MonoBehaviour
         arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
         arcDischarge.BulletEffectIsFinishedEvent += AttackFinished;
         arcDischarge.SetActive(false);
+
+
+        aquaBurst = Instantiate(aquaBurst_Prefab);
+        aquaBurst.Initialize(characterStatProvider, bulletEffectProvider, damageSystem);
+        aquaBurst.BulletEffectIsFinishedEvent -= AttackFinished;
+        aquaBurst.BulletEffectIsFinishedEvent += AttackFinished;
+        aquaBurst.SetActive(false);
+
     }
 
     private void OnDestroy()
     {
         prismBolt.BulletEffectIsFinishedEvent -= AttackFinished;
         arcDischarge.BulletEffectIsFinishedEvent -= AttackFinished;
+        aquaBurst.BulletEffectIsFinishedEvent -= AttackFinished;
 
         AttackFinishedEvent = null;
     }
@@ -96,6 +108,14 @@ public class AttackComponent : MonoBehaviour
                     arcDischarge.SetActive(true);
                     arcDischarge.Fire(dir, firePos);
                 }
+                break;
+            case BulletType.AquaBurst:
+                {
+                    currentBullet = aquaBurst;
+                    aquaBurst.SetActive(true);
+                    aquaBurst.Fire(dir, firePos);
+                }
+
                 break;
         }
     }

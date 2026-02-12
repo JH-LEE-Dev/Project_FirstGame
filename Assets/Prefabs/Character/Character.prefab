@@ -403,6 +403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackComponent
   prismBolt_Prefab: {fileID: 6235347253760606445, guid: 05fb3c28453d0d04484c88f7028f34fa, type: 3}
   arcDischarge_Prefab: {fileID: 6314381514516721546, guid: 73f9f47613ccec24e8275fd63dce741e, type: 3}
+  aquaBurst_Prefab: {fileID: 2946263162886280836, guid: 179870be1b1430d4bbcfe06623a9fb35, type: 3}
 --- !u!1 &577053996168498907
 GameObject:
   m_ObjectHideFlags: 0
