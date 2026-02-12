@@ -44,17 +44,12 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     protected void ApplyDamage(Collider2D other, Vector2 startPos)
     {
-        Collider2D directHitObject = other;
-
-        // 데미지 처리
-        //bullet.nonProjectileObj.effectComponent.PlayImpactEffect();
-
         IDamageable hit = other.GetComponent<IDamageable>();
 
         bool bCritical = false;
         float baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
-        base.ApplyDamage(other, baseDamage, bCritical, startPos);
+        base.ApplyDamage(other, baseDamage, bCritical, other.transform.position);
 
         ApplyKnockBack(hit, startPos, other.transform.position);
     }
