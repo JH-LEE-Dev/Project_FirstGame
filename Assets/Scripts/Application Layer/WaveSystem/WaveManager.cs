@@ -20,6 +20,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     private int spawnEnemyCnt = 0;
     private int currentEnemyThreshold = 0;
     private int currentWaveReward = 0;
+    private int maxEnemyCnt = 0;
     private bool bIsWaveEnded = false;
 
     bool bDontProceedWave = false;
@@ -82,14 +83,24 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
             currentEnemyThreshold = curWaveData.currentEnemyThreshold;
             spawnEnemyCnt = curWaveData.spawnEnemyCnt;
             currentWaveReward = curWaveData.waveRewardMoneyAmount;
-            signalHub.Publish(new SpawnWaveSignal(currentEnemyCount));
+            maxEnemyCnt = curWaveData.maxEnemyCnt;
+            signalHub.Publish(new SpawnWaveSignal(currentEnemyCount,false));
         }
     }
 
     public void SpawnAdditionalWave()
     {
-        signalHub.Publish(new SpawnWaveSignal(spawnEnemyCnt));
-        currentEnemyCount += spawnEnemyCnt;
+        int currentSpawnEnemyCnt = spawnEnemyCnt;
+
+        if (currentEnemyCount + currentSpawnEnemyCnt > maxEnemyCnt)
+        {
+            currentEnemyCount = maxEnemyCnt;
+            currentSpawnEnemyCnt = maxEnemyCnt - currentEnemyCount;
+        }
+        else
+            currentEnemyCount += currentSpawnEnemyCnt;
+
+        signalHub.Publish(new SpawnWaveSignal(currentSpawnEnemyCnt,true));
     }
 
     public void StartEnemyMoveTurn(EnemyTurnStartSignal enemyTurnStartSignal)
@@ -103,12 +114,16 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         yield return new WaitForSeconds(MoveTurnDelay);
 
         if (bDontProceedWave == false)
+        {
             signalHub.Publish(new WaveMoveEndSignal());
+        }
     }
 
     private IEnumerator MoveTurnCoroutine()
     {
         yield return new WaitForSeconds(MoveTurnDelay);
+
+        SpawnAdditionalWave();
 
         signalHub.Publish(new StartMoveSignal());
 
@@ -144,7 +159,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
 
         if (currentEnemyCount <= currentEnemyThreshold)
         {
-            SpawnAdditionalWave();
+            //SpawnAdditionalWave();
         }
     }
 

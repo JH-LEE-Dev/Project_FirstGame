@@ -89,6 +89,11 @@ public class Unit : MonoBehaviour, IDamageable
         return bDead;
     }
 
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
     /// <summary>
     /// 구현 코드 존.----------------------------------------------
     /// </summary>
@@ -144,12 +149,12 @@ public class Unit : MonoBehaviour, IDamageable
 
     }
 
-    public virtual void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    public virtual void TakeDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         healthComponent.TakeDamage(damage);
     }
 
-    public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
+    public void TakeCollideDamage(float damage, bool bCritical, Vector2 pos, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
     {
         throw new NotImplementedException();
     }

@@ -200,6 +200,11 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
                 spawnedUnit.Initialize_Enemy(inputManager, gameServiceLocator, enemyTypeData);
                 spawnedUnit.SetTargetPoint(enemyTargetPoint.transform.position);
 
+                if (spawnWaveSignal.bAdditional)
+                    spawnedUnit.SetbCanMove(false);
+                else
+                    spawnedUnit.SetbCanMove(true);
+
                 if (!enemies.Contains(spawnedUnit))
                 {
                     enemyData.Add(spawnedUnit);

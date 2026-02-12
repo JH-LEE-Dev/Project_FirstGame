@@ -8,7 +8,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
     public event Action<float> TakeDamageEvent;
     public event Action PlayerDeadEvent;
     public event Action PlayerDebuffChangedEvent;
-    public event Action<IPlayerData,IReadOnlyDictionary<DebuffElementEffectType,DebuffElementData>> PlayerHitEvent;
+    public event Action<IPlayerData, Vector2,IReadOnlyDictionary<DebuffElementEffectType,DebuffElementData>> PlayerHitEvent;
 
     //인터페이스 선언부
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IPlayerData.currentAppliedDebuff => currentAppliedDebuff;
@@ -133,11 +133,11 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
         PlayerDebuffChangedEvent?.Invoke();
     }
 
-    public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
+    public void TakeCollideDamage(float damage, bool bCritical, Vector2 pos, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
     {
         ApplyElementDebuff(_debuffElements);
 
-        PlayerHitEvent?.Invoke(this, _debuffElements);
+        PlayerHitEvent?.Invoke(this,pos, _debuffElements);
         damage = elementDamageHandleComponent.GetResultDamage(_debuffElements, damage);
 
         healthComponent.TakeDamage(damage);
@@ -171,7 +171,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
         PlayerDebuffChangedEvent?.Invoke();
     }
 
-    public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    public void TakeDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
 
     }

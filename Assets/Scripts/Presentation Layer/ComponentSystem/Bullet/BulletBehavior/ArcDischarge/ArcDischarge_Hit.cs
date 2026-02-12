@@ -54,12 +54,9 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         bool bCritical = false;
         float baseDamage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
-        if (hit != null)
-        {
-            hit.TakeDamage(baseDamage, bCritical, bulletEffectProvider.currentEffectElements);
-            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
-            ApplyKnockBack(hit, startPos, other.transform.position);
-        }
+        base.ApplyDamage(other, baseDamage, bCritical, startPos);
+
+        ApplyKnockBack(hit, startPos, other.transform.position);
     }
 
     private void ApplyKnockBack(IDamageable enemy, Vector2 startPos, Vector2 enemyPos)

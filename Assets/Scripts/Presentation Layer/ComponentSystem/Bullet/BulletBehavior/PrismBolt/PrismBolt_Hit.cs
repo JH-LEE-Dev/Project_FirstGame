@@ -20,7 +20,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
             bool bCritical = false;
             float damage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
-            ApplyDamage(enemy, damage, bCritical);
+            ApplyDamage(enemy, damage, bCritical,prismBolt.transform.position);
             ApplyKnockBack(enemy, 2.8f);
         }
 
@@ -61,7 +61,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
 
             var targets = CheckRange(pos, prismBolt.originExplosionSubRange);
             foreach (var enemy in targets)
-                ApplyAdditionalDamage(enemy, subDamageData);
+                ApplyAdditionalDamage(enemy, subDamageData, enemy.transform.position);
 
             yield return new WaitForSeconds(0.08f);
         }

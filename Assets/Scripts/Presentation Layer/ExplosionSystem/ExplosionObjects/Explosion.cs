@@ -34,5 +34,5 @@ public abstract class Explosion : MonoBehaviour
         ApplyExplosionEvent?.Invoke(elementExplosionType, _colliders);
     }
 
-    public abstract void Explode();
+    public abstract void Explode(Vector2 pos);
 }

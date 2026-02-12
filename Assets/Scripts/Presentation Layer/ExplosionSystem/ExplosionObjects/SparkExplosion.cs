@@ -11,8 +11,8 @@ public class SparkExplosion : Explosion
         animator = GetComponentInChildren<Animator>();
     }
 
-    public override void Explode()
+    public override void Explode(Vector2 pos)
     {
-        explosionBehavior.Explode();
+        explosionBehavior.Explode(pos);
     }
 }

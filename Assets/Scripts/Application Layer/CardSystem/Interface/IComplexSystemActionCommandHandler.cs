@@ -54,4 +54,5 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType);
     void ApplySlotCntModifier(int _slotCnt);
     void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
+    void ApplyAttackRangeModifier(int range);
 }

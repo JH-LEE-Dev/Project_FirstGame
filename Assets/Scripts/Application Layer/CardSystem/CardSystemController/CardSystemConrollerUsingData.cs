@@ -146,6 +146,7 @@ public enum ComplexSystemEffectType
     NaturalCycle,
     Cleanse,
     ElementalBoost,
+    WeaknessHarvest,
 }
 
 public enum CardSelectionSystemEffectType

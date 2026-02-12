@@ -6,9 +6,11 @@ namespace WaveSystemSignals
     public struct SpawnWaveSignal 
     {
         public int waveIdx;
-        public SpawnWaveSignal(int idx)
+        public bool bAdditional;
+        public SpawnWaveSignal(int idx,bool _boolean)
         {
             waveIdx = idx;
+            bAdditional = _boolean;
         }
     }
     public struct WaveMoveEndSignal  { }

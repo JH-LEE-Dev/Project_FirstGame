@@ -19,3 +19,9 @@ MonoBehaviour:
   - cardName: 22
     cnt: 5
     bUpgraded: 0
+  - cardName: 22
+    cnt: 5
+    bUpgraded: 0
+  - cardName: 29
+    cnt: 5
+    bUpgraded: 0

@@ -14,7 +14,7 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
         AdditionalAttackStat additionalAttackStat;
         DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Wet,2);
 
-        if (bUpgraded)
+        if (bUpgraded == false)
         {
             additionalAttackStat = new AdditionalAttackStat(10, 0.5f, 1, debuffElementData);
         }

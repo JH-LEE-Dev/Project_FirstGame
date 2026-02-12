@@ -5,7 +5,7 @@ public class SteamExplosionBehavior : ExplosionBehavior
 {
     //이벤트
 
-    public override void Explode()
+    public override void Explode(Vector2 pos)
     {
         //여기에 폭발 로직을 구현하면 됨.
 

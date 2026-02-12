@@ -15,25 +15,29 @@ MonoBehaviour:
   waveData:
   - waveIdx: 0
     spawnEnemyCnt: 1
-    InitialEnemyCnt: 15
+    InitialEnemyCnt: 3
     currentEnemyThreshold: 2
     numberOfEnemiesToKill: 5
     waveRewardMoneyAmount: 1000
+    maxEnemyCnt: 6
   - waveIdx: 1
     spawnEnemyCnt: 4
     InitialEnemyCnt: 5
     currentEnemyThreshold: 2
     numberOfEnemiesToKill: 7
     waveRewardMoneyAmount: 1000
+    maxEnemyCnt: 8
   - waveIdx: 2
     spawnEnemyCnt: 6
     InitialEnemyCnt: 8
     currentEnemyThreshold: 4
     numberOfEnemiesToKill: 12
     waveRewardMoneyAmount: 1000
+    maxEnemyCnt: 12
   - waveIdx: 3
     spawnEnemyCnt: 8
     InitialEnemyCnt: 12
     currentEnemyThreshold: 6
     numberOfEnemiesToKill: 16
     waveRewardMoneyAmount: 1000
+    maxEnemyCnt: 16

@@ -22,7 +22,7 @@ public class SparkExplosionBehavior : ExplosionBehavior
 
     //¿Ã∫•∆Æ
 
-    public override void Explode()
+    public override void Explode(Vector2 pos)
     {
         PlayExplosionAnim();
 

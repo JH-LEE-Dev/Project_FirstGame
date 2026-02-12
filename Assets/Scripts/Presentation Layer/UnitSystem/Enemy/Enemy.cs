@@ -14,8 +14,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
     public event Action EnemyDebuffChangedEvent;
-    public event Action<IEnemyData, IEnemyData> EnemyCollideEvent;
-    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>> EnemyHitEvent;
+    public event Action<IEnemyData, IEnemyData,Vector2> EnemyCollideEvent;
+    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>,Vector2> EnemyHitEvent;
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
@@ -47,7 +47,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     bool bInitialized = false;
     private float activateDelay = 1f;
     private Vector2 targetPoint; //지구를 뜻함.
-
+    bool bCanMove = false;
 
 
 
@@ -110,6 +110,11 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         SetupEnemyType();
 
         bInitialized = true;
+    }
+
+    public void SetbCanMove(bool boolean)
+    {
+        bCanMove = boolean;
     }
 
     private void SetEnemyState(bool boolean)
@@ -199,13 +204,13 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         combatComponent.Initialize(ctx, visualComponentCoordinator, statComponent);
     }
 
-    public override void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    public override void TakeDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         if (bDead == true)
             return;
 
         if (_bulletElements != null)
-            EnemyHitEvent?.Invoke(this, _bulletElements);
+            EnemyHitEvent?.Invoke(this, _bulletElements,pos);
 
         damage = elementDamageHandleComponent.GetResultDamage(_bulletElements, damage);
         healthComponent.TakeDamage(damage);
@@ -252,7 +257,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            EnemyCollideEvent?.Invoke(this, other as IEnemyData);
+            Vector2 hitPoint = other.ClosestPoint(transform.position);
+            EnemyCollideEvent?.Invoke(this, other as IEnemyData, hitPoint);
 
             return;
         }
@@ -339,7 +345,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         Span<DebuffElementEffectType> allKeys = stackalloc DebuffElementEffectType[currentAppliedDebuff.Count];
         int index = 0;
 
-        foreach (var k in currentAppliedDebuff.Keys) 
+        foreach (var k in currentAppliedDebuff.Keys)
             allKeys[index++] = k;
 
         for (int i = 0; i < allKeys.Length; i++)
@@ -380,7 +386,10 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     {
         if (bDead == false)
         {
-            moveComponent.ApplyImpulse();
+            if (bCanMove == true)
+                moveComponent.ApplyImpulse();
+            else
+                bCanMove = true;
         }
     }
 
@@ -402,11 +411,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         targetDir.Normalize();
 
         moveComponent.SetMoveDirection(targetDir);
-    }
-
-    public Transform GetTransform()
-    {
-        return transform;
     }
 
     public float GetMaxHealth()

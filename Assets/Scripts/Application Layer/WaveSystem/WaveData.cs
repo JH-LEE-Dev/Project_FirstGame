@@ -7,4 +7,5 @@ public class WaveData
     public int currentEnemyThreshold = 0;
     public int numberOfEnemiesToKill = 0;
     public int waveRewardMoneyAmount = 1000;
+    public int maxEnemyCnt = 0;
 }
