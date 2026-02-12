@@ -50,6 +50,7 @@ public class ElementExplosionSystem : MonoBehaviour
                 createFunc: () =>
                 {
                     Explosion instance = Instantiate(explosions[index]);
+                    instance.Initialize();
 
                     return instance;
                 },
