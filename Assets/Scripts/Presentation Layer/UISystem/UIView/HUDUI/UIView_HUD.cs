@@ -232,9 +232,6 @@ public class UIView_HUD : UIView
 
         if (null != hpText)
             hpText.OnHit(prevHp, currHp, hpProgress, damage, prevShield, currShield, _damagNum: playerDamageNumPool.Pool.Get());
-
-        Debug.Log(currHp);
-        Debug.Log(currShield);
     }
 
     private void Target_BarUpdate(Vector2 worldDeadPos)
