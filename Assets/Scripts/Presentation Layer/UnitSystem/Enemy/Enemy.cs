@@ -22,7 +22,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public IEnemyStatProvider enemyStatProvider => statComponent;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyHandler.currentAppliedDebuff => currentAppliedDebuff;
-
+    bool IEnemyData.bDead => bDead;
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -39,7 +39,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public EnemyTypeData enemyTypeData { get; private set; }
     public int enemyID { get; private set; }
     public CircleCollider2D statusCollider { get; private set; }
-
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;

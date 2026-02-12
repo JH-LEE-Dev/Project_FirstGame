@@ -96,6 +96,8 @@ public class GameInstaller : MonoBehaviour
         shopManager.Initialize(cardManager);
         shopSystem.Initialize(signalHub, shopManager);
 
+        environmentManager.Initialize(unitSpawner);
+
         SetupGamePlayScene();
     }
 

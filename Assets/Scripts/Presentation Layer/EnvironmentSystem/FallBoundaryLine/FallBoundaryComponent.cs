@@ -32,7 +32,7 @@ public class FallBoundaryComponent : MonoBehaviour
 
     // Danger
     [Header("Danger")]
-    [SerializeField] private List<Transform> monsters = new();
+    [SerializeField] private IReadOnlyList<IEnemyData> monsters;
     [SerializeField] private float dangerNear = 0.8f;
     [SerializeField] private float dangerFar = 3f;
 
@@ -44,8 +44,10 @@ public class FallBoundaryComponent : MonoBehaviour
 
     ///
 
-    private void Awake()
+    public void Initialize(IReadOnlyList<IEnemyData> _enemyUnits)
     {
+        monsters = _enemyUnits; 
+
         if (!center) center = transform;
 
         dangerSmoothed = new float[LineCount];
@@ -69,7 +71,7 @@ public class FallBoundaryComponent : MonoBehaviour
         DrawPathLine();
     }
 
-    public void SetMonsters(IEnumerable<Transform> list, bool clearBefore)
+    public void SetMonsters(IReadOnlyList<IEnemyData> list, bool clearBefore)
     {
         if (clearBefore) monsters.Clear();
         if (list == null) return;

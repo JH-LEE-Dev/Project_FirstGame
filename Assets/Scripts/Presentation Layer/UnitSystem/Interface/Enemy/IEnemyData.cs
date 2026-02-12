@@ -10,6 +10,7 @@ public interface IEnemyData
     float GetCurrentHealth();
     IHealthComponentProvider healthComponentProvider { get; }
     IEnemyStatProvider enemyStatProvider { get; }
+    bool bDead { get; }
     event Action EnemySpawnedEvent;
     event Action EnemyIsDeadEvent;
     EnemyTypeData enemyTypeData { get; }

@@ -3,12 +3,22 @@ using UnityEngine;
 
 public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
 {
+    //외부 의존성
+    IUnitSpawnSystemData unitSpawnSystemData;
+
+    //내부 의존성
     private OrbitPathComponent orbitPathComponent;
     private FallBoundaryComponent fallBoundaryLineComponent;
 
-    public void Initialize()
+    public void Initialize(IUnitSpawnSystemData _unitSpawnSystemData)
     {
+        unitSpawnSystemData = _unitSpawnSystemData;
 
+        orbitPathComponent = GetComponentInChildren<OrbitPathComponent>();
+        fallBoundaryLineComponent = GetComponentInChildren<FallBoundaryComponent>();
+
+        orbitPathComponent.Initialize();
+        fallBoundaryLineComponent.Initialize(unitSpawnSystemData.enemiesData);
     }
 
     public void Release()
@@ -29,35 +39,4 @@ public class EnvironmentManager : MonoBehaviour, IOrbitPathProvider
     }
 
     // FallBoundaryComponent
-
-    // 덩어리로 추가하는 함수
-    // clearBefore를 true로 하면, 넣은 덩어리로 교체이고 false때리면 기존거에 덩어리 더 추가 
-    public void SetMonsters(IEnumerable<Transform> list, bool clearBefore = true)
-    {
-        fallBoundaryLineComponent.SetMonsters(list, clearBefore);
-    }
-    // 등록
-    public void RegisterMonster(Transform monster)
-    {
-        fallBoundaryLineComponent.RegisterMonster(monster);
-    }
-    // 등록 해제
-    public bool UnregisterMonster(Transform monster)
-    {
-        return fallBoundaryLineComponent.UnregisterMonster(monster);
-    }
-    // 그냥 싸그리 날리는 함수 (씬넘어가거나, 그럴때 추천임
-    public void CleanupMonsters()
-    {
-        fallBoundaryLineComponent.CleanupMonsters();
-    }
-
-
-
-
-    private void Awake()
-    {
-        orbitPathComponent = GetComponentInChildren<OrbitPathComponent>();
-        fallBoundaryLineComponent = GetComponentInChildren<FallBoundaryComponent>();
-    }
 }

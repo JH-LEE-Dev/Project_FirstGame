@@ -36,22 +36,6 @@ public class OrbitPathComponent : MonoBehaviour
     // 전체 흐름 제어 변수
     private float globalT;
 
-
-    private void Awake()
-    {
-        Initialize();
-
-        if (!center) center = transform;
-
-        for (int i = 0; i < pathLineCount; i++)
-        {
-            var go = Instantiate(pathLinePrefab, center);
-            var line = go.GetComponent<OrbitPathSegment>();
-            if (!line) line = go.AddComponent<OrbitPathSegment>();
-            pathLines.Add(line);
-        }
-    }
-
     public void Initialize()
     {
         if(orbitPathSettings == null)
@@ -67,6 +51,16 @@ public class OrbitPathComponent : MonoBehaviour
         pathLineCount = orbitPathSettings.pathLineCount;
         flowSpeedPerSec = orbitPathSettings.flowSpeedPerSec;
         pathLinePrefab = orbitPathSettings.pathLinePrefab;
+
+        if (!center) center = transform;
+
+        for (int i = 0; i < pathLineCount; i++)
+        {
+            var go = Instantiate(pathLinePrefab, center);
+            var line = go.GetComponent<OrbitPathSegment>();
+            if (!line) line = go.AddComponent<OrbitPathSegment>();
+            pathLines.Add(line);
+        }
     }
 
     private void Update()
