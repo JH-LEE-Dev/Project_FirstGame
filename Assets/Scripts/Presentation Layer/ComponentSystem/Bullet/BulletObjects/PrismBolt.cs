@@ -22,10 +22,10 @@ public class PrismBolt : Bullet
     {
         base.Initialize(_characterStatProvider, _bulletEffectProvider, _damageSystem);
 
-        originRange = 0.3f;
+        originRange = 0.45f;
         originExplosionRange = 1f;
         originExplosionSubRange = 0.3f;
-        speed = 5f;
+        speed = 6.5f;
 
         animator = GetComponentInChildren<Animator>();
 
