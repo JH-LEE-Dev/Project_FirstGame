@@ -43,6 +43,7 @@ public class UIView_HUD : UIView
 
     [Header("CharacterStatUI")]
     [SerializeField] private UIStat_Player characterStatUI;
+    [SerializeField] private ConditionUI playerConditionUI;
 
 
     private bool WaveStartFirstTime = true;
@@ -55,9 +56,10 @@ public class UIView_HUD : UIView
             Instantiate(uiPrefab, uiRoot);
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        
+        if (null != playerData)
+            playerData.PlayerDebuffChangedEvent -= Init_ConditionUI;
     }
 
     public void DataInjection(IWaveSystemData _waveSystemData, IPlayerData _playerData,ICharacterData _characterData)
@@ -68,6 +70,13 @@ public class UIView_HUD : UIView
 
         IntializeChildrenHUD();
         Init_CharacterStat();
+        Init_ConditionUI();
+
+        if (null != playerData)
+        {
+            playerData.PlayerDebuffChangedEvent -= Init_ConditionUI;
+            playerData.PlayerDebuffChangedEvent += Init_ConditionUI;
+        }
     }
 
     protected override void OnShow()
@@ -392,6 +401,14 @@ public class UIView_HUD : UIView
         characterStatUI.Setup(PlayerStatType.CriticalChance, "치명타 확률:", stat.criticalChance);
         characterStatUI.Setup(PlayerStatType.AttackDamage, "공격력:", stat.resultDamage);
         characterStatUI.Setup(PlayerStatType.WeaknessTurnCount, "적 약화 디버프 횟수:", stat.weaknessTurnCnt);
+    }
+
+    private void Init_ConditionUI()
+    {
+        if (null == playerConditionUI || null == playerData)
+            return;
+
+        playerConditionUI.UpdateConditions(playerData.currentAppliedDebuff);
     }
 
     // For StarlightUI

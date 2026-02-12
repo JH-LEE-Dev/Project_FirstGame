@@ -15,6 +15,10 @@ public abstract class BulletBehavior : ScriptableObject
     protected IDamageSystem damageSystem;
     protected Bullet bullet;
 
+
+    protected static readonly Collider2D[] overlapBuffer = new Collider2D[64];
+    protected static readonly Collider2D[] sectorResultBuffer = new Collider2D[64];
+    protected static ContactFilter2D filter;
     /// <summary>
     /// 시스템 속성 존 --------------------------------------
     /// </summary>
@@ -28,6 +32,11 @@ public abstract class BulletBehavior : ScriptableObject
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
         damageSystem = _damageSystem;
+
+        filter = new ContactFilter2D();
+        filter.useLayerMask = true;
+        filter.layerMask = bullet.targetMask;
+        filter.useTriggers = true;
     }
 
     public virtual void Enter()
@@ -90,6 +99,49 @@ public abstract class BulletBehavior : ScriptableObject
             pos,
             UpscaleRange(range),
             bullet.targetMask);
+    }
+
+    protected int CheckSector(Vector2 pos, float range, float angleDeg, Vector2 forwardDir)
+    {
+        float r = UpscaleRange(range);
+
+        int hitCount = Physics2D.OverlapCircle(pos, r, filter, overlapBuffer);
+        if (hitCount == 0) return 0;
+
+        if (forwardDir.sqrMagnitude < 0.0001f)
+            forwardDir = Vector2.up;
+        forwardDir.Normalize();
+
+        float half = angleDeg * 0.5f;
+        float cosThreshold = Mathf.Cos(half * Mathf.Deg2Rad);
+
+        int resultCount = 0;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var col = overlapBuffer[i];
+            if (!col) continue;
+
+            Vector2 to = (Vector2)col.bounds.ClosestPoint(pos) - pos;
+            float sqr = to.sqrMagnitude;
+
+            if (sqr <= 0.000001f)
+            {
+                sectorResultBuffer[resultCount++] = col;
+                continue;
+            }
+
+            to /= Mathf.Sqrt(sqr); // normalize
+            float dot = Vector2.Dot(forwardDir, to);
+
+            if (dot >= cosThreshold)
+            {
+                sectorResultBuffer[resultCount++] = col;
+                if (resultCount >= sectorResultBuffer.Length) break;
+            }
+        }
+
+        return resultCount;
     }
 
     protected float UpscaleRange(float range)

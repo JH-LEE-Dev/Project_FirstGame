@@ -430,9 +430,13 @@ MonoBehaviour:
     defaultElementTypes: []
     defaultdebuffTypes:
     - debuffElementType: 1
-      turnCnt: 10
+      turnCnt: 1
+    - debuffElementType: 0
+      turnCnt: 2
     - debuffElementType: 2
-      turnCnt: 10
+      turnCnt: 3
+    - debuffElementType: 3
+      turnCnt: 4
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -464,7 +468,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 22
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: ae1543aae39d21743a3e0790091764c7, type: 3}
     cardName: 22
     cardNameId: 22
     cardDescriptionId: 22
@@ -486,7 +490,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 23
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: 0d658baa2281f894f9b591b9f5629549, type: 3}
     cardName: 23
     cardNameId: 23
     cardDescriptionId: 23
@@ -506,7 +510,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 24
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: a794dc570028c6041a0859ea0cd2dde4, type: 3}
     cardName: 24
     cardNameId: 24
     cardDescriptionId: 24
@@ -526,7 +530,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 25
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: c9d0950752ac3b648aea8f31aae832ae, type: 3}
     cardName: 25
     cardNameId: 25
     cardDescriptionId: 25
@@ -546,7 +550,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 26
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: 09b1db5cd1901184ba38f8f6cd3c0eec, type: 3}
     cardName: 26
     cardNameId: 26
     cardDescriptionId: 26
@@ -566,7 +570,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 27
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: f3289b4897d58f848b324860bb9bf71a, type: 3}
     cardName: 27
     cardNameId: 27
     cardDescriptionId: 27
@@ -586,7 +590,7 @@ MonoBehaviour:
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}
   - id: 28
-    cardImage: {fileID: 8897262174192377144, guid: 7043e43c0a9b7314aa54a454c46fe1fd, type: 3}
+    cardImage: {fileID: 21300000, guid: a0d3805a3fa18aa4690da3d597a1029c, type: 3}
     cardName: 28
     cardNameId: 28
     cardDescriptionId: 28

@@ -98,6 +98,11 @@ public class SocketVisual : MonoBehaviour
         ResetVisualToBase();
     }
 
+    private void OnDestroy()
+    {
+        KillIdleTween();
+    }
+
     private void ResetVisualToBase()
     {
         if (visual == null) return;
@@ -135,43 +140,52 @@ public class SocketVisual : MonoBehaviour
     private void StartHover()
     {
         hoverTween?.Kill();
-        if (visual == null) return;
+        if (!visual) return;
 
         float phase = hoverPhase0;
 
         hoverTween = DOTween.To(() => phase, v =>
         {
-            phase = v;
+            if (!visual) { hoverTween?.Kill(); return; }
 
+            phase = v;
             var p = visual.localPosition;
             p.y = baseVisualLocalY + Mathf.Sin(phase) * hoverAmplitude;
             visual.localPosition = p;
-
-        }, hoverPhase0 + Mathf.PI * 2f, hoverDuration)
+        },
+            hoverPhase0 + Mathf.PI * 2f,
+            hoverDuration
+        )
         .SetEase(Ease.Linear)
         .SetLoops(-1, LoopType.Restart)
-        .SetTarget(this);
+        .SetTarget(this)
+        .SetLink(visual.gameObject, LinkBehaviour.KillOnDestroy);
     }
 
     private void StartWobbleRotate()
     {
         rotateTween?.Kill();
-        if (visual == null) return;
+        if (!visual) return;
 
         float phase = wobblePhase0;
 
         rotateTween = DOTween.To(() => phase, v =>
         {
+            if (!visual) { rotateTween?.Kill(); return; }
+
             phase = v;
-
-            float z = baseVisualZ + Mathf.Sin(phase) * wobbleDeg; // 기본 20도 + ±3도
+            float z = baseVisualZ + Mathf.Sin(phase) * wobbleDeg;
             visual.localRotation = Quaternion.Euler(0f, 0f, z);
-
-        }, wobblePhase0 + Mathf.PI * 2f, wobbleDuration)
+        },
+            wobblePhase0 + Mathf.PI * 2f,
+            wobbleDuration
+        )
         .SetEase(Ease.Linear)
         .SetLoops(-1, LoopType.Restart)
-        .SetTarget(this);
+        .SetTarget(this)
+        .SetLink(visual.gameObject, LinkBehaviour.KillOnDestroy);
     }
+
 
     private void KillIdleTween()
     {

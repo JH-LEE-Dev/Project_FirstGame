@@ -156,8 +156,10 @@ public class BulletSocketSystem : MonoBehaviour
         SocketVisual socketVisual = sockets[_index];
         socketVisual.PlayImpactSlam();
 
-        // 중첩 카드가 아닐경우, 카운팅하지않음.
-        if (data.cardType == CardType.Bullet && data.usingType == UsingType.NotNesting ) return;
+        // 중첩 카드가 아닐경우, 카운팅 하지 않음.
+        if (data.cardType == CardType.Bullet && data.usingType == UsingType.NotNesting) return;
+        // 고유 카드일 경우에도, 카운팅 하지 않음.
+        if (data.cardType == CardType.Inherence) return;
 
         int count = socketVisual.GetOverlapCount();
         count++;
