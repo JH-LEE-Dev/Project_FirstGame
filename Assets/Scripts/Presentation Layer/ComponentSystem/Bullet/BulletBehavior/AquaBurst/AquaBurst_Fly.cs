@@ -26,6 +26,9 @@ public class AquaBurst_Fly : AquaBurstBehavior
         }
 
         RotateToDirection(aquaBurst.initDir);
+
+        float fixScale = UpscaleRange(1f);
+        aquaBurst.transform.localScale = new Vector2(fixScale, fixScale);
     }
 
     public override void Update()

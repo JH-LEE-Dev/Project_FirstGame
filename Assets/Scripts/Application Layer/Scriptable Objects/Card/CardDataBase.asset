@@ -476,7 +476,7 @@ MonoBehaviour:
       nestingCnt: 1
     defaultdebuffTypes:
     - debuffElementType: 3
-      turnCnt: 1
+      turnCnt: 2
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:

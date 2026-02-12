@@ -8,8 +8,8 @@ public class AquaBurst_Hit : AquaBurstBehavior
     {
         base.Enter();
 
-        int count = CheckSector(aquaBurst.transform.position, 
-            aquaBurst.originExplosionRange,
+        int count = CheckSector(aquaBurst.transform.position,
+            UpscaleRange(aquaBurst.originExplosionRange),
             60f,
             aquaBurst.initDir);
 
@@ -30,6 +30,8 @@ public class AquaBurst_Hit : AquaBurstBehavior
             ApplyKnockBack(enemy, 4f);
         }
 
+        float fixScale = UpscaleRange(1f);
+        aquaBurst.bigFx.transform.localScale = new Vector2(fixScale, fixScale);
         PlayExplosionDirected(aquaBurst.bigFx, aquaBurst.transform.position, aquaBurst.initDir);
     }
 
