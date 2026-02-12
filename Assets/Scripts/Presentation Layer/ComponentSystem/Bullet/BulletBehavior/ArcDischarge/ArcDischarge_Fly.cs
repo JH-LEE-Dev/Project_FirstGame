@@ -8,8 +8,6 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
     {
         bBehaviorEnd = false;
         arcDischarge.firstTarget = null;
-
-        Debug.Log("³Ê ³»²¨¾ß?" + bullet.initPosition);
     }
 
     public override void Update()

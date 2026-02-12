@@ -6,6 +6,8 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
     public override void Enter()
     {
         bBehaviorEnd = false;
+
+        arcDischarge.AllDeActivateVFX();
     }
 
     public override void Update()
