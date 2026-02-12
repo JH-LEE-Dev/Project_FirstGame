@@ -37,7 +37,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData { get; private set; }
     public int enemyID { get; private set; }
-    public CircleCollider2D statusCollider {  get; private set; }
+    public CircleCollider2D statusCollider { get; private set; }
 
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
@@ -289,39 +289,72 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         moveComponent.ApplyKnockBack(dir, power);
     }
 
-    public override void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
+    public override void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
     {
-        if (currentAppliedDebuff.ContainsKey(debuffElementEffectType))
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffs)
         {
-            var data = currentAppliedDebuff[debuffElementEffectType];
-            data.turnCnt += turnCnt;
-            currentAppliedDebuff[debuffElementEffectType] = data;
-        }
-        else
-        {
-            DebuffElementData data;
-            data.debuffElementType = debuffElementEffectType;
-            data.turnCnt = turnCnt;
+            if (currentAppliedDebuff.ContainsKey(pair.Key))
+            {
+                var data = currentAppliedDebuff[pair.Key];
+                data.turnCnt += pair.Value.turnCnt;
+                currentAppliedDebuff[pair.Key] = data;
+            }
+            else
+            {
+                currentAppliedDebuff[pair.Key] = pair.Value;
+            }
 
-            currentAppliedDebuff[debuffElementEffectType] = data;
         }
 
         EnemyDebuffChangedEvent?.Invoke();
     }
 
+    public override void ApplyElementDebuff(DebuffElementData debuff)
+    {
+        if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
+        {
+            var data = currentAppliedDebuff[debuff.debuffElementType];
+            data.turnCnt += debuff.turnCnt;
+            currentAppliedDebuff[debuff.debuffElementType] = data;
+        }
+        else
+        {
+            currentAppliedDebuff[debuff.debuffElementType] = debuff;
+        }
+
+        EnemyDebuffChangedEvent?.Invoke();
+    }
+
+    public void ClearDebuff()
+    {
+        if (bDead == false)
+        {
+            currentAppliedDebuff.Clear();
+            EnemyDebuffChangedEvent?.Invoke();
+        }
+    }
+
     public void EnemyTurnEnd()
     {
-        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in currentAppliedDebuff)
+        Span<DebuffElementEffectType> allKeys = stackalloc DebuffElementEffectType[currentAppliedDebuff.Count];
+        int index = 0;
+
+        foreach (var k in currentAppliedDebuff.Keys) 
+            allKeys[index++] = k;
+
+        for (int i = 0; i < allKeys.Length; i++)
         {
-            if (pair.Value.turnCnt <= 1)
+            var key = allKeys[i];
+            var data = currentAppliedDebuff[key];
+
+            if (data.turnCnt <= 1)
             {
-                currentAppliedDebuff.Remove(pair.Key);
+                currentAppliedDebuff.Remove(key);
             }
             else
             {
-                var data = pair.Value;
                 data.turnCnt -= 1;
-                currentAppliedDebuff[pair.Key] = data;
+                currentAppliedDebuff[key] = data;
             }
         }
 
@@ -384,14 +417,5 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public float GetCurrentHealth()
     {
         return healthComponent.GetCurrentHealth();
-    }
-
-    public void ClearDebuff()
-    {
-        if (bDead == false)
-        {
-            currentAppliedDebuff.Clear();
-            EnemyDebuffChangedEvent?.Invoke();
-        }
     }
 }

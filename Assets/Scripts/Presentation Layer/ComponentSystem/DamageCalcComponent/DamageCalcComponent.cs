@@ -23,16 +23,20 @@ public class DamageCalcComponent : IPrismBoltDamageCalculator, IAquaBurstDamageC
 
     public AdditionalAttackData GetPrismEffectDamage()
     {
+        bool bCritical = false;
+
         AdditionalAttackData data = new AdditionalAttackData(statComponent.additionalAttackStat.debuffData,
-            statComponent.CalcResultDamage_Optional());
+            statComponent.CalcResultDamage_Optional(out bCritical), bCritical);
 
         return data;
     }
 
     public AdditionalAttackData GetAquaEffectDamage()
     {
+        bool bCritical = false;
+
         AdditionalAttackData data = new AdditionalAttackData(statComponent.additionalAttackStat.debuffData,
-           statComponent.CalcResultDamage_Optional());
+            statComponent.CalcResultDamage_Optional(out bCritical), bCritical);
 
         return data;
     }

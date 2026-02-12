@@ -144,11 +144,6 @@ public class Unit : MonoBehaviour, IDamageable
 
     }
 
-    public virtual void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
-    {
-
-    }
-
     public virtual void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         healthComponent.TakeDamage(damage);
@@ -157,5 +152,15 @@ public class Unit : MonoBehaviour, IDamageable
     public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
     {
         throw new NotImplementedException();
+    }
+
+    public virtual void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
+    {
+
+    }
+
+    public virtual void ApplyElementDebuff(DebuffElementData debuff)
+    {
+
     }
 }

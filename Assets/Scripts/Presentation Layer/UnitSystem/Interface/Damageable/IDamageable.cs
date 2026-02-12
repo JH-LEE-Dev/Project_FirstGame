@@ -7,5 +7,6 @@ public interface IDamageable
     void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null);
     void KnockBack(Vector2 dir, float power);
     void ApplyWeakness(int turnCnt);
-    void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt);
+    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs);
+    void ApplyElementDebuff(DebuffElementData debuff);
 }

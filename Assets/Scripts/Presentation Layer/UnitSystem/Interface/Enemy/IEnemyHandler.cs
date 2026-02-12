@@ -15,5 +15,6 @@ public interface IEnemyHandler
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
     void ClearDebuff();
     CircleCollider2D statusCollider { get; }
-    void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt);
+    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs);
+    void ApplyElementDebuff(DebuffElementData debuff);
 }
