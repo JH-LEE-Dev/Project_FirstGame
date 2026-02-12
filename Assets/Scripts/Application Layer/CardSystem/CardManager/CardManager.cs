@@ -44,7 +44,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         for (int i = 0; i < cardDataBase.cardData.Count; ++i)
         {
             CardData cardData = cardDataBase.GetCardData(i);
-            Debug.Log(cardData.cardName);
+
             ObjectPool<CardDataInstance> pool = new ObjectPool<CardDataInstance>(
                 createFunc: () =>
                 {
