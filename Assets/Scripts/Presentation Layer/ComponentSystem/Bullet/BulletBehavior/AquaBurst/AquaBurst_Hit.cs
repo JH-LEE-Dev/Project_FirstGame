@@ -14,10 +14,14 @@ public class AquaBurst_Hit : AquaBurstBehavior
             aquaBurst.initDir);
 
 
+        Collider2D directHit = aquaBurst.directHitEnemy;
+
         for (int i = 0; i < count; i++)
         {
             var enemy = sectorResultBuffer[i];
 
+            if (directHit != null && directHit == enemy) 
+                continue;
             var damageData = damageSystem
                 .GetDamageCalc<IAquaBurstDamageCalculator>()
                 .GetAquaEffectDamage();
@@ -41,6 +45,7 @@ public class AquaBurst_Hit : AquaBurstBehavior
 
     public override void Exit()
     {
+        aquaBurst.directHitEnemy = null;
         base.Exit();
     }
 

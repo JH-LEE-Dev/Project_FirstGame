@@ -3,6 +3,8 @@ using UnityEngine;
 public abstract class BulletBehavior_Projectile : BulletBehavior
 {
     protected Vector2 prevPosition;
+    protected Collider2D directHitEnemy;
+
 
     protected enum ProjectileState
     {
@@ -53,8 +55,10 @@ public abstract class BulletBehavior_Projectile : BulletBehavior
 
         Vector2 dir = delta / distance;
 
-        if (CheckCollision_Enemy(dir, distance, out var hit) != null)
+        Collider2D hitCol = CheckCollision_Enemy(dir, distance, out var hit);
+        if (hitCol != null)
         {
+            directHitEnemy = hitCol;
             Vector2 impactPoint = hit.point;
             bullet.transform.position = impactPoint;
             End();
