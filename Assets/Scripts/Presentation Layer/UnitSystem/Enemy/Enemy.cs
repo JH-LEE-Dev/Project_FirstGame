@@ -208,7 +208,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (_bulletElements != null)
             EnemyHitEvent?.Invoke(this, _bulletElements);
 
-        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_bulletElements, damage));
+        damage = elementDamageHandleComponent.GetResultDamage(_bulletElements, damage);
+        healthComponent.TakeDamage(damage);
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
     }
 
