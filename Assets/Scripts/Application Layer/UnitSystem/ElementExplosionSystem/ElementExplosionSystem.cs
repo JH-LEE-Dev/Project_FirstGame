@@ -20,32 +20,36 @@ public class ElementExplosionSystem : MonoBehaviour
 
         explosionBehaviors.Sort(comparer);
 
-        for (int i = 0; i < cardDataBase.cardData.Count; ++i)
+        for (int i = 0; i < explosionBehaviors.Count; ++i)
         {
-            CardData cardData = cardDataBase.GetCardData(i);
-
-            ObjectPool<CardDataInstance> pool = new ObjectPool<CardDataInstance>(
+            ObjectPool<ExplosionBehavior> pool = new ObjectPool<ExplosionBehavior>(
                 createFunc: () =>
                 {
-                    CardDataInstance instance = new CardDataInstance();
-                    instance.Initialize(cardData);
+                    ExplosionBehavior instance = Instantiate(explosionBehaviors[i]);
+
                     return instance;
                 },
-                actionOnGet: card =>
+                actionOnGet: explosion =>
                 {
-                    card.ResetState();
+                    explosion.ExplosionEndEvent -= ExplosionEnd;
+                    explosion.ExplosionEndEvent += ExplosionEnd;
+
+                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
+                    explosion.ExplosionApplyRequestEvent += HandleExplosion;
                 },
-                actionOnRelease: card =>
+                actionOnRelease: explosion =>
                 {
-                    card.ResetState();
+                    explosion.ExplosionEndEvent -= ExplosionEnd;
+
+                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
                 },
                 actionOnDestroy: null,
                 collectionCheck: false,
-                defaultCapacity: SYSTEM_VAR.maxDeckPileCount,
-                maxSize: SYSTEM_VAR.limitDeckPileCount
+                defaultCapacity: SYSTEM_VAR.maxExplosionCount,
+                maxSize: SYSTEM_VAR.maxExplosionCount
             );
 
-            cardPools.Add(cardData.id, pool);
+            explosionPools.Add(explosionBehaviors[i].explosionType, pool);
         }
     }
 
@@ -182,14 +186,19 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         for (int i = 0; i < explodedTypes.Count; ++i)
         {
-            explosionBehaviors[(int)explodedTypes[i]].Explode();
+            explosionPools[explodedTypes[i]].Get().Explode();
             ElementExplosionOccuredEvent?.Invoke(explodedTypes[i]);
         }
 
         explodedTypes.Clear();
     }
 
-    private void HandleExplosionResult()
+    private void ExplosionEnd(ExplosionBehavior _explosionBehavior)
+    {
+        explosionPools[_explosionBehavior.explosionType].Release(_explosionBehavior);
+    }
+
+    private void HandleExplosion(ElementExplosionType _type, Collider2D[] _colliders)
     {
 
     }

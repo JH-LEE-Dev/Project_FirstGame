@@ -13,6 +13,8 @@ public static class SYSTEM_VAR
     public const int maxDebuffElementCount = (int)BulletElementType.MAX;
 
     public const int maxEnemyCount = 50;
+
+    public const int maxExplosionCount = 50;
 }
 
 public enum CardType
@@ -119,7 +121,7 @@ public struct ExplosionComparer : IComparer<ExplosionBehavior>
 {
     public int Compare(ExplosionBehavior x, ExplosionBehavior y)
     {
-        return x.elementExplosionType.CompareTo(y.elementExplosionType);
+        return x.explosionType.CompareTo(y.explosionType);
     }
 }
 
