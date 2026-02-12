@@ -30,13 +30,12 @@ public class FallBoundaryComponent : MonoBehaviour
     private float globalT;
 
 
-    // Danger (TEST)
-    [Header("Danger (TEST)")]
-    [SerializeField] private List<Transform> testMonsters = new();
+    // Danger
+    [Header("Danger")]
+    [SerializeField] private List<Transform> monsters = new();
     [SerializeField] private float dangerNear = 0.8f;
     [SerializeField] private float dangerFar = 3f;
 
-    [Tooltip("위험도 변화 부드럽게")]
     [SerializeField] private float dangerSmoothTime = 0.15f;
 
     // 세그먼트마다 위험도 스무딩용
@@ -69,6 +68,36 @@ public class FallBoundaryComponent : MonoBehaviour
     {
         DrawPathLine();
     }
+
+    public void SetMonsters(IEnumerable<Transform> list, bool clearBefore)
+    {
+        if (clearBefore) monsters.Clear();
+        if (list == null) return;
+
+        foreach (var t in list)
+            RegisterMonster(t);
+    }
+
+    public void RegisterMonster(Transform monster)
+    {
+        if (!monster) return;
+
+        if (!monsters.Contains(monster))
+            monsters.Add(monster);
+    }
+
+    public bool UnregisterMonster(Transform monster)
+    {
+        if (!monster) return false;
+        return monsters.Remove(monster);
+    }
+    public void CleanupMonsters()
+    {
+        if (monsters == null) return;
+        monsters.RemoveAll(t => !t);
+    }
+
+
 
     private void DrawPathLine()
     {
@@ -119,14 +148,14 @@ public class FallBoundaryComponent : MonoBehaviour
 
     private float ComputeDanger01(Vector3 worldPos)
     {
-        if (testMonsters == null || testMonsters.Count == 0)
+        if (monsters == null || monsters.Count == 0)
             return 0f;
 
         float minDist = float.MaxValue;
 
-        for (int i = 0; i < testMonsters.Count; i++)
+        for (int i = 0; i < monsters.Count; i++)
         {
-            var t = testMonsters[i];
+            var t = monsters[i];
             if (!t) continue;
 
             float d = Vector3.Distance(worldPos, t.position);
