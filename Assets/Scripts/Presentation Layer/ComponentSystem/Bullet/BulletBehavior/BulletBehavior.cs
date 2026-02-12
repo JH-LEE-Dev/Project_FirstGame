@@ -63,7 +63,7 @@ public abstract class BulletBehavior : ScriptableObject
     }
 
     // 콜라이더 주인장한테 데미지 및 상태이상을 주는 함수
-    protected virtual void ApplyDamage(Collider2D other, float damage, bool bCritical)
+    protected virtual void ApplyDamage(Collider2D other, float damage, bool bCritical, Vector2 pos)
     {
         // 데미지 처리
 
@@ -79,11 +79,11 @@ public abstract class BulletBehavior : ScriptableObject
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }
 
-            hit.TakeDamage(damage, bCritical, bulletEffectProvider.currentEffectElements);
+            hit.TakeDamage(damage, bCritical, pos, bulletEffectProvider.currentEffectElements);
         }
     }
 
-    protected virtual void ApplyAdditionalDamage(Collider2D other, AdditionalAttackData _data)
+    protected virtual void ApplyAdditionalDamage(Collider2D other, AdditionalAttackData _data, Vector2 pos )
     {
         // 데미지 처리
         IDamageable hit = other.GetComponent<IDamageable>();
@@ -98,7 +98,7 @@ public abstract class BulletBehavior : ScriptableObject
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }
 
-            hit.TakeDamage(_data.resultDamage, _data.bCritical);
+            hit.TakeDamage(_data.resultDamage, _data.bCritical, pos);
         }
     }
 

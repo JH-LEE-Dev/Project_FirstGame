@@ -7,7 +7,7 @@ public class FlameExplosion : Explosion
         base.Initialize();
     }
 
-    public override void Explode()
+    public override void Explode(Vector2 pos)
     {
         explosionBehavior.Explode();
     }

@@ -18,7 +18,7 @@ public class ECombatComponent : CombatComponent
 
         if(target != null )
         {
-            target.TakeCollideDamage(enemyStatProvider.attack, false, debuffs);
+            target.TakeCollideDamage(enemyStatProvider.attack, false,transform.position, debuffs);
         }
     }
 }

@@ -275,7 +275,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     public void HPDecrease(float amount)
     {
-        playerUnit.TakeCollideDamage(amount, false);
+        playerUnit.TakeCollideDamage(amount, false,default);
     }
 
     public void ApplyCriticalChanceModifier(int chance)
@@ -402,18 +402,18 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.combatEffectReceiver.ApplyAdditionalAttackStat(_additionalAttackStat);
     }
 
-    private void PlayerHit(IPlayerData _data, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _elements)
+    private void PlayerHit(IPlayerData _data, Vector2 pos, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _elements)
     {
-        elementExplosionSystem.PlayerCollide(_data, _elements);
+        elementExplosionSystem.PlayerCollide(_data, _elements,pos);
     }
 
-    private void EnemyHit(IEnemyData _data, IReadOnlyDictionary<BulletElementType, BulletElementData> _elements)
+    private void EnemyHit(IEnemyData _data,IReadOnlyDictionary<BulletElementType, BulletElementData> _elements,Vector2 pos)
     {
-        elementExplosionSystem.EnemyHit(_data, _elements);
+        elementExplosionSystem.EnemyHit(_data, _elements, pos);
     }
 
-    private void EnemyCollide(IEnemyData _data1, IEnemyData _data2)
+    private void EnemyCollide(IEnemyData _data1,IEnemyData _data2, Vector2 pos)
     {
-        elementExplosionSystem.EnemyCollide(_data1, _data2);
+        elementExplosionSystem.EnemyCollide(_data1, _data2, pos);
     }
 }

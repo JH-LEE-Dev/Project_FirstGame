@@ -26,7 +26,7 @@ public class AquaBurst_Hit : AquaBurstBehavior
                 .GetDamageCalc<IAquaBurstDamageCalculator>()
                 .GetAquaEffectDamage();
 
-            ApplyAdditionalDamage(enemy, damageData);
+            ApplyAdditionalDamage(enemy, damageData,enemy.transform.position);
             ApplyKnockBack(enemy, 4f);
         }
 

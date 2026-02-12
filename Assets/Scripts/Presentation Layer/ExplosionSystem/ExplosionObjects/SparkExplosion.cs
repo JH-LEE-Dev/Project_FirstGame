@@ -8,7 +8,7 @@ public class SparkExplosion : Explosion
 
     }
 
-    public override void Explode()
+    public override void Explode(Vector2 pos)
     {
         explosionBehavior.Explode();
     }
