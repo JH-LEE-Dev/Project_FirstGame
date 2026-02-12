@@ -7,12 +7,13 @@ using UnityEngine.Pool;
 public class ArcDischarge_Hit : ArcDischargeBehavior
 {
     private Vector2 tempPos;
+    private Coroutine routine;
 
     public override void Enter()
     {
         bBehaviorEnd = false;
 
-        EnterHitEnemy(arcDischarge.firstTarget, bullet.transform.position);
+        EnterHitEnemy(arcDischarge.firstTarget, bullet.initPosition);
     }
 
     public override void Update()
@@ -31,6 +32,12 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
     {
         bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
+
+        if (null != routine)
+        {
+            bullet?.StopCoroutine(routine);
+            routine = null;
+        }
     }
 
     #region Damage & Knockback
@@ -79,7 +86,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         //이펙트 재생
         Debug.DrawLine(startPos, targetPos, Color.red, 3f);
-        //Sound.Play("Impact", bullet.transform.position);
+        arcDischarge?.PlayVFX(startPos, targetPos);
     }
 
     #endregion
@@ -98,7 +105,7 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         try
         {
-            while (0 < nextTargets.Count && currentTransferStep <= arcDischarge.maxTransference)
+            while (0 < nextTargets.Count && currentTransferStep < arcDischarge.maxTransference)
             {
                 yield return new WaitForSeconds(arcDischarge.chainDelay);
 
@@ -118,6 +125,8 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
             CollectionPool<Collider2D>.ReturnCollection(nextTargets);
             CollectionPool<Collider2D>.ReturnCollection(visits);
 
+            // 지금 이거 끝나자마자 바로 호출 돼서 불릿이 비활성화 되는 건지 이펙트 마지막 전이가 안 나오고 있음
+            // TODO: 나중에 해결
             Exit();
         }
     }
@@ -127,19 +136,24 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
         if (hitColl == null) 
             return;
 
-        bullet.StartCoroutine(ChainLightningRoutine(hitColl));
+        if (null != routine)
+        {
+            bullet.StopCoroutine(routine);
+            routine = null;
+        }
+
+        routine = bullet.StartCoroutine(ChainLightningRoutine(hitColl));
     }
 
     private void ProcessOneEnemy(Queue<Collider2D> nextTargets, HashSet<Collider2D> visits)
     {
-        Collider2D frontCollider = nextTargets.Dequeue();
-        if (null == frontCollider)
+        Collider2D startCollider = nextTargets.Dequeue();
+        if (null == startCollider)
             return;
 
-        Vector2 _startPos = frontCollider.transform.position;
+        Vector2 _startPos = startCollider.transform.position;
 
-        // TODO: 추후 제거
-        DrawDebugCircle(_startPos, arcDischarge.finderRadius, Color.red, 3f);
+        DrawDebugCircle(_startPos, arcDischarge.finderRadius, Color.red, 3f); // TODO: 추후 제거
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, arcDischarge.finderRadius, bullet.targetMask);
         if (0 >= targets.Length)
