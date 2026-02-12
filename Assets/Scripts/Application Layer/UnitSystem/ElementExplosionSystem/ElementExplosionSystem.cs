@@ -254,9 +254,12 @@ public class ElementExplosionSystem : MonoBehaviour
 
     private void HandleSparkExplosion(Collider2D[] _colliders)
     {
+        if (_colliders == null)
+            return;
+
         for (int i = 0; i < _colliders.Length; ++i)
         {
-            var enemy = (IEnemyHandler)_colliders[i];
+            var enemy = _colliders[i].GetComponent<IEnemyHandler>();
 
             if (enemy != null)
             {
