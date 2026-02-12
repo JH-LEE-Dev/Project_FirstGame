@@ -47,7 +47,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     bool bInitialized = false;
     private float activateDelay = 1f;
     private Vector2 targetPoint; //지구를 뜻함.
-
+    bool bCanMove = false;
 
 
 
@@ -110,6 +110,11 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         SetupEnemyType();
 
         bInitialized = true;
+    }
+
+    public void SetbCanMove(bool boolean)
+    {
+        bCanMove = boolean;
     }
 
     private void SetEnemyState(bool boolean)
@@ -339,7 +344,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         Span<DebuffElementEffectType> allKeys = stackalloc DebuffElementEffectType[currentAppliedDebuff.Count];
         int index = 0;
 
-        foreach (var k in currentAppliedDebuff.Keys) 
+        foreach (var k in currentAppliedDebuff.Keys)
             allKeys[index++] = k;
 
         for (int i = 0; i < allKeys.Length; i++)
@@ -380,7 +385,10 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     {
         if (bDead == false)
         {
-            moveComponent.ApplyImpulse();
+            if (bCanMove == true)
+                moveComponent.ApplyImpulse();
+            else
+                bCanMove = true;
         }
     }
 

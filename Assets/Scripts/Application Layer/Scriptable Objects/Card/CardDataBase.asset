@@ -474,7 +474,9 @@ MonoBehaviour:
     defaultElementTypes:
     - bulletElementType: 2
       nestingCnt: 1
-    defaultdebuffTypes: []
+    defaultdebuffTypes:
+    - debuffElementType: 3
+      turnCnt: 1
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:
@@ -601,5 +603,25 @@ MonoBehaviour:
     cardSlotSystemEffects_Prefab: []
     complexSystemEffects_Prefab:
     - {fileID: 11400000, guid: 6cdefb5fd0c466344848ca2fdab985db, type: 2}
+    selectionSystemEffects_Prefab: []
+    HandPileExistEffect_Prefab: {fileID: 0}
+  - id: 29
+    cardImage: {fileID: 21300000, guid: d47322dddb9e6954cbae3ab3d422d46f, type: 3}
+    cardName: 29
+    cardNameId: 29
+    cardDescriptionId: 29
+    cardType: 0
+    elementType: 0
+    usingType: 0
+    priority: 1
+    bUpgradable: 1
+    defaultElementTypes: []
+    defaultdebuffTypes: []
+    cardLogicSystemEffects_Prefab: []
+    cardDataControlSystemEffects_Prefab: []
+    cardStatusEffects_Prefab: []
+    cardSlotSystemEffects_Prefab: []
+    complexSystemEffects_Prefab:
+    - {fileID: 11400000, guid: f14e7b72bf260da4c9845c9436a5effd, type: 2}
     selectionSystemEffects_Prefab: []
     HandPileExistEffect_Prefab: {fileID: 0}

@@ -312,4 +312,9 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     {
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(_additionalAttackStat);
     }
+
+    public void ApplyAttackRangeModifier(int range)
+    {
+        cardStatusEffectCommandHandler.ApplyRangeModifier(range);
+    }
 }

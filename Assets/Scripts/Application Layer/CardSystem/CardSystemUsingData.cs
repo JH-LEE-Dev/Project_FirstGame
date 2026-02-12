@@ -69,6 +69,7 @@ public enum CardName
     NaturalCycle,
     Cleanse,
     ElementalBoost,
+    WeaknessHarvest,
     AirBust,
 }
 
