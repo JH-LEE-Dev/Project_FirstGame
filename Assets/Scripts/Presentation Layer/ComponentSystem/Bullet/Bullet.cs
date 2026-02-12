@@ -92,6 +92,7 @@ public class Bullet : MonoBehaviour
 
     public virtual void Fire(Vector2 dir, Vector2 firePos) //발사하는 함수.
     {
+        Debug.Log(firePos);
         bFired = true;
         initPosition = firePos;
         initDir = dir;
