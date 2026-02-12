@@ -63,7 +63,7 @@ public class AquaBurst_Fly : AquaBurstBehavior
             .GetDamageCalc<IAquaBurstDamageCalculator>()
             .GetDefaultDamage(out bCritical);
 
-            ApplyDamage(directHitEnemy, damage, bCritical,aquaBurst.transform.position);
+            ApplyDamage(directHitEnemy, damage, bCritical, aquaBurst.transform.position);
             ApplyKnockBack(directHitEnemy, 4f);
         }
 

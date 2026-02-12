@@ -10,6 +10,8 @@ public abstract class Explosion : MonoBehaviour
     protected ExplosionBehavior explosionBehavior;
     public ElementExplosionType elementExplosionType;
 
+    [SerializeField] public LayerMask targetMask;
+    [SerializeField] public LayerMask EarthMask;
 
     public virtual void Initialize()
     {
