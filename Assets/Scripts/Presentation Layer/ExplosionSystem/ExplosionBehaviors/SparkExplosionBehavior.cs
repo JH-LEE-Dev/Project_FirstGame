@@ -7,6 +7,7 @@ public class SparkExplosionBehavior : ExplosionBehavior
 {
     private SparkExplosion sparkExplosion;
     private float sparkExplosionRange = 2f;
+    private float knockBackPower = 15f;
 
 
     private Coroutine waitCo;
@@ -26,11 +27,17 @@ public class SparkExplosionBehavior : ExplosionBehavior
     {
         PlayExplosionAnim();
 
-        Vector2 pos = sparkExplosion.transform.position;
+        sparkExplosion.transform.position = pos;
         Collider2D[] targets = Physics2D.OverlapCircleAll(pos, sparkExplosionRange, sparkExplosion.targetMask);
         //Collider2D[] earthtargets = Physics2D.OverlapCircleAll(pos, sparkExplosionRange, sparkExplosion.EarthMask);
         ApplyExplosion(targets);
         
+        foreach(var target in targets)
+        {
+            var enemy = target.GetComponent<IDamageable>();
+            Vector2 dir = (Vector2)target.transform.position - pos;
+            enemy.KnockBack(dir.normalized, knockBackPower);
+        }
 
 
         // 코루틴 중복 방지 코드라고함
