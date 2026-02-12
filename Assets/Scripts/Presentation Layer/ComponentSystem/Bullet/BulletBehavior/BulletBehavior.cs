@@ -83,6 +83,25 @@ public abstract class BulletBehavior : ScriptableObject
         }
     }
 
+    protected virtual void ApplyAdditionalDamage(Collider2D other, AdditionalAttackData _data)
+    {
+        // 데미지 처리
+        IDamageable hit = other.GetComponent<IDamageable>();
+
+        if (hit != null)
+        {
+            if (damagedObjects.Contains(hit) == false)
+            {
+                damagedObjects.Add(hit);
+
+                hit.ApplyElementDebuff(_data.debuffData);
+                hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
+            }
+
+            hit.TakeDamage(_data.resultDamage, _data.bCritical);
+        }
+    }
+
     // 콜라이더 주인장한테, 원하는 넉백을 주는 함수 (충돌 지점 기준..)
     protected virtual void ApplyKnockBack(Collider2D other, float knockBackPower = 0f)
     {

@@ -18,12 +18,11 @@ public class AquaBurst_Hit : AquaBurstBehavior
         {
             var enemy = sectorResultBuffer[i];
 
-            bool bCritical;
-            float damage = damageSystem
+            var damageData = damageSystem
                 .GetDamageCalc<IAquaBurstDamageCalculator>()
-                .GetDefaultDamage(out bCritical);
+                .GetAquaEffectDamage();
 
-            ApplyDamage(enemy, damage, bCritical);
+            ApplyAdditionalDamage(enemy, damageData);
             ApplyKnockBack(enemy, 4f);
         }
 

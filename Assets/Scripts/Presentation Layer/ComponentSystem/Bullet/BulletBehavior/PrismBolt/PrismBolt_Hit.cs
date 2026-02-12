@@ -59,13 +59,9 @@ public class PrismBolt_Hit : PrismBoltBehavior
 
             var subDamageData = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetPrismEffectDamage();
 
-            // 서브 데미지 넉백 없음
-            float subDamage = subDamageData.resultDamage;
-            bool bCritical = subDamageData.bCritical;
-
             var targets = CheckRange(pos, prismBolt.originExplosionSubRange);
             foreach (var enemy in targets)
-                ApplyDamage(enemy, subDamage, bCritical);
+                ApplyAdditionalDamage(enemy, subDamageData);
 
             yield return new WaitForSeconds(0.08f);
         }
