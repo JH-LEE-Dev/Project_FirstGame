@@ -16,6 +16,8 @@ public class PrismBolt_Fly : PrismBoltBehavior
             prismBolt.animator.speed = 1f;
             prismBolt.animator.Update(0f);
         }
+        float fixScale = UpscaleRange(1f);
+        prismBolt.transform.localScale = new Vector2(fixScale, fixScale);
     }
 
     public override void Update()

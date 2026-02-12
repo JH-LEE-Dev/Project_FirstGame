@@ -5,6 +5,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
 {
     private Coroutine routine;
     private int subIndex;
+    private float fixScale = 1f;
 
     public override void Initialize(Bullet owner, ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
@@ -14,7 +15,9 @@ public class PrismBolt_Hit : PrismBoltBehavior
     {
         base.Enter();
 
-        var enemys = CheckRange(prismBolt.transform.position, prismBolt.originExplosionRange);
+        SetScale();
+
+        var enemys = CheckRange(prismBolt.transform.position, UpscaleRange(prismBolt.originExplosionRange));
         foreach (var enemy in enemys)
         {
             bool bCritical = false;
@@ -29,6 +32,11 @@ public class PrismBolt_Hit : PrismBoltBehavior
         routine = prismBolt.StartCoroutine(HitFxSequence());
     }
 
+    public void SetScale()
+    {
+        fixScale = UpscaleRange(1f);
+        prismBolt.bigFx.transform.localScale = new Vector2(fixScale, fixScale);
+    }
 
     public override void Update()
     {
@@ -48,7 +56,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
         // 0.2초 간격으로 5번 (1.5랜덤위치임)
         for (int i = 0; i < 8; i++)
         {
-            Vector2 pos = center + Random.insideUnitCircle * 1.2f;
+            Vector2 pos = center + Random.insideUnitCircle * (1.2f * fixScale);
 
             // 서브 이펙트 재생
             var fx = GetNextSubFx();
@@ -59,7 +67,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
 
             var subDamageData = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetPrismEffectDamage();
 
-            var targets = CheckRange(pos, prismBolt.originExplosionSubRange);
+            var targets = CheckRange(pos, UpscaleRange(prismBolt.originExplosionSubRange));
             foreach (var enemy in targets)
                 ApplyAdditionalDamage(enemy, subDamageData, pos);
 
@@ -76,6 +84,7 @@ public class PrismBolt_Hit : PrismBoltBehavior
 
         var fx = prismBolt.subFx[subIndex];
         subIndex = (subIndex + 1) % prismBolt.subFx.Length;
+        fx.transform.localScale = new Vector2(fixScale, fixScale);
         return fx;
     }
     public override void Exit()
