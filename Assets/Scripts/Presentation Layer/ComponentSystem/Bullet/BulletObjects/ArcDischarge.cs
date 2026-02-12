@@ -16,6 +16,8 @@ public class ArcDischarge : Bullet
     [field: SerializeField] public float finderRadius { get; set; } = 20f;
     [field: SerializeField] public float chainDelay { get; set; } = 0.1f;
 
+    public Vector2 firstHitPoint { get; set; }
+
     public override void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
         base.Initialize(_characterStatProvider, _bulletEffectProvider, _damageSystem);

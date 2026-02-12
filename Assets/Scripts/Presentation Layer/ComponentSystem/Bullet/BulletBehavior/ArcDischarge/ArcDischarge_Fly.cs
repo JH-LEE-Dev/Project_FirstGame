@@ -50,6 +50,7 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
             bullet.targetMask
         );
 
+        arcDischarge.firstHitPoint = hit.point;
         arcDischarge.firstTarget = hit.collider;
 
         if (null != arcDischarge.firstTarget) 
