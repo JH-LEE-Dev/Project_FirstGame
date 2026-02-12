@@ -12,6 +12,9 @@ public class AquaBurst : Bullet
 
     private bool fxPoolReady = false;
 
+    public Collider2D directHitEnemy;
+
+
     public override void Initialize(ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
         base.Initialize(_characterStatProvider, _bulletEffectProvider, _damageSystem);
@@ -40,7 +43,5 @@ public class AquaBurst : Bullet
             bigFx = bigGo.GetComponent<FxAutoHideOnAnimEnd>();
             if (!bigFx) bigFx = bigGo.AddComponent<FxAutoHideOnAnimEnd>();
         }
-
-
     }
 }

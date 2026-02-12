@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 [CreateAssetMenu(menuName = "Strategy/BulletBehavior/AquaBurst/AquaBurst_Fly")]
 
 public class AquaBurst_Fly : AquaBurstBehavior
@@ -11,6 +12,9 @@ public class AquaBurst_Fly : AquaBurstBehavior
         base.Enter();
         SetBulletInitialPosition();
         baseSpeed = aquaBurst.speed;
+
+        directHitEnemy = null;
+        aquaBurst.directHitEnemy = null;
 
         if (aquaBurst.animator != null)
         {
@@ -51,6 +55,18 @@ public class AquaBurst_Fly : AquaBurstBehavior
 
     public override void End()
     {
+        if (directHitEnemy != null)
+        {
+            aquaBurst.directHitEnemy = directHitEnemy;
+            bool bCritical;
+            float damage = damageSystem
+            .GetDamageCalc<IAquaBurstDamageCalculator>()
+            .GetDefaultDamage(out bCritical);
+
+            ApplyDamage(directHitEnemy, damage, bCritical);
+            ApplyKnockBack(directHitEnemy, 4f);
+        }
+
         StopAnim();
         base.End();
     }
@@ -79,9 +95,6 @@ public class AquaBurst_Fly : AquaBurstBehavior
         var st = aquaBurst.animator.GetCurrentAnimatorStateInfo(0);
         return st.normalizedTime >= 1f;
     }
-
-
-
 
     private void RotateToDirection(Vector2 dir)
     {
