@@ -44,10 +44,12 @@ public class ElementExplosionSystem : MonoBehaviour
 
         for (int i = 0; i < explosions.Count; ++i)
         {
+            int index = i;
+
             ObjectPool<Explosion> pool = new ObjectPool<Explosion>(
                 createFunc: () =>
                 {
-                    Explosion instance = Instantiate(explosions[i]);
+                    Explosion instance = Instantiate(explosions[index]);
 
                     return instance;
                 },
