@@ -113,12 +113,16 @@ public class CardDataInstance : ICardDataInstanceProvider
         for (int i = 0; i < cardData.defaultElementTypes.Count; ++i)
         {
             if (elementTypes.ContainsKey(cardData.defaultElementTypes[i].bulletElementType))
+            {
                 elementTypes[cardData.defaultElementTypes[i].bulletElementType] = new BulletElementData(cardData.defaultElementTypes[i].bulletElementType, cardData.defaultElementTypes[i].nestingCnt);
+            }
         }
         for (int i = 0; i < cardData.defaultdebuffTypes.Count; ++i)
         {
             if (debuffTypes.ContainsKey(cardData.defaultdebuffTypes[i].debuffElementType))
+            {
                 debuffTypes[cardData.defaultdebuffTypes[i].debuffElementType] = new DebuffElementData(cardData.defaultdebuffTypes[i].debuffElementType, cardData.defaultdebuffTypes[i].turnCnt);
+            }
         }
     }
 
