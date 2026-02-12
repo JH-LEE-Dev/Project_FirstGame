@@ -12,7 +12,7 @@ public class ExplosionBehavior : ScriptableObject
         ExplosionApplyRequestEvent?.Invoke(colliders);
     }
 
-    public virtual void Explode()
+    public virtual void Explode(Vector2 pos)
     {
 
     }

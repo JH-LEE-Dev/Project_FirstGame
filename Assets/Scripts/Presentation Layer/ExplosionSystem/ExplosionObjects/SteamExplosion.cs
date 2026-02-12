@@ -10,6 +10,6 @@ public class SteamExplosion : Explosion
 
     public override void Explode(Vector2 pos)
     {
-        explosionBehavior.Explode();
+        explosionBehavior.Explode(pos);
     }
 }
