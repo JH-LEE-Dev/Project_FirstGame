@@ -20,8 +20,6 @@ public abstract class BulletBehavior_Projectile : BulletBehavior
     protected virtual void SetBulletInitialPosition()
     {
         prevPosition = bullet.transform.position = bullet.initPosition;
-        Debug.Log(bullet.transform.position);
-
     }
 
     // 불릿을 앞으로 나아가게 하는 함수.
@@ -59,7 +57,6 @@ public abstract class BulletBehavior_Projectile : BulletBehavior
         {
             Vector2 impactPoint = hit.point;
             bullet.transform.position = impactPoint;
-            Debug.Log(impactPoint);
             End();
             return;
         }

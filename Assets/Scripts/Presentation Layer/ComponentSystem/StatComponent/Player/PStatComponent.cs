@@ -69,12 +69,25 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         resultDamage = totalDamage * totalDamageValue;
     }
 
-    public float CalcResultDamage_Optional()
+    public float CalcResultDamage_Optional(out bool bCritical)
     {
-        float tempTotalDamage = additionalAttackStat.attack + (additionalAttack * additionalAttackStat.additionalAttackValue);
-        tempTotalDamage *= additionalAttackStat.totalDamageValue;
+        bCritical = false;
 
-        return tempTotalDamage;
+        float tempTotalDamage = additionalAttackStat.attack + (additionalAttack * additionalAttackStat.additionalAttackValue);
+
+        int critical = UnityEngine.Random.Range(0, 100);
+
+        float criticalDamage = tempTotalDamage;
+
+        if (critical < criticalChance)
+        {
+            bCritical = true;
+            criticalDamage = tempTotalDamage * 2;
+        }
+
+        criticalDamage *= additionalAttackStat.totalDamageValue;
+
+        return criticalDamage;
     }
 
     public void ApplyRangeModifier(float bonusRange)

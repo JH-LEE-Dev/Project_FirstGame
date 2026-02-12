@@ -2,12 +2,14 @@ using UnityEngine;
 
 public struct AdditionalAttackData
 {
-    DebuffElementData debuffData;
-    float resultDamage;
-    public AdditionalAttackData(DebuffElementData _debuffData, float _resultDamage)
+    public DebuffElementData debuffData;
+    public float resultDamage;
+    public bool bCritical;
+    public AdditionalAttackData(DebuffElementData _debuffData, float _resultDamage,bool _bCritical)
     {
         debuffData = _debuffData;
         resultDamage = _resultDamage;
+        bCritical = _bCritical;
     }
 }
 

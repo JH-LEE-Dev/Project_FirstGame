@@ -126,26 +126,6 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
         return money;
     }
 
-    public void ApplyElementDebuff(DebuffElementEffectType debuffElementEffectType, int turnCnt)
-    {
-        if (currentAppliedDebuff.ContainsKey(debuffElementEffectType))
-        {
-            var data = currentAppliedDebuff[debuffElementEffectType];
-            data.turnCnt += turnCnt;
-            currentAppliedDebuff[debuffElementEffectType] = data;
-        }
-        else
-        {
-            DebuffElementData data;
-            data.debuffElementType = debuffElementEffectType;
-            data.turnCnt = turnCnt;
-
-            currentAppliedDebuff[debuffElementEffectType] = data;
-        }
-
-        PlayerDebuffChangedEvent?.Invoke();
-    }
-
     public void ClearDebuff()
     {
         currentAppliedDebuff.Clear();
@@ -155,24 +135,36 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
 
     public void TakeCollideDamage(float damage, bool bCritical, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null)
     {
+        ApplyElementDebuff(_debuffElements);
+
         PlayerHitEvent?.Invoke(this, _debuffElements);
-        healthComponent.TakeDamage(elementDamageHandleComponent.GetResultDamage(_debuffElements, damage));
+        damage = elementDamageHandleComponent.GetResultDamage(_debuffElements, damage);
+
+        healthComponent.TakeDamage(damage);
         TakeDamageEvent?.Invoke(damage);
     }
 
     public void PlayerTurnEnd()
     {
-        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in currentAppliedDebuff)
+        Span<DebuffElementEffectType> allKeys = stackalloc DebuffElementEffectType[currentAppliedDebuff.Count];
+        int index = 0;
+
+        foreach (var k in currentAppliedDebuff.Keys)
+            allKeys[index++] = k;
+
+        for (int i = 0; i < allKeys.Length; i++)
         {
-            if (pair.Value.turnCnt <= 1)
+            var key = allKeys[i];
+            var data = currentAppliedDebuff[key];
+
+            if (data.turnCnt <= 1)
             {
-                currentAppliedDebuff.Remove(pair.Key);
+                currentAppliedDebuff.Remove(key);
             }
             else
             {
-                var data = pair.Value;
                 data.turnCnt -= 1;
-                currentAppliedDebuff[pair.Key] = data;
+                currentAppliedDebuff[key] = data;
             }
         }
 
@@ -182,5 +174,41 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
     public void TakeDamage(float damage, bool bCritical, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
 
+    }
+
+    public void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
+    {
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffs)
+        {
+            if (currentAppliedDebuff.ContainsKey(pair.Key))
+            {
+                var data = currentAppliedDebuff[pair.Key];
+                data.turnCnt += pair.Value.turnCnt;
+                currentAppliedDebuff[pair.Key] = data;
+            }
+            else
+            {
+                currentAppliedDebuff[pair.Key] = pair.Value;
+            }
+
+        }
+
+        PlayerDebuffChangedEvent?.Invoke();
+    }
+
+    public void ApplyElementDebuff(DebuffElementData debuff)
+    {
+        if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
+        {
+            var data = currentAppliedDebuff[debuff.debuffElementType];
+            data.turnCnt += debuff.turnCnt;
+            currentAppliedDebuff[debuff.debuffElementType] = data;
+        }
+        else
+        {
+            currentAppliedDebuff[debuff.debuffElementType] = debuff;
+        }
+
+        PlayerDebuffChangedEvent?.Invoke();
     }
 }

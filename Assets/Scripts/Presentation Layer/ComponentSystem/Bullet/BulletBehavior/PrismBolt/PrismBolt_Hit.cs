@@ -56,12 +56,16 @@ public class PrismBolt_Hit : PrismBoltBehavior
             {
                 fx.PlayAt(pos);
             }
+
+            var subDamageData = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetPrismEffectDamage();
+
             // 서브 데미지 넉백 없음
-            float subDamage = 10f; //damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetPrismEffectDamage().resultDamage;
+            float subDamage = subDamageData.resultDamage;
+            bool bCritical = subDamageData.bCritical;
 
             var targets = CheckRange(pos, prismBolt.originExplosionSubRange);
             foreach (var enemy in targets)
-                ApplyDamage(enemy, subDamage, false);
+                ApplyDamage(enemy, subDamage, bCritical);
 
             yield return new WaitForSeconds(0.08f);
         }

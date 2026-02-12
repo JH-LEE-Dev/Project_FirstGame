@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6948406221326664532}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2242450919362427624
@@ -67,6 +68,53 @@ MonoBehaviour:
   behavior_BeforeFire_prefab: {fileID: 11400000, guid: bc30c5c228d88c44a8d2113f08c748d4, type: 2}
   behavior_Fly_prefab: {fileID: 11400000, guid: e6c082508b1889c4e82b1da5303f2452, type: 2}
   behavior_Hit_prefab: {fileID: 11400000, guid: a97e2a0530a6fdd479b2c50f18851e8d, type: 2}
+  <vfxPooling>k__BackingField: {fileID: 8530360508857755957}
   <maxTransference>k__BackingField: 2
   <finderRadius>k__BackingField: 1.25
   <chainDelay>k__BackingField: 0.35
+--- !u!1 &8765256413135420540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6948406221326664532}
+  - component: {fileID: 8530360508857755957}
+  m_Layer: 0
+  m_Name: VFXPooling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6948406221326664532
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8765256413135420540}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1909306208562268373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8530360508857755957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8765256413135420540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09fde36e684cd9b41b7b768cad452785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolingSystem
+  prefab: {fileID: 9097319154197359457, guid: 10e8664d5f56a504db225ac801e1770f, type: 3}
+  maxPoolSize: 20

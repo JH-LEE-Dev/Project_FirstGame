@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Pool;
 
 public class ElementExplosionSystem : MonoBehaviour
 {
@@ -10,11 +11,63 @@ public class ElementExplosionSystem : MonoBehaviour
 
     private List<ElementExplosionType> explodedTypes = new List<ElementExplosionType>((int)ElementExplosionType.MAX);
 
+    private Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>> explosionPools
+= new Dictionary<ElementExplosionType, ObjectPool<ExplosionBehavior>>();
+
+    public delegate void ExplosionHandler(Collider2D[] _colliders);
+    private ExplosionHandler[] explosionHandlerCreator;
+
+    public const int steamDamage = 20;
+    public const int flameDamage = 15;
+    public const int sparkDamage = 30;
+
     public void Initialize()
     {
         ExplosionComparer comparer = new ExplosionComparer();
 
         explosionBehaviors.Sort(comparer);
+
+        for (int i = 0; i < explosionBehaviors.Count; ++i)
+        {
+            ObjectPool<ExplosionBehavior> pool = new ObjectPool<ExplosionBehavior>(
+                createFunc: () =>
+                {
+                    ExplosionBehavior instance = Instantiate(explosionBehaviors[i]);
+
+                    return instance;
+                },
+                actionOnGet: explosion =>
+                {
+                    explosion.ExplosionEndEvent -= ExplosionEnd;
+                    explosion.ExplosionEndEvent += ExplosionEnd;
+
+                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
+                    explosion.ExplosionApplyRequestEvent += HandleExplosion;
+                },
+                actionOnRelease: explosion =>
+                {
+                    explosion.ExplosionEndEvent -= ExplosionEnd;
+
+                    explosion.ExplosionApplyRequestEvent -= HandleExplosion;
+                },
+                actionOnDestroy: null,
+                collectionCheck: false,
+                defaultCapacity: SYSTEM_VAR.maxExplosionCount,
+                maxSize: SYSTEM_VAR.maxExplosionCount
+            );
+
+            explosionPools.Add(explosionBehaviors[i].explosionType, pool);
+        }
+
+
+        explosionHandlerCreator = new ExplosionHandler[(int)ElementExplosionType.MAX];
+
+        BindLogic(ElementExplosionType.Steam, HandleSteamExplosion);
+        BindLogic(ElementExplosionType.Spark, HandleSparkExplosion);
+        BindLogic(ElementExplosionType.Flame, HandleFlameExplosion);
+
+        void BindLogic(ElementExplosionType type, ExplosionHandler action)
+            => explosionHandlerCreator[(int)type] = action;
     }
 
     public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2)
@@ -150,10 +203,44 @@ public class ElementExplosionSystem : MonoBehaviour
     {
         for (int i = 0; i < explodedTypes.Count; ++i)
         {
-            explosionBehaviors[(int)explodedTypes[i]].Explode();
+            explosionPools[explodedTypes[i]].Get().Explode();
             ElementExplosionOccuredEvent?.Invoke(explodedTypes[i]);
         }
 
         explodedTypes.Clear();
+    }
+
+    private void ExplosionEnd(ExplosionBehavior _explosionBehavior)
+    {
+        explosionPools[_explosionBehavior.explosionType].Release(_explosionBehavior);
+    }
+
+    private void HandleExplosion(ElementExplosionType _type, Collider2D[] _colliders)
+    {
+        explosionHandlerCreator[(int)_type].Invoke(_colliders);
+    }
+
+    private void HandleSteamExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
+    }
+
+    private void HandleSparkExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
+    }
+
+    private void HandleFlameExplosion(Collider2D[] _colliders)
+    {
+        for (int i = 0; i < _colliders.Length; ++i)
+        {
+
+        }
     }
 }

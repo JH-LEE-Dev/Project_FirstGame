@@ -1,11 +1,21 @@
 using UnityEngine;
 using System;
 
-public abstract class ExplosionBehavior : ScriptableObject
+public class ExplosionBehavior : ScriptableObject
 {
-    public event Action ExplosionEndEvent;
-    
-    public ElementExplosionType elementExplosionType;
+    //¿Ã∫•∆Æ
+    public event Action<ExplosionBehavior> ExplosionEndEvent;
+    public event Action<ElementExplosionType,Collider2D[]> ExplosionApplyRequestEvent;
 
-    public abstract void Explode();
+    public ElementExplosionType explosionType;
+
+    public void ApplyExplosion(Collider2D[] colliders)
+    {
+        ExplosionApplyRequestEvent?.Invoke(explosionType,colliders);
+    }
+
+    public virtual void Explode()
+    {
+        ExplosionEndEvent?.Invoke(this);
+    }
 }

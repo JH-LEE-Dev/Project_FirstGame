@@ -1,5 +1,6 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class BulletBehavior : ScriptableObject
 {
@@ -12,17 +13,20 @@ public abstract class BulletBehavior : ScriptableObject
     protected ICharacterStatProvider characterStatProvider;
     protected IBulletEffectProvider bulletEffectProvider;
     protected IDamageSystem damageSystem;
-    protected bool bBehaviorEnd = false;
-
     protected Bullet bullet;
 
 
     protected static readonly Collider2D[] overlapBuffer = new Collider2D[64];
     protected static readonly Collider2D[] sectorResultBuffer = new Collider2D[64];
     protected static ContactFilter2D filter;
+    /// <summary>
+    /// 시스템 속성 존 --------------------------------------
+    /// </summary>
+    protected List<IDamageable> damagedObjects = new List<IDamageable>(SYSTEM_VAR.maxEnemyCount);
+    protected bool bBehaviorEnd = false;
 
     public virtual void Initialize(Bullet owner, ICharacterStatProvider _characterStatProvider,
-    IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
+    IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
         bullet = owner;
         characterStatProvider = _characterStatProvider;
@@ -53,6 +57,7 @@ public abstract class BulletBehavior : ScriptableObject
 
     public virtual void Exit()
     {
+        damagedObjects.Clear();
         bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
@@ -66,8 +71,15 @@ public abstract class BulletBehavior : ScriptableObject
 
         if (hit != null)
         {
-            hit.TakeDamage(damage, bCritical);
-            hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
+            if (damagedObjects.Contains(hit) == false)
+            {
+                damagedObjects.Add(hit);
+
+                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes);
+                hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
+            }
+
+            hit.TakeDamage(damage, bCritical, bulletEffectProvider.currentEffectElements);
         }
     }
 

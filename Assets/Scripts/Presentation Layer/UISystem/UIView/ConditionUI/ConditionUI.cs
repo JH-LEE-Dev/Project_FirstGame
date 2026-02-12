@@ -45,14 +45,13 @@ public class ConditionUI : MonoBehaviour
             {
                 units[i].gameObject.SetActive(true);
                 units[i].UpdateUnit(getSprite, remainCnt);
+                i++;
             }
         }
     }
 
     private void ClearUnits()
     {
-        Debug.Log("너 불리고 있어?");
-
         if (null != units)
         {
             foreach (ConditionUI_Unit unit in units)

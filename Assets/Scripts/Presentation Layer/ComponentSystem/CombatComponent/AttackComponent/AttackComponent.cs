@@ -93,7 +93,7 @@ public class AttackComponent : MonoBehaviour
 
     public void Fire(BulletType _bulletType,int cnt, Vector2 dir, Vector2 firePos) //발사하는 함수.
     {
-        switch(_bulletType)
+        switch (_bulletType)
         {
             case BulletType.PrismBolt:
                 {

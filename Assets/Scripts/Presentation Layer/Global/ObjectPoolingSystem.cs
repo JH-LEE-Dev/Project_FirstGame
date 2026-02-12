@@ -7,7 +7,7 @@ public class ObjectPoolingSystem : MonoBehaviour
 {
     [Header("Main Settings")]
     [SerializeField] private GameObject prefab;
-    [SerializeField] private int maxPoolSize = 15;
+    public int maxPoolSize = 15;
 
     private ObjectPool<GameObject> pool = null;
     private List<GameObject> poolList;

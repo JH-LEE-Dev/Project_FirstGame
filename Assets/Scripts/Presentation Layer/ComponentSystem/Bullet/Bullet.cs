@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -49,7 +50,7 @@ public class Bullet : MonoBehaviour
     }
 
     public virtual void Initialize(ICharacterStatProvider _characterStatProvider,
-        IBulletEffectProvider _bulletEffectProvider,IDamageSystem _damageSystem)
+        IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
     {
         characterStatProvider = _characterStatProvider;
         bulletEffectProvider = _bulletEffectProvider;
@@ -73,7 +74,7 @@ public class Bullet : MonoBehaviour
         behavior_Hit = Instantiate(behavior_Hit_prefab);
 
         behavior_BeforeFire.Initialize(this, _characterStatProvider, _bulletEffectProvider, _damageSystem);
-        behavior_Fly.Initialize(this,  _characterStatProvider, _bulletEffectProvider, _damageSystem);
+        behavior_Fly.Initialize(this, _characterStatProvider, _bulletEffectProvider, _damageSystem);
         behavior_Hit.Initialize(this, _characterStatProvider, _bulletEffectProvider, _damageSystem);
     }
 
@@ -109,11 +110,6 @@ public class Bullet : MonoBehaviour
     {
         this.gameObject.SetActive(value);
     }
-
-
-
-
-
 
 
 
