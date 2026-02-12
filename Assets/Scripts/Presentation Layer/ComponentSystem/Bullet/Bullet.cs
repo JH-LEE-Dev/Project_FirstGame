@@ -106,7 +106,10 @@ public class Bullet : MonoBehaviour
     }
 
 
-
+    public virtual void SetActive(bool value)
+    {
+        this.gameObject.SetActive(value);
+    }
 
 
 

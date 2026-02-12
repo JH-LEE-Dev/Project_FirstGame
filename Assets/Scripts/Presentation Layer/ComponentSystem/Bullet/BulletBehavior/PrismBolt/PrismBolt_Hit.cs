@@ -1,17 +1,32 @@
+using System.Collections;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Hit")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt/PrismBolt_Hit")]
 public class PrismBolt_Hit : PrismBoltBehavior
 {
+    private Coroutine routine;
+    private int subIndex;
+
+    public override void Initialize(Bullet owner, ICharacterStatProvider _characterStatProvider, IBulletEffectProvider _bulletEffectProvider, IDamageSystem _damageSystem)
+    {
+        base.Initialize(owner, _characterStatProvider, _bulletEffectProvider, _damageSystem);
+    }
     public override void Enter()
     {
         base.Enter();
 
-        var enemys = CheckExplosion();
+        var enemys = CheckRange(prismBolt.transform.position, prismBolt.originExplosionRange);
         foreach (var enemy in enemys)
         {
-            ApplyDamage(enemy);
-            ApplyKnockBack(enemy);
+            bool bCritical = false;
+            float damage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
+
+            ApplyDamage(enemy, damage, bCritical);
+            ApplyKnockBack(enemy, 2.8f);
         }
+
+        if (routine != null) 
+            bullet.StopCoroutine(routine);
+        routine = bullet.StartCoroutine(HitFxSequence());
     }
 
 
@@ -19,18 +34,58 @@ public class PrismBolt_Hit : PrismBoltBehavior
     {
         if (bBehaviorEnd)
             return;
+    }
+    private IEnumerator HitFxSequence()
+    {
+        Vector2 center = bullet.transform.position;
 
+        // 큰 폭발 이펙트 1회
+        prismBolt.bigFx?.PlayAt(center);        
+        
+        // 1초 후
+        yield return new WaitForSeconds(0.6f);
+
+        // 0.2초 간격으로 5번 (1.5랜덤위치임)
+        for (int i = 0; i < 8; i++)
+        {
+            Vector2 pos = center + Random.insideUnitCircle * 1.2f;
+
+            // 서브 이펙트 재생
+            var fx = GetNextSubFx();
+            if (fx != null)
+            {
+                fx.PlayAt(pos);
+            }
+            // 서브 데미지 넉백 없음
+            float subDamage = 10f; //damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetPrismEffectDamage().resultDamage;
+
+            var targets = CheckRange(pos, prismBolt.originExplosionSubRange);
+            foreach (var enemy in targets)
+                ApplyDamage(enemy, subDamage, false);
+
+            yield return new WaitForSeconds(0.08f);
+        }
+
+        // 전부 끝나면 종료
         Exit();
     }
 
-
-    public override void End()
+    private FxAutoHideOnAnimEnd GetNextSubFx()
     {
-        base.End();
-    }
+        if (prismBolt == null || prismBolt.subFx == null || prismBolt.subFx.Length == 0) return null;
 
+        var fx = prismBolt.subFx[subIndex];
+        subIndex = (subIndex + 1) % prismBolt.subFx.Length;
+        return fx;
+    }
     public override void Exit()
     {
+        if (routine != null)
+        {
+            bullet.StopCoroutine(routine);
+            routine = null;
+        }
+
         base.Exit();
     }
 }

@@ -48,14 +48,11 @@ public abstract class BulletBehavior : ScriptableObject
     }
 
     // 콜라이더 주인장한테 데미지 및 상태이상을 주는 함수
-    protected virtual void ApplyDamage(Collider2D other)
+    protected virtual void ApplyDamage(Collider2D other, float damage, bool bCritical)
     {
         // 데미지 처리
 
         IDamageable hit = other.GetComponent<IDamageable>();
-
-        bool bCritical = false;
-        float damage = damageSystem.GetDamageCalc<IPrismBoltDamageCalculator>().GetDefaultDamage(out bCritical);
 
         if (hit != null)
         {
@@ -69,7 +66,21 @@ public abstract class BulletBehavior : ScriptableObject
     {
         IDamageable enemy = other.GetComponent<IDamageable>();
 
-        //Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
-        //enemy.KnockBack(dir.normalized, knockBackPower);
+        Vector2 dir = (Vector2)other.transform.position - (Vector2)bullet.transform.position;
+        enemy.KnockBack(dir.normalized, knockBackPower);
+    }
+
+    // 범위만 체크하고, Collider들을 뱉는 함수
+    protected Collider2D[] CheckRange(Vector3 pos, float range)
+    {
+        return Physics2D.OverlapCircleAll(
+            pos,
+            UpscaleRange(range),
+            bullet.targetMask);
+    }
+
+    protected float UpscaleRange(float range)
+    {
+        return range + range * (characterStatProvider.attackRange * 0.01f);
     }
 }

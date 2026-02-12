@@ -120,19 +120,6 @@ public abstract class BulletBehavior_Projectile : BulletBehavior
         return false;
     }
 
-    // 범위만 체크하고, Collider들을 뱉는 함수
-    protected Collider2D[] CheckExplosion()
-    {
-        return Physics2D.OverlapCircleAll(
-            bullet.transform.position,
-            UpscaleRange(bullet.originExplosionRange),
-            bullet.targetMask);
-    }
-    protected float UpscaleRange(float range)
-    {
-        return range + range * (characterStatProvider.attackRange * 0.01f);
-    }
-
     public override void End()
     {
         base.End();

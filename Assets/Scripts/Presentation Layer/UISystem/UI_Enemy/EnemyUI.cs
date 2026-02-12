@@ -7,6 +7,7 @@ public class EnemyUI : MonoBehaviour
     [SerializeField] private float tempOffset;
     [SerializeField] private HealthBar_Enemy healthBar;
     [SerializeField] private DamageInfo_Enemy damageInfo;
+    [SerializeField] private ConditionUI conditionUI;
 
     private RectTransform topRect;
 
@@ -31,6 +32,7 @@ public class EnemyUI : MonoBehaviour
         if (null != owner)
         {
             owner.EnemyIsDeadEvent -= ReturnObject;
+            owner.EnemyDebuffChangedEvent -= UpdateCondition;
         }
     }
 
@@ -45,6 +47,9 @@ public class EnemyUI : MonoBehaviour
         {
             owner.EnemyIsDeadEvent -= ReturnObject;
             owner.EnemyIsDeadEvent += ReturnObject;
+
+            owner.EnemyDebuffChangedEvent -= UpdateCondition;
+            owner.EnemyDebuffChangedEvent += UpdateCondition;
         }
 
         if (null != healthBar)
@@ -56,9 +61,22 @@ public class EnemyUI : MonoBehaviour
         {
             damageInfo.Init(target, this);
         }
+
+        if (null != conditionUI)
+        {
+            UpdateCondition();
+        }
     }
 
     public void ReturnObject() => returnEvent?.Invoke(this.gameObject);
+
+    public void UpdateCondition()
+    {
+        if (null == conditionUI)
+            return;
+
+        conditionUI.UpdateConditions(owner.currentAppliedDebuff);
+    }
 
     private void Update_Position()
     {

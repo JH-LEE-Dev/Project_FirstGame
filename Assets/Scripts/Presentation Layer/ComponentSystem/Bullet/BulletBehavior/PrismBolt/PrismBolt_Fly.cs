@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt_Fly")]
+[CreateAssetMenu(menuName = "Strategy/BulletBehavior/PrismBolt/PrismBolt_Fly")]
 public class PrismBolt_Fly : PrismBoltBehavior
 {
 
@@ -7,7 +7,14 @@ public class PrismBolt_Fly : PrismBoltBehavior
     {
         base.Enter();
         SetBulletInitialPosition();
-        prismBolt.speed = 1f;
+
+        if (prismBolt.animator != null)
+        {
+            prismBolt.animator.gameObject.SetActive(true);
+            prismBolt.animator.enabled = true;
+            prismBolt.animator.Play(0, 0, 0f);
+            prismBolt.animator.speed = 1f;    
+        }
     }
 
     public override void Update()
@@ -30,6 +37,11 @@ public class PrismBolt_Fly : PrismBoltBehavior
 
     public override void End()
     {
+        if (prismBolt.animator != null)
+        {
+            prismBolt.animator.gameObject.SetActive(false);
+            prismBolt.animator.enabled = false;
+        }
         base.End();
     }
 
