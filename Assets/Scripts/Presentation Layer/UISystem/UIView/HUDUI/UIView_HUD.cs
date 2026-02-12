@@ -71,6 +71,12 @@ public class UIView_HUD : UIView
         IntializeChildrenHUD();
         Init_CharacterStat();
         Init_ConditionUI();
+
+        if (null != playerData)
+        {
+            playerData.PlayerDebuffChangedEvent -= Init_ConditionUI;
+            playerData.PlayerDebuffChangedEvent += Init_ConditionUI;
+        }
     }
 
     protected override void OnShow()
@@ -402,13 +408,10 @@ public class UIView_HUD : UIView
 
     private void Init_ConditionUI()
     {
-        if (null == playerConditionUI || null  == playerData)
+        if (null == playerConditionUI || null == playerData)
             return;
 
         playerConditionUI.UpdateConditions(playerData.currentAppliedDebuff);
-
-        playerData.PlayerDebuffChangedEvent -= Init_ConditionUI;
-        playerData.PlayerDebuffChangedEvent += Init_ConditionUI;
     }
 
     // For StarlightUI
