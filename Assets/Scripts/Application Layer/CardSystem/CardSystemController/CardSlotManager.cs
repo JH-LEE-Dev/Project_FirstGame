@@ -149,6 +149,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             bulletCardSlotForUse[i].Clear();
         }
 
+        currentInherenceCard = null;
         bInherenceCardEquipped = false;
         SynchronizeCardSlotForUse();
     }
@@ -226,5 +227,10 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
     public CardDataInstance GetCurrentInherenceCard()
     {
         return currentInherenceCard;
+    }
+
+    public void SetInherenceCard(CardDataInstance _card)
+    {
+        currentInherenceCard = _card;
     }
 }

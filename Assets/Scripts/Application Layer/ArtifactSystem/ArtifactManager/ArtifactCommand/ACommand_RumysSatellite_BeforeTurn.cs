@@ -5,8 +5,6 @@ public class ACommand_RumysSatellite_BeforeTurn : ArtifactCommand<IComplexSystem
 {
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
     {
-        Debug.Log("루미의 위성 효과 적용.");
-
         complexSystemActionCommand.ApplySlotCntModifier(2);
     }
 

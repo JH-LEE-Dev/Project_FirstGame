@@ -23,7 +23,7 @@ public ref struct RentalScope<T>
 {
     private T[] _array;
     public readonly Span<T> Span;
-    private bool _isDisposed; // 로컬 방어용
+    private bool _isDisposed; 
 
     public RentalScope(int amount)
     {

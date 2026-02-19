@@ -70,7 +70,7 @@ public enum CardName
     Cleanse,
     ElementalBoost,
     WeaknessHarvest,
-    AirBust,
+    OffenseReorder,
 }
 
 public enum BulletElementType

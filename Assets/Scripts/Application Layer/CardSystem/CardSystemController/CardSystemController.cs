@@ -112,9 +112,14 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         CardSlotCntChangedEvent?.Invoke(cnt);
     }
 
-    public void StartCardDrawTurn()
+    public void StartGame()
     {
         DispatchCardSystemActionCommand_GameStarted();
+    }
+
+    public void StartCardDrawTurn()
+    {
+        PostPoneBeforeUsingPhaseCommand();
 
         cardSlotManager.ResetSlotCntModifier();
 
@@ -157,8 +162,6 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardUsePhaseCnt = 1;
 
         PlayerTurnFinishedEvent?.Invoke();
-
-        PostPoneBeforeUsingPhaseCommand();
     }
 
     private void PostPoneBeforeUsingPhaseCommand()
@@ -583,6 +586,9 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public void CardUsingFinished()
     {
         bCardUsingFinished = true;
+
+        UndoAfterAttackEffets();
+        ApplyAfterAttackEffects();
 
         ApplyWithoutAfterAttackEffects();
         DispatchCardEffect_AfterCardUsingPhase();

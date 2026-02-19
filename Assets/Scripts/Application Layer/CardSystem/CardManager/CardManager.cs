@@ -117,12 +117,12 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public void Awake()
     {
-       
+
     }
 
     public void Start()
     {
-       
+
     }
 
     private void OnDestroy()
@@ -286,7 +286,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         --currentCardCount;
 
-        if(currentCardCount < 0)
+        if (currentCardCount < 0)
         {
             Debug.Log("Card Release에서 오작동이 발생했습니다.");
         }
@@ -353,7 +353,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.CardsToGraveEvent, cardSystemContext, cards);
     }
 
-    public void ExecuteCommand(GameSystemCommand actionCommand,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand actionCommand, bool bUndo)
     {
         cardSystemContext = actionCommand.GetGameSystemContext();
 
@@ -389,7 +389,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public CardDataInstance CreateCard(int id)
     {
-        if(currentCardCount == SYSTEM_VAR.maxCardCount)
+        if (currentCardCount == SYSTEM_VAR.maxCardCount)
         {
             Debug.LogWarning("더 이상 카드를 생성할 수 없습니다.");
             return null;
@@ -464,7 +464,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
     public void AddCardsToDeck(ReadOnlySpan<CardDataInstance> _cards)
     {
-        if(permanentDeckPile.Count + _cards.Length > SYSTEM_VAR.maxDeckPileCount)
+        if (permanentDeckPile.Count + _cards.Length > SYSTEM_VAR.maxDeckPileCount)
         {
             Debug.LogWarning("덱에 최대 30장의 카드만 넣을 수 있습니다.");
             return;

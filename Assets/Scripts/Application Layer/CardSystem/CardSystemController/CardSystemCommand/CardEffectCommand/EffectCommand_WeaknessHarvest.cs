@@ -14,7 +14,7 @@ public class EffectCommand_WeaknessHarvest : CardEffectCommand<IComplexSystemAct
 
         for (int i = 0; i < enemyUnits.Count; ++i)
         {
-            if (enemyUnits[i].currentAppliedDebuff.Count != 0)
+            if (enemyUnits[i].currentAppliedDebuff.Count != 0 && enemyUnits[i].bDead == false)
                 ++enemyCnt;
         }
 

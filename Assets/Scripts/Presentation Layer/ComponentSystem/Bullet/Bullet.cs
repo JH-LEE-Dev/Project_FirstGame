@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
     protected BulletBehavior behavior_BeforeFire;
     protected BulletBehavior behavior_Fly;
     protected BulletBehavior behavior_Hit;
-
+    public List<IDamageable> damagedObjects = new List<IDamageable>(SYSTEM_VAR.maxEnemyCount);
 
     /// <summary>
     /// 구현 속성 존 --------------------------------------------------------

@@ -193,4 +193,9 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     {
 
     }
+
+    public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
+    {
+        return currentEffectElements;
+    }
 }

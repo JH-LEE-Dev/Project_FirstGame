@@ -10,4 +10,5 @@ public interface ICardSlotSystemActionCommandHandler : ICommandHandler
     int GetPrevUsedBulletCardCnt();
     bool IsInherenceCardEquipped();
     CardDataInstance GetCurrentInherenceCard();
+    void SetInherenceCard(CardDataInstance _card);
 }

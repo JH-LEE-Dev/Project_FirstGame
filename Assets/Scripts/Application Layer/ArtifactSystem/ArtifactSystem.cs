@@ -3,6 +3,8 @@ using CardSystemSignals;
 using GameControlSignals;
 using UnitSpawnSystemSignals;
 using UnityEngine;
+using CardSystemUISignal;
+using ArtifactSystemSignals;
 
 public class ArtifactSystem
 {
@@ -33,7 +35,7 @@ public class ArtifactSystem
         signalHub.Subscribe<CharacterCreatedSignal>(CharacterSpawned);
         signalHub.Subscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.Subscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
-        signalHub.Subscribe<AfterCardUsePhaseStartedSignal>(AfterCardUsePhaseStarted);
+        signalHub.Subscribe<CardUsingFinishedSignal>(AfterCardUsePhaseStarted);
     }
 
     private void UnsubscribeSignals()
@@ -41,18 +43,23 @@ public class ArtifactSystem
         signalHub.UnSubscribe<CharacterCreatedSignal>(CharacterSpawned);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(PlayerTurnStarted);
         signalHub.UnSubscribe<CardUsePhaseStartedSignal>(CardUsePhaseStarted);
-        signalHub.UnSubscribe<AfterCardUsePhaseStartedSignal>(AfterCardUsePhaseStarted);
+        signalHub.UnSubscribe<CardUsingFinishedSignal>(AfterCardUsePhaseStarted);
     }
 
     private void BindEvents()
     {
         artifactManager.AfrifactCommandDispatchEvent -= DispatchAftifactCommand;
         artifactManager.AfrifactCommandDispatchEvent += DispatchAftifactCommand;
+
+        artifactManager.ArtifactAppliedEvent_AfterCardUsingPhase -= ArtifactApplied_AfterCardUsingPhase;
+        artifactManager.ArtifactAppliedEvent_AfterCardUsingPhase += ArtifactApplied_AfterCardUsingPhase;
     }
 
     private void ReleaseEvents()
     {
         artifactManager.AfrifactCommandDispatchEvent -= DispatchAftifactCommand;
+
+        artifactManager.ArtifactAppliedEvent_AfterCardUsingPhase -= ArtifactApplied_AfterCardUsingPhase;
     }
 
     private void CharacterSpawned(CharacterCreatedSignal characterCreatedSignal)
@@ -70,7 +77,7 @@ public class ArtifactSystem
         artifactManager.CardUsePhaseStarted();
     }
 
-    private void AfterCardUsePhaseStarted(AfterCardUsePhaseStartedSignal afterCardUsePhaseStarted)
+    private void AfterCardUsePhaseStarted(CardUsingFinishedSignal cardUsingFinishedSignal)
     {
         artifactManager.AfterCardUsePhaseStarted();
     }
@@ -85,5 +92,10 @@ public class ArtifactSystem
         {
             signalHub.Publish(new ArtifactEffectCommandDispatchSignal(_command, bUndo, _type));
         }
+    }
+
+    private void ArtifactApplied_AfterCardUsingPhase()
+    {
+        signalHub.Publish(new AfterCardUsingPhase_ArtifactAppliedSignal());
     }
 }

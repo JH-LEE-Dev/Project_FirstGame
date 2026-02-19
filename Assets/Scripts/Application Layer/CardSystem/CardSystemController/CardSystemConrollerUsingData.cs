@@ -147,6 +147,7 @@ public enum ComplexSystemEffectType
     Cleanse,
     ElementalBoost,
     WeaknessHarvest,
+    OffenseReorder,
 }
 
 public enum CardSelectionSystemEffectType

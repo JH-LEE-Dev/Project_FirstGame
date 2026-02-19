@@ -55,6 +55,7 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
                 else
                     complexSystemActionCommandHandler.AdditionalDraw(1, GameSystemActionContextType.MAX);
 
+                complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
                 complexSystemActionCommandHandler.CardsToDeck(writeBuffer,gameSystemActionContext);
             }
         }
@@ -75,6 +76,7 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
         else
             complexSystemActionCommandHandler.AdditionalDraw(1, GameSystemActionContextType.MAX);
 
+        complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
         complexSystemActionCommandHandler.CardsToDeck(writeBuffer, gameSystemActionContext);
     }
 
