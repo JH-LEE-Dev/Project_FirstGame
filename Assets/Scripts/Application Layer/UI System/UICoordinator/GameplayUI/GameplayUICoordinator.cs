@@ -187,4 +187,9 @@ public class GameplayUICoordinator
     {
         unitWorldUISystem.SetAiming(false);
     }
+
+    public void CharacterElementChanged()
+    {
+
+    }
 }

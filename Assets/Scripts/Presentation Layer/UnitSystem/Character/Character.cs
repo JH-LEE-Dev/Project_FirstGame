@@ -75,13 +75,13 @@ public class Character : Unit, ICharacterData
         attackComponent = GetComponent<AttackComponent>();
 
         //Visual 로직에 필요한 의존성을 추가해주면 됨.
-        statComponent.Initialize();
         visualComponentCoordinator.Initialize(character_Visual, combatComponent, moveComponent, cutsceneComponent);
         moveComponent.Initialize(ctx, orbitPathProvider, visualComponentCoordinator);
         combatComponent.Initialize(ctx, visualComponentCoordinator,statComponent, damageCalcComponent,attackComponent);
         cutsceneComponent?.Initialize(this, visualComponentCoordinator, orbitPathProvider, character_Visual);
         damageCalcComponent.Initialize(statComponent, combatComponent);
         attackComponent.Initialize(statComponent, combatComponent, damageCalcComponent);
+        statComponent.Initialize();
 
         BindEvent();
 
@@ -295,5 +295,10 @@ public class Character : Unit, ICharacterData
     public ICharacterStatProvider GetStatProvider()
     {
         return statComponent;
+    }
+
+    public IBulletEffectProvider GetBulletEffectProvider()
+    {
+        return combatComponent;
     }
 }
