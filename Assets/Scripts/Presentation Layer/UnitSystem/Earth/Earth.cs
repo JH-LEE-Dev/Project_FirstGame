@@ -176,7 +176,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
 
     }
 
-    public void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
+    public void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default)
     {
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffs)
         {
@@ -196,7 +196,7 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
         PlayerDebuffChangedEvent?.Invoke();
     }
 
-    public void ApplyElementDebuff(DebuffElementData debuff)
+    public void ApplyElementDebuff(DebuffElementData debuff, Vector2 pos = default)
     {
         if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
         {

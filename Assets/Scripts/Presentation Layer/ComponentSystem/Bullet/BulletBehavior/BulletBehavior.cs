@@ -75,7 +75,7 @@ public abstract class BulletBehavior : ScriptableObject
             {
                 bullet.damagedObjects.Add(hit);
 
-                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes);
+                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes, pos);
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }
 
@@ -83,7 +83,7 @@ public abstract class BulletBehavior : ScriptableObject
         }
     }
 
-    protected virtual void ApplyAdditionalDamage(Collider2D other, AdditionalAttackData _data, Vector2 pos )
+    protected virtual void ApplyAdditionalDamage(Collider2D other, AdditionalAttackData _data, Vector2 pos)
     {
         // 데미지 처리
         IDamageable hit = other.GetComponent<IDamageable>();
@@ -94,12 +94,12 @@ public abstract class BulletBehavior : ScriptableObject
             {
                 bullet.damagedObjects.Add(hit);
 
-                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes);
-                hit.ApplyElementDebuff(_data.debuffData);
+                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes, pos);
+                hit.ApplyElementDebuff(_data.debuffData, pos);
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }
 
-            hit.TakeDamage(_data.resultDamage, _data.bCritical, pos);
+            hit.TakeDamage(_data.resultDamage, _data.bCritical, pos,bulletEffectProvider.currentEffectElements);
         }
     }
 

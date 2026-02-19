@@ -27,6 +27,9 @@ public class CardData : ICardDataProvider
     public List<CardEffectCommand> complexSystemEffects_Prefab;
     public List<CardEffectCommand> selectionSystemEffects_Prefab;
     public CardEffectCommand HandPileExistEffect_Prefab;
+    [Space]
+    [Header("Card Using Condition")]
+    public CardUsingCondition cardUsingCondition_Prefab;
 
     bool ICardDataProvider.bUpgradable => bUpgradable;
 

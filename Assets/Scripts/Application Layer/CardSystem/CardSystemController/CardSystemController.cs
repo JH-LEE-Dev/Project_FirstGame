@@ -10,6 +10,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
     public event Action PlayerTurnFinishedEvent;
     public event Action<bool> IsInherenceCardEquippedEvent;
     public event Action StartAfterCardUsePhaseEvent;
+    public event Action<CardUsingCondition> CardUsingConditionCheckEvent;
 
     //public event Action CardActionBeginScopeEvent;
     public event Action CardActionEndScopeEvent;
@@ -629,7 +630,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         for (int i = 0; i < cardStatusEffects.Count; ++i)
         {
-            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier,usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
+            cardStatusEffects[i].InitializeCommand(usedCard.valueModifier, usedCard.IsUpgraded(), usedCard.elementTypes, usedCard.debuffTypes);
 
             GameSystemActionTimingType timing = cardStatusEffects[i].GetGameSystemActionTimingType();
             InsertCommandToList(timing, cardStatusEffects[i]);
@@ -821,6 +822,20 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
         CardUsedResult result;
 
+        if (card.cardUsingCondition != null)
+        {
+            CardUsingConditionCheckEvent?.Invoke(card.cardUsingCondition);
+
+            if(card.cardUsingCondition.bResult == false)
+            {
+                result.bVerified = false;
+                result.slotIdx = -1;
+                result.usedCard = card;
+
+                return result;
+            }
+        }
+
         ICardDataProvider usedCardData = usedCard.GetCardDataProvider();
 
         if (usedCardData.cardType == CardType.Bullet || usedCardData.cardType == CardType.Inherence)
@@ -965,7 +980,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void ReserveCardEffect(CardEffectCommand command)
     {
-        InsertCommandToList(command.GetGameSystemActionTimingType(),command);
+        InsertCommandToList(command.GetGameSystemActionTimingType(), command);
     }
 
     public int GetPrevUsedCardCnt()
@@ -1024,7 +1039,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     private void HandleSlotEffectsWhenHandChanged()
     {
-        if(bCardUsingFinished == true) 
+        if (bCardUsingFinished == true)
             return;
 
         UndoAfterAttackEffets();

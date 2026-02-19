@@ -37,9 +37,18 @@ public class CardDataInstance : ICardDataInstanceProvider
     public List<CardEffectCommand> GetselectionSystemEffects() { return selectionSystemEffects; }
     public CardEffectCommand GetHandPileExistEffect() { return HandPileExistEffect; }
 
+    public CardUsingCondition cardUsingCondition;
+
     public void Initialize(CardData cardData)
     {
         this.cardData = cardData;
+
+        if (cardData.cardUsingCondition_Prefab != null)
+        {
+            cardUsingCondition = UnityEngine.Object.Instantiate(cardData.cardUsingCondition_Prefab);
+            cardUsingCondition.SetOwner(this);
+        }
+
         ResetState();
         ReadyEffects();
     }

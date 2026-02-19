@@ -34,7 +34,7 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
             if (currentElement.ContainsKey(BulletElementType.Electric))
             {
                 bUpgradedEffectOn = true;
-
+                UnityEngine.Debug.Log("BBBBB");
                 complexSystemActionCommandHandler.ApplyDebuffElementType(debuff);
             }
             else

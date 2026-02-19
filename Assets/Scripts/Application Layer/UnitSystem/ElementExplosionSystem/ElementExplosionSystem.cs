@@ -7,7 +7,7 @@ public struct ExplosionData
 {
     public ElementExplosionType type;
     public Vector2 pos;
-    public ExplosionData(ElementExplosionType _type,Vector2 _pos)
+    public ExplosionData(ElementExplosionType _type, Vector2 _pos)
     {
         type = _type;
         pos = _pos;
@@ -88,7 +88,7 @@ public class ElementExplosionSystem : MonoBehaviour
             => explosionHandlerCreator[(int)type] = action;
     }
 
-    public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2,Vector2 pos)
+    public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2, Vector2 pos)
     {
         if (_enemy1 == null || _enemy2 == null)
             return;
@@ -96,7 +96,15 @@ public class ElementExplosionSystem : MonoBehaviour
         if (_enemy1.enemyID > _enemy2.enemyID)
             return;
 
-        EvaluateExplosionType(_enemy1.currentAppliedDebuff, _enemy2.currentAppliedDebuff,pos);
+        EvaluateExplosionType(_enemy1.currentAppliedDebuff, _enemy2.currentAppliedDebuff, pos);
+    }
+
+    public void EnemyDebuffApplied(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, DebuffElementData _data, Vector2 pos)
+    {
+        if (debuffs == null)
+            return;
+
+        EvaluateExplosionType(debuffs,_data, pos);
     }
 
     public void EnemyHit(IEnemyData _data, IReadOnlyDictionary<BulletElementType, BulletElementData> _elements, Vector2 pos)
@@ -110,7 +118,7 @@ public class ElementExplosionSystem : MonoBehaviour
     }
 
     private void EvaluateExplosionType(IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements,
-        IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements,Vector2 pos)
+        IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements, Vector2 pos)
     {
         if (_bulletElements == null || _debuffElements == null)
             return;
@@ -175,7 +183,7 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Wet))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark,pos));
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
                 }
             }
 
@@ -208,6 +216,60 @@ public class ElementExplosionSystem : MonoBehaviour
             if (pair.Key == DebuffElementEffectType.Oxidation)
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Combustion))
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                }
+            }
+        }
+
+        ExecuteExplosion();
+    }
+
+    private void EvaluateExplosionType(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements1,
+      DebuffElementData _debuffElements2, Vector2 pos)
+    {
+        if (_debuffElements1 == null )
+            return;
+
+        foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in _debuffElements1)
+        {
+            if (pair.Key == DebuffElementEffectType.ElectricShock)
+            {
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.Wet)
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                }
+            }
+
+            if (pair.Key == DebuffElementEffectType.Combustion)
+            {
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.Oxidation)
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                }
+
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.Wet)
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                }
+            }
+
+            if (pair.Key == DebuffElementEffectType.Wet)
+            {
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.ElectricShock)
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                }
+
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.Combustion)
+                {
+                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                }
+            }
+
+            if (pair.Key == DebuffElementEffectType.Oxidation)
+            {
+                if (_debuffElements2.debuffElementType == DebuffElementEffectType.Combustion)
                 {
                     explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
                 }

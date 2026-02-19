@@ -418,6 +418,11 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         elementExplosionSystem.EnemyCollide(_data1, _data2, pos);
     }
 
+    private void EnemyDebuffApplied(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _elements,DebuffElementData _data,Vector2 _pos)
+    {
+        elementExplosionSystem.EnemyDebuffApplied(_elements,_data, _pos);
+    }
+
     public void WaveRewardReceived(int amount)
     {
         playerUnit.EarnMoney(amount);

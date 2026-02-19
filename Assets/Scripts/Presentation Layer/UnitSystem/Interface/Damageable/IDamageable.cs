@@ -7,7 +7,7 @@ public interface IDamageable
     void TakeCollideDamage(float damage, bool bCritical, Vector2 pos,IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null);
     void KnockBack(Vector2 dir, float power);
     void ApplyWeakness(int turnCnt);
-    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs);
-    void ApplyElementDebuff(DebuffElementData debuff);
+    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs,Vector2 pos = default);
+    void ApplyElementDebuff(DebuffElementData debuff,Vector2 pos = default);
     Transform GetTransform();
 }

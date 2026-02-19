@@ -184,6 +184,7 @@ public enum CardEffectPriority
     Adder,
     totalDamageMultiplier,
     Normal,
+    Last,
 }
 
 public enum GameSystemActionContextType
