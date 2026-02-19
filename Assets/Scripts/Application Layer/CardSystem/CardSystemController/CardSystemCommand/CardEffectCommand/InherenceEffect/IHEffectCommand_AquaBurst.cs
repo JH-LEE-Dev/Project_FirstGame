@@ -12,7 +12,7 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         AdditionalAttackStat additionalAttackStat;
-        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.MAX, 2);
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 2);
 
         if (bUpgraded == false)
         {

@@ -88,6 +88,11 @@ public class ElementExplosionSystem : MonoBehaviour
             => explosionHandlerCreator[(int)type] = action;
     }
 
+    public void ResetSystem()
+    {
+        ElementExplosionOccuredEvent = null;
+    }
+
     public void EnemyCollide(IEnemyData _enemy1, IEnemyData _enemy2, Vector2 pos)
     {
         if (_enemy1 == null || _enemy2 == null)

@@ -184,7 +184,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         rb.linearDamping = initialDamping;
         rb.angularDamping = initialAngularDamping;
 
-        StartCoroutine(SetEnemyState_Delayed(true));
+        SetEnemyState(true);
+        //StartCoroutine(SetEnemyState_Delayed(true));
 
         EnemySpawnedEvent?.Invoke();
     }

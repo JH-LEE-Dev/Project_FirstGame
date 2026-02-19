@@ -132,6 +132,7 @@ public enum DebuffElementEffectType
     ElectricShock, //감전
     Oxidation, //산화
     Wet, //습윤 ㅋ
+    Default,
     MAX,
 }
 
