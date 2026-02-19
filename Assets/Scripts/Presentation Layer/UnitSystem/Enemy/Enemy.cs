@@ -132,7 +132,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         sr.enabled = boolean;
 
         bDead = !boolean;
-        currentAppliedDebuff.Clear();
+
+        ClearDebuff();
 
         if (boolean == false)
         {
@@ -372,9 +373,23 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         EnemyDebuffChangedEvent?.Invoke();
     }
 
+    public void ReleaseDebuff(DebuffElementData debuffElementData)
+    {
+        if (currentAppliedDebuff.ContainsKey(debuffElementData.debuffElementType))
+        {
+            var data = currentAppliedDebuff[debuffElementData.debuffElementType];
+            data.turnCnt -= debuffElementData.turnCnt;
+            currentAppliedDebuff[debuffElementData.debuffElementType] = data;
+        }
 
+        EnemyDebuffChangedEvent?.Invoke();
+    }
 
-
+    public void ReleaseDebuff(DebuffElementEffectType type)
+    {
+        currentAppliedDebuff.Remove(type);
+        EnemyDebuffChangedEvent?.Invoke();
+    }
 
 
 

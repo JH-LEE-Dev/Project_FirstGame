@@ -327,8 +327,22 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 enemy.TakeDamage(sparkDamage, false, default);
 
+                enemy.ReleaseDebuff(DebuffElementEffectType.Wet);
+
                 DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
                 enemy.ApplyElementDebuff(debuffElementData);
+            }
+
+            var player = _colliders[i].GetComponent<IPlayerHandler>();
+
+            if (player != null)
+            {
+                player.TakeCollideDamage(sparkDamage, false, default);
+
+                enemy.ReleaseDebuff(DebuffElementEffectType.Wet);
+
+                DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
+                player.ApplyElementDebuff(debuffElementData);
             }
         }
     }
