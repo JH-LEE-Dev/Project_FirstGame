@@ -54,7 +54,7 @@ public enum CardReturnType
     Temp,           // 즉시 삭제
 }
 
-public enum CurrentPannel
+public enum CardZone
 {
     Deck,
     Grave,

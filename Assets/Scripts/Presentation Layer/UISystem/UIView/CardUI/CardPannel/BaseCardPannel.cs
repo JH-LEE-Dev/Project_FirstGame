@@ -10,7 +10,7 @@ public abstract class BaseCardPannel : MonoBehaviour
 
     protected ScrollRect pannelScroll = null;
 
-    protected CurrentPannel currPannelType = CurrentPannel.NONE;
+    protected CardZone currPannelType = CardZone.NONE;
 
     protected bool pannelSelectMode = false;
     public bool PannelSelectMode { get { return pannelSelectMode; } set { pannelSelectMode = value; } }
@@ -21,7 +21,7 @@ public abstract class BaseCardPannel : MonoBehaviour
     protected List<MainCardInstance> selectCards = new List<MainCardInstance>(10);
     protected List<ICardDataInstanceProvider> selectDatas = new List<ICardDataInstanceProvider>(10);
 
-    public CurrentPannel CurrPannelType
+    public CardZone CurrPannelType
     {
         get { return currPannelType; }
         set { currPannelType = value; }

@@ -169,7 +169,7 @@ public class GraveyardSystem : MonoBehaviour
             .SetEase(upEventEase)
             .OnComplete(UpEventCompleteEvent));
 
-        cardSystem?.CallPannel(CurrentPannel.Grave);
+        cardSystem?.CallPannel(CardZone.Grave);
     }
 
     public void CardMoveToDeckEffect(int spawningCount)
@@ -180,7 +180,7 @@ public class GraveyardSystem : MonoBehaviour
         MoveToDeckTopRect();
 
         // 묘지 > 덱 타이밍에 패널이 묘지 타입으로 열려 있다면 강제로 끔
-        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
+        cardSystem.ForceDeActivatePannelSelf(CardZone.Grave);
         currentMoveCnt = spawningCount;
 
         Vector3 targetPoint = cardSystem.DeckSystem.transform.position;
@@ -254,6 +254,26 @@ public class GraveyardSystem : MonoBehaviour
             .SetEase(Ease.OutCubic));
     }
 
+    public void InGraveMotion()
+    {
+        topRect.localRotation = originQuat;
+        topRect.localScale = originScale;
+
+        CancelPrevMotion(activeSeq);
+
+        activeSeq = DOTween.Sequence();
+
+        activeSeq.Append(topRect.DOPunchScale(originScale * 0.1f, 0.15f)
+            .SetUpdate(false)
+            .SetEase(Ease.OutExpo))
+            .OnComplete(InGraveMotionFinished);
+    }
+
+    private void InGraveMotionFinished()
+    {
+        topRect.localScale = originScale;
+    }
+
     private void MoveToDeckTopRect()
     {
         float totalDuration = toDeckDelay * currentMoveCnt;
@@ -272,7 +292,7 @@ public class GraveyardSystem : MonoBehaviour
         if (null == cardSystem)
             return;
 
-        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Grave);
+        cardSystem.ForceDeActivatePannelSelf(CardZone.Grave);
 
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)

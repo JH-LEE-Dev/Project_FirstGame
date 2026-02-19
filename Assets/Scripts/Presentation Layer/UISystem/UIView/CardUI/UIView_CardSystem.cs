@@ -531,15 +531,15 @@ public class UIView_CardSystem : UIView
         }
         else if(_data.selectCardPileType == SelectCardPileType.Grave)
         {
-            StartCardSelectModefromPannel(CurrentPannel.Grave, _selectCount, _bSelectforcing);
+            StartCardSelectModefromPannel(CardZone.Grave, _selectCount, _bSelectforcing);
         }
         else if (_data.selectCardPileType == SelectCardPileType.Extinction)
         {
-            StartCardSelectModefromPannel(CurrentPannel.Extinction, _selectCount, _bSelectforcing);
+            StartCardSelectModefromPannel(CardZone.Extinction, _selectCount, _bSelectforcing);
         }
         else if (_data.selectCardPileType == SelectCardPileType.Deck)
         {
-            StartCardSelectModefromPannel(CurrentPannel.Deck, _selectCount, _bSelectforcing);
+            StartCardSelectModefromPannel(CardZone.Deck, _selectCount, _bSelectforcing);
         }
     }
 
@@ -618,7 +618,7 @@ public class UIView_CardSystem : UIView
         }
     }
 
-    public void CallPannel(CurrentPannel _setType, bool bSelectMode = false)
+    public void CallPannel(CardZone _setType, bool bSelectMode = false)
     {
         if (null == cardPannel)
             return;
@@ -629,21 +629,21 @@ public class UIView_CardSystem : UIView
 
         switch (_setType)
         {
-            case CurrentPannel.Deck:
+            case CardZone.Deck:
                 ActivatePannel(deckCards);
                 break;
 
-            case CurrentPannel.Grave:
+            case CardZone.Grave:
                 ActivatePannel(graveCards);
                 break;
 
-            case CurrentPannel.Extinction:
+            case CardZone.Extinction:
                 ActivatePannel(extinctionCards);
                 break;
         }
     }
 
-    public void CallPannel(CurrentPannel _setType, bool bSelectMode, IReadOnlyList<ICardDataInstanceProvider> openList)
+    public void CallPannel(CardZone _setType, bool bSelectMode, IReadOnlyList<ICardDataInstanceProvider> openList)
     {
         if (null == cardPannel || 0 >= openList.Count)
             return;
@@ -655,7 +655,7 @@ public class UIView_CardSystem : UIView
         ActivatePannel(openList);
     }
 
-    public void ForceDeActivatePannelSelf(CurrentPannel callType)
+    public void ForceDeActivatePannelSelf(CardZone callType)
     {
         if (null == cardPannel || callType != cardPannel.CurrPannelType)
             return;
@@ -665,11 +665,11 @@ public class UIView_CardSystem : UIView
 
     public void AllDeActivatePannel()
     {
-        ForceDeActivatePannelSelf(CurrentPannel.Grave);
-        ForceDeActivatePannelSelf(CurrentPannel.Deck);
-        ForceDeActivatePannelSelf(CurrentPannel.Extinction);
+        ForceDeActivatePannelSelf(CardZone.Grave);
+        ForceDeActivatePannelSelf(CardZone.Deck);
+        ForceDeActivatePannelSelf(CardZone.Extinction);
     }
-    public void StartCardSelectModefromPannel(CurrentPannel _pannelType, int _selectCount, bool _bSelectforcing)
+    public void StartCardSelectModefromPannel(CardZone _pannelType, int _selectCount, bool _bSelectforcing)
     {
         if (null == cardSelectionModeData.availableCards)
             return;
@@ -720,7 +720,7 @@ public class UIView_CardSystem : UIView
         // 풀링한테 지워달라고 요청
         poolingSystem?.StarEffects?.Release(_performer);
         // 덱 받은 모션 재생
-        deckSystem?.InDeckFromGraveMotion();
+        deckSystem?.InDeckMotion();
 
         // 현재 받은 인덱스가 마지막 주자 인덱스랑 같으면 마무리 모션
         graveSystem?.MoveToDeckFinishMotion(currIdx);
@@ -733,20 +733,22 @@ public class UIView_CardSystem : UIView
 
     #region Effect 
 
-    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, ICardDataInstanceProvider _data = null)
+    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, 
+        ICardDataInstanceProvider _data = null, CardZone _targetType = CardZone.NONE)
     {
         GameObject star = GetStarPerformerFromPool(_startWorldPos);
         VFX_CardStar vfx = star?.GetComponent<VFX_CardStar>();
         if (null == vfx)
             return;
 
-        Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f, DragDir.UP);
-
+        vfx.TargetZone = _targetType;
         vfx.CardDataInstance = _data;
 
         float delay = 0.15f;
         float duration = 0.35f;
         Ease ease = Ease.OutQuad;
+
+        Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f, DragDir.UP);
 
         if (bCardSpawn)
             vfx.PlayCardSpawnEvent(_idx, delay, duration, ease, path, SpawnCardStarEvent, SpawnCardCompleteEvent);
@@ -762,6 +764,8 @@ public class UIView_CardSystem : UIView
     private void SpawnCardCompleteEvent(VFX_CardStar vfx)
     {
         CallOneCardDrawed(vfx.TargetPos, vfx.CardDataInstance, vfx.gameObject);
+        StarCompletedMoveToTarget(vfx.TargetZone);
+        vfx.TargetZone = CardZone.NONE;
     }
 
     private void NotCardSpawnStarEvent(VFX_CardStar vfx)
@@ -772,6 +776,24 @@ public class UIView_CardSystem : UIView
     private void NotCardSpawnCompleteEvent(VFX_CardStar vfx)
     {
         poolingSystem?.StarEffects?.Release(vfx.gameObject);
+        StarCompletedMoveToTarget(vfx.TargetZone);
+        vfx.TargetZone = CardZone.NONE;
+    }
+
+    private void StarCompletedMoveToTarget(CardZone zone)
+    {
+        switch (zone)
+        {
+            case CardZone.Deck:
+                deckSystem?.InDeckMotion();
+                break;
+            case CardZone.Grave:
+                graveSystem?.InGraveMotion();
+                break;
+            case CardZone.Extinction:
+
+                break;
+        }
     }
 
     public GameObject GetStarPerformerFromPool(Transform target)
@@ -818,6 +840,6 @@ public class UIView_CardSystem : UIView
     [Button]
     private void TestCall_PannelSelectMode()
     {
-        StartCardSelectModefromPannel(CurrentPannel.Grave, 3, true);
+        StartCardSelectModefromPannel(CardZone.Grave, 3, true);
     }
 }

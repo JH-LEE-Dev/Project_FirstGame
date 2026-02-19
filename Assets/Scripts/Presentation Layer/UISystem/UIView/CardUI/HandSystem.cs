@@ -873,7 +873,7 @@ public class HandSystem : MonoBehaviour
                 // ∫∞∂À∫∞/π¶¡ˆ ¿Ã∆Â∆Æ (≥  ±‚¡∏ ∑Œ¡˜)
                 Vector2 basePos = card.transform.position;
                 Vector2 gravePos = cardSystem.GetGravePos();
-                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos);
+                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos, _targetType: CardZone.Grave);
 
                 ReturnToPool(card);
 

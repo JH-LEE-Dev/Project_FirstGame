@@ -70,7 +70,7 @@ MonoBehaviour:
   behavior_Hit_prefab: {fileID: 11400000, guid: a97e2a0530a6fdd479b2c50f18851e8d, type: 2}
   <vfxPooling>k__BackingField: {fileID: 8530360508857755957}
   <maxTransference>k__BackingField: 2
-  <finderRadius>k__BackingField: 1.25
+  <finderRadius>k__BackingField: 2.65
   <chainDelay>k__BackingField: 0.35
 --- !u!1 &8765256413135420540
 GameObject:
