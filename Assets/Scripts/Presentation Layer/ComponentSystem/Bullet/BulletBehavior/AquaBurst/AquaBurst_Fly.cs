@@ -36,9 +36,12 @@ public class AquaBurst_Fly : AquaBurstBehavior
         if (bBehaviorEnd)
             return;
 
-        aquaBurst.speed -= Time.deltaTime * mulTime;
-        if (aquaBurst.speed < 0f)
-            aquaBurst.speed = 0f;
+        if (bulletEffectProvider.bUpgraded == false)
+        {
+            aquaBurst.speed -= Time.deltaTime * mulTime;
+            if (aquaBurst.speed < 0f)
+                aquaBurst.speed = 0f;
+        }
 
         BulletUpdate();
     }
