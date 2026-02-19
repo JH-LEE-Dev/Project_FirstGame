@@ -121,6 +121,7 @@ public enum PlayerStatType
     AttackRange,
     CriticalChance,
     AttackDamage,
+    AdditionalDamage,
     WeaknessTurnCount,
 }
 
