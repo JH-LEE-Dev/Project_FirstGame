@@ -148,9 +148,11 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
         Vector2 _startPos = startCollider.transform.position;
 
-        DrawDebugCircle(_startPos, arcDischarge.finderRadius, Color.red, 3f); // TODO: 추후 제거
+        float currentRadius = UpscaleRange(arcDischarge.finderRadius);
 
-        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, arcDischarge.finderRadius, bullet.targetMask);
+        DrawDebugCircle(_startPos, currentRadius, Color.red, 3f); // TODO: 추후 제거
+
+        Collider2D[] targets = Physics2D.OverlapCircleAll(_startPos, currentRadius, bullet.targetMask);
         if (0 >= targets.Length)
             return;
 
