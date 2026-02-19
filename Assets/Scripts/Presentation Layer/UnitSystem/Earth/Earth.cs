@@ -211,4 +211,22 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
 
         PlayerDebuffChangedEvent?.Invoke();
     }
+
+    public void ReleaseDebuff(DebuffElementData debuffElementData)
+    {
+        if (currentAppliedDebuff.ContainsKey(debuffElementData.debuffElementType))
+        {
+            var data = currentAppliedDebuff[debuffElementData.debuffElementType];
+            data.turnCnt -= debuffElementData.turnCnt;
+            currentAppliedDebuff[debuffElementData.debuffElementType] = data;
+        }
+
+        PlayerDebuffChangedEvent?.Invoke();
+    }
+
+    public void ReleaseDebuff(DebuffElementEffectType type)
+    {
+        currentAppliedDebuff.Remove(type);
+        PlayerDebuffChangedEvent?.Invoke();
+    }
 }
