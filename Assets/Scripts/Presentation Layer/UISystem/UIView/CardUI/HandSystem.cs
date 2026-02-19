@@ -873,9 +873,7 @@ public class HandSystem : MonoBehaviour
                 if (card.cardState == CardState.Hidden) return;
 
                 Vector2 basePos = card.transform.position;
-
-                Vector2 gravePos = cardSystem.GetGravePos();
-                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos, _targetType: zone);
+                cardSystem.SpawnStarAtoB(false, 0, basePos, _targetType: zone);
 
                 ReturnToPool(card);
 
