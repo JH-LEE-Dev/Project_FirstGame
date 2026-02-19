@@ -15,7 +15,6 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
         cardStatusEffectCommandHandler.SetCharacterCanAttackState(true);
 
-        Debug.Log("AAAAAAA");
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
         {
             cardStatusEffectCommandHandler.ApplyBulletElementType(pair.Value);

@@ -51,7 +51,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                         {
                             writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
                             ++enemyCnt_Applied;
-                            enemyHandler.ApplyElementDebuff(debuffData);
+                            enemyHandler.ApplyElementDebuff(debuffData,enemyHandler.GetTransform().position);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                             writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
                             ++enemyCnt_Applied;
                             debuffData.turnCnt = 2;
-                            enemyHandler.ApplyElementDebuff(debuffData);
+                            enemyHandler.ApplyElementDebuff(debuffData, enemyHandler.GetTransform().position);
                         }
                     }
                 }
@@ -99,7 +99,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
         if (_bUpgraded)
             finalRadius *= 2;
-
+        finalRadius *= 5f;
         return Physics2D.OverlapCircleAll(
             _enemyHandler.GetTransform().position,
             finalRadius,

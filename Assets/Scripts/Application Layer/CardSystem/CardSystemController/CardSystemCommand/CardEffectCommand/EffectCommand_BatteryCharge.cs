@@ -7,7 +7,7 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
     private bool bUpgradedEffectOn = false;
     private bool bEffectOn = false;
     private BulletElementData data = new BulletElementData(BulletElementType.Electric, 1);
-    private DebuffElementData debuff = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
+    private DebuffElementData debuff = new DebuffElementData(DebuffElementEffectType.ElectricShock, 5);
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {
@@ -34,7 +34,7 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
             if (currentElement.ContainsKey(BulletElementType.Electric))
             {
                 bUpgradedEffectOn = true;
-                UnityEngine.Debug.Log("BBBBB");
+
                 complexSystemActionCommandHandler.ApplyDebuffElementType(debuff);
             }
             else

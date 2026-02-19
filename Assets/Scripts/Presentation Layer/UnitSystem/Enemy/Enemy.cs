@@ -324,6 +324,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     public override void ApplyElementDebuff(DebuffElementData debuff, Vector2 pos = default)
     {
+        EnemyDebuffAppliedEvent?.Invoke(currentAppliedDebuff, debuff, pos);
+
         if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
         {
             var data = currentAppliedDebuff[debuff.debuffElementType];

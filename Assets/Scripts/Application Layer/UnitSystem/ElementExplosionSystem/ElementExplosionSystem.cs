@@ -21,17 +21,16 @@ public class ElementExplosionSystem : MonoBehaviour
 
     [SerializeField] private List<Explosion> explosions = new List<Explosion>((int)ElementExplosionType.MAX);
 
-    private List<ExplosionData> explodedTypes = new List<ExplosionData>((int)ElementExplosionType.MAX);
-
     private Dictionary<ElementExplosionType, ObjectPool<Explosion>> explosionPools
 = new Dictionary<ElementExplosionType, ObjectPool<Explosion>>();
 
     public delegate void ExplosionHandler(Collider2D[] _colliders);
     private ExplosionHandler[] explosionHandlerCreator;
 
-    public const int steamDamage = 20;
-    public const int flameDamage = 15;
-    public const int sparkDamage = 30;
+    private const int steamDamage = 20;
+    private const int flameDamage = 15;
+    private const int sparkDamage = 30;
+    private const int maxExplosionCnt = 30;
 
     public void Initialize()
     {
@@ -109,7 +108,7 @@ public class ElementExplosionSystem : MonoBehaviour
         if (debuffs == null)
             return;
 
-        EvaluateExplosionType(debuffs,_data, pos);
+        EvaluateExplosionType(debuffs, _data, pos);
     }
 
     public void EnemyHit(IEnemyData _data, IReadOnlyDictionary<BulletElementType, BulletElementData> _elements, Vector2 pos)
@@ -128,13 +127,23 @@ public class ElementExplosionSystem : MonoBehaviour
         if (_bulletElements == null || _debuffElements == null)
             return;
 
+        Span<ExplosionData> explodedTypes = stackalloc ExplosionData[maxExplosionCnt];
+        int explosionCnt = 0;
+
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in _bulletElements)
         {
+            if (explosionCnt >= maxExplosionCnt)
+            {
+                Debug.LogWarning("ElementExplosionSystem::EvaluateExplosionType -> 원소 폭발 횟수 한계 초과 .. 추가 용량 확보 필요");
+                return;
+            }
+
             if (pair.Key == BulletElementType.Electric)
             {
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.Wet))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -142,12 +151,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.Oxidation))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.Wet))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -155,12 +166,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.ElectricShock))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.Combustion))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -168,12 +181,13 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements.ContainsKey(DebuffElementEffectType.Combustion))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
             }
         }
 
-        ExecuteExplosion();
+        ExecuteExplosion(explodedTypes, explosionCnt);
     }
 
     private void EvaluateExplosionType(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements1,
@@ -182,13 +196,23 @@ public class ElementExplosionSystem : MonoBehaviour
         if (_debuffElements1 == null || _debuffElements2 == null)
             return;
 
+        Span<ExplosionData> explodedTypes = stackalloc ExplosionData[maxExplosionCnt];
+        int explosionCnt = 0;
+
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in _debuffElements1)
         {
+            if (explosionCnt >= maxExplosionCnt)
+            {
+                Debug.LogWarning("ElementExplosionSystem::EvaluateExplosionType -> 원소 폭발 횟수 한계 초과 .. 추가 용량 확보 필요");
+                return;
+            }
+
             if (pair.Key == DebuffElementEffectType.ElectricShock)
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Wet))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -196,12 +220,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Oxidation))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Wet))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -209,12 +235,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.ElectricShock))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Combustion))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -222,27 +250,38 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.ContainsKey(DebuffElementEffectType.Combustion))
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
             }
         }
 
-        ExecuteExplosion();
+        ExecuteExplosion(explodedTypes, explosionCnt);
     }
 
     private void EvaluateExplosionType(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements1,
       DebuffElementData _debuffElements2, Vector2 pos)
     {
-        if (_debuffElements1 == null )
+        if (_debuffElements1 == null)
             return;
+
+        Span<ExplosionData> explodedTypes = stackalloc ExplosionData[maxExplosionCnt];
+        int explosionCnt = 0;
 
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in _debuffElements1)
         {
+            if (explosionCnt >= maxExplosionCnt)
+            {
+                Debug.LogWarning("ElementExplosionSystem::EvaluateExplosionType -> 원소 폭발 횟수 한계 초과 .. 추가 용량 확보 필요");
+                return;
+            }
+
             if (pair.Key == DebuffElementEffectType.ElectricShock)
             {
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.Wet)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -250,12 +289,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.Oxidation)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.Wet)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -263,12 +304,14 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.ElectricShock)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Spark, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Spark, pos);
+                    ++explosionCnt;
                 }
 
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.Combustion)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Steam, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Steam, pos);
+                    ++explosionCnt;
                 }
             }
 
@@ -276,17 +319,21 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 if (_debuffElements2.debuffElementType == DebuffElementEffectType.Combustion)
                 {
-                    explodedTypes.Add(new ExplosionData(ElementExplosionType.Flame, pos));
+                    explodedTypes[explosionCnt] = new ExplosionData(ElementExplosionType.Flame, pos);
+                    ++explosionCnt;
                 }
             }
         }
 
-        ExecuteExplosion();
+        ExecuteExplosion(explodedTypes, explosionCnt);
     }
 
-    private void ExecuteExplosion()
+    private void ExecuteExplosion(Span<ExplosionData> explodedTypes, int cnt)
     {
-        for (int i = 0; i < explodedTypes.Count; ++i)
+        if (cnt == 0)
+            return;
+
+        for (int i = 0; i < cnt; ++i)
         {
             explosionPools[explodedTypes[i].type].Get().Explode(explodedTypes[i].pos);
             ElementExplosionOccuredEvent?.Invoke(explodedTypes[i].type);

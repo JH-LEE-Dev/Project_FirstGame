@@ -160,6 +160,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
             enemyUnits[i].EnemyHitEvent -= EnemyHit;
             enemyUnits[i].EnemyHitEvent += EnemyHit;
+
+            enemyUnits[i].EnemyDebuffAppliedEvent -= EnemyDebuffApplied;
+            enemyUnits[i].EnemyDebuffAppliedEvent += EnemyDebuffApplied;
         }
     }
 
@@ -176,6 +179,8 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
                 enemyUnits[i].EnemyCollideEvent -= EnemyCollide;
 
                 enemyUnits[i].EnemyHitEvent -= EnemyHit;
+
+                enemyUnits[i].EnemyDebuffAppliedEvent -= EnemyDebuffApplied;
             }
         }
     }
