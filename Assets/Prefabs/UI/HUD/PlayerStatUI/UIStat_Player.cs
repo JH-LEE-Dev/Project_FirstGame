@@ -24,6 +24,15 @@ public class UIStat_Player : MonoBehaviour
         dataInstance.unit.Setup(dataInstance.iconImage, title, value);
     }
 
+    public void Setup(PlayerStatType type, string title, string value)
+    {
+        UIPlayerStat dataInstance = units[(int)type];
+        if (null == dataInstance)
+            return;
+
+        dataInstance.unit.Setup(dataInstance.iconImage, title, value);
+    }
+
     public void ChangeValue(PlayerStatType type, float _current)
     {
         if (units.Count < (int)type)

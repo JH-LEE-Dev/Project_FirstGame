@@ -390,6 +390,23 @@ public class UIView_HUD : UIView
         characterStatUI.ChangeValue(PlayerStatType.WeaknessTurnCount, stat.weaknessTurnCnt);
     }
 
+    public void UpdateCallBulletElementalAndDebuff()
+    {
+        if (null == characterStatUI)
+            return;
+
+        IBulletEffectProvider data = characterData.GetBulletEffectProvider();
+
+        //switch(data.currentEffectElements.Keys)
+        //{
+        //    case BulletElementType.Normal:
+        //            break;
+        //}
+
+        //characterStatUI.ChangeValue(PlayerStatType.BulletEffectElemental, stat.additionalAttack);
+        //characterStatUI.ChangeValue(PlayerStatType.BulletDebuff, stat.weaknessTurnCnt);
+    }
+
     private void Init_CharacterStat()
     {
         if (null == characterStatUI)
@@ -404,7 +421,11 @@ public class UIView_HUD : UIView
         characterStatUI.Setup(PlayerStatType.AttackDamage, "기본 공격력:", stat.defaultAttack);
         characterStatUI.Setup(PlayerStatType.AdditionalDamage, "추가 공격력:", stat.additionalAttack);
         characterStatUI.Setup(PlayerStatType.WeaknessTurnCount, "적 약화 디버프 횟수:", stat.weaknessTurnCnt);
+        characterStatUI.Setup(PlayerStatType.BulletEffectElemental, "투사체 속성:", "무속성");
+        characterStatUI.Setup(PlayerStatType.BulletDebuff, "투사체 디버프:", "없음");
     }
+
+    
 
     private void Init_ConditionUI()
     {
