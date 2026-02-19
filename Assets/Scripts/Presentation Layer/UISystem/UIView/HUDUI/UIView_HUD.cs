@@ -397,6 +397,7 @@ public class UIView_HUD : UIView
 
         ICharacterStatProvider stat = characterData.GetStatProvider();
 
+        // TODO: 언어 번역을 위해 json 에서 끌어다 사용해야 함.
         characterStatUI.Setup(PlayerStatType.AttackCount, "공격 횟수:", stat.attackCnt);
         characterStatUI.Setup(PlayerStatType.AttackRange, "공격 범위:", stat.attackRange);
         characterStatUI.Setup(PlayerStatType.CriticalChance, "치명타 확률:", stat.criticalChance);
