@@ -254,6 +254,26 @@ public class GraveyardSystem : MonoBehaviour
             .SetEase(Ease.OutCubic));
     }
 
+    public void InGraveMotion()
+    {
+        topRect.localRotation = originQuat;
+        topRect.localScale = originScale;
+
+        CancelPrevMotion(activeSeq);
+
+        activeSeq = DOTween.Sequence();
+
+        activeSeq.Append(topRect.DOPunchScale(originScale * 0.1f, 0.15f)
+            .SetUpdate(false)
+            .SetEase(Ease.OutExpo))
+            .OnComplete(InGraveMotionFinished);
+    }
+
+    private void InGraveMotionFinished()
+    {
+        topRect.localScale = originScale;
+    }
+
     private void MoveToDeckTopRect()
     {
         float totalDuration = toDeckDelay * currentMoveCnt;

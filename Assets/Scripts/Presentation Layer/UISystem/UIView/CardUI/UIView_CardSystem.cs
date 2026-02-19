@@ -788,7 +788,7 @@ public class UIView_CardSystem : UIView
                 deckSystem?.InDeckMotion();
                 break;
             case CardZone.Grave:
-
+                graveSystem?.InGraveMotion();
                 break;
             case CardZone.Extinction:
 
