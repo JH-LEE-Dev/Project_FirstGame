@@ -105,6 +105,9 @@ public class CardSystem
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
         cardSystemController.CardSlotCntChangedEvent += CardSlotCntChanged;
 
+        cardSystemController.CardUsingConditionCheckEvent -= CardUsingConditionCheck;
+        cardSystemController.CardUsingConditionCheckEvent += CardUsingConditionCheck;
+
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
         cardSelectionManager.CardSelectionStartEvent += CardSelectionModeStart;
 
@@ -146,6 +149,8 @@ public class CardSystem
         cardSystemController.CardComplexCommandDispatchEvent -= complexCardEffectResolver.ExecuteCommand;
 
         cardSystemController.CardSlotCntChangedEvent -= CardSlotCntChanged;
+
+        cardSystemController.CardUsingConditionCheckEvent -= CardUsingConditionCheck;
 
         cardSelectionManager.CardSelectionStartEvent -= CardSelectionModeStart;
 
@@ -293,5 +298,10 @@ public class CardSystem
                 cardDataControlManager.ExecuteCommand(command, bUndo);
                 break;
         }
+    }
+
+    private void CardUsingConditionCheck(CardUsingCondition _condition)
+    {
+        complexCardEffectResolver.CardUsingConditionCheck(_condition);
     }
 }

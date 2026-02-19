@@ -22,9 +22,10 @@ public abstract class CardEffectCommand : CardSystemCommand
         elementTypes = _elementTypes;
         debuffTypes = _debuffTypes;
 
-        if(followUpEffectCommand_Prefab != null)
+        if(followUpEffectCommand_Prefab != null && followUpEffectCommand == null)
         {
             followUpEffectCommand = Instantiate(followUpEffectCommand_Prefab);
+            followUpEffectCommand.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
         }
     }
 

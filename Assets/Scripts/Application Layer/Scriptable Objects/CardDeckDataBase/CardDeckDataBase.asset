@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CardDeckDataBase
   m_EditorClassIdentifier: Assembly-CSharp::CardDeckDataBase
   cardPileData:
-  - cardName: 22
+  - cardName: 11
     cnt: 4
     bUpgraded: 0
   - cardName: 25

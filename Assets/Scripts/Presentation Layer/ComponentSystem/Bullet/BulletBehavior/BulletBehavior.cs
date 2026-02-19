@@ -99,7 +99,7 @@ public abstract class BulletBehavior : ScriptableObject
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }
 
-            hit.TakeDamage(_data.resultDamage, _data.bCritical, pos);
+            hit.TakeDamage(_data.resultDamage, _data.bCritical, pos,bulletEffectProvider.currentEffectElements);
         }
     }
 

@@ -7,21 +7,18 @@ public class EffectCommand_NaturalCycle_Ready : CardEffectCommand<IComplexSystem
 {
     IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
 
-    private CardEffectCommand naturalCycleExecuteCommand = null;
-
+    private bool bExecuted = false; 
+    
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes, Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
-
-        if (naturalCycleExecuteCommand == null)
-        {
-            naturalCycleExecuteCommand = Instantiate(followUpEffectCommand);
-        }
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
-        naturalCycleExecuteCommand.ResetCommandData();
+        bExecuted = false;
+
+        followUpEffectCommand.ResetCommandData();
 
         complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
 
@@ -35,11 +32,16 @@ public class EffectCommand_NaturalCycle_Ready : CardEffectCommand<IComplexSystem
 
     private void TargetEventOccured(ElementExplosionType _type)
     {
+        if (bExecuted == true)
+            return;
+
         complexSystemActionCommandHandler.CancelObserveElementExplosionEvent(TargetEventOccured);
 
         if (followUpEffectCommand != null)
         {
             complexSystemActionCommandHandler.ReserveCardEffect(followUpEffectCommand);
         }
+
+        bExecuted = true;
     }
 }

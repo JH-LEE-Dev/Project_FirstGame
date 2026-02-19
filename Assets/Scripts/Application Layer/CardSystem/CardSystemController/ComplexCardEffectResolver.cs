@@ -46,6 +46,11 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
             cardSystemCommand.Undo(this);
     }
 
+    public void CardUsingConditionCheck(CardUsingCondition condition)
+    {
+        condition.CheckUsingCondition(this);
+    }
+
     public void ApplyAttackCntModifier(int attckCnt, GameSystemActionContextType cardSystemContextType)
     {
         cardStatusEffectCommandHandler.ApplyAttackCntModifier(attckCnt);
