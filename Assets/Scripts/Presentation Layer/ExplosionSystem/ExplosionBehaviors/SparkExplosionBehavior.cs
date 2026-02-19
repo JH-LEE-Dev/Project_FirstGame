@@ -7,7 +7,7 @@ public class SparkExplosionBehavior : ExplosionBehavior
 {
     private SparkExplosion sparkExplosion;
     private float sparkExplosionRange = 2f;
-    private float knockBackPower = 15f;
+    private float knockBackPower = 3f;
 
 
     private Coroutine waitCo;
@@ -83,6 +83,11 @@ public class SparkExplosionBehavior : ExplosionBehavior
         }
 
         if (token == explodeToken)
+        {
             ExplosionEnd();
+            anim.Update(0f);
+            anim.gameObject.SetActive(false);
+            anim.enabled = false;
+        }
     }
 }
