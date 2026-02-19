@@ -14,8 +14,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
     public event Action EnemyDebuffChangedEvent;
-    public event Action<IEnemyData, IEnemyData,Vector2> EnemyCollideEvent;
-    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>,Vector2> EnemyHitEvent;
+    public event Action<IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData>, DebuffElementData,Vector2> EnemyDebuffAppliedEvent;
+    public event Action<IEnemyData, IEnemyData, Vector2> EnemyCollideEvent;
+    public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>, Vector2> EnemyHitEvent;
 
     //인터페이스 선언부.
     public IHealthComponentProvider healthComponentProvider => healthComponent;
@@ -207,13 +208,13 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         combatComponent.Initialize(ctx, visualComponentCoordinator, statComponent);
     }
 
-    public override void TakeDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
+    public override void TakeDamage(float damage, bool bCritical, Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null)
     {
         if (bDead == true)
             return;
 
         if (_bulletElements != null)
-            EnemyHitEvent?.Invoke(this, _bulletElements,pos);
+            EnemyHitEvent?.Invoke(this, _bulletElements, pos);
 
         damage = elementDamageHandleComponent.GetResultDamage(_bulletElements, damage);
         healthComponent.TakeDamage(damage);
@@ -298,10 +299,12 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         moveComponent.ApplyKnockBack(dir, power);
     }
 
-    public override void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
+    public override void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default)
     {
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffs)
         {
+            EnemyDebuffAppliedEvent?.Invoke(currentAppliedDebuff, pair.Value, pos);
+
             if (currentAppliedDebuff.ContainsKey(pair.Key))
             {
                 var data = currentAppliedDebuff[pair.Key];
@@ -317,7 +320,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         EnemyDebuffChangedEvent?.Invoke();
     }
 
-    public override void ApplyElementDebuff(DebuffElementData debuff)
+    public override void ApplyElementDebuff(DebuffElementData debuff, Vector2 pos = default)
     {
         if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
         {

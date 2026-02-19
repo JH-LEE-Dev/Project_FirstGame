@@ -531,7 +531,7 @@ MonoBehaviour:
     cardType: 0
     elementType: 0
     usingType: 1
-    priority: 0
+    priority: 3
     bUpgradable: 1
     defaultElementTypes: []
     defaultdebuffTypes: []
@@ -591,7 +591,7 @@ MonoBehaviour:
     cardType: 0
     elementType: 0
     usingType: 0
-    priority: 1
+    priority: 4
     bUpgradable: 1
     defaultElementTypes: []
     defaultdebuffTypes: []

@@ -16,8 +16,8 @@ public interface IEnemyHandler
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
     void ClearDebuff();
     CircleCollider2D statusCollider { get; }
-    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs);
-    void ApplyElementDebuff(DebuffElementData debuff);
+    void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default);
+    void ApplyElementDebuff(DebuffElementData debuff,Vector2 pos = default);
     void TakeDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<BulletElementType, BulletElementData> _bulletElements = null);
     void TakeCollideDamage(float damage, bool bCritical,Vector2 pos, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _debuffElements = null);
 }

@@ -76,8 +76,8 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
         else
             complexSystemActionCommandHandler.AdditionalDraw(1, GameSystemActionContextType.MAX);
 
-        complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
         complexSystemActionCommandHandler.CardsToDeck(writeBuffer, gameSystemActionContext);
+        complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.UsedCardsRemoveFromHand,writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler handler)

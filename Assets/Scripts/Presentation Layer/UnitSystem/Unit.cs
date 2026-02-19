@@ -159,12 +159,12 @@ public class Unit : MonoBehaviour, IDamageable
         throw new NotImplementedException();
     }
 
-    public virtual void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs)
+    public virtual void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default)
     {
 
     }
 
-    public virtual void ApplyElementDebuff(DebuffElementData debuff)
+    public virtual void ApplyElementDebuff(DebuffElementData debuff,Vector2 pos = default)
     {
 
     }

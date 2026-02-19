@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b71fd563093f7814aaf5a5515cdaa4dd, type: 3}
   m_Name: Natural Cycle Ready Command
   m_EditorClassIdentifier: Assembly-CSharp::EffectCommand_NaturalCycle_Ready
-  gameSystemActionTimingType: 0
+  gameSystemActionTimingType: 1
   effectApplyType: 3
   followUpEffectCommand_Prefab: {fileID: 11400000, guid: 37027f9964a6f7c43bac5327dda56606, type: 2}
   valueModifier: 1

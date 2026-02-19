@@ -3,8 +3,20 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Natural Cycle Execute")]
 public class EffectCommand_NaturalCycle_Execute : CardEffectCommand<ICardLogicSystemActionCommandHandler>
 {
+    private bool bExecuted = false;
+
+    public override void ResetCommandData()
+    {
+        base.ResetCommandData();
+
+        bExecuted = false;    
+    }
+
     protected override void Execute(ICardLogicSystemActionCommandHandler logicSystemActionCommandHandler)
     {
+        if (bExecuted == true)
+            return;
+
         if(bUpgraded == false)
         {
             logicSystemActionCommandHandler.DrawAgain(2);
@@ -13,6 +25,8 @@ public class EffectCommand_NaturalCycle_Execute : CardEffectCommand<ICardLogicSy
         {
             logicSystemActionCommandHandler.DrawAgain(3);
         }
+
+        bExecuted = true;
     }
 
     protected override void Undo(ICardLogicSystemActionCommandHandler logicSystemActionCommandHandler)

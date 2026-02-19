@@ -13,6 +13,8 @@ public class EffectCommand_ElementalBoost : CardEffectCommand<IComplexSystemActi
 
     protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
     {
+        bApplied = false;
+
         var currentElement = complexSystemActionCommand.GetCurrentAppliedBulletElement();
 
         if (currentElement.Count != 0)
