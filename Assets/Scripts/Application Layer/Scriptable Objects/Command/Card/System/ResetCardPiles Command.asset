@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5566095b6c3fd94295cef2607359835, type: 3}
   m_Name: ResetCardPiles Command
   m_EditorClassIdentifier: Assembly-CSharp::ActionCommand_ResetCardPiles
-  cardSystemActionTimingType: 0
+  gameSystemActionTimingType: 6
+  effectApplyType: 0
