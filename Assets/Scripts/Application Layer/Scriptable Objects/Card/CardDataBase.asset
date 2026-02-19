@@ -427,12 +427,8 @@ MonoBehaviour:
     usingType: 1
     priority: 2
     bUpgradable: 1
-    defaultElementTypes:
-    - bulletElementType: 1
-      nestingCnt: 1
-    defaultdebuffTypes:
-    - debuffElementType: 1
-      turnCnt: 2
+    defaultElementTypes: []
+    defaultdebuffTypes: []
     cardLogicSystemEffects_Prefab: []
     cardDataControlSystemEffects_Prefab: []
     cardStatusEffects_Prefab:

@@ -12,9 +12,6 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
 
         AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1,default);
 
-        //юс╫ц
-        complexSystemActionCommand.ApplyDebuffElementType(new DebuffElementData(DebuffElementEffectType.ElectricShock,1));
-
         if (bUpgraded == false)
         {
             complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false);
