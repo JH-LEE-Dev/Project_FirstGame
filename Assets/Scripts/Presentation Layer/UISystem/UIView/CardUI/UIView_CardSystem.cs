@@ -414,7 +414,7 @@ public class UIView_CardSystem : UIView
 
         if (uiActionData.cardSystemContextType == GameSystemActionContextType.HandCardsToDeck)
         {
-            ReturnCard(uiActionData.cards, CardReturnType.Extinction);
+            ReturnCard(uiActionData.cards, CardReturnType.ToDeck);
         }
 
         return turnWaitTime;
