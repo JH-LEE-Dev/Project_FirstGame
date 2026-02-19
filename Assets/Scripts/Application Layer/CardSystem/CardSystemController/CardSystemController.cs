@@ -114,6 +114,8 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public void StartCardDrawTurn()
     {
+        DispatchCardSystemActionCommand_GameStarted();
+
         cardSlotManager.ResetSlotCntModifier();
 
         CardDrawStartEvent?.Invoke();
@@ -183,6 +185,15 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
         cardEffect_BeforeAttack.Clear();
         cardEffect_BeforeTurn.Clear();
         cardEffect_BeforeCardUsingPhase.Clear();
+    }
+
+    private void DispatchCardSystemActionCommand_GameStarted()
+    {
+        for (int i = 0; i < cardLogicSystemActionCommands.Count; ++i)
+        {
+            if (cardLogicSystemActionCommands[i].GetGameSystemActionTimingType() == GameSystemActionTimingType.GameStarted)
+                CardLogicSystemCommandDispatchEvent?.Invoke(cardLogicSystemActionCommands[i], false);
+        }
     }
 
     private void DispatchCardSystemActionCommand_BeforeTurn()
