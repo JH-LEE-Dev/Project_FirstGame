@@ -385,7 +385,8 @@ public class UIView_HUD : UIView
         characterStatUI.ChangeValue(PlayerStatType.AttackCount, stat.attackCnt);
         characterStatUI.ChangeValue(PlayerStatType.AttackRange, stat.attackRange);
         characterStatUI.ChangeValue(PlayerStatType.CriticalChance, stat.criticalChance);
-        characterStatUI.ChangeValue(PlayerStatType.AttackDamage, stat.resultDamage);
+        characterStatUI.ChangeValue(PlayerStatType.AttackDamage, stat.defaultAttack);
+        characterStatUI.ChangeValue(PlayerStatType.AdditionalDamage, stat.additionalAttack);
         characterStatUI.ChangeValue(PlayerStatType.WeaknessTurnCount, stat.weaknessTurnCnt);
     }
 
@@ -396,10 +397,12 @@ public class UIView_HUD : UIView
 
         ICharacterStatProvider stat = characterData.GetStatProvider();
 
+        // TODO: 언어 번역을 위해 json 에서 끌어다 사용해야 함.
         characterStatUI.Setup(PlayerStatType.AttackCount, "공격 횟수:", stat.attackCnt);
         characterStatUI.Setup(PlayerStatType.AttackRange, "공격 범위:", stat.attackRange);
         characterStatUI.Setup(PlayerStatType.CriticalChance, "치명타 확률:", stat.criticalChance);
-        characterStatUI.Setup(PlayerStatType.AttackDamage, "공격력:", stat.resultDamage);
+        characterStatUI.Setup(PlayerStatType.AttackDamage, "기본 공격력:", stat.defaultAttack);
+        characterStatUI.Setup(PlayerStatType.AdditionalDamage, "추가 공격력:", stat.additionalAttack);
         characterStatUI.Setup(PlayerStatType.WeaknessTurnCount, "적 약화 디버프 횟수:", stat.weaknessTurnCnt);
     }
 
