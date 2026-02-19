@@ -38,6 +38,9 @@ public class CardMotion : MonoBehaviour
     [SerializeField] private float rejectScale = 0.95f;   
     [SerializeField] private float rejectAngle = 5f;    
     private Sequence rejectSeq;
+    private Vector3 rejectOriginScale;
+    private float rejectOriginZ;
+    private bool rejectActive;
 
     [Header("Grave Motion")]
     private float graveDuration = 0.2f;
@@ -92,6 +95,7 @@ public class CardMotion : MonoBehaviour
         previewEndScaleTween?.Kill();
 
         rejectSeq?.Kill();
+        rejectActive = false;
 
         flyTween?.Kill();
         flyRotateTween?.Kill();
@@ -177,11 +181,31 @@ public class CardMotion : MonoBehaviour
     // 못 쓸때.
     public void PlayReject()
     {
+        bool wasRejecting = rejectSeq != null && rejectSeq.IsActive();
+
+        Vector3 baseScale;
+        float baseZ;
+
+        if (wasRejecting && rejectActive)
+        {
+            baseScale = rejectOriginScale;
+            baseZ = rejectOriginZ;
+        }
+        else
+        {
+            baseScale = transform.localScale;
+            baseZ = rt.localEulerAngles.z;
+            rejectOriginScale = baseScale;
+            rejectOriginZ = baseZ;
+        }
+
         // 다른 연출들 정리
         AllKillTweens(false);
 
-        Vector3 baseScale = transform.localScale;
-        float baseZ = transform.localEulerAngles.z;
+        transform.localScale = baseScale;
+        rt.localRotation = Quaternion.Euler(0f, 0f, baseZ);
+
+        rejectActive = true;
 
         float t1 = rejectTotal * 0.45f;
         float t2 = rejectTotal * 0.55f;
@@ -191,15 +215,25 @@ public class CardMotion : MonoBehaviour
         float a3 = rejectAngle * 0.25f;
 
         rejectSeq = DOTween.Sequence()
-            .SetUpdate(true) 
-                             
-            .Join(transform.DOScale(baseScale * rejectScale, t1).SetEase(Ease.OutQuad))
-            .Append(transform.DOScale(baseScale, t2).SetEase(Ease.OutQuad))
+              .SetUpdate(true)
+              .SetLink(gameObject, LinkBehaviour.KillOnDisable) // 안전장치(선택이지만 추천)
 
-            .Insert(0f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a1), rejectTotal * 0.25f).SetEase(Ease.OutQuad))
-            .Insert(rejectTotal * 0.25f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a2), rejectTotal * 0.25f).SetEase(Ease.InOutQuad))
-            .Insert(rejectTotal * 0.50f, transform.DOLocalRotate(new Vector3(0, 0, baseZ + a3), rejectTotal * 0.20f).SetEase(Ease.InOutQuad))
-            .Insert(rejectTotal * 0.70f, transform.DOLocalRotate(new Vector3(0, 0, baseZ), rejectTotal * 0.30f).SetEase(Ease.OutQuad));
+              .Join(transform.DOScale(baseScale * rejectScale, t1).SetEase(Ease.OutQuad))
+              .Append(transform.DOScale(baseScale, t2).SetEase(Ease.OutQuad))
+
+              .Insert(0f, rt.DOLocalRotate(new Vector3(0, 0, baseZ + a1), rejectTotal * 0.25f).SetEase(Ease.OutQuad))
+              .Insert(rejectTotal * 0.25f, rt.DOLocalRotate(new Vector3(0, 0, baseZ + a2), rejectTotal * 0.25f).SetEase(Ease.InOutQuad))
+              .Insert(rejectTotal * 0.50f, rt.DOLocalRotate(new Vector3(0, 0, baseZ + a3), rejectTotal * 0.20f).SetEase(Ease.InOutQuad))
+              .Insert(rejectTotal * 0.70f, rt.DOLocalRotate(new Vector3(0, 0, baseZ), rejectTotal * 0.30f).SetEase(Ease.OutQuad))
+
+              .OnComplete(OnRejectSeqComplete)
+              .OnKill(OnRejectSeqComplete);
+    }
+
+    private void OnRejectSeqComplete()
+    {
+        rejectActive = false;
+        rejectSeq = null;
     }
 
 
