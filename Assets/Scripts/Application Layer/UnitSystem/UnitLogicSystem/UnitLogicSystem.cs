@@ -416,4 +416,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     {
         elementExplosionSystem.EnemyCollide(_data1, _data2, pos);
     }
+
+    public void WaveRewardReceived(int amount)
+    {
+        playerUnit.EarnMoney(amount);
+    }
 }
