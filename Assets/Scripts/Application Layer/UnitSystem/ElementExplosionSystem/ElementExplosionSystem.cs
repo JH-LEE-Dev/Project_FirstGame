@@ -344,7 +344,7 @@ public class ElementExplosionSystem : MonoBehaviour
             {
                 player.TakeCollideDamage(sparkDamage, false, default);
 
-                enemy.ReleaseDebuff(DebuffElementEffectType.Wet);
+                player.ReleaseDebuff(DebuffElementEffectType.Wet);
 
                 DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
                 player.ApplyElementDebuff(debuffElementData);

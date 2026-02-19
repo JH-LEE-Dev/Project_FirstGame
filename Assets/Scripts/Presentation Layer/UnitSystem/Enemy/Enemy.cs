@@ -215,12 +215,12 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (bDead == true)
             return;
 
-        if (_bulletElements != null)
-            EnemyHitEvent?.Invoke(this, _bulletElements, pos);
-
         damage = elementDamageHandleComponent.GetResultDamage(_bulletElements, damage);
         healthComponent.TakeDamage(damage);
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
+
+        if (_bulletElements != null)
+            EnemyHitEvent?.Invoke(this, _bulletElements, pos);
     }
 
     private void EnemyIsKilled()
