@@ -29,7 +29,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
                         for (int j = 0; j < targets.Count(); ++j)
                         {
-                            var enemyHandler = (IEnemyHandler)targets[j];
+                            var enemyHandler = targets[j].GetComponent<IEnemyHandler>();
                             if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
                             {
                                 enemyHandler.ApplyElementDebuff(debuffData);
@@ -45,7 +45,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
                         for (int j = 0; j < targets.Count(); ++j)
                         {
-                            var enemyHandler = (IEnemyHandler)targets[j];
+                            var enemyHandler = targets[j].GetComponent<IEnemyHandler>();
                             if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
                             {
                                 debuffData.turnCnt = 2;

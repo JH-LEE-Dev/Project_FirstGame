@@ -20,7 +20,7 @@ public class ElementDamageHandleComponent
 
         //Card Logic System ¸Ê ÇÒ´ç
         BindLogic(BulletElementType.Electric, CalcElectricDamage);
-        BindLogic(BulletElementType.Water, CalcWetDamage);
+        BindLogic(BulletElementType.Water, NoCalculate);
 
         void BindLogic(BulletElementType _type, BulletDamageCalcHandler _action)
             => bulletDamageCalcCreatorMap[(int)_type] = _action;
@@ -29,7 +29,7 @@ public class ElementDamageHandleComponent
 
         //Card Logic System ¸Ê ÇÒ´ç
         BindCollideLogic(DebuffElementEffectType.ElectricShock, CalcElectricDamage);
-        BindCollideLogic(DebuffElementEffectType.Wet, CalcWetDamage);
+        BindCollideLogic(DebuffElementEffectType.Wet, NoCalculate);
 
         void BindCollideLogic(DebuffElementEffectType _type, CollideDamageCalcHandler _action)
             => collideDamageCalcCreatorMap[(int)_type] = _action;
@@ -101,5 +101,15 @@ public class ElementDamageHandleComponent
             additionalDamage += _damage * 0.5f;
 
         return additionalDamage;
+    }
+
+    private float NoCalculate(DebuffElementEffectType _type, float _damage)
+    {
+        return 0;
+    }
+
+    private float NoCalculate(BulletElementType _type, float _damage)
+    {
+        return 0;
     }
 }
