@@ -47,7 +47,9 @@ public enum CardReturnType
 
     Extinction,     // 소멸 연출 이후 풀링반납.
 
-    MagicUse,       // 마법 연출 이후 풀링반납.
+    MagicUse,       // 마법 연출 이후 풀링반납. (묘지로 가는 별똥별)
+
+    ToDeck,         // 별이 되어서 덱으로
 
     StayHand,       // 손에 그대로 있기. 풀링반납안함. 다시 패로 감.
 

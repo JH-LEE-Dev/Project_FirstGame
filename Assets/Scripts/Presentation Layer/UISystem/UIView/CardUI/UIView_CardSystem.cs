@@ -1,12 +1,13 @@
+using DG.Tweening;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DG.Tweening;
-using NaughtyAttributes;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static DG.Tweening.DOTweenAnimation;
 
 public class UIView_CardSystem : UIView
 {
@@ -733,7 +734,7 @@ public class UIView_CardSystem : UIView
 
     #region Effect 
 
-    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, Vector3 _targetWorldPos, 
+    public void SpawnStarAtoB(bool bCardSpawn, int _idx, Vector3 _startWorldPos, 
         ICardDataInstanceProvider _data = null, CardZone _targetType = CardZone.NONE)
     {
         GameObject star = GetStarPerformerFromPool(_startWorldPos);
@@ -748,6 +749,7 @@ public class UIView_CardSystem : UIView
         float duration = 0.35f;
         Ease ease = Ease.OutQuad;
 
+        Vector3 _targetWorldPos = GetCardZoneWorldPos(_targetType);
         Vector3[] path = pathSystem.GetDragPath(star, _startWorldPos, _targetWorldPos, 150f, DragDir.UP);
 
         if (bCardSpawn)
@@ -794,6 +796,26 @@ public class UIView_CardSystem : UIView
 
                 break;
         }
+    }
+
+    public Vector3 GetCardZoneWorldPos(CardZone zone)
+    {
+        Vector3 _targetWorldPos = Vector3.zero;
+
+        switch (zone)
+        {
+            case CardZone.Deck:
+                _targetWorldPos = deckSystem.transform.position;
+                break;
+            case CardZone.Grave:
+                _targetWorldPos = graveSystem.transform.position;
+                break;
+            case CardZone.Extinction:
+                _targetWorldPos = extinctionSystem.transform.position;
+                break;
+        }
+
+        return _targetWorldPos;
     }
 
     public GameObject GetStarPerformerFromPool(Transform target)
