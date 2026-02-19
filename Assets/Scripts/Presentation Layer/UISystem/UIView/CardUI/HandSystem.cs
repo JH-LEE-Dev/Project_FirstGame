@@ -768,10 +768,7 @@ public class HandSystem : MonoBehaviour
             return;
         }
 
-
-        //card.SetUIState(CardState.Other);
         card.Motion.SetSocketIndex(-1);
-
 
         if (!computeArcOptimization)
         {
@@ -800,7 +797,13 @@ public class HandSystem : MonoBehaviour
             case CardReturnType.MagicUse:
                 if (wasInHand) card.SetUIState(CardState.EffectInHand);
                 else card.SetUIState(CardState.EffectOther);
-                PlayMagicUseAndReturn(card, delay);
+                PlayMagicUseAndReturn(card, delay, CardZone.Grave);
+                break;
+
+            case CardReturnType.ToDeck:
+                if (wasInHand) card.SetUIState(CardState.EffectInHand);
+                else card.SetUIState(CardState.EffectOther);
+                PlayMagicUseAndReturn(card, delay, CardZone.Deck);
                 break;
         }
     }
@@ -824,7 +827,6 @@ public class HandSystem : MonoBehaviour
 
     private void PlayExtinctionAndReturn(MainCardInstance card, float delay)
     {
-        // øπ: º“∏Í Ω√∞£/∂≥∏≤ Ω√∞£ ∆©¥◊
         float dissolveDur = 1.0f;
         float shakeDur = 0.35f;
 
@@ -850,7 +852,7 @@ public class HandSystem : MonoBehaviour
         }).SetUpdate(true);
     }
 
-    private void PlayMagicUseAndReturn(MainCardInstance card, float delay)
+    private void PlayMagicUseAndReturn(MainCardInstance card, float delay, CardZone zone)
     {
         DOVirtual.DelayedCall(delay, () =>
         {
@@ -870,10 +872,10 @@ public class HandSystem : MonoBehaviour
                 if (card == null) return;
                 if (card.cardState == CardState.Hidden) return;
 
-                // ∫∞∂À∫∞/π¶¡ˆ ¿Ã∆Â∆Æ (≥  ±‚¡∏ ∑Œ¡˜)
                 Vector2 basePos = card.transform.position;
+
                 Vector2 gravePos = cardSystem.GetGravePos();
-                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos, _targetType: CardZone.Grave);
+                cardSystem.SpawnStarAtoB(false, 0, basePos, gravePos, _targetType: zone);
 
                 ReturnToPool(card);
 
