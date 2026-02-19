@@ -23,6 +23,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyHandler.currentAppliedDebuff => currentAppliedDebuff;
     bool IEnemyData.bDead => bDead;
+    bool IEnemyHandler.bDead => bDead;
+    CircleCollider2D IEnemyHandler.statusCollider => statusCollider;
+
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.
@@ -38,7 +41,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     [SerializeField] private LayerMask gravityLayerMask;
     public EnemyTypeData enemyTypeData { get; private set; }
     public int enemyID { get; private set; }
-    public CircleCollider2D statusCollider { get; private set; }
+
+    [SerializeField] public CircleCollider2D statusCollider;
 
     private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
     private EMoveComponent moveComponent;
@@ -89,7 +93,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             visualComponentCoordinator = new EVisualComponentCoordinator();
             statComponent = GetComponent<EStatComponent>();
             elementDamageHandleComponent = new ElementDamageHandleComponent();
-            statusCollider = GetComponentInChildren<CircleCollider2D>();
 
             //Visual 로직에 필요한 의존성을 추가해주면 됨.
             visualComponentCoordinator.Initialize(combatComponent, moveComponent);
@@ -128,10 +131,10 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         sr.enabled = boolean;
 
         bDead = !boolean;
+        currentAppliedDebuff.Clear();
 
         if (boolean == false)
         {
-            //currentAppliedDebuff.Clear();
             rb.simulated = false;
         }
         else
@@ -309,7 +312,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             {
                 currentAppliedDebuff[pair.Key] = pair.Value;
             }
-
         }
 
         EnemyDebuffChangedEvent?.Invoke();

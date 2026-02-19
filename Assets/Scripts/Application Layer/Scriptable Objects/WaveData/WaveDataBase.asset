@@ -15,7 +15,7 @@ MonoBehaviour:
   waveData:
   - waveIdx: 0
     spawnEnemyCnt: 1
-    InitialEnemyCnt: 3
+    InitialEnemyCnt: 13
     currentEnemyThreshold: 2
     numberOfEnemiesToKill: 5
     waveRewardMoneyAmount: 1000

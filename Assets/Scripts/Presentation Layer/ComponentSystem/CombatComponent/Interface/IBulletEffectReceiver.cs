@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface IBulletEffectReceiver
@@ -8,4 +9,5 @@ public interface IBulletEffectReceiver
     void UndoBulletElementApply(BulletElementData _effectElementData);
     void ApplyDebuffElementType(DebuffElementData _debuffElementData);
     void UndoDebuffElementApply(DebuffElementData _debuffElementData);
+    IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement();
 }

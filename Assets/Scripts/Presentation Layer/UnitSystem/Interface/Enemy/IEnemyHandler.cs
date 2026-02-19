@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public interface IEnemyHandler
 {
+    bool bDead { get; }
     Transform GetTransform();
     float GetMaxHealth();
     float GetCurrentHealth();

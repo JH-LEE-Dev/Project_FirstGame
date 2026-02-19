@@ -59,6 +59,7 @@ MonoBehaviour:
   gravityLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  statusCollider: {fileID: 4305044845098640313}
   vfxDeadImpact: {fileID: 7343177008291146914}
 --- !u!114 &542305970191168841
 MonoBehaviour:

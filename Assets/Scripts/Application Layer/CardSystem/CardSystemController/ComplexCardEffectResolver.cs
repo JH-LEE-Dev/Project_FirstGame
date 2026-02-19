@@ -317,4 +317,14 @@ public class ComplexCardEffectResolver : IComplexSystemActionCommandHandler
     {
         cardStatusEffectCommandHandler.ApplyRangeModifier(range);
     }
+
+    public void SetInherenceCard(CardDataInstance _card)
+    {
+        slotSystemActionCommandHandler.SetInherenceCard(_card);
+    }
+
+    public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
+    {
+        return cardStatusEffectCommandHandler.GetCurrentAppliedBulletElement();
+    }
 }

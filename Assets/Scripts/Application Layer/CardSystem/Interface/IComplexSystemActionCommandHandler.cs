@@ -55,4 +55,6 @@ public interface IComplexSystemActionCommandHandler : ICommandHandler
     void ApplySlotCntModifier(int _slotCnt);
     void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
     void ApplyAttackRangeModifier(int range);
+    void SetInherenceCard(CardDataInstance _card);
+    IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement();
 }

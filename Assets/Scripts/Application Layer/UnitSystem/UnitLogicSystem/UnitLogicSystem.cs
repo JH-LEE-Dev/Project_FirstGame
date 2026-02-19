@@ -73,9 +73,10 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
         BindEvent_Enemy();
 
-        for(int i = 0;i<enemyUnits.Count;++i)
+        for (int i = 0; i < enemyUnits.Count; ++i)
         {
-            enemyHandlers.Add(enemyUnits[i]);
+            if (enemyHandlers.Contains(enemyUnits[i]) == false)
+                enemyHandlers.Add(enemyUnits[i]);
         }
 
         EnemySpawnedEvent?.Invoke();
@@ -92,7 +93,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     public void Release()
     {
-        ReleaseEvents();    
+        ReleaseEvents();
         ReleaseEvent_Character();
         ReleaseEvent_Enemy();
         ReleaseEvent_Player();
@@ -275,7 +276,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     public void HPDecrease(float amount)
     {
-        playerUnit.TakeCollideDamage(amount, false,default);
+        playerUnit.TakeCollideDamage(amount, false, default);
     }
 
     public void ApplyCriticalChanceModifier(int chance)
@@ -349,7 +350,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
     }
 
-    public void SetBulletType(BulletType bulletType,bool bUpgraded)
+    public void SetBulletType(BulletType bulletType, bool bUpgraded)
     {
         characterUnit.bulletEffectReceiver.SetBulletType(bulletType, bUpgraded);
     }
@@ -404,16 +405,26 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     private void PlayerHit(IPlayerData _data, Vector2 pos, IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> _elements)
     {
-        elementExplosionSystem.PlayerCollide(_data, _elements,pos);
+        elementExplosionSystem.PlayerCollide(_data, _elements, pos);
     }
 
-    private void EnemyHit(IEnemyData _data,IReadOnlyDictionary<BulletElementType, BulletElementData> _elements,Vector2 pos)
+    private void EnemyHit(IEnemyData _data, IReadOnlyDictionary<BulletElementType, BulletElementData> _elements, Vector2 pos)
     {
         elementExplosionSystem.EnemyHit(_data, _elements, pos);
     }
 
-    private void EnemyCollide(IEnemyData _data1,IEnemyData _data2, Vector2 pos)
+    private void EnemyCollide(IEnemyData _data1, IEnemyData _data2, Vector2 pos)
     {
         elementExplosionSystem.EnemyCollide(_data1, _data2, pos);
+    }
+
+    public void WaveRewardReceived(int amount)
+    {
+        playerUnit.EarnMoney(amount);
+    }
+
+    public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
+    {
+        return characterUnit.bulletEffectReceiver.GetCurrentAppliedBulletElement();
     }
 }

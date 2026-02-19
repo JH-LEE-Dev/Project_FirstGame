@@ -5,6 +5,8 @@ using UnityEngine.Pool;
 
 public class ArtifactManager : MonoBehaviour
 {
+    public event Action ArtifactAppliedEvent_AfterCardUsingPhase;
+
     [SerializeField] private ArtifactDataBase artifactDataBase;
 
     private Dictionary<int, ObjectPool<Artifact>> artifactPools = new Dictionary<int, ObjectPool<Artifact>>();
@@ -109,6 +111,8 @@ public class ArtifactManager : MonoBehaviour
         OrganizeCardEffectCommand(GameSystemActionTimingType.AfterCardUsingPhase);
 
         DispatchCardEffect_AfterCardUsingPhase();
+
+        ArtifactAppliedEvent_AfterCardUsingPhase?.Invoke();
     }
 
     private void OrganizeCardEffectCommand(GameSystemActionTimingType _type)

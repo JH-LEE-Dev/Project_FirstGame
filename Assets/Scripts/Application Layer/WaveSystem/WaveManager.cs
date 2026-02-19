@@ -143,7 +143,8 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
         {
             bIsWaveEnded = true;
             signalHub.Publish(new AllEnemyDeadSignal());
-            signalHub.Publish(new WaveCompleteRewardSignal(spawnEnemyCnt));
+            signalHub.Publish(new WaveCompleteRewardSignal(currentWaveReward));
+
             return;
         }
 

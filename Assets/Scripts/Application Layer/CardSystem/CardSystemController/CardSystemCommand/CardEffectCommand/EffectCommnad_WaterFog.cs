@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/WaterFog")]
@@ -10,6 +10,14 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
     {
         var enemies = cardStatusEffectCommandHandler.GetEnemyHandlers();
 
+        using var rentalBuffer = new RentalScope<IEnemyHandler>(enemies.Count);
+        Span<IEnemyHandler> writeBuffer = rentalBuffer.Span;
+        int enemyCnt = 0;
+
+        using var rentalBuffer_Applied = new RentalScope<IEnemyHandler>(enemies.Count);
+        Span<IEnemyHandler> writeBuffer_Applied = rentalBuffer_Applied.Span;
+        int enemyCnt_Applied = 0;
+
         var debuffData = new DebuffElementData(targetDebuff, 1);
 
         for (int i = 0; i < enemies.Count; ++i)
@@ -17,40 +25,53 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
             if (enemies[i].currentAppliedDebuff.ContainsKey(targetDebuff))
             {
                 IEnemyHandler target = enemies[i];
+                writeBuffer[enemyCnt] = target;
+                ++enemyCnt;
+            }
+        }
 
-                if (target != null)
+        for (int i = 0; i < enemyCnt; ++i)
+        {
+            if (writeBuffer[i] != null)
+            {
+                var target = writeBuffer[i];
+
+                if (bUpgraded == false)
                 {
-                    if (bUpgraded == false)
+                    var targets = GetCollider(target, bUpgraded);
+
+                    if (targets == null)
+                        return;
+
+                    for (int j = 0; j < targets.Length; ++j)
                     {
-                        var targets = GetCollider(target, bUpgraded);
+                        var enemyHandler = targets[j].GetComponent<IEnemyHandler>();
 
-                        if (targets == null)
-                            return;
-
-                        for (int j = 0; j < targets.Count(); ++j)
+                        if (enemyHandler != null && Contains(writeBuffer_Applied, enemyHandler) == false)
                         {
-                            var enemyHandler = (IEnemyHandler)targets[j];
-                            if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
-                            {
-                                enemyHandler.ApplyElementDebuff(debuffData);
-                            }
+                            writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
+                            ++enemyCnt_Applied;
+                            enemyHandler.ApplyElementDebuff(debuffData);
                         }
                     }
-                    else
+                }
+                else
+                {
+                    var targets = GetCollider(target, bUpgraded);
+
+                    if (targets == null)
+                        return;
+
+                    for (int j = 0; j < targets.Length; ++j)
                     {
-                        var targets = GetCollider(target, bUpgraded);
+                        var enemyHandler = targets[j].GetComponent<IEnemyHandler>();
 
-                        if (targets == null)
-                            return;
-
-                        for (int j = 0; j < targets.Count(); ++j)
+                        if (enemyHandler != null && Contains(writeBuffer_Applied, enemyHandler) == false)
                         {
-                            var enemyHandler = (IEnemyHandler)targets[j];
-                            if (enemyHandler != null && enemyHandler.currentAppliedDebuff.ContainsKey(targetDebuff))
-                            {
-                                debuffData.turnCnt = 2;
-                                enemyHandler.ApplyElementDebuff(debuffData);
-                            }
+                            writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
+                            ++enemyCnt_Applied;
+                            debuffData.turnCnt = 2;
+                            enemyHandler.ApplyElementDebuff(debuffData);
                         }
                     }
                 }
@@ -58,15 +79,30 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
         }
     }
 
+    private bool Contains(Span<IEnemyHandler> span, IEnemyHandler target)
+    {
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (span[i] == target)
+                return true;
+        }
+
+        return false;
+    }
+
     private Collider2D[] GetCollider(IEnemyHandler _enemyHandler, bool _bUpgraded)
     {
-        float radius = _enemyHandler.statusCollider.radius;
+        float localRadius = _enemyHandler.statusCollider.radius;
+
+        float worldScale = _enemyHandler.GetTransform().lossyScale.x;
+        float finalRadius = localRadius * worldScale;
+
         if (_bUpgraded)
-            radius *= 2;
+            finalRadius *= 2;
 
         return Physics2D.OverlapCircleAll(
             _enemyHandler.GetTransform().position,
-            radius,
+            finalRadius,
            LayerMask.GetMask("Enemy"));
     }
 

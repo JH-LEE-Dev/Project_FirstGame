@@ -6,6 +6,7 @@ using UnitLogicSystemSignals;
 using CardSystemUISignal;
 using WaveSystemSignals;
 using ShopSystemUISignals;
+using ArtifactSystemSignals;
 
 public class CardSystem
 {
@@ -41,7 +42,7 @@ public class CardSystem
         signalHub.Subscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
         signalHub.Subscribe<TryCardUseSignal>(TryCardUse);
         signalHub.Subscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
-        signalHub.Subscribe<CardUsingFinishedSignal>(CardUsingFinished);
+        signalHub.Subscribe<AfterCardUsingPhase_ArtifactAppliedSignal>(CardUsingFinished);
         signalHub.Subscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.Subscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.Subscribe<WaveStartSignal>(WaveStarted);
@@ -56,7 +57,7 @@ public class CardSystem
         signalHub.UnSubscribe<PlayerAttackFinishedSignal>(PlayerTurnFinished);
         signalHub.UnSubscribe<TryCardUseSignal>(TryCardUse);
         signalHub.UnSubscribe<PlayerTurnStartSignal>(StartCardDrawTurn);
-        signalHub.UnSubscribe<CardUsingFinishedSignal>(CardUsingFinished);
+        signalHub.UnSubscribe<AfterCardUsingPhase_ArtifactAppliedSignal>(CardUsingFinished);
         signalHub.UnSubscribe<DiscardBulletCardSignal>(DiscardBulletCard);
         signalHub.UnSubscribe<PlayerAttackedSignal>(PlayerAttacked);
         signalHub.UnSubscribe<WaveStartSignal>(WaveStarted);
@@ -168,7 +169,7 @@ public class CardSystem
         cardSystemController.PlayerTurnFinished();
     }
 
-    private void CardUsingFinished(CardUsingFinishedSignal cardUsingFinishedSignal)
+    private void CardUsingFinished(AfterCardUsingPhase_ArtifactAppliedSignal afterCardUsingPhase_ArtifactAppliedSignal)
     {
         cardSystemController.CardUsingFinished();
     }
@@ -240,7 +241,7 @@ public class CardSystem
 
     private void WaveStarted(WaveStartSignal waveStartSignal)
     {
-
+        cardSystemController.StartGame();
     }
 
     private void CardSelectionEnd(UICardSelectionEndSignal uICardSelectionEndSignal)

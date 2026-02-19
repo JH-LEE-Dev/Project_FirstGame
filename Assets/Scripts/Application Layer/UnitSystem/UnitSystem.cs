@@ -121,6 +121,7 @@ public class UnitSystem
         signalHub.Subscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.Subscribe<ShopBillingSignal>(PlayerMoneyUsed);
         signalHub.Subscribe<WaveMoveEndSignal>(EnemyTurnEnd);
+        signalHub.Subscribe<WaveCompleteRewardSignal>(WaveRewardReceived);
     }
 
     private void UnSubscribeEvents()
@@ -137,6 +138,7 @@ public class UnitSystem
         signalHub.UnSubscribe<ShopTimeStartedSignal>(ShopTimeStarted);
         signalHub.UnSubscribe<ShopBillingSignal>(PlayerMoneyUsed);
         signalHub.UnSubscribe<WaveMoveEndSignal>(EnemyTurnEnd);
+        signalHub.UnSubscribe<WaveCompleteRewardSignal>(WaveRewardReceived);
     }
 
     private void EnemyIsDead(Vector2 position)
@@ -233,5 +235,10 @@ public class UnitSystem
     private void EnemyTurnEnd(WaveMoveEndSignal waveMoveEndSignal)
     {
         unitLogicSystem.EnemyTurnEnd();
+    }
+
+    private void WaveRewardReceived(WaveCompleteRewardSignal waveCompleteRewardSignal)
+    {
+        unitLogicSystem.WaveRewardReceived(waveCompleteRewardSignal.moneyAmount);
     }
 }

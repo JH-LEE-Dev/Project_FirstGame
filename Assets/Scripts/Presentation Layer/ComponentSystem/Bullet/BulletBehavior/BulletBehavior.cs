@@ -22,7 +22,7 @@ public abstract class BulletBehavior : ScriptableObject
     /// <summary>
     /// 시스템 속성 존 --------------------------------------
     /// </summary>
-    protected List<IDamageable> damagedObjects = new List<IDamageable>(SYSTEM_VAR.maxEnemyCount);
+
     protected bool bBehaviorEnd = false;
 
     public virtual void Initialize(Bullet owner, ICharacterStatProvider _characterStatProvider,
@@ -57,7 +57,7 @@ public abstract class BulletBehavior : ScriptableObject
 
     public virtual void Exit()
     {
-        damagedObjects.Clear();
+        bullet.damagedObjects.Clear();
         bBehaviorEnd = true;
         BulletEffectEndEvent?.Invoke();
     }
@@ -71,9 +71,9 @@ public abstract class BulletBehavior : ScriptableObject
 
         if (hit != null)
         {
-            if (damagedObjects.Contains(hit) == false)
+            if (bullet.damagedObjects.Contains(hit) == false)
             {
-                damagedObjects.Add(hit);
+                bullet.damagedObjects.Add(hit);
 
                 hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes);
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
@@ -90,10 +90,11 @@ public abstract class BulletBehavior : ScriptableObject
 
         if (hit != null)
         {
-            if (damagedObjects.Contains(hit) == false)
+            if (bullet.damagedObjects.Contains(hit) == false)
             {
-                damagedObjects.Add(hit);
+                bullet.damagedObjects.Add(hit);
 
+                hit.ApplyElementDebuff(bulletEffectProvider.currentDebuffElementTypes);
                 hit.ApplyElementDebuff(_data.debuffData);
                 hit.ApplyWeakness(characterStatProvider.weaknessTurnCnt);
             }

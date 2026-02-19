@@ -27,4 +27,5 @@ public interface IStatusEffectCommandHandler : ICommandHandler
     IPlayerHandler GetPlayerHandler();
     IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
     void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
+    IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement();
 }

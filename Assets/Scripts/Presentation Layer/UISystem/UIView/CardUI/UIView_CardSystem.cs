@@ -413,7 +413,7 @@ public class UIView_CardSystem : UIView
 
         if (uiActionData.cardSystemContextType == GameSystemActionContextType.HandCardsToDeck)
         {
-            Debug.Log("패의 카드가 덱으로 감");
+            ReturnCard(uiActionData.cards, CardReturnType.Extinction);
         }
 
         return turnWaitTime;
