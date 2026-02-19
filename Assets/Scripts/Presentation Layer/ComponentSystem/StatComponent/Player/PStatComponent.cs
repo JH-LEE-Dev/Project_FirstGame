@@ -11,6 +11,8 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     public float totalDamage { get; private set; }
     public float resultDamage { get; private set; }
     public float totalDamageValue { get; private set; }
+    public float defaultAttack => attack;
+    float ICharacterStatProvider.additionalAttack => totalAdditionalAttack;
 
     private int initialAttackCnt = 1;
     private float initialAttackRange = 0f;
@@ -19,6 +21,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     private float initialTotalDamageValue = 1f;
     private float additionalAttack = 0f;
     private float additionalAttackModifier = 1f;
+    private float totalAdditionalAttack = 0f;
 
     public AdditionalAttackStat additionalAttackStat { get; private set; }
 
@@ -65,7 +68,8 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
 
     public void CalcResultDamage()
     {
-        totalDamage = attack + (additionalAttack * additionalAttackModifier);
+        totalAdditionalAttack = additionalAttack * additionalAttackModifier;
+        totalDamage = attack + totalAdditionalAttack;
         resultDamage = totalDamage * totalDamageValue;
     }
 
@@ -123,6 +127,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         resultDamage = 0;
         additionalAttackModifier = 1f;
         additionalAttackStat = default;
+        totalAdditionalAttack = 0f;
     }
 
     public void DecreaseAttackCnt()

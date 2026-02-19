@@ -7,4 +7,5 @@ public interface ICharacterData
     float GetCurrentHealth();
     CharacterType characterType { get; }
     ICharacterStatProvider GetStatProvider();
+    IBulletEffectProvider GetBulletEffectProvider();
 }

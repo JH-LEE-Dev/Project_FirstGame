@@ -27,6 +27,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public event Action CharacterStatChangedEvent;
     public event Action PlayerIsDeadEvent;
     public event Action<ElementExplosionType> ElementExplosionOccuredEvent;
+    public event Action CharacterElementChangedEvent;
 
     //의존성 DIP적용 검토하기.
     private Character characterUnit;
@@ -348,6 +349,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void ApplyBulletElementType(BulletElementData effectElementData)
     {
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
+        CharacterElementChangedEvent?.Invoke();
     }
 
     public void SetBulletType(BulletType bulletType, bool bUpgraded)
@@ -363,16 +365,19 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void UndoBulletElementApply(BulletElementData _effectElementData)
     {
         characterUnit.bulletEffectReceiver.UndoBulletElementApply(_effectElementData);
+        CharacterElementChangedEvent?.Invoke();
     }
 
     public void ApplyDebuffElementType(DebuffElementData _debuffElementData)
     {
         characterUnit.bulletEffectReceiver.ApplyDebuffElementType(_debuffElementData);
+        CharacterElementChangedEvent?.Invoke();
     }
 
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
         characterUnit.bulletEffectReceiver.UndoDebuffElementApply(_debuffElementData);
+        CharacterElementChangedEvent?.Invoke();
     }
 
     private void ElementExplosionOccured(ElementExplosionType _type)

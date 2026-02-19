@@ -72,6 +72,9 @@ public class UnitSystem
 
         unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
         unitLogicSystem.PlayerIsDeadEvent += PlayerIsDead;
+
+        unitLogicSystem.CharacterElementChangedEvent -= CharacterElementChanged;
+        unitLogicSystem.CharacterElementChangedEvent += CharacterElementChanged;
     }
 
     private void ReleaseEvents()
@@ -103,6 +106,8 @@ public class UnitSystem
         unitSpawner.AdditionalEnemySpawnedEvent -= AdditionalEnemySpawned;
 
         unitLogicSystem.PlayerIsDeadEvent -= PlayerIsDead;
+
+        unitLogicSystem.CharacterElementChangedEvent -= CharacterElementChanged;
     }
 
     private void SubscribeEvents()
@@ -240,5 +245,10 @@ public class UnitSystem
     private void WaveRewardReceived(WaveCompleteRewardSignal waveCompleteRewardSignal)
     {
         unitLogicSystem.WaveRewardReceived(waveCompleteRewardSignal.moneyAmount);
+    }
+
+    private void CharacterElementChanged()
+    {
+        signalHub.Publish(new CharacterElementChangedSignal());
     }
 }
