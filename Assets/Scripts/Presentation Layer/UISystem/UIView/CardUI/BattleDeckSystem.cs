@@ -42,7 +42,7 @@ public class BattleDeckSystem : BaseDeckSystem
             return;
 
         // 드로우 타이밍에 패널이 덱 타입으로 열려 있다면 강제로 끔
-        cardSystem.ForceDeActivatePannelSelf(CurrentPannel.Deck);
+        cardSystem.ForceDeActivatePannelSelf(CardZone.Deck);
 
         int currentDrawCount = dataList.Count;
         for (int i = 0; i < currentDrawCount; i++)
@@ -88,7 +88,7 @@ public class BattleDeckSystem : BaseDeckSystem
         impactParticle.Play();
     }
 
-    public void InDeckFromGraveMotion()
+    public void InDeckMotion()
     {
         if (null == cardBackRect || null == impactParticle)
             return;
@@ -133,7 +133,7 @@ public class BattleDeckSystem : BaseDeckSystem
             return;
 
         base.OnPointerUp(_eventData);
-        cardSystem?.CallPannel(CurrentPannel.Deck);
+        cardSystem?.CallPannel(CardZone.Deck);
     }
 
     public override void OnPointerEnter(PointerEventData _eventData)

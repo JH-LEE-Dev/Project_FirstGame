@@ -24,6 +24,13 @@ public class VFX_CardStar : MonoBehaviour
         set { cardDataInstance = value; } 
     }
 
+    private CardZone targetZone;
+    public CardZone TargetZone
+    {
+        get { return targetZone; }
+        set { targetZone = value; }
+    }
+
     private int tempCurrentIdx;
     private int tempLastIdx;
 

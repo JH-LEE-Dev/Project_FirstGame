@@ -190,7 +190,7 @@ public class UIView_Shop : UIView
         if (0 >= openList.Count)
             return false;
 
-        cardPannel.CurrPannelType = CurrentPannel.Deck;
+        cardPannel.CurrPannelType = CardZone.Deck;
         cardPannel.gameObject.SetActive(true);
         cardPannel.SetupSelectMode(bSelectMode, bSelectBtnHidden);
 

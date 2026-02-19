@@ -137,7 +137,7 @@ public class ExtinctionSystem : MonoBehaviour
                 bClickedEvent = false;
             }));
 
-        cardSystem?.CallPannel(CurrentPannel.Extinction);
+        cardSystem?.CallPannel(CardZone.Extinction);
     }
 
     private void CancelPrevMotion(Sequence _activeSeq)
