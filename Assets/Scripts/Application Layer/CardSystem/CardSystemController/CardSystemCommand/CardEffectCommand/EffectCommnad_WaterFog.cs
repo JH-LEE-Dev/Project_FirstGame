@@ -99,7 +99,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
         if (_bUpgraded)
             finalRadius *= 2;
-        finalRadius *= 5f;
+
         return Physics2D.OverlapCircleAll(
             _enemyHandler.GetTransform().position,
             finalRadius,
