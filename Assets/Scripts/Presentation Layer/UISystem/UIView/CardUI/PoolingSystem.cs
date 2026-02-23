@@ -25,6 +25,7 @@ public class PoolingSystem : MonoBehaviour
 
     // 덱, 웜홀에서 사용할 이펙트 풀링
     private ObjectPool<GameObject> starEffects;
+    private List<GameObject> starEffectsList;
     public ObjectPool<GameObject> StarEffects { get { return starEffects; } }
 
     // 카드에서 사용할 이펙트 풀링
@@ -93,10 +94,17 @@ public class PoolingSystem : MonoBehaviour
             actionOnDestroy: DestroyPoolObj,
             maxSize: maxPool);
 
+        starEffectsList = new List<GameObject>(maxPool);
+
         for (int i = 0; i < maxPool; ++i)
         {
             GameObject newObj = starEffects.Get();
-            starEffects.Release(newObj);
+            starEffectsList.Add(newObj);
+        }
+
+        for (int i = 0; i < maxPool; ++i)
+        {
+            starEffects.Release(starEffectsList[i]);
         }
     }
 
