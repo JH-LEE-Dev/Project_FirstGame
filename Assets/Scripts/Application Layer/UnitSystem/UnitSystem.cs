@@ -239,6 +239,7 @@ public class UnitSystem
 
     private void EnemyTurnEnd(WaveMoveEndSignal waveMoveEndSignal)
     {
+        elementExplosionSystem.ResetSystem();
         unitLogicSystem.EnemyTurnEnd();
     }
 

@@ -184,7 +184,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         rb.linearDamping = initialDamping;
         rb.angularDamping = initialAngularDamping;
 
-        StartCoroutine(SetEnemyState_Delayed(true));
+        SetEnemyState(true);
+        //StartCoroutine(SetEnemyState_Delayed(true));
 
         EnemySpawnedEvent?.Invoke();
     }
@@ -214,12 +215,12 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
         if (bDead == true)
             return;
 
-        if (_bulletElements != null)
-            EnemyHitEvent?.Invoke(this, _bulletElements, pos);
-
         damage = elementDamageHandleComponent.GetResultDamage(_bulletElements, damage);
         healthComponent.TakeDamage(damage);
         EnemyTakeDamageEvent?.Invoke(this, damage, bCritical);
+
+        if (_bulletElements != null)
+            EnemyHitEvent?.Invoke(this, _bulletElements, pos);
     }
 
     private void EnemyIsKilled()
@@ -323,6 +324,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     public override void ApplyElementDebuff(DebuffElementData debuff, Vector2 pos = default)
     {
+        EnemyDebuffAppliedEvent?.Invoke(currentAppliedDebuff, debuff, pos);
+
         if (currentAppliedDebuff.ContainsKey(debuff.debuffElementType))
         {
             var data = currentAppliedDebuff[debuff.debuffElementType];
