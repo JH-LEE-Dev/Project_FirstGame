@@ -1,5 +1,9 @@
 using System;
 
+/// <summary>
+/// Structs -----------------------------
+/// </summary>
+
 [Serializable]
 public struct BulletBehaviorData
 {

@@ -15,13 +15,13 @@ public class EffectCommand_Distortion : CardEffectCommand<IStatusEffectCommandHa
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(bonusRange * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit * valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(upgradedBonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusCrit  * valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusDamage  * valueModifier);
         }
@@ -33,13 +33,13 @@ public class EffectCommand_Distortion : CardEffectCommand<IStatusEffectCommandHa
     {
         if (bUpgraded == false)
         {
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-bonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusCrit  * valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusDamage  * valueModifier);
         }
         else
         {
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-upgradedBonusRange  * valueModifier);
             cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusCrit  * valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusDamage  * valueModifier);
         }

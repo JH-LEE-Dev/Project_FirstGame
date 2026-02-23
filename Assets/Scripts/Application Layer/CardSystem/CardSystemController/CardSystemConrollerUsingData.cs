@@ -56,6 +56,8 @@ public struct CardDataControlSystemEventData
     public GameSystemActionContextType contextType;
 }
 
+
+
 /// <summary>
 /// Enums ----------------------------------------------
 /// </summary>

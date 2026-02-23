@@ -8,31 +8,31 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
     [SerializeField] private int bonusAttack = 0;
     [SerializeField] private int upgradedBonusAttack = 0;
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = handler.cardLogicSystem.GetHandPile();
 
         if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(bonusAttack * valueModifier,gameSystemActionContext);
+            handler.statusSystem.ApplyAdditionalAttackModifier(bonusAttack * valueModifier);
         }
         else
         {
-            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier, gameSystemActionContext);
+            handler.statusSystem.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier);
         }
 
         ResetCommandData();
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
         if (bUpgraded == false)
         {
-            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(-bonusAttack * valueModifier, gameSystemActionContext);
+            handler.statusSystem.ApplyAdditionalAttackModifier(-bonusAttack * valueModifier);
         }
         else
         {
-            complexSystemActionCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusAttack * valueModifier, gameSystemActionContext);
+            handler.statusSystem.ApplyAdditionalAttackModifier(-upgradedBonusAttack * valueModifier);
         }
     }
 }

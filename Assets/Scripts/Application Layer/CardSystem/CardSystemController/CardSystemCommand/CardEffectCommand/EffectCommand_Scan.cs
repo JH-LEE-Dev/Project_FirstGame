@@ -8,17 +8,17 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
     [SerializeField] private int selectCnt = 1;
     [SerializeField] private int upgradedSelectCnt = 2;
 
-    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    IComplexSystemActionCommandHandler handler;
 
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommandHandler.GetGravePile();
+        IReadOnlyList<CardDataInstance> gravePile = handler.cardLogicSystem.GetGravePile();
 
         for (int i = 0; i < gravePile.Count; ++i)
         {
@@ -28,8 +28,8 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         if (bUpgraded == false)
         {
             if (availableCards.Count > selectCnt)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, selectCnt, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
+                handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Grave,
+                    CardSelectionMode.GraveCardsToHand, selectCnt, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -41,14 +41,14 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
             }
         }
         else
         {
             if (availableCards.Count > upgradedSelectCnt)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
+                handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Grave,
+                    CardSelectionMode.GraveCardsToHand, upgradedSelectCnt, availableCards, true, HandleCardSelectionResult);
             else
             {
                 using var rentalBuffer = new RentalScope<CardDataInstance>(gravePile.Count);
@@ -60,7 +60,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
             }
         }
 
@@ -78,7 +78,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         }
 
         if (_cards.Count > 0)
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
     }
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {

@@ -3,11 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/HandPileExistCommand/Bullet/MeteorShower")]
 public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
-        var handPile = complexSystemActionCommand.GetHandPile();
+        var handPile = _handler.cardLogicSystem.GetHandPile();
 
-        var bulletCardSlot = complexSystemActionCommand.GetCurrentCardSlot();
+        var bulletCardSlot = _handler.cardSlotSystem.GetCurrentCardSlot();
 
         bool bCondition_1 = false;
         for(int i = 0;i<bulletCardSlot.Count;++i)
@@ -39,7 +39,7 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
 
             if(bCondition && handPile.Count == 1)
             {
-                complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, gameSystemActionContext);
+                _handler.cardSystem.ApplyCardUsePhaseCntModifier(1);
             }
         }
         else
@@ -57,7 +57,7 @@ public class HPE_EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAc
 
             if (bCondition)
             {
-                complexSystemActionCommand.ApplyCardUsePhaseCntModifier(1, gameSystemActionContext);
+                _handler.cardSystem.ApplyCardUsePhaseCntModifier(1);
             }
         }
 

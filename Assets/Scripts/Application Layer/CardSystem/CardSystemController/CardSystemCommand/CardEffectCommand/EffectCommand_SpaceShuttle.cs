@@ -14,11 +14,11 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
         gameSystemActionContext = GameSystemActionContextType.GraveCardsToHand;
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
-        IReadOnlyList<IReadOnlyList<CardDataInstance>> prevUsedBulletCards = complexSystemActionCommandHandler.GetPrevUsedBulletCards();
+        IReadOnlyList<IReadOnlyList<CardDataInstance>> prevUsedBulletCards = _handler.cardSlotSystem.GetPrevUsedBulletCards();
 
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = _handler.cardLogicSystem.GetHandPile();
 
         if(handPile.Count >= SYSTEM_VAR.maxHandPileCount)
         {
@@ -52,7 +52,8 @@ public class EffectCommand_SpaceShuttle : CardEffectCommand<IComplexSystemAction
             return;
         }
 
-        complexSystemActionCommandHandler.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt), gameSystemActionContext);
+        _handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
+        _handler.cardLogicSystem.GraveCardsToHand(writeBuffer.Slice(0,bufferCnt));
 
         ResetCommandData();
     }

@@ -30,14 +30,12 @@ public class ArcDischarge_Fly : ArcDischargeBehavior
 
     public override void End()
     {
-        bBehaviorEnd = true;
-        BulletBehaviorEndEvent?.Invoke();
+        base.End();
     }
 
     public override void Exit()
     {
-        bBehaviorEnd = true;
-        BulletEffectEndEvent?.Invoke();
+        base.Exit();
     }
 
 

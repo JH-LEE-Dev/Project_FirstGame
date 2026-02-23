@@ -3,11 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardUsingConditionCheck/Offense Reorder")]
 public class OffensReorderConditionChecker : CardUsingCondition
 {
-    public override void CheckUsingCondition(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    public override void CheckUsingCondition(IComplexSystemActionCommandHandler _handler)
     {
         bResult = false;
 
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = _handler.cardLogicSystem.GetHandPile();
 
         for (int i = 0; i < handPile.Count; ++i)
         {

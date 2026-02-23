@@ -9,13 +9,13 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
     private BulletElementData data = new BulletElementData(BulletElementType.Electric, 1);
     private DebuffElementData debuff = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
         bUpgradedEffectOn = false;
         bEffectOn = false;
 
-        var currentElement = complexSystemActionCommandHandler.GetCurrentAppliedBulletElement();
-        var inherenceCard = complexSystemActionCommandHandler.GetCurrentInherenceCard();
+        var currentElement = handler.statusSystem.GetCurrentAppliedBulletElement();
+        var inherenceCard = handler.cardSlotSystem.GetCurrentInherenceCard();
 
         if (inherenceCard == null)
             return;
@@ -27,7 +27,7 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
 
             bEffectOn = true;
 
-            complexSystemActionCommandHandler.ApplyBulletElementType(data);
+            handler.statusSystem.ApplyBulletElementType(data);
         }
         else
         {
@@ -35,37 +35,37 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
             {
                 bUpgradedEffectOn = true;
 
-                complexSystemActionCommandHandler.ApplyDebuffElementType(debuff);
+                handler.statusSystem.ApplyDebuffElementType(debuff);
             }
             else
             {
                 bEffectOn = true;
 
-                complexSystemActionCommandHandler.ApplyBulletElementType(data);
+                handler.statusSystem.ApplyBulletElementType(data);
             }
         }
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
         if (bUpgraded == false)
         {
             if (bEffectOn)
             {
-                complexSystemActionCommandHandler.UndoBulletElementApply(data);
+                handler.statusSystem.UndoBulletElementApply(data);
             }
         }
         else
         {
             if (bUpgradedEffectOn)
             {
-                complexSystemActionCommandHandler.UndoDebuffElementApply(debuff);
+                handler.statusSystem.UndoDebuffElementApply(debuff);
             }
             else
             {
                 if (bEffectOn)
                 {
-                    complexSystemActionCommandHandler.UndoBulletElementApply(data);
+                    handler.statusSystem.UndoBulletElementApply(data);
                 }
             }
         }

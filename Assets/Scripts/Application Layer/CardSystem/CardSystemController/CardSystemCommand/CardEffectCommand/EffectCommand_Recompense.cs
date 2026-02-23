@@ -6,9 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Recompense")]
 public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = _handler.cardLogicSystem.GetHandPile();
 
         if (handPile.Count == SYSTEM_VAR.maxHandPileCount)
         {
@@ -18,7 +18,7 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
 
         if (bUpgraded == false)
         {
-            IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
+            IReadOnlyList<CardDataInstance> prevHandToGraveCards = _handler.cardFlowSystem.GetPrevTurnHandToGraveCards();
 
             int bulletCardCnt = 0;
             for (int i = 0; i < prevHandToGraveCards.Count; ++i)
@@ -39,11 +39,12 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
                 return;
             }
 
-            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, gameSystemActionContext);
+            _handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
+            _handler.cardLogicSystem.DrawAgain(newDrawAmount);
         }
         else
         {
-            IReadOnlyList<CardDataInstance> prevHandToGraveCards = complexSystemActionCommandHandler.GetPrevHandToGraveCards();
+            IReadOnlyList<CardDataInstance> prevHandToGraveCards = _handler.cardFlowSystem.GetPrevTurnHandToGraveCards();
 
             int newDrawAmount = prevHandToGraveCards.Count;
             if (handPile.Count + newDrawAmount > SYSTEM_VAR.maxHandPileCount)
@@ -57,7 +58,8 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
                 return;
             }
 
-            complexSystemActionCommandHandler.AdditionalDraw(newDrawAmount, gameSystemActionContext);
+            _handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
+            _handler.cardLogicSystem.DrawAgain(newDrawAmount);
         }
 
         ResetCommandData();

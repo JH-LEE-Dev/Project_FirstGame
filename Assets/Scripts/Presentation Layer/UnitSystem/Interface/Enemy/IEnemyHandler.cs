@@ -4,16 +4,7 @@ using System.Collections.Generic;
 
 public interface IEnemyHandler
 {
-    bool bDead { get; }
-    Transform GetTransform();
-    float GetMaxHealth();
-    float GetCurrentHealth();
-    IHealthComponentProvider healthComponentProvider { get; }
-    IEnemyStatProvider enemyStatProvider { get; }
-    event Action EnemySpawnedEvent;
-    event Action EnemyIsDeadEvent;
-    EnemyTypeData enemyTypeData { get; }
-    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
+    IEnemyData enemyData { get; }
     void ClearDebuff();
     CircleCollider2D statusCollider { get; }
     void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default);

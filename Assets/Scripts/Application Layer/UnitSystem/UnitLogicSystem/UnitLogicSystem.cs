@@ -268,7 +268,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         PlayerAttackedEvent?.Invoke();
     }
 
-    public void ApplyRangeModifier(float bonusRange)
+    public void ApplyAttackRangeModifier(float bonusRange)
     {
         characterUnit.combatEffectReceiver.ApplyRangeModifier(bonusRange);
         CharacterStatChanged();

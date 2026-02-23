@@ -9,7 +9,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
     private List<CardName> forbiddenCards = new List<CardName>(5);
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    IComplexSystemActionCommandHandler handler;
 
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
       Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
@@ -23,13 +23,13 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
             forbiddenCards.Add(CardName.Pluto);
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        IReadOnlyList<CardDataInstance> extinctionPile = complexSystemActionCommandHandler.GetExtinctionPile();
+        IReadOnlyList<CardDataInstance> extinctionPile = handler.cardLogicSystem.GetExtinctionPile();
 
         if (extinctionPile.Count == 0)
             return;
@@ -46,8 +46,8 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         if (availableCards.Count > 1)
-            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, valueModifier, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
+            handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Extinction,
+                CardSelectionMode.ExtinctionCardsToDeck, valueModifier, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
@@ -56,7 +56,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
             }
 
             if (availableCards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, gameSystemActionContext);
         }
 
         ResetCommandData();
@@ -73,7 +73,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
         }
 
         if (_cards.Count > 0)
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, gameSystemActionContext);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)

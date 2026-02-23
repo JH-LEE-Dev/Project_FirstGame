@@ -3,58 +3,11 @@ using System.Collections.Generic;
 
 public interface IComplexSystemActionCommandHandler : ICommandHandler
 {
-    void ApplyAttackCntModifier(int attckCnt,GameSystemActionContextType cardSystemContextType);
-    IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards();
-    IReadOnlyList<IReadOnlyList<CardDataInstance>> GetCurrentCardSlot();
-    void GraveCardsToHand(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    void GraveCardsToDeck(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    IReadOnlyList<CardDataInstance> GetHandPile();
-    IReadOnlyList<CardDataInstance> GetDeckPile();
-    IReadOnlyList<CardDataInstance> GetGravePile();
-    IReadOnlyList<CardDataInstance> GetExtinctionPile();
-    void UseCards_AfterAttackEffects(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
-    void UndoCardPileUse(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
-    void CardsToExtinction(ReadOnlySpan<CardDataInstance> cardPile, GameSystemActionContextType cardSystemContextType);
-    void ApplyAdditionalAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
-    void ApplyAdditionalAttackValueModifier(float value);
-    void ApplyCriticalChanceModifier(int chance, GameSystemActionContextType cardSystemContextType);
-    void ApplyAttackModifier(float attack, GameSystemActionContextType cardSystemContextType);
-    int GetPrevUsedBulletCardCnt();
-    int GetPrevUsedCardCnt();
-    void AdditionalDraw(int amount, GameSystemActionContextType cardSystemContextType);
-    void StartCardSelectionMode(SelectCardPileType selectCardPileType, CardSelectionMode cardSelectionMode, int amount, GameSystemActionContextType cardSystemContextType,IReadOnlyList<ICardDataInstanceProvider> forbiddenCards,bool _bForced, Action<List<ICardDataInstanceProvider>> onComplete);
-    void RequestCardSystemActionCommand(CardLogicSystemActionType cardSystemActionType, ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType, GameSystemActionTimingType _type = GameSystemActionTimingType.Instant);
-    void RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType cardDataControlSystemActionType, ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType, GameSystemActionTimingType _type = GameSystemActionTimingType.Instant);
-    void UpgradeCards(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, GameSystemActionContextType cardSystemContextType);
-    void RevertCardsUpgrade(ReadOnlySpan<CardDataInstance> cards, bool bPermenant, GameSystemActionContextType cardSystemContextType);
-    void ApplyValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, GameSystemActionContextType cardSystemContextType);
-    void UndoValueModifier(ReadOnlySpan<CardDataInstance> cards, int valueModifier, GameSystemActionContextType cardSystemContextType);
-    void CardsRemoveFromHands(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    void ExtinctionCardsToDeck(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    IReadOnlyList<CardDataInstance> GetPrevHandToGraveCards();
-    void ApplyCardUsePhaseCntModifier(int cnt, GameSystemActionContextType cardSystemContextType);
-    void ExecuteHandPileExistEffect(ReadOnlySpan<CardDataInstance> cards, GameSystemActionContextType cardSystemContextType);
-    void ApplyAddifionalAttackValueModifier(float bonusDamage);
-    void ApplyTotalDamageValueModifier(float bonusValue);
-    void UndoAdditionalAttackValueModifier(float bonusDamage);
-    void SetCharacterCanAttackState(bool boolean);
-    bool IsInherenceCardEquipped();
-    void ApplyBulletElementType(BulletElementData effectElementData);
-    void SetBulletType(BulletType bulletType,bool bUpgraded);
-    void ResetBulletType();
-    void UndoBulletElementApply(BulletElementData _effectElementData);
-    void ApplyDebuffElementType(DebuffElementData _debuffElementData);
-    void UndoDebuffElementApply(DebuffElementData _debuffElementData);
-    CardDataInstance GetCurrentInherenceCard();
-    void ObserveElementExplosionEvent(Action<ElementExplosionType> handler);
-    void CancelObserveElementExplosionEvent(Action<ElementExplosionType> handler);
-    void ReserveCardEffect(CardEffectCommand command);
-    IPlayerHandler GetPlayerHandler();
-    IReadOnlyList<IEnemyHandler> GetEnemyHandlers();
-    void CardsToDeck(ReadOnlySpan<CardDataInstance> cards,GameSystemActionContextType gameSystemActionContextType);
-    void ApplySlotCntModifier(int _slotCnt);
-    void ApplyAdditionalAttackStat(AdditionalAttackStat _additionalAttackStat);
-    void ApplyAttackRangeModifier(int range);
-    void SetInherenceCard(CardDataInstance _card);
-    IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement();
+    ICardLogicSystemActionCommandHandler cardLogicSystem { get; }
+    IStatusEffectCommandHandler statusSystem { get; }
+    ICardDataControlActionCommandHandler cardDataSystem { get; }
+    ICardFlowDataActionCommandHandler cardFlowSystem { get; }
+    ICardSlotSystemActionCommandHandler cardSlotSystem { get; }
+    ICardSelectionSystemActionCommandHandler cardSelectionSystem { get; }
+    ICardSystemControlActionCommandHandler cardSystem { get; }
 }

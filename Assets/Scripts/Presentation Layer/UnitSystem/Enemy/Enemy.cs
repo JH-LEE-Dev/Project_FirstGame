@@ -22,11 +22,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public IHealthComponentProvider healthComponentProvider => healthComponent;
     public IEnemyStatProvider enemyStatProvider => statComponent;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyData.currentAppliedDebuff => currentAppliedDebuff;
-    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IEnemyHandler.currentAppliedDebuff => currentAppliedDebuff;
     bool IEnemyData.bDead => bDead;
-    bool IEnemyHandler.bDead => bDead;
     CircleCollider2D IEnemyHandler.statusCollider => statusCollider;
-
+    public IEnemyData enemyData => this;
 
     //내부 의존성
     EVisualComponentCoordinator visualComponentCoordinator; //Visual 로직 통신을 담당하는 객체.

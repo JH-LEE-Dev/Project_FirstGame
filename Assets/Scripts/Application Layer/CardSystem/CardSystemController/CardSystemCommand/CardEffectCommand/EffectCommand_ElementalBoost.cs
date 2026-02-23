@@ -11,42 +11,42 @@ public class EffectCommand_ElementalBoost : CardEffectCommand<IComplexSystemActi
 
     private bool bApplied = false;
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
         bApplied = false;
 
-        var currentElement = complexSystemActionCommand.GetCurrentAppliedBulletElement();
+        var currentElement = handler.statusSystem.GetCurrentAppliedBulletElement();
 
         if (currentElement.Count != 0)
         {
             if (bUpgraded == false)
             {
                 bApplied = true;
-                complexSystemActionCommand.ApplyAdditionalAttackModifier(bonusDamage * valueModifier, GameSystemActionContextType.MAX);
-                complexSystemActionCommand.ApplyCriticalChanceModifier(bonusCrit * valueModifier, GameSystemActionContextType.MAX);
+                handler.statusSystem.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(bonusCrit * valueModifier);
             }
             else
             {
                 bApplied = true;
-                complexSystemActionCommand.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier, GameSystemActionContextType.MAX);
-                complexSystemActionCommand.ApplyCriticalChanceModifier(upgradedBonusCrit * valueModifier, GameSystemActionContextType.MAX);
+                handler.statusSystem.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(upgradedBonusCrit * valueModifier);
             }
         }
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
         if (bApplied == true)
         {
             if (bUpgraded == false)
             {
-                complexSystemActionCommand.ApplyAdditionalAttackModifier(-bonusDamage * valueModifier, GameSystemActionContextType.MAX);
-                complexSystemActionCommand.ApplyCriticalChanceModifier(-bonusCrit * valueModifier, GameSystemActionContextType.MAX);
+                handler.statusSystem.ApplyAdditionalAttackModifier(-bonusDamage * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(-bonusCrit * valueModifier);
             }
             else
             {
-                complexSystemActionCommand.ApplyAdditionalAttackModifier(-upgradedBonusDamage * valueModifier, GameSystemActionContextType.MAX);
-                complexSystemActionCommand.ApplyCriticalChanceModifier(-upgradedBonusCrit * valueModifier, GameSystemActionContextType.MAX);
+                handler.statusSystem.ApplyAdditionalAttackModifier(-upgradedBonusDamage * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(-upgradedBonusCrit * valueModifier);
             }
         }
     }

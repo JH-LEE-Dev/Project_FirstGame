@@ -7,6 +7,7 @@ public class ElementDamageHandleComponent
     //외부 의존성
     private IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs;
 
+    //함수 바인더.
     public delegate float BulletDamageCalcHandler(BulletElementType type, float _damage);
     private BulletDamageCalcHandler[] bulletDamageCalcCreatorMap;
     public delegate float CollideDamageCalcHandler(DebuffElementEffectType type, float _damage);

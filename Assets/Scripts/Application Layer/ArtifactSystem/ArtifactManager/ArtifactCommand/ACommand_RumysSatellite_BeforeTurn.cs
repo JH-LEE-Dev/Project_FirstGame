@@ -3,13 +3,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/ArtifactEffects/Rumy's Satellite BeforeTurn")]
 public class ACommand_RumysSatellite_BeforeTurn : ArtifactCommand<IComplexSystemActionCommandHandler>
 {
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
-        complexSystemActionCommand.ApplySlotCntModifier(2);
+        handler.cardSlotSystem.ApplySlotCntModifier(2);
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
-        complexSystemActionCommand.ApplySlotCntModifier(-2);
+        handler.cardSlotSystem.ApplySlotCntModifier(-2);
     }
 }

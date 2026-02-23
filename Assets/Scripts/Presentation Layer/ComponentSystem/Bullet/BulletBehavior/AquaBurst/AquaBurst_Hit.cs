@@ -40,7 +40,6 @@ public class AquaBurst_Hit : AquaBurstBehavior
         if (bBehaviorEnd)
             return;
 
-
         Exit();
     }
 

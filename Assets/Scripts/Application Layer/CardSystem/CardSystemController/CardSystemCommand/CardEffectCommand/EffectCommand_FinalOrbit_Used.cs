@@ -28,7 +28,7 @@ public class EffectCommand_FinalOrbit_Used : CardEffectCommand<ICardLogicSystemA
         {
             writeBuffer[i] = handPile[i];
         }
-        Debug.Log("AAAA");
+
         cardLogicSystemActionCommandHandler.CardsRemoveFromHand(writeBuffer);
         cardLogicSystemActionCommandHandler.CardsToExtinction(writeBuffer);
 

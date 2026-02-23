@@ -2,18 +2,15 @@ using DG.Tweening;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static DG.Tweening.DOTweenAnimation;
 
 public class UIView_CardSystem : UIView
 {
     /// <summary>
     /// 시스템 속성 -------------------------------------------------------
     /// </summary>
+    
     //외부 방송 이벤트
     public event Action<int> UICommandCompleteEvent;
     public event Action<ICardDataInstanceProvider> TryCardUseEvent;

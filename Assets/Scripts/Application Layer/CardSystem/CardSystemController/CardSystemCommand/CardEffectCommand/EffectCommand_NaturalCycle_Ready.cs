@@ -5,29 +5,30 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Natural Cycle Ready")]
 public class EffectCommand_NaturalCycle_Ready : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    IComplexSystemActionCommandHandler handler;
 
-    private bool bExecuted = false; 
-    
+    private bool bExecuted = false;
+
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes, Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         bExecuted = false;
 
         followUpEffectCommand.ResetCommandData();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        complexSystemActionCommandHandler.ObserveElementExplosionEvent(TargetEventOccured);
+        handler.statusSystem.ElementExplosionOccuredEvent -= TargetEventOccured;
+        handler.statusSystem.ElementExplosionOccuredEvent += TargetEventOccured;
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {
-        complexSystemActionCommandHandler.CancelObserveElementExplosionEvent(TargetEventOccured);
+        handler.statusSystem.ElementExplosionOccuredEvent -= TargetEventOccured;
     }
 
     private void TargetEventOccured(ElementExplosionType _type)
@@ -35,11 +36,11 @@ public class EffectCommand_NaturalCycle_Ready : CardEffectCommand<IComplexSystem
         if (bExecuted == true)
             return;
 
-        complexSystemActionCommandHandler.CancelObserveElementExplosionEvent(TargetEventOccured);
+        handler.statusSystem.ElementExplosionOccuredEvent -= TargetEventOccured;
 
         if (followUpEffectCommand != null)
         {
-            complexSystemActionCommandHandler.ReserveCardEffect(followUpEffectCommand);
+            handler.cardSystem.ReserveCardEffect(followUpEffectCommand);
         }
 
         bExecuted = true;
