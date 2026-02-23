@@ -402,7 +402,7 @@ public class UIView_HUD : UIView
 
     public void UpdateCallBulletElementalAndDebuff()
     {
-        if (null == characterStatUI)
+        if (null == characterStatUI || null == characterData)
             return;
 
         IBulletEffectProvider bullet = characterData.GetBulletEffectProvider();
@@ -492,7 +492,9 @@ public class UIView_HUD : UIView
         characterStatUI.Setup(PlayerStatType.BulletDebuff, "투사체 디버프:", "없음");
     }
 
-    
+    #endregion
+
+    #region Condition UI
 
     private void Init_ConditionUI()
     {
