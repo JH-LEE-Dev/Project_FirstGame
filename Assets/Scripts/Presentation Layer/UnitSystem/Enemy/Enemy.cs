@@ -41,7 +41,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     [SerializeField] public CircleCollider2D statusCollider;
 
-    private TrailRenderer trailRenderer; //임시 트레일임, 버려도 무방.
+
     private EMoveComponent moveComponent;
     private ECombatComponent combatComponent;
     private EStatComponent statComponent;
@@ -96,14 +96,6 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
             moveComponent.Initialize(ctx, visualComponentCoordinator);
             elementDamageHandleComponent.Initialize(currentAppliedDebuff);
             effectComponent.Initialize();
-
-            //trail 임시 코드.
-            trailRenderer = GetComponent<TrailRenderer>();
-            trailRenderer.material = sr.material;
-            trailRenderer.material.mainTexture = sr.sprite.texture;
-            Color c = trailRenderer.material.color;
-            c.a = 0.3f;
-            trailRenderer.material.color = c;
         }
 
         enemyTypeData = _enemyTypeData;

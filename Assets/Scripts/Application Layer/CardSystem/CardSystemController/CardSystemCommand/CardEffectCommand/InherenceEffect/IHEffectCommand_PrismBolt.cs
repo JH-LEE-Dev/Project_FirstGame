@@ -12,14 +12,15 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         AdditionalAttackStat additionalAttackStat;
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
 
         if (bUpgraded)
         {
-            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1,default);
+            additionalAttackStat = new AdditionalAttackStat(5, 0.5f, 1, debuffElementData);
         }
         else
         {
-            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, default);
+            additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, debuffElementData);
         }
 
         cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);

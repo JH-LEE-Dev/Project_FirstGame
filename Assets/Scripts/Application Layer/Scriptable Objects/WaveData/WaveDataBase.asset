@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDatabase
   waveData:
   - waveIdx: 0
-    spawnEnemyCnt: 5
-    InitialEnemyCnt: 13
+    spawnEnemyCnt: 1
+    InitialEnemyCnt: 3
     currentEnemyThreshold: 2
     numberOfEnemiesToKill: 5
     waveRewardMoneyAmount: 500

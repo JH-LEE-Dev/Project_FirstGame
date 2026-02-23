@@ -94,11 +94,14 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
 
         if (currentEnemyCount + currentSpawnEnemyCnt > maxEnemyCnt)
         {
-            currentEnemyCount = maxEnemyCnt;
             currentSpawnEnemyCnt = maxEnemyCnt - currentEnemyCount;
+            currentEnemyCount = maxEnemyCnt;
         }
         else
             currentEnemyCount += currentSpawnEnemyCnt;
+
+        if (currentSpawnEnemyCnt <= 0)
+            return;
 
         signalHub.Publish(new SpawnWaveSignal(currentSpawnEnemyCnt,true));
     }
@@ -122,8 +125,6 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
     private IEnumerator MoveTurnCoroutine()
     {
         yield return new WaitForSeconds(MoveTurnDelay);
-
-        SpawnAdditionalWave();
 
         signalHub.Publish(new StartMoveSignal());
 
