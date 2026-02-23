@@ -40,4 +40,12 @@ public class UIStat_Player : MonoBehaviour
 
         units[(int)type].unit.ValueChange(_current);
     }
+
+    public void ChangeValue(PlayerStatType type, string _current)
+    {
+        if (units.Count < (int)type)
+            return;
+
+        units[(int)type].unit.ValueChange(_current);
+    }
 }

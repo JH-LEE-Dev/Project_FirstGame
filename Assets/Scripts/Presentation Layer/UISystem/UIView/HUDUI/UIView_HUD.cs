@@ -186,6 +186,8 @@ public class UIView_HUD : UIView
         HP_BarUpdateforDamaged(damage);
     }
 
+    #region Player HP Bar
+
     private void HP_BarUpdateLateHit()
     {
         float maxHp = playerData.GetMaxHealth();
@@ -348,6 +350,10 @@ public class UIView_HUD : UIView
         targetBarEffectPool.Pool.Release(target.gameObject);
     }
 
+    #endregion
+
+    #region Other
+
     private void IntializeChildrenHUD()
     {
         if (!WaveStartFirstTime)
@@ -374,6 +380,10 @@ public class UIView_HUD : UIView
 
     public GameObject GetDamageObj() => playerDamageNumPool.Pool.Get();
 
+    #endregion
+
+    #region StatUI
+
     private void CharacterStatUpdate()
     {
         if (null == characterStatUI)
@@ -395,16 +405,73 @@ public class UIView_HUD : UIView
         if (null == characterStatUI)
             return;
 
-        IBulletEffectProvider data = characterData.GetBulletEffectProvider();
+        IBulletEffectProvider bullet = characterData.GetBulletEffectProvider();
+        BulletEffectType(bullet);
+        BulletDebuffType(bullet);
+    }
 
-        //switch(data.currentEffectElements.Keys)
-        //{
-        //    case BulletElementType.Normal:
-        //            break;
-        //}
+    private void BulletEffectType(IBulletEffectProvider bullet)
+    {
+        string effectElements = string.Empty;
+        foreach (var data in bullet.currentEffectElements)
+        {
+            switch (data.Key)
+            {
+                case BulletElementType.Normal:
+                    effectElements += "노말";
+                    break;
 
-        //characterStatUI.ChangeValue(PlayerStatType.BulletEffectElemental, stat.additionalAttack);
-        //characterStatUI.ChangeValue(PlayerStatType.BulletDebuff, stat.weaknessTurnCnt);
+                case BulletElementType.Poison:
+                    effectElements += "산성 ";
+                    break;
+
+                case BulletElementType.Water:
+                    effectElements += "물 ";
+                    break;
+
+                case BulletElementType.Electric:
+                    effectElements += "전기 ";
+                    break;
+
+                case BulletElementType.Fire:
+                    effectElements += "불 ";
+                    break;
+            }
+        }
+
+        characterStatUI.ChangeValue(PlayerStatType.BulletEffectElemental, effectElements);
+    }
+
+    private void BulletDebuffType(IBulletEffectProvider bullet)
+    {
+        string effectElements = string.Empty;
+        foreach (var data in bullet.currentDebuffElementTypes)
+        {
+            switch (data.Key)
+            {
+                case DebuffElementEffectType.Default:
+                    effectElements += "없음";
+                    break;
+
+                case DebuffElementEffectType.ElectricShock:
+                    effectElements += "감전 ";
+                    break;
+
+                case DebuffElementEffectType.Oxidation:
+                    effectElements += "산화 ";
+                    break;
+
+                case DebuffElementEffectType.Combustion:
+                    effectElements += "연소 ";
+                    break;
+
+                case DebuffElementEffectType.Wet:
+                    effectElements += "습윤 ";
+                    break;
+            }
+        }
+
+        characterStatUI.ChangeValue(PlayerStatType.BulletDebuff, effectElements);
     }
 
     private void Init_CharacterStat()
@@ -434,6 +501,8 @@ public class UIView_HUD : UIView
 
         playerConditionUI.UpdateConditions(playerData.currentAppliedDebuff);
     }
+
+    #endregion
 
     // For StarlightUI
 
