@@ -43,7 +43,7 @@ public class ShopBehaviorHandler
 
         if (_type == ShopBehaviorType.PickUp)
         {
-            cardLogicSystemActionCommandHandler.AddCardsToDeck(writeBuffer);
+            cardLogicSystemActionCommandHandler.AddCardsToDeck(writeBuffer.Slice(0, _cards.Count));
         }
     }
 }

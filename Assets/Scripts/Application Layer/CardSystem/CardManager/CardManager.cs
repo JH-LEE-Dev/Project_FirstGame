@@ -460,7 +460,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         for (int i = 0; i < _cards.Length; ++i)
         {
             _cards[i].bPermanent = true;
-            permanentDeckPile.Add(_cards[i] as CardDataInstance);
+            permanentDeckPile.Add(_cards[i]);
         }
     }
 

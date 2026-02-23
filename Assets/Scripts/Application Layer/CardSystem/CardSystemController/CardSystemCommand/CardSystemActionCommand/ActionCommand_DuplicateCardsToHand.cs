@@ -43,9 +43,9 @@ public class ActionCommand_DuplicateCardsToHand : CardSystemActionCommand<ICardL
                     break;
                 }
 
+                writeBuffer[duplicatedCnt] = newCard;
+                writeBuffer[duplicatedCnt].SetUpgrade(cards[i].IsUpgraded());
                 ++duplicatedCnt;
-                writeBuffer[i] = newCard;
-                writeBuffer[i].SetUpgrade(cards[i].IsUpgraded());
             }
         }
 
