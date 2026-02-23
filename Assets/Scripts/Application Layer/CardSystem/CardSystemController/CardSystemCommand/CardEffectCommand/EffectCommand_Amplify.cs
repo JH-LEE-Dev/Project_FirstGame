@@ -7,9 +7,9 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
     [SerializeField] int bonusValueModifier = 1;
     [SerializeField] int upgradedBonusValueModifier = 1;
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
-        var bulletCards = complexSystemActionCommandHandler.GetCurrentCardSlot();
+        var bulletCards = handler.cardSlotSystem.GetCurrentCardSlot();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -31,7 +31,10 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, gameSystemActionContext);
+            {
+                handler.cardDataSystem.SetCardSystemContext(gameSystemActionContext);
+                handler.cardDataSystem.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier);
+            }
         }
         else
         {
@@ -50,15 +53,18 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, gameSystemActionContext);
+            {
+                handler.cardDataSystem.SetCardSystemContext(gameSystemActionContext);
+                handler.cardDataSystem.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
+            }
         }
 
         ResetCommandData();
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
-        var bulletCards = complexSystemActionCommandHandler.GetCurrentCardSlot();
+        var bulletCards = handler.cardSlotSystem.GetCurrentCardSlot();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -80,7 +86,10 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier, gameSystemActionContext);
+            {
+                handler.cardDataSystem.SetCardSystemContext(gameSystemActionContext);
+                handler.cardDataSystem.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), bonusValueModifier);
+            }
         }
         else
         {
@@ -99,7 +108,10 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
             }
 
             if (modifiedCnt != 0)
-                complexSystemActionCommandHandler.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier, gameSystemActionContext);
+            {
+                handler.cardDataSystem.SetCardSystemContext(gameSystemActionContext);
+                handler.cardDataSystem.UndoValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
+            }
         }
     }
 }

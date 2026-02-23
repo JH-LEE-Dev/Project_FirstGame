@@ -9,13 +9,14 @@ public class Character : Unit, ICharacterData
     /// 시스템 속성 존.----------------------------------
     /// </summary>
     
-    //인터페이스 선언부.
-    public ICombatEffectReceiver combatEffectReceiver => statComponent;
-    public IBulletEffectReceiver bulletEffectReceiver => combatComponent;
-
+    //이벤트.
     public event Action PlayerAttackEvent;
     public event Action PlayerAttackFinishedEvent;
     public event Action CharacterStatChangedEvent;
+
+    //인터페이스 선언부.
+    public ICombatEffectReceiver combatEffectReceiver => statComponent;
+    public IBulletEffectReceiver bulletEffectReceiver => combatComponent;
 
     //외부 의존성
     IOrbitPathProvider orbitPathProvider;

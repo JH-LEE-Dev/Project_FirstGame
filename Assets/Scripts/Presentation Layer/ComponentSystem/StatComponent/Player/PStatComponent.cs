@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterStatProvider
 {
+    //인터페이스 선언부.
     public int attackCnt { get; private set; }
     public float attackRange { get; private set; }
     public float criticalChance { get; private set; }
@@ -14,6 +15,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
     public float defaultAttack => attack;
     float ICharacterStatProvider.additionalAttack => totalAdditionalAttack;
 
+    //속성.
     private int initialAttackCnt = 1;
     private float initialAttackRange = 0f;
     private float initialCriticalChange = 10f;

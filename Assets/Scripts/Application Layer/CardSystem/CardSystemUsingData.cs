@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// static classes ---------------------------------
+/// </summary>
 public static class SYSTEM_VAR
 {
     public const int maxCardCount = 50;
@@ -16,6 +19,12 @@ public static class SYSTEM_VAR
 
     public const int maxExplosionCount = 50;
 }
+
+
+
+/// <summary>
+/// Enums ----------------------------------
+/// </summary>
 
 public enum CardType
 {
@@ -92,6 +101,41 @@ public enum BulletType
     MAX
 }
 
+
+public enum DebuffElementEffectType
+{
+    Combustion, //연소
+    ElectricShock, //감전
+    Oxidation, //산화
+    Wet, //습윤 ㅋ
+    Default,
+    MAX,
+}
+
+public enum InherenceCardType
+{
+    PrismBolt,
+    ArcDischarge,
+    AquaBurst,
+    AirBust,
+    MAX,
+}
+
+
+public enum ElementExplosionType
+{
+    Steam,
+    Flame,
+    Spark,
+    MAX,
+}
+
+
+/// <summary>
+/// Structs ------------------------------
+/// </summary>
+
+
 [Serializable]
 public struct BulletElementData
 {
@@ -111,7 +155,7 @@ public struct DebuffElementData
     public DebuffElementEffectType debuffElementType;
     public int turnCnt;
 
-    public DebuffElementData(DebuffElementEffectType _effectElementType,int _turnCnt)
+    public DebuffElementData(DebuffElementEffectType _effectElementType, int _turnCnt)
     {
         debuffElementType = _effectElementType;
         turnCnt = _turnCnt;
@@ -124,25 +168,6 @@ public struct ExplosionComparer : IComparer<Explosion>
     {
         return x.elementExplosionType.CompareTo(y.elementExplosionType);
     }
-}
-
-public enum DebuffElementEffectType
-{
-    Combustion, //연소
-    ElectricShock, //감전
-    Oxidation, //산화
-    Wet, //습윤 ㅋ
-    Default,
-    MAX,
-}
-
-
-public enum ElementExplosionType
-{
-    Steam,
-    Flame,
-    Spark,
-    MAX,
 }
 
 public struct AdditionalAttackStat
@@ -161,14 +186,4 @@ public struct AdditionalAttackStat
         debuffData = _debuffData;
     }
 }
-
-public enum InherenceCardType
-{ 
-    PrismBolt,
-    ArcDischarge,
-    AquaBurst,
-    AirBust,
-    MAX,
-}
-
 

@@ -4,30 +4,30 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Cleanse")]
 public class EffectCommand_Cleanse : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
         bool bCleansed = false;
 
-        var enemies = complexSystemActionCommandHandler.GetEnemyHandlers();
+        var enemies = handler.statusSystem.GetEnemyHandlers();
 
         for (int i = 0; i < enemies.Count; ++i)
         {
-            if (enemies[i].currentAppliedDebuff.Count != 0)
+            if (enemies[i].enemyData.currentAppliedDebuff.Count != 0)
             {
                 bCleansed = true;
                 enemies[i].ClearDebuff();
             }
         }
 
-        var player = complexSystemActionCommandHandler.GetPlayerHandler();
+        var player = handler.statusSystem.GetPlayerHandler();
 
-        if (player.currentAppliedDebuff.Count != 0)
+        if (player.playerData.currentAppliedDebuff.Count != 0)
         {
             bCleansed = true;
             player.ClearDebuff();
         }
 
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = handler.cardLogicSystem.GetHandPile();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
@@ -46,16 +46,17 @@ public class EffectCommand_Cleanse : CardEffectCommand<IComplexSystemActionComma
         if (cardCnt != 0)
         {
             bCleansed = true;
-            complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer.Slice(0, cardCnt), GameSystemActionContextType.MAX);
-            complexSystemActionCommandHandler.CardsToExtinction(writeBuffer.Slice(0, cardCnt), GameSystemActionContextType.UsedCardsToExtinction);
+            handler.cardLogicSystem.CardsRemoveFromHand(writeBuffer.Slice(0, cardCnt));
+            handler.cardLogicSystem.SetCardSystemContext(GameSystemActionContextType.UsedCardsToExtinction);
+            handler.cardLogicSystem.CardsToExtinction(writeBuffer.Slice(0, cardCnt));
         }
 
         if (bCleansed)
         {
             if (bUpgraded == false)
-                complexSystemActionCommandHandler.AdditionalDraw(2, GameSystemActionContextType.MAX);
+                handler.cardLogicSystem.DrawAgain(2);
             else
-                complexSystemActionCommandHandler.AdditionalDraw(3, GameSystemActionContextType.MAX);
+                handler.cardLogicSystem.DrawAgain(3);
         }
     }
 

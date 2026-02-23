@@ -13,21 +13,21 @@ public class ArcDischargeBehavior : BulletBehavior
 
     public override void Enter()
     {
-        
+        base.Enter();
     }
 
     public override void Update()
     {
-        
+
     }
 
     public override void End()
     {
-
+        base.End(); 
     }
 
     public override void Exit()
     {
-
+        base.Exit();
     }
 }

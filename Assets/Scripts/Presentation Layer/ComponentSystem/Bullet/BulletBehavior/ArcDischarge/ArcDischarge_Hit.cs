@@ -24,14 +24,12 @@ public class ArcDischarge_Hit : ArcDischargeBehavior
 
     public override void End()
     {
-        bBehaviorEnd = true;
-        BulletBehaviorEndEvent?.Invoke();
+        base.End();
     }
 
     public override void Exit()
     {
-        bBehaviorEnd = true;
-        BulletEffectEndEvent?.Invoke();
+        base.Exit();
 
         if (null != routine)
         {

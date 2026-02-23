@@ -9,18 +9,18 @@ public class EffectCommand_BonusRange : CardEffectCommand<IStatusEffectCommandHa
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(bonusRange * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(bonusRange * valueModifier);
         else
-            cardStatusEffectCommandHandler.ApplyRangeModifier(upgradedBonusRange * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(upgradedBonusRange * valueModifier);
 
         ResetCommandData();
     }
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-bonusRange * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-bonusRange * valueModifier);
         else
-            cardStatusEffectCommandHandler.ApplyRangeModifier(-upgradedBonusRange * valueModifier);
+            cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-upgradedBonusRange * valueModifier);
 
         ResetCommandData();
     }

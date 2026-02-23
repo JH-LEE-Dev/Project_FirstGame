@@ -228,19 +228,6 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
     }
 
-    public void ClearAllCards()
-    {
-        foreach (var card in handPile)
-            cardPools[card.GetCardData().id].Release(card);
-
-        foreach (var card in gravePile)
-            cardPools[card.GetCardData().id].Release(card);
-
-        handPile.Clear();
-        gravePile.Clear();
-        deckPile.Clear();
-    }
-
     public void HandToGrave()
     {
         using var rentalBuffer = new RentalScope<CardDataInstance>(handPile.Count);

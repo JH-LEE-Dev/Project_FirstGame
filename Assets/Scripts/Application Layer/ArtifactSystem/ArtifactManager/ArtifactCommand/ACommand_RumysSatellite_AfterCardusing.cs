@@ -19,43 +19,43 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
         }
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
-        if (complexSystemActionCommand.IsInherenceCardEquipped() == true)
+        if (handler.cardSlotSystem.IsInherenceCardEquipped() == true)
             return;
 
-        complexSystemActionCommand.SetInherenceCard(prismBolt);
+        handler.cardSlotSystem.SetInherenceCard(prismBolt);
 
         AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, default);
 
         if (bUpgraded == false)
         {
-            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false);
-            complexSystemActionCommand.ApplyAdditionalAttackStat(additionalAttackStat);
+            handler.statusSystem.SetBulletType(BulletType.PrismBolt, false);
+            handler.statusSystem.ApplyAdditionalAttackStat(additionalAttackStat);
 
-            complexSystemActionCommand.ApplyAttackModifier(10, GameSystemActionContextType.MAX);
-            complexSystemActionCommand.ApplyAdditionalAttackValueModifier(1);
+            handler.statusSystem.ApplyAttackModifier(10);
+            handler.statusSystem.ApplyAdditionalAttackValueModifier(1);
         }
         else
         {
-            complexSystemActionCommand.SetBulletType(BulletType.PrismBolt, false);
-            complexSystemActionCommand.ApplyAdditionalAttackStat(additionalAttackStat);
+            handler.statusSystem.SetBulletType(BulletType.PrismBolt, false);
+            handler.statusSystem.ApplyAdditionalAttackStat(additionalAttackStat);
 
-            complexSystemActionCommand.ApplyAttackModifier(20, GameSystemActionContextType.MAX);
-            complexSystemActionCommand.ApplyAdditionalAttackValueModifier(2);
+            handler.statusSystem.ApplyAttackModifier(20);
+            handler.statusSystem.ApplyAdditionalAttackValueModifier(2);
         }
 
-        complexSystemActionCommand.SetCharacterCanAttackState(true);
+        handler.statusSystem.SetCharacterCanAttackState(true);
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommand)
+    protected override void Undo(IComplexSystemActionCommandHandler _handler)
     {
-        if (complexSystemActionCommand.IsInherenceCardEquipped() == true)
+        if (_handler.cardSlotSystem.IsInherenceCardEquipped() == true)
             return;
 
-        complexSystemActionCommand.ApplyAdditionalAttackStat(default);
-        complexSystemActionCommand.ResetBulletType();
+        _handler.statusSystem.ApplyAdditionalAttackStat(default);
+        _handler.statusSystem.ResetBulletType();
 
-        complexSystemActionCommand.SetCharacterCanAttackState(false);
+        _handler.statusSystem.SetCharacterCanAttackState(false);
     }
 }

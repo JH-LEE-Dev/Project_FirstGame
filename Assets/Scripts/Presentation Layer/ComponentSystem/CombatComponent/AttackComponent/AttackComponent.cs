@@ -74,7 +74,6 @@ public class AttackComponent : MonoBehaviour
         aquaBurst.BulletEffectIsFinishedEvent -= AttackFinished;
         aquaBurst.BulletEffectIsFinishedEvent += AttackFinished;
         aquaBurst.SetActive(false);
-
     }
 
     private void OnDestroy()

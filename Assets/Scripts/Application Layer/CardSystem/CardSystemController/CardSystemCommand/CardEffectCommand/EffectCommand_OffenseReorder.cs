@@ -7,7 +7,7 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
 {
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    IComplexSystemActionCommandHandler handler;
 
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
       Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
@@ -18,13 +18,13 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
         gameSystemActionContext = GameSystemActionContextType.HandCardsToDeck;
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+        IReadOnlyList<CardDataInstance> handPile = handler.cardLogicSystem.GetHandPile();
 
         if (handPile.Count == 0)
             return;
@@ -39,8 +39,8 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         if (availableCards.Count > 1)
-            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                CardSelectionMode.HandCardsToDeck, valueModifier, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
+            handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
+                CardSelectionMode.HandCardsToDeck, valueModifier, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
@@ -51,12 +51,14 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
             if (availableCards.Count > 0)
             {
                 if (bUpgraded)
-                    complexSystemActionCommandHandler.AdditionalDraw(2, GameSystemActionContextType.MAX);
+                    handler.cardLogicSystem.DrawAgain(2);
                 else
-                    complexSystemActionCommandHandler.AdditionalDraw(1, GameSystemActionContextType.MAX);
+                    handler.cardLogicSystem.DrawAgain(1);
 
-                complexSystemActionCommandHandler.CardsRemoveFromHands(writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
-                complexSystemActionCommandHandler.CardsToDeck(writeBuffer,gameSystemActionContext);
+                handler.cardLogicSystem.SetCardSystemContext(GameSystemActionContextType.UsedCardsRemoveFromHand);
+                handler.cardLogicSystem.CardsRemoveFromHand(writeBuffer);
+                handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
+                handler.cardLogicSystem.CardsToDeck(writeBuffer);
             }
         }
     }
@@ -72,12 +74,13 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
         }
 
         if (bUpgraded)
-            complexSystemActionCommandHandler.AdditionalDraw(2, GameSystemActionContextType.MAX);
+            handler.cardLogicSystem.DrawAgain(2);
         else
-            complexSystemActionCommandHandler.AdditionalDraw(1, GameSystemActionContextType.MAX);
+            handler.cardLogicSystem.DrawAgain(1);
 
-        complexSystemActionCommandHandler.CardsToDeck(writeBuffer, gameSystemActionContext);
-        complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.UsedCardsRemoveFromHand,writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
+        handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
+        handler.cardLogicSystem.CardsToDeck(writeBuffer);
+        handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.UsedCardsRemoveFromHand,writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler handler)

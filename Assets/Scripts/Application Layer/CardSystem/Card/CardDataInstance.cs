@@ -43,14 +43,17 @@ public class CardDataInstance : ICardDataInstanceProvider
     {
         this.cardData = cardData;
 
+        ReadyCardUsingConditionChecker();
+        ResetState();
+        ReadyEffects();
+    }
+
+    private void ReadyCardUsingConditionChecker()
+    {
         if (cardData.cardUsingCondition_Prefab != null)
         {
             cardUsingCondition = UnityEngine.Object.Instantiate(cardData.cardUsingCondition_Prefab);
-            cardUsingCondition.SetOwner(this);
         }
-
-        ResetState();
-        ReadyEffects();
     }
 
     private void ReadyEffects()

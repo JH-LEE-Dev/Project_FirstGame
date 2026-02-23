@@ -12,7 +12,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
     private List<CardName> forbiddenCards = new List<CardName>(5);
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    private IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    private IComplexSystemActionCommandHandler handler;
 
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
       Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
@@ -24,13 +24,13 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             forbiddenCards.Add(CardName.QuantumEntanglement);
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+        IReadOnlyList<CardDataInstance> handPile = handler.cardLogicSystem.GetHandPile();
 
         for (int i = 0; i < handPile.Count; ++i)
         {
@@ -43,8 +43,8 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         if (bUpgraded == false)
         {
             if (availableCards.Count > duplicateAmount * valueModifier)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * valueModifier, gameSystemActionContext,
+                handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
+                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * valueModifier,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -57,14 +57,14 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 }
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, GameSystemActionContextType.MAX);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, GameSystemActionContextType.MAX);
             }
         }
         else
         {
             if (availableCards.Count > upgradedDuplicateAmount * valueModifier)
-                complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * valueModifier, gameSystemActionContext,
+                handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
+                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * valueModifier,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -83,7 +83,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
 
                 if (availableCards.Count > 0)
-                    complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
             }
         }
 
@@ -105,7 +105,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         if (bUpgraded == false)
         {
             if (_cards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, _cards.Count), GameSystemActionContextType.MAX);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, _cards.Count), GameSystemActionContextType.MAX);
         }
         else
         {
@@ -113,7 +113,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
 
             if (_cards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
         }
     }
 

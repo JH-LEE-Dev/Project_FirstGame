@@ -27,11 +27,11 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         gameSystemActionContext = GameSystemActionContextType.UsedCardsToExtinction;
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
         currentUsingPiles.Clear();
 
-        IReadOnlyList<CardDataInstance> handPile = complexSystemActionCommandHandler.GetHandPile();
+        IReadOnlyList<CardDataInstance> handPile = handler.cardLogicSystem.GetHandPile();
 
         if (handPile.Count == 0)
             return;
@@ -67,20 +67,20 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
+            handler.cardDataSystem.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false);
         }
 
-        complexSystemActionCommandHandler.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt), gameSystemActionContext);
+        handler.cardSystem.UseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt));
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
+            handler.cardDataSystem.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false);
         }
 
         ResetCommandData();
     }
 
-    protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Undo(IComplexSystemActionCommandHandler handler)
     {
         if (currentUsingPiles.Count == 0)
             return;
@@ -128,27 +128,22 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         }
 
         if (revertCurrentCardsCnt != 0 && bUpgraded == false)
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, GameSystemActionContextType.NoContext);
-
-
-
-
-
+            handler.cardDataSystem.RevertCardsUpgrade(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false);
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
+            handler.cardDataSystem.UpgradeCards(writeBuffer_Upgrade.Slice(0, upgradeCnt), false);
         }
 
-        complexSystemActionCommandHandler.UndoCardPileUse(writeBuffer_Using.Slice(0, usingCnt), gameSystemActionContext);
+        handler.cardSystem.UndoUseCards_AfterAttackEffects(writeBuffer_Using.Slice(0, usingCnt));
 
         if (upgradeCnt != 0)
         {
-            complexSystemActionCommandHandler.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false, GameSystemActionContextType.NoContext);
+            handler.cardDataSystem.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false);
         }
 
         if (revertCurrentCardsCnt != 0 && bUpgraded == false)
-            complexSystemActionCommandHandler.UpgradeCards(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false, GameSystemActionContextType.NoContext);
+            handler.cardDataSystem.UpgradeCards(writeBuffer_Revert.Slice(0, revertCurrentCardsCnt), false);
 
         currentUsingPiles.Clear();
     }

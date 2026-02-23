@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthComponentProvider
 {
+    //이벤트
     public event Action UnitIsDeadEvent;
     public event Action TakeDamageEvent;
 
+    //인터페이스 선언부.
+    float IHealthComponentProvider.maxHealth => maxHealth;
+    float IHealthComponentProvider.currentHealth => currentHealth;
+    float IHealthComponentProvider.currentShield => currentShield;
+    float IHealthComponentProvider.prevHealth => prevHealth;
+    float IHealthComponentProvider.prevShield => prevShield;
+    bool IHealthComponentProvider.bWeakness => bWeakness;
+
+    //속성.
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
     [SerializeField] private float currentShield;
@@ -15,13 +25,6 @@ public class HealthComponent : EntityComponent, IStatusEffectReceiver, IHealthCo
     private float prevShield;
 
     private bool bWeakness = false;
-
-    float IHealthComponentProvider.maxHealth => maxHealth;
-    float IHealthComponentProvider.currentHealth => currentHealth;
-    float IHealthComponentProvider.currentShield => currentShield;
-    float IHealthComponentProvider.prevHealth => prevHealth;
-    float IHealthComponentProvider.prevShield => prevShield;
-    bool IHealthComponentProvider.bWeakness => bWeakness;
 
     protected override void Awake()
     {

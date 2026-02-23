@@ -3,16 +3,7 @@ using UnityEngine;
 
 public interface IPlayerHandler
 {
-    Transform GetTransform();
-    float GetMaxHealth();
-    float GetCurrentHealth();
-    float GetCurrentShield();
-
-    float GetPrevHealth();
-
-    float GetPrevShield();
-    int GetPlayerCurrentMoney();
-    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> currentAppliedDebuff { get; }
+    IPlayerData playerData { get; }
     void ClearDebuff();
     void ReleaseDebuff(DebuffElementData debuffElementData);
     void ReleaseDebuff(DebuffElementEffectType type);

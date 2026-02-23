@@ -22,8 +22,7 @@ public class ArtifactManager : MonoBehaviour
     private List<ArtifactCommand> artifactEffect_AfterCardUsingPhase = new List<ArtifactCommand>(SYSTEM_VAR.maxDeckPileCount);
 
     //BeforeTurn,AfterAttack,BeforeAttack 등 아티팩트 효과 적용 타이밍을 CardSystemController보다 먼저 할지 뒤에 할지 통일해야 함.
-    //현재 위 세 개는 순서 보장이 안됨.
-    //beforeCardUsePhase는 CardSystemController가 먼저 실행하고, AfterCardUsePhase는 AfritfactManager가 먼저 실행함.
+
     public void Initialize()
     {
         ReadyArtifactPools();

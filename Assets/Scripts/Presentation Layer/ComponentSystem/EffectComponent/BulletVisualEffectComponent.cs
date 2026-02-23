@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//임시 컴포넌트.
 public class BulletVisualEffectComponent : EntityComponent
 {
     private Animator animator;

@@ -22,7 +22,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 
         for (int i = 0; i < enemies.Count; ++i)
         {
-            if (enemies[i].currentAppliedDebuff.ContainsKey(targetDebuff))
+            if (enemies[i].enemyData.currentAppliedDebuff.ContainsKey(targetDebuff))
             {
                 IEnemyHandler target = enemies[i];
                 writeBuffer[enemyCnt] = target;
@@ -51,7 +51,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                         {
                             writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
                             ++enemyCnt_Applied;
-                            enemyHandler.ApplyElementDebuff(debuffData,enemyHandler.GetTransform().position);
+                            enemyHandler.ApplyElementDebuff(debuffData,enemyHandler.enemyData.GetTransform().position);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                             writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
                             ++enemyCnt_Applied;
                             debuffData.turnCnt = 2;
-                            enemyHandler.ApplyElementDebuff(debuffData, enemyHandler.GetTransform().position);
+                            enemyHandler.ApplyElementDebuff(debuffData, enemyHandler.enemyData.GetTransform().position);
                         }
                     }
                 }
@@ -94,14 +94,14 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
     {
         float localRadius = _enemyHandler.statusCollider.radius;
 
-        float worldScale = _enemyHandler.GetTransform().lossyScale.x;
+        float worldScale = _enemyHandler.enemyData.GetTransform().lossyScale.x;
         float finalRadius = localRadius * worldScale;
 
         if (_bUpgraded)
             finalRadius *= 2;
 
         return Physics2D.OverlapCircleAll(
-            _enemyHandler.GetTransform().position,
+            _enemyHandler.enemyData.GetTransform().position,
             finalRadius,
            LayerMask.GetMask("Enemy"));
     }

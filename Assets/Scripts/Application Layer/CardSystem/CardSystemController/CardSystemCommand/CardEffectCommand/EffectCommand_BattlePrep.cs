@@ -8,7 +8,7 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
 {
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    IComplexSystemActionCommandHandler complexSystemActionCommandHandler;
+    IComplexSystemActionCommandHandler handler;
 
     public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
       Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
@@ -19,13 +19,13 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
         gameSystemActionContext = GameSystemActionContextType.GraveCardsToHand;
     }
 
-    protected override void Execute(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
 
-        complexSystemActionCommandHandler = _complexSystemActionCommandHandler;
+        handler = _handler;
 
-        IReadOnlyList<CardDataInstance> gravePile = complexSystemActionCommandHandler.GetGravePile();
+        IReadOnlyList<CardDataInstance> gravePile = handler.cardLogicSystem.GetGravePile();
 
         if (gravePile.Count == 0)
             return;
@@ -40,8 +40,8 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
         Span<CardDataInstance> writeBuffer = rentalBuffer.Span;
 
         if (availableCards.Count > 1)
-            complexSystemActionCommandHandler.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToHand, valueModifier, gameSystemActionContext, availableCards, true, HandleCardSelectionResult);
+            handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Grave,
+                CardSelectionMode.GraveCardsToHand, valueModifier, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
@@ -50,10 +50,10 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
             }
 
             if (bUpgraded)
-                complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
 
             if (availableCards.Count > 0)
-                complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
         }
     }
 
@@ -68,10 +68,10 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
         }
 
         if (bUpgraded)
-            complexSystemActionCommandHandler.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
 
         if (_cards.Count > 0)
-            complexSystemActionCommandHandler.RequestCardSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)

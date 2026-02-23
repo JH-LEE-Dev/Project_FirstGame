@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/ComplexSystemAction/HandPileExistEffectExecute")]
 public class ActionCommand_HandPileExistEffectExecute : CardSystemActionCommand<IComplexSystemActionCommandHandler>
 {
-    protected override void Execute(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
-        var handPile = complexSystemActionCommandHandler.GetHandPile();
+        var handPile = _handler.cardLogicSystem.GetHandPile();
 
         if (handPile.Count == 0)
             return;
@@ -20,7 +20,7 @@ public class ActionCommand_HandPileExistEffectExecute : CardSystemActionCommand<
             writeBuffer[i] = handPile[i];
         }
 
-        complexSystemActionCommandHandler.ExecuteHandPileExistEffect(writeBuffer, gameSystemActionContext);
+        _handler.cardSystem.ExecuteHandPileExistEffect(writeBuffer);
     }
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {

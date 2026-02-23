@@ -20,12 +20,11 @@ public class ArcDischarge_BeforeFire : ArcDischargeBehavior
 
     public override void End()
     {
-        bBehaviorEnd = true;
-        BulletBehaviorEndEvent?.Invoke();
+        base.End();
     }
 
     public override void Exit()
     {
-        BulletEffectEndEvent?.Invoke();
+        base.Exit();
     }
 }

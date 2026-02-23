@@ -187,7 +187,7 @@ public class CardSlotManager : ICardSlotSystemActionCommandHandler
             command.Undo(this);
     }
 
-    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCard()
+    public IReadOnlyList<IReadOnlyList<CardDataInstance>> GetPrevUsedBulletCards()
     {
         return prevBulletCardSlot;
     }

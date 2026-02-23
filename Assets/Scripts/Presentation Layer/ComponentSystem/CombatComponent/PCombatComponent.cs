@@ -23,12 +23,11 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     IReadOnlyDictionary<BulletElementType, BulletElementData> IBulletEffectProvider.currentEffectElements => currentEffectElements;
     IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> IBulletEffectProvider.currentDebuffElementTypes => currentDebuffElementTypes;
 
+    //¼Ó¼º.
     private BulletType bulletType;
     private bool bUpgraded = false;
     BulletType IBulletEffectProvider.bulletType => bulletType;
     bool IBulletEffectProvider.bUpgraded => bUpgraded;
-
-
 
     protected Dictionary<DebuffElementEffectType, DebuffElementData> currentDebuffElementTypes =
         new Dictionary<DebuffElementEffectType, DebuffElementData>(SYSTEM_VAR.maxDebuffElementCount);
