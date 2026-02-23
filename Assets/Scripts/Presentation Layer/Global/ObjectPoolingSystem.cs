@@ -23,8 +23,11 @@ public class ObjectPoolingSystem : MonoBehaviour
         {
             GameObject getObj = pool.Get();
             poolList.Add(getObj);
-            pool.Release(getObj);
+            getObj.SetActive(true);
         }
+
+        for (int i = 0; i < maxPoolSize; ++i)
+            pool.Release(poolList[i]);
     }
 
     private GameObject PoolCreate()
