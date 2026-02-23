@@ -190,6 +190,6 @@ public class GameplayUICoordinator
 
     public void CharacterElementChanged()
     {
-
+        hudUISystem.UpdateCallBulletElementalAndDebuff();
     }
 }

@@ -29,10 +29,9 @@ public class ActionCommand_HandToGrave : CardSystemActionCommand<ICardLogicSyste
                         break;
                     }
 
+                    writeBuffer[duplicatedCnt] = card;
+                    writeBuffer[duplicatedCnt].SetUpgrade(handPile[i].IsUpgraded());
                     ++duplicatedCnt;
-
-                    writeBuffer[i] = card;
-                    writeBuffer[i].SetUpgrade(handPile[i].IsUpgraded());
                 }
             }
 

@@ -213,6 +213,10 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
                     enemies[i].SetEnemyID(activatedEnemyCnt);
                     ++activatedEnemyCnt;
                 }
+                else
+                {
+                    enemyPool.Release(spawnedUnit);
+                }
             }
         }
 
@@ -227,6 +231,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
             enemyPool.Release(enemies[i]);
         }
 
+        enemyData.Clear();
         enemies.Clear();
     }
 
@@ -241,8 +246,33 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawnSystemData
         }
 
         enemies.Clear();
+        enemyData.Clear();
+        additionalSpawnedEnemy.Clear();
 
         enemyPool.Dispose();
+    }
+
+    public void ReleaseDeadEnemy()
+    {
+        using var rentalBuffer = new RentalScope<Enemy>(enemies.Count);
+        Span<Enemy> writeBuffer = rentalBuffer.Span;
+
+        int deadCnt = 0;
+
+        for (int i = 0; i < enemies.Count; ++i)
+        {
+            if (enemies[i].IsUnitDead())
+            {
+                writeBuffer[deadCnt] = enemies[i];
+                ++deadCnt;
+            }
+        }
+
+        for (int i = 0; i < deadCnt; ++i)
+        {
+            enemies.Remove(writeBuffer[i]);
+            enemyPool.Release(writeBuffer[i]);
+        }
     }
 
     public void Release()

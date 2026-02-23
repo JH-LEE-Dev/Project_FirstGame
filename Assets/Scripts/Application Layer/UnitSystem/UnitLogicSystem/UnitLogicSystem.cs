@@ -210,7 +210,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         playerUnit.PlayerTurnEnd();
     }
 
-    public void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
+    public void EnemyTurnStarted()
     {
         characterUnit.ResetbCanAction();
 

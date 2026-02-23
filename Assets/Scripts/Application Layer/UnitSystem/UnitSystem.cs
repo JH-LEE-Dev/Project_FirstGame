@@ -43,6 +43,9 @@ public class UnitSystem
         unitLogicSystem.EnemyIsDeadEvent -= EnemyIsDead;
         unitLogicSystem.EnemyIsDeadEvent += EnemyIsDead;
 
+        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
+        unitLogicSystem.EnemyIsKilledEvent += EnemyIsKilled;
+
         unitLogicSystem.PlayerTurnFinishedEvent -= PlayerTurnFinished;
         unitLogicSystem.PlayerTurnFinishedEvent += PlayerTurnFinished;
 
@@ -60,9 +63,6 @@ public class UnitSystem
 
         unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
         unitLogicSystem.EnemyTakeDamageEvent += EnemyTakeDamage;
-
-        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
-        unitLogicSystem.EnemyIsKilledEvent += EnemyIsKilled;
 
         unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
         unitLogicSystem.CharacterStatChangedEvent += CharacterStatChanged;
@@ -87,6 +87,8 @@ public class UnitSystem
 
         unitLogicSystem.EnemyIsDeadEvent -= EnemyIsDead;
 
+        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
+
         unitLogicSystem.PlayerTurnFinishedEvent -= PlayerTurnFinished;
 
         unitLogicSystem.PlayerTakeDamageEvent -= PlayerTakeDamage;
@@ -98,8 +100,6 @@ public class UnitSystem
         unitLogicSystem.PlayerGetHPEvent -= PlayerGetHP;
 
         unitLogicSystem.EnemyTakeDamageEvent -= EnemyTakeDamage;
-
-        unitLogicSystem.EnemyIsKilledEvent -= EnemyIsKilled;
 
         unitLogicSystem.CharacterStatChangedEvent -= CharacterStatChanged;
 
@@ -117,7 +117,7 @@ public class UnitSystem
         signalHub.Subscribe<SpawnWaveSignal>(unitSpawner.SpawnWave);
         signalHub.Subscribe<AllEnemyDeadSignal>(unitSpawner.ResetCurrentEnemies);
         signalHub.Subscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
-        signalHub.Subscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
+        signalHub.Subscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.Subscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
         signalHub.Subscribe<CardUsePhaseStartedSignal>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.Subscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
@@ -134,7 +134,7 @@ public class UnitSystem
         signalHub.UnSubscribe<SpawnWaveSignal>(unitSpawner.SpawnWave);
         signalHub.UnSubscribe<AllEnemyDeadSignal>(unitSpawner.ResetCurrentEnemies);
         signalHub.UnSubscribe<CardStatusEffectCommandDispatchSignal>(unitLogicSystem.ExecuteCommand);
-        signalHub.UnSubscribe<EnemyTurnStartSignal>(unitLogicSystem.EnemyTurnStarted);
+        signalHub.UnSubscribe<EnemyTurnStartSignal>(EnemyTurnStarted);
         signalHub.UnSubscribe<CardUsingFinishedSignal>(unitLogicSystem.CardUsingFinished);
         signalHub.UnSubscribe<CardUsePhaseStartedSignal>(unitLogicSystem.CardUsePhaseStarted);
         signalHub.UnSubscribe<StartMoveSignal>(unitLogicSystem.StartEnemyMove);
@@ -144,6 +144,12 @@ public class UnitSystem
         signalHub.UnSubscribe<ShopBillingSignal>(PlayerMoneyUsed);
         signalHub.UnSubscribe<WaveMoveEndSignal>(EnemyTurnEnd);
         signalHub.UnSubscribe<WaveCompleteRewardSignal>(WaveRewardReceived);
+    }
+
+    private void EnemyTurnStarted(EnemyTurnStartSignal enemyTurnStartSignal)
+    {
+        unitLogicSystem.EnemyTurnStarted();
+        unitSpawner.ReleaseDeadEnemy();
     }
 
     private void EnemyIsDead(Vector2 position)

@@ -273,9 +273,9 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
             combatComponent.ApplyAttack(other, currentAppliedDebuff);
 
-            SetEnemyState(false);
-
             UnitIsDead();
+
+            SetEnemyState(false);
 
             EnemyIsDeadEvent?.Invoke();
 
