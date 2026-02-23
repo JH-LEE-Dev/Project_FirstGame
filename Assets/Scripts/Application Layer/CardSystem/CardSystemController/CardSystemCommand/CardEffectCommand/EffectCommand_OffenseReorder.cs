@@ -56,9 +56,9 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
                     handler.cardLogicSystem.DrawAgain(1);
 
                 handler.cardLogicSystem.SetCardSystemContext(GameSystemActionContextType.UsedCardsRemoveFromHand);
-                handler.cardLogicSystem.CardsRemoveFromHand(writeBuffer);
+                handler.cardLogicSystem.CardsRemoveFromHand(writeBuffer.Slice(0,availableCards.Count));
                 handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
-                handler.cardLogicSystem.CardsToDeck(writeBuffer);
+                handler.cardLogicSystem.CardsToDeck(writeBuffer.Slice(0,availableCards.Count));
             }
         }
     }
@@ -79,7 +79,7 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
             handler.cardLogicSystem.DrawAgain(1);
 
         handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
-        handler.cardLogicSystem.CardsToDeck(writeBuffer);
+        handler.cardLogicSystem.CardsToDeck(writeBuffer.Slice(0,_cards.Count));
         handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.UsedCardsRemoveFromHand,writeBuffer, GameSystemActionContextType.UsedCardsRemoveFromHand);
     }
 

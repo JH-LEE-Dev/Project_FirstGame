@@ -71,7 +71,7 @@ public class ElementDamageHandleComponent
         float additionalDamage = 0;
         if (debuffs.ContainsKey(DebuffElementEffectType.ElectricShock))
             additionalDamage += _damage * 0.5f;
-
+        Debug.Log(debuffs.ContainsKey(DebuffElementEffectType.ElectricShock));
         return additionalDamage;
     }
 

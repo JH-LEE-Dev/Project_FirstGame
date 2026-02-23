@@ -20,7 +20,7 @@ public class ActionCommand_HandPileExistEffectExecute : CardSystemActionCommand<
             writeBuffer[i] = handPile[i];
         }
 
-        _handler.cardSystem.ExecuteHandPileExistEffect(writeBuffer);
+        _handler.cardSystem.ExecuteHandPileExistEffect(writeBuffer.Slice(0,handPile.Count));
     }
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)
     {

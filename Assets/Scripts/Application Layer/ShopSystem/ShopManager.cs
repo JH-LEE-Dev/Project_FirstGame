@@ -45,9 +45,10 @@ public class ShopManager : MonoBehaviour, IShopSystemData
     {
         cardDataMerchandiseData.Clear();
 
-        for(int i = 0;i<cardMerchandiseData.Count;++i)
+        for (int i = 0; i < cardMerchandiseData.Count; ++i)
         {
-            cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
+            if (cardMerchandiseData[i].bPermanent == false)
+                cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
         }
 
         cardMerchandiseData.Clear();
@@ -72,7 +73,8 @@ public class ShopManager : MonoBehaviour, IShopSystemData
 
         for (int i = 0; i < cardMerchandiseData.Count; ++i)
         {
-            cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
+            if (cardMerchandiseData[i].bPermanent == false)
+                cardLogicSystemProvider.ReleaseCard(cardMerchandiseData[i]);
         }
 
         cardMerchandiseData.Clear();

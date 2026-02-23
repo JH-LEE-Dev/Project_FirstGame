@@ -6,7 +6,7 @@ public abstract class CardSystemActionCommand : CardSystemCommand
     protected CardDataInstance[] cards = new CardDataInstance[SYSTEM_VAR.maxDeckPileCount];
     protected int cnt;
 
-    public virtual void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards,GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
+    public virtual void InitializeCommand(ReadOnlySpan<CardDataInstance> _cards, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
         gameSystemActionContext = _cardSystemContextType;
 
@@ -18,9 +18,11 @@ public abstract class CardSystemActionCommand : CardSystemCommand
         cnt = 0;
         for (int i = 0; i < _cards.Length; ++i)
         {
-            ++cnt;
             if (_cards[i] != null)
+            {
+                ++cnt;
                 cards[i] = _cards[i];
+            }
         }
     }
 }

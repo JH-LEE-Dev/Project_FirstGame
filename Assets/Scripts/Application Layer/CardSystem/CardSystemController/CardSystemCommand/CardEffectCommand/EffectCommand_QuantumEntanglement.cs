@@ -57,7 +57,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                 }
 
                 if (availableCards.Count > 0)
-                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer, GameSystemActionContextType.MAX);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0,availableCards.Count), GameSystemActionContextType.MAX);
             }
         }
         else

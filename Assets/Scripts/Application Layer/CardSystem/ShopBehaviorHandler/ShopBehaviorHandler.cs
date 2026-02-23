@@ -33,17 +33,17 @@ public class ShopBehaviorHandler
 
         if (_type == ShopBehaviorType.Delete)
         {
-            cardLogicSystemActionCommandHandler.DeleteCardsFromDeck(writeBuffer);
+            cardLogicSystemActionCommandHandler.DeleteCardsFromDeck(writeBuffer.Slice(0,_cards.Count));
         }
 
         if (_type == ShopBehaviorType.Upgrade)
         {
-            RequestCardDataControlSystemActionEvent?.Invoke(CardDataControlSystemActionType.CardsPermenantlyUpgraded, writeBuffer, GameSystemActionContextType.MAX);
+            RequestCardDataControlSystemActionEvent?.Invoke(CardDataControlSystemActionType.CardsPermenantlyUpgraded, writeBuffer.Slice(0,_cards.Count), GameSystemActionContextType.MAX);
         }
 
         if (_type == ShopBehaviorType.PickUp)
         {
-            cardLogicSystemActionCommandHandler.AddCardsToDeck(writeBuffer);
+            cardLogicSystemActionCommandHandler.AddCardsToDeck(writeBuffer.Slice(0, _cards.Count));
         }
     }
 }

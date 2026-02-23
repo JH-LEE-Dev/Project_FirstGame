@@ -28,10 +28,10 @@ public class ActionCommand_DuplicateCardsToDeck : CardSystemActionCommand<ICardL
                     Debug.LogWarning("카드를 복제할 수 없습니다. 카드 총량은 50장입니다.");
                     break;
                 }
-                ++duplicatedCnt;
 
-                writeBuffer[i] = newCard;
-                writeBuffer[i].SetUpgrade(cards[i].IsUpgraded());
+                writeBuffer[duplicatedCnt] = newCard;
+                writeBuffer[duplicatedCnt].SetUpgrade(cards[i].IsUpgraded());
+                ++duplicatedCnt;
             }
         }
 

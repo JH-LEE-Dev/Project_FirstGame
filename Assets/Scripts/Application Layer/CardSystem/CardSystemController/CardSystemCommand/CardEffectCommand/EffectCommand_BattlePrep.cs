@@ -50,10 +50,10 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
             }
 
             if (bUpgraded)
-                handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer.Slice(0,availableCards.Count), gameSystemActionContext);
 
             if (availableCards.Count > 0)
-                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0,availableCards.Count), gameSystemActionContext);
         }
     }
 
@@ -68,10 +68,10 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
         }
 
         if (bUpgraded)
-            handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
 
         if (_cards.Count > 0)
-            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
