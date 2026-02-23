@@ -100,6 +100,9 @@ public class PoolingSystem : MonoBehaviour
         {
             GameObject newObj = starEffects.Get();
             starEffectsList.Add(newObj);
+            newObj.SetActive(true);
+
+            //newObj.GetComponentInChildren<ParticleSystem>()?.Emit(1);
         }
 
         for (int i = 0; i < maxPool; ++i)

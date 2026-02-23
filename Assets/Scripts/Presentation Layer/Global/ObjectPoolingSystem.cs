@@ -23,6 +23,7 @@ public class ObjectPoolingSystem : MonoBehaviour
         {
             GameObject getObj = pool.Get();
             poolList.Add(getObj);
+            getObj.SetActive(true);
         }
 
         for (int i = 0; i < maxPoolSize; ++i)
