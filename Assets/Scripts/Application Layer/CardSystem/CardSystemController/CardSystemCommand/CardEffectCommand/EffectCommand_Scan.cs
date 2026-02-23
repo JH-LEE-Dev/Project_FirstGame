@@ -41,7 +41,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
             }
         }
         else
@@ -60,7 +60,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                 }
 
                 if (availableCards.Count > 0)
-                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+                    handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
             }
         }
 
@@ -78,7 +78,7 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
         }
 
         if (_cards.Count > 0)
-            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer, gameSystemActionContext);
+            handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0,_cards.Count), gameSystemActionContext);
     }
     protected override void Undo(IComplexSystemActionCommandHandler _complexSystemActionCommandHandler)
     {

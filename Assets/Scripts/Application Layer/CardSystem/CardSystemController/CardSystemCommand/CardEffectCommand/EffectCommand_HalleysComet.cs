@@ -51,7 +51,7 @@ public class EffectCommand_HalleysComet : CardEffectCommand<IComplexSystemAction
             }
 
             if (availableCards.Count > 0)
-                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer, gameSystemActionContext);
+                handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToDeck, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
         }
 
         ResetCommandData();

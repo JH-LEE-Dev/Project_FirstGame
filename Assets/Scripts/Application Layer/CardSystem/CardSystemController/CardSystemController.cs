@@ -885,7 +885,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             writeBuffer[i] = cards[i];
         }
 
-        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer);
+        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer.Slice(0,cards.Count));
 
         UndoAfterAttackEffets();
         cardSlotManager.DiscardBulletCard(slotIdx);

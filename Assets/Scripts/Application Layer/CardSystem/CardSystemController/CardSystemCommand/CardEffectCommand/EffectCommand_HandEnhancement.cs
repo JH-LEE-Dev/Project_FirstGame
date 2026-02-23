@@ -53,7 +53,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
                 }
 
                 if (availableCards.Count > 0)
-                    handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, gameSystemActionContext);
+                    handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade.Slice(0,availableCards.Count), gameSystemActionContext);
             }
         }
         else

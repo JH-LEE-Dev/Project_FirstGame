@@ -188,7 +188,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             writeBuffer[i] = card;
         }
 
-        if (rentalBuffer.Span.Length != 0)
+        if (writeBuffer.Length != 0)
         {
             if (bAdditional == false)
                 cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.CardPileDrawEvent, cardSystemContext, writeBuffer.Slice(0, amount));
@@ -242,7 +242,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         handPile.Clear();
 
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext, writeBuffer);
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.HandCardsToGraveEvent, cardSystemContext, writeBuffer.Slice(0,handPile.Count));
     }
 
     private void GraveToDeck()
@@ -264,7 +264,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
         }
 
         gravePile.Clear();
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer);
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0,gravePile.Count));
     }
 
     public void ReleaseCard(CardDataInstance card)
@@ -459,6 +459,7 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
 
         for (int i = 0; i < _cards.Length; ++i)
         {
+            _cards[i].bPermanent = true;
             permanentDeckPile.Add(_cards[i] as CardDataInstance);
         }
     }
