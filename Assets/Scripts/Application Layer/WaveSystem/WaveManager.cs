@@ -160,7 +160,7 @@ public class WaveManager : MonoBehaviour, IWaveSystemData
 
         if (currentEnemyCount <= currentEnemyThreshold)
         {
-            //SpawnAdditionalWave();
+            SpawnAdditionalWave();
         }
     }
 
