@@ -1,13 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.AppUI.UI;
-using UnityEditor;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 public class UIView_HUD : UIView
 {

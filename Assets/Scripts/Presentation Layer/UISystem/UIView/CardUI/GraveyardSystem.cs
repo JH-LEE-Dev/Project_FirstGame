@@ -2,10 +2,6 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using VFolders.Libs;
-using static UnityEngine.Analytics.IAnalytic;
 using Image = UnityEngine.UI.Image;
 
 public class GraveyardSystem : MonoBehaviour

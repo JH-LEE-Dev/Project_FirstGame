@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class UIView_Unit_Canvas : UIView

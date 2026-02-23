@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 
 
 public class Enemy : Unit, IEnemyData, IEnemyHandler
