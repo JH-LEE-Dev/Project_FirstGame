@@ -123,6 +123,8 @@ public enum PlayerStatType
     AttackDamage,
     AdditionalDamage,
     WeaknessTurnCount,
+    BulletEffectElemental,
+    BulletDebuff,
 }
 
 public enum CharacterType

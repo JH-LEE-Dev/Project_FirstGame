@@ -32,6 +32,21 @@ public class UIStat_Unit : MonoBehaviour
         mainText.text = title + value.ToString("0.#");
     }
 
+    public void Setup(Sprite _icon, string title, string value)
+    {
+        iconImage = GetComponent<Image>();
+
+        if (null == iconImage || null == mainText)
+            return;
+
+        iconImage.sprite = _icon;
+
+        titleStr = title;
+
+        mainText.text = title + value;
+    }
+
+
     public void ValueChange(float _current, float duration = 0.5f)
     {
         CancelPrevMotion(animSeq);
@@ -55,6 +70,14 @@ public class UIStat_Unit : MonoBehaviour
             animSeq.Join(mainText.DOColor(Color.white, duration));
 
         animSeq.OnComplete(CompleteCallback);
+    }
+
+    public void ValueChange(string value)
+    {
+        if (null == mainText)
+            return;
+
+        mainText.text = titleStr + value;
     }
 
     private void CompleteCallback()
