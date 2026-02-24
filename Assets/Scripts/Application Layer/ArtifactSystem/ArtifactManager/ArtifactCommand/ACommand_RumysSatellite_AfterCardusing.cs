@@ -26,7 +26,8 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
 
         handler.cardSlotSystem.SetInherenceCard(prismBolt);
 
-        AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, default);
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default,0);
+        AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(2, 0.2f, 1, debuffElementData);
 
         if (bUpgraded == false)
         {
@@ -53,7 +54,10 @@ public class ACommand_RumysSatellite_AfterCardUsing : ArtifactCommand<IComplexSy
         if (_handler.cardSlotSystem.IsInherenceCardEquipped() == true)
             return;
 
-        _handler.statusSystem.ApplyAdditionalAttackStat(default);
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
+        AdditionalAttackStat additionalAttackStat = new AdditionalAttackStat(0, 0f, 0, debuffElementData);
+
+        _handler.statusSystem.ApplyAdditionalAttackStat(additionalAttackStat);
         _handler.statusSystem.ResetBulletType();
 
         _handler.statusSystem.SetCharacterCanAttackState(false);

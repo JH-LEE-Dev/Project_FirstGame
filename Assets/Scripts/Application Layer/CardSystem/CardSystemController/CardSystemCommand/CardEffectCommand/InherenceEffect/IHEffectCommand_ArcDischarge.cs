@@ -11,8 +11,11 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
 
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
+        AdditionalAttackStat stat = new AdditionalAttackStat(0,0,0,debuffElementData);
+
         cardStatusEffectCommandHandler.SetBulletType(BulletType.ArcDischarge, bUpgraded);
-        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(stat);
         cardStatusEffectCommandHandler.SetCharacterCanAttackState(true);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
@@ -39,8 +42,11 @@ public class IHEffectCommand_ArcDischarge : CardEffectCommand<IStatusEffectComma
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
+        AdditionalAttackStat stat = new AdditionalAttackStat(0, 0, 0, debuffElementData);
+
         cardStatusEffectCommandHandler.ResetBulletType();
-        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(stat);
         cardStatusEffectCommandHandler.SetCharacterCanAttackState(false);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)

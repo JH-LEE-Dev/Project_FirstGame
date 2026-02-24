@@ -263,8 +263,8 @@ public class CardManager : MonoBehaviour, ICardLogicSystemActionCommandHandler, 
             deckPile.Add(card);
         }
 
+        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0, gravePile.Count));
         gravePile.Clear();
-        cardSystemEventInvoker.Dispatch(CardLogicSystemEventType.GraveCardsToDeckEvent, cardSystemContext, writeBuffer.Slice(0,gravePile.Count));
     }
 
     public void ReleaseCard(CardDataInstance card)

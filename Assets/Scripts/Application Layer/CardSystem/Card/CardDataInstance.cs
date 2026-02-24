@@ -134,6 +134,10 @@ public class CardDataInstance : ICardDataInstanceProvider
 
     public void ResetState()
     {
+        bUpgrade = false;
+        bPermanent = false;
+        bPermanentUpgrade = false;
+        valueModifier = 1;
         ResetElement_Debuff();
     }
 

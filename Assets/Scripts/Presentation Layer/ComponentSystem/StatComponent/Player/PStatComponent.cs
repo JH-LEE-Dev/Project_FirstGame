@@ -128,7 +128,7 @@ public class PStatComponent : StatComponent, ICombatEffectReceiver, ICharacterSt
         totalDamage = 0;
         resultDamage = 0;
         additionalAttackModifier = 1f;
-        additionalAttackStat = default;
+        additionalAttackStat = new AdditionalAttackStat(0,0,0,new DebuffElementData(DebuffElementEffectType.Default,0));
         totalAdditionalAttack = 0f;
     }
 

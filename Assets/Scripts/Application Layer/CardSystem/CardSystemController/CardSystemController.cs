@@ -817,16 +817,22 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
 
     public CardUsedResult TryCardUse(ICardDataInstanceProvider usedCard)
     {
-        if (usedCard is CardDataInstance card == false)
-            return default;
-
         CardUsedResult result;
+
+        if (usedCard is CardDataInstance card == false)
+        {
+            result.bVerified = false;
+            result.slotIdx = -1;
+            result.usedCard = null;
+
+            return result;
+        }
 
         if (card.cardUsingCondition != null)
         {
             CardUsingConditionCheckEvent?.Invoke(card.cardUsingCondition);
 
-            if(card.cardUsingCondition.bResult == false)
+            if (card.cardUsingCondition.bResult == false)
             {
                 result.bVerified = false;
                 result.slotIdx = -1;
@@ -885,7 +891,7 @@ public class CardSystemController : MonoBehaviour, ICardSystemControlActionComma
             writeBuffer[i] = cards[i];
         }
 
-        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer.Slice(0,cards.Count));
+        DispatchCardSystemActionCommand_Instant(CardLogicSystemActionType.CardsToHand, writeBuffer.Slice(0, cards.Count));
 
         UndoAfterAttackEffets();
         cardSlotManager.DiscardBulletCard(slotIdx);

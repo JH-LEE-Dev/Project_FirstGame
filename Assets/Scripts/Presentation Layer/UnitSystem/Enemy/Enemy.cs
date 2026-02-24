@@ -12,7 +12,7 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
     public event Action EnemySpawnedEvent;
     public event Action EnemyIsDeadEvent;
     public event Action EnemyDebuffChangedEvent;
-    public event Action<IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData>, DebuffElementData,Vector2> EnemyDebuffAppliedEvent;
+    public event Action<IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData>, DebuffElementData, Vector2> EnemyDebuffAppliedEvent;
     public event Action<IEnemyData, IEnemyData, Vector2> EnemyCollideEvent;
     public event Action<IEnemyData, IReadOnlyDictionary<BulletElementType, BulletElementData>, Vector2> EnemyHitEvent;
 
@@ -330,11 +330,8 @@ public class Enemy : Unit, IEnemyData, IEnemyHandler
 
     public void ClearDebuff()
     {
-        if (bDead == false)
-        {
-            currentAppliedDebuff.Clear();
-            EnemyDebuffChangedEvent?.Invoke();
-        }
+        currentAppliedDebuff.Clear();
+        EnemyDebuffChangedEvent?.Invoke();
     }
 
     public void EnemyTurnEnd()

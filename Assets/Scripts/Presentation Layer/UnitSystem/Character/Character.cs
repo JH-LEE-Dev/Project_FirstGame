@@ -13,6 +13,7 @@ public class Character : Unit, ICharacterData
     public event Action PlayerAttackEvent;
     public event Action PlayerAttackFinishedEvent;
     public event Action CharacterStatChangedEvent;
+    public event Action CharacterElementChangedEvent;
 
     //인터페이스 선언부.
     public ICombatEffectReceiver combatEffectReceiver => statComponent;
@@ -180,6 +181,8 @@ public class Character : Unit, ICharacterData
     private void PlayerAttackFinished()
     {
         combatComponent.ResetComponent();
+        CharacterElementChangedEvent?.Invoke();
+
         statComponent.DecreaseAttackCnt();
 
         if (statComponent.attackCnt == 0)

@@ -131,6 +131,9 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
         characterUnit.CharacterStatChangedEvent += CharacterStatChanged;
+
+        characterUnit.CharacterElementChangedEvent -= CharacterElementChanged;
+        characterUnit.CharacterElementChangedEvent += CharacterElementChanged;
     }
 
     private void ReleaseEvent_Character()
@@ -140,6 +143,8 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
         characterUnit.PlayerAttackEvent -= PlayerAttacked;
 
         characterUnit.CharacterStatChangedEvent -= CharacterStatChanged;
+
+        characterUnit.CharacterElementChangedEvent -= CharacterElementChanged;
     }
 
     private void BindEvent_Enemy()
@@ -206,8 +211,8 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
 
     private void PlayerTurnFinished()
     {
-        PlayerTurnFinishedEvent?.Invoke();
         playerUnit.PlayerTurnEnd();
+        PlayerTurnFinishedEvent?.Invoke();
     }
 
     public void EnemyTurnStarted()
@@ -354,7 +359,7 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void ApplyBulletElementType(BulletElementData effectElementData)
     {
         characterUnit.bulletEffectReceiver.ApplyBulletElementType(effectElementData);
-        CharacterElementChangedEvent?.Invoke();
+        CharacterElementChanged();
     }
 
     public void SetBulletType(BulletType bulletType, bool bUpgraded)
@@ -370,19 +375,19 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public void UndoBulletElementApply(BulletElementData _effectElementData)
     {
         characterUnit.bulletEffectReceiver.UndoBulletElementApply(_effectElementData);
-        CharacterElementChangedEvent?.Invoke();
+        CharacterElementChanged();
     }
 
     public void ApplyDebuffElementType(DebuffElementData _debuffElementData)
     {
         characterUnit.bulletEffectReceiver.ApplyDebuffElementType(_debuffElementData);
-        CharacterElementChangedEvent?.Invoke();
+        CharacterElementChanged();
     }
 
     public void UndoDebuffElementApply(DebuffElementData _debuffElementData)
     {
         characterUnit.bulletEffectReceiver.UndoDebuffElementApply(_debuffElementData);
-        CharacterElementChangedEvent?.Invoke();
+        CharacterElementChanged();
     }
 
     private void ElementExplosionOccured(ElementExplosionType _type)
@@ -441,5 +446,10 @@ public class UnitLogicSystem : MonoBehaviour, IStatusEffectCommandHandler
     public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
     {
         return characterUnit.bulletEffectReceiver.GetCurrentAppliedBulletElement();
+    }
+
+    public void CharacterElementChanged()
+    {
+        CharacterElementChangedEvent?.Invoke();
     }
 }

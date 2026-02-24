@@ -181,6 +181,9 @@ public class Earth : MonoBehaviour, IDamageable, IPlayerData, IPlayerHandler
 
     public void ApplyElementDebuff(IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> debuffs, Vector2 pos = default)
     {
+        if (debuffs == null)
+            return;
+
         foreach (KeyValuePair<DebuffElementEffectType, DebuffElementData> pair in debuffs)
         {
             if (currentAppliedDebuff.ContainsKey(pair.Key))

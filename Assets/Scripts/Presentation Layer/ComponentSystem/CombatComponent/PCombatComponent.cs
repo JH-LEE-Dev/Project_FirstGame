@@ -174,6 +174,11 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
         }
     }
 
+    public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
+    {
+        return currentEffectElements;
+    }
+
     /// <summary>
     /// 구현 코드 존. ----------------------------------------------------
     /// </summary>
@@ -191,10 +196,5 @@ public class PCombatComponent : CombatComponent, IBulletEffectReceiver, IBulletE
     protected override void Start()
     {
 
-    }
-
-    public IReadOnlyDictionary<BulletElementType, BulletElementData> GetCurrentAppliedBulletElement()
-    {
-        return currentEffectElements;
     }
 }

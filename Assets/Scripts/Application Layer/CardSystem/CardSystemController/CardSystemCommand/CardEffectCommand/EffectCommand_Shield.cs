@@ -16,6 +16,7 @@ public class EffectCommand_Shield : CardEffectCommand<IStatusEffectCommandHandle
 
         ResetCommandData();
     }
+
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
 

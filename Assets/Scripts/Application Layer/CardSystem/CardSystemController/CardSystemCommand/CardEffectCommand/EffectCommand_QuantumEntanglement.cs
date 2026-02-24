@@ -82,7 +82,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                     writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
 
 
-                if (availableCards.Count > 0)
+                if (duplicateCnt > 0)
                     handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
             }
         }
@@ -112,7 +112,7 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
             if (duplicateCnt != 0)
                 writeBuffer[duplicateCnt] = writeBuffer[duplicateCnt - 1];
 
-            if (_cards.Count > 0)
+            if (duplicateCnt > 0)
                 handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
         }
     }

@@ -51,8 +51,12 @@ public class IHEffectCommand_PrismBolt : CardEffectCommand<IStatusEffectCommandH
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        AdditionalAttackStat additionalAttackStat;
+        DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
+        additionalAttackStat = new AdditionalAttackStat(0, 0, 0, debuffElementData);
+
         cardStatusEffectCommandHandler.ResetBulletType();
-        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
+        cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(additionalAttackStat);
         cardStatusEffectCommandHandler.SetCharacterCanAttackState(false);
 
         foreach (KeyValuePair<BulletElementType, BulletElementData> pair in elementTypes)
