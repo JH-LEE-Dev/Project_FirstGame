@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/BatteryCharge")]

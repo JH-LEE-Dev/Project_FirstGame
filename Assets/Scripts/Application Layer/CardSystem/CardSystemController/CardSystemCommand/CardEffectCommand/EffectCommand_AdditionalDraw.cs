@@ -50,9 +50,8 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
 
             cardLogicSystemActionCommandHandler.DrawAgain(newDrawAmount);
         }
-
-        ResetCommandData();
     }
+
     protected override void Undo(ICardLogicSystemActionCommandHandler handler)
     {
 
