@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/QuantumEntanglement")]
 public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSystemActionCommandHandler>
@@ -14,11 +13,23 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
     private IComplexSystemActionCommandHandler handler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         if (forbiddenCards.Count == 0)
             forbiddenCards.Add(CardName.QuantumEntanglement);
@@ -42,9 +53,9 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
 
         if (bUpgraded == false)
         {
-            if (availableCards.Count > duplicateAmount * valueModifier)
+            if (availableCards.Count > duplicateAmount)
                 handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount * valueModifier,
+                    CardSelectionMode.DuplicateCardsToHand, duplicateAmount,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -62,9 +73,9 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
         }
         else
         {
-            if (availableCards.Count > upgradedDuplicateAmount * valueModifier)
+            if (availableCards.Count > upgradedDuplicateAmount)
                 handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
-                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount * valueModifier,
+                    CardSelectionMode.DuplicateCardsToHand, upgradedDuplicateAmount,
                     availableCards, true, HandleCardSelectionResult);
             else
             {
@@ -86,8 +97,6 @@ public class EffectCommand_QuantumEntanglement : CardEffectCommand<IComplexSyste
                     handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.DuplicateCardsToHand, writeBuffer.Slice(0, duplicateCnt + 1), GameSystemActionContextType.MAX);
             }
         }
-
-        ResetCommandData();
     }
 
     private void HandleCardSelectionResult(List<ICardDataInstanceProvider> _cards)

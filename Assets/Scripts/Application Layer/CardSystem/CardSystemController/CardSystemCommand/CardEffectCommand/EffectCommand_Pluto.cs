@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Pluto")]
 public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommandHandler>
@@ -11,11 +10,22 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
     IComplexSystemActionCommandHandler handler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         gameSystemActionContext = GameSystemActionContextType.ExtinctionCardsToDeck;
 
@@ -47,7 +57,7 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
 
         if (availableCards.Count > 1)
             handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Extinction,
-                CardSelectionMode.ExtinctionCardsToDeck, valueModifier, availableCards, true, HandleCardSelectionResult);
+                CardSelectionMode.ExtinctionCardsToDeck, 1, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)
@@ -58,8 +68,6 @@ public class EffectCommand_Pluto : CardEffectCommand<IComplexSystemActionCommand
             if (availableCards.Count > 0)
                 handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.ExtinctionCardsToDeck, writeBuffer, gameSystemActionContext);
         }
-
-        ResetCommandData();
     }
 
     private void HandleCardSelectionResult(List<ICardDataInstanceProvider> _cards)

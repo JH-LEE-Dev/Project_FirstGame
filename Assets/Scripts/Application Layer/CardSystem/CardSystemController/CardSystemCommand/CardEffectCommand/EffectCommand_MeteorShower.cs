@@ -8,8 +8,32 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
     [SerializeField] private int bonusAttack = 0;
     [SerializeField] private int upgradedBonusAttack = 0;
 
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
+        EffectConditionCheck();
+
         var handPile = handler.cardLogicSystem.GetHandPile();
 
         if (bUpgraded == false)
@@ -20,8 +44,6 @@ public class EffectCommand_MeteorShower : CardEffectCommand<IComplexSystemAction
         {
             handler.statusSystem.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler handler)

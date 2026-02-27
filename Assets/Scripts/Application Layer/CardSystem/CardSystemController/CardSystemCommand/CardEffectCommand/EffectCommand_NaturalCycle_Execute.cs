@@ -5,6 +5,18 @@ public class EffectCommand_NaturalCycle_Execute : CardEffectCommand<ICardLogicSy
 {
     private bool bExecuted = false;
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     public override void ResetCommandData()
     {
         base.ResetCommandData();

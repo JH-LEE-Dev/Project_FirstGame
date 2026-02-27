@@ -18,17 +18,31 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         }
     }
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         gameSystemActionContext = GameSystemActionContextType.UsedCardsToExtinction;
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
+        EffectConditionCheck();
+
         currentUsingPiles.Clear();
 
         IReadOnlyList<CardDataInstance> handPile = handler.cardLogicSystem.GetHandPile();
@@ -76,8 +90,6 @@ public class EffectCommand_FinalOrbit_Equipped : CardEffectCommand<IComplexSyste
         {
             handler.cardDataSystem.RevertCardsUpgrade(writeBuffer_Upgrade.Slice(0, upgradeCnt), false);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler handler)

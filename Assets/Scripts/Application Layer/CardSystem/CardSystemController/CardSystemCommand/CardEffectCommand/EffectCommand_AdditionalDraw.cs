@@ -6,8 +6,33 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
     [SerializeField] private int drawAmount = 0;
     [SerializeField] private int upgradedDrawAmount = 0;
 
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if(cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
     protected override void Execute(ICardLogicSystemActionCommandHandler cardLogicSystemActionCommandHandler)
     {
+        EffectConditionCheck();
+
         var handPile = cardLogicSystemActionCommandHandler.GetHandPile();
 
         if (handPile.Count == SYSTEM_VAR.maxHandPileCount)
@@ -18,7 +43,7 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
 
         if (bUpgraded == false)
         {
-            int newDrawAmount = drawAmount * valueModifier;
+            int newDrawAmount = drawAmount * (int)valueModifier;
 
             if (handPile.Count + newDrawAmount > SYSTEM_VAR.maxHandPileCount)
             {
@@ -35,7 +60,7 @@ public class EffectCommand_AdditionalDraw : CardEffectCommand<ICardLogicSystemAc
         }
         else
         {
-            int newDrawAmount = upgradedDrawAmount * valueModifier;
+            int newDrawAmount = upgradedDrawAmount * (int)valueModifier;
 
             if (handPile.Count + newDrawAmount > SYSTEM_VAR.maxHandPileCount)
             {

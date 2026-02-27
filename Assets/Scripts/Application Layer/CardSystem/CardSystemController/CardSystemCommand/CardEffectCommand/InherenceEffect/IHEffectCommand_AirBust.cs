@@ -4,8 +4,22 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Inherence/AirBust")]
 public class IHEffectCommand_AirBust : CardEffectCommand<IStatusEffectCommandHandler>
 {
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        EffectConditionCheck();
+
         cardStatusEffectCommandHandler.SetBulletType(BulletType.PrismBolt, bUpgraded);
         cardStatusEffectCommandHandler.ApplyAdditionalAttackStat(default);
         cardStatusEffectCommandHandler.SetCharacterCanAttackState(true);

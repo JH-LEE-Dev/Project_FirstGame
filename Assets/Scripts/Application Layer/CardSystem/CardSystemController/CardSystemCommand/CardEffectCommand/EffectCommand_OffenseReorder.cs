@@ -9,11 +9,22 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
 
     IComplexSystemActionCommandHandler handler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         gameSystemActionContext = GameSystemActionContextType.HandCardsToDeck;
     }
@@ -40,7 +51,7 @@ public class EffectCommand_OffenseReorder : CardEffectCommand<IComplexSystemActi
 
         if (availableCards.Count > 1)
             handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand,
-                CardSelectionMode.HandCardsToDeck, valueModifier, availableCards, true, HandleCardSelectionResult);
+                CardSelectionMode.HandCardsToDeck, 1, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)

@@ -9,20 +9,42 @@ public class EffectCommand_RiftDetection : CardEffectCommand<IStatusEffectComman
     [SerializeField] private int upgradedWeaknessTurn = 0;
     [SerializeField] private int upgradedBonusAttack = 0;
 
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        EffectConditionCheck();
+
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusAttack * valueModifier);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(weaknessTurn * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(weaknessTurn * (int)valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusAttack * valueModifier);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(upgradedWeaknessTurn * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(upgradedWeaknessTurn * (int)valueModifier);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
@@ -30,12 +52,12 @@ public class EffectCommand_RiftDetection : CardEffectCommand<IStatusEffectComman
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusAttack * valueModifier);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-weaknessTurn * (int)valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusAttack * valueModifier);
-            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * valueModifier);
+            cardStatusEffectCommandHandler.ApplyWeaknessModifier(-upgradedWeaknessTurn * (int)valueModifier);
         }
     }
 }

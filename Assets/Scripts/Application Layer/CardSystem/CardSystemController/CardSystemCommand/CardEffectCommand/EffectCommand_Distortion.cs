@@ -11,22 +11,44 @@ public class EffectCommand_Distortion : CardEffectCommand<IStatusEffectCommandHa
     [SerializeField] private int upgradedBonusCrit = 0;
     [SerializeField] private float upgradedBonusDamage = 0;
 
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        EffectConditionCheck();
+
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackRangeModifier(bonusRange * valueModifier);
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusCrit * (int)valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackRangeModifier(upgradedBonusRange  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusCrit  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusCrit  * (int)valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusDamage  * valueModifier);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
@@ -34,13 +56,13 @@ public class EffectCommand_Distortion : CardEffectCommand<IStatusEffectCommandHa
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-bonusRange  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusCrit  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusCrit  * (int)valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-bonusDamage  * valueModifier);
         }
         else
         {
             cardStatusEffectCommandHandler.ApplyAttackRangeModifier(-upgradedBonusRange  * valueModifier);
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusCrit  * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusCrit  * (int)valueModifier);
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(-upgradedBonusDamage  * valueModifier);
         }
     }

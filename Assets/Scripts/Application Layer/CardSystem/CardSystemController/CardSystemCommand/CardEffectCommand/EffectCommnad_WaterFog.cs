@@ -6,6 +6,19 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
 {
     private DebuffElementEffectType targetDebuff = DebuffElementEffectType.Wet;
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         var enemies = cardStatusEffectCommandHandler.GetEnemyHandlers();
@@ -51,7 +64,7 @@ public class EffectCommnad_WaterFog : CardEffectCommand<IStatusEffectCommandHand
                         {
                             writeBuffer_Applied[enemyCnt_Applied] = enemyHandler;
                             ++enemyCnt_Applied;
-                            enemyHandler.ApplyElementDebuff(debuffData,enemyHandler.enemyData.GetTransform().position);
+                            enemyHandler.ApplyElementDebuff(debuffData, enemyHandler.enemyData.GetTransform().position);
                         }
                     }
                 }

@@ -9,8 +9,23 @@ public class IHEffectCommand_AquaBurst : CardEffectCommand<IStatusEffectCommandH
     [SerializeField] private float upgradedvalue = 2;
     [SerializeField] private float upgradedAttackValue = 50;
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        EffectConditionCheck();
+
         AdditionalAttackStat additionalAttackStat;
         DebuffElementData debuffElementData = new DebuffElementData(DebuffElementEffectType.Default, 0);
 

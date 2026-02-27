@@ -7,8 +7,22 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
     [SerializeField] int bonusValueModifier = 1;
     [SerializeField] int upgradedBonusValueModifier = 1;
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
+        EffectConditionCheck();
+
         var bulletCards = handler.cardSlotSystem.GetCurrentCardSlot();
 
         using var rentalBuffer = new RentalScope<CardDataInstance>(SYSTEM_VAR.maxDeckPileCount);
@@ -58,8 +72,6 @@ public class EffectCommand_Amplify : CardEffectCommand<IComplexSystemActionComma
                 handler.cardDataSystem.ApplyValueModifier(writeBuffer.Slice(0, modifiedCnt), upgradedBonusValueModifier);
             }
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler handler)

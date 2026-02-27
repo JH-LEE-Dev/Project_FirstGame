@@ -7,26 +7,67 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
     private bool bEffectOn = false;
     private BulletElementData data = new BulletElementData(BulletElementType.Electric, 1);
     private DebuffElementData debuff = new DebuffElementData(DebuffElementEffectType.ElectricShock, 2);
+    private IComplexSystemActionCommandHandler handler = null;
 
-    protected override void Execute(IComplexSystemActionCommandHandler handler)
+    public override bool EffectConditionCheck()
     {
-        bUpgradedEffectOn = false;
-        bEffectOn = false;
+        if (handler == null)
+            return false;
 
         var currentElement = handler.statusSystem.GetCurrentAppliedBulletElement();
         var inherenceCard = handler.cardSlotSystem.GetCurrentInherenceCard();
 
-        if (inherenceCard == null)
-            return;
+        int newCondition = 0;
 
         if (bUpgraded == false)
         {
             if (currentElement.ContainsKey(BulletElementType.Electric))
-                return;
+                return false;
 
+            newCondition = 1;
+        }
+        else
+        {
+            if (currentElement.ContainsKey(BulletElementType.Electric))
+            {
+                newCondition = 2;
+            }
+            else
+            {
+                newCondition = 3;
+            }
+        }
+
+        if (newCondition != condition)
+        {
+            condition = newCondition;
+            CheckApplyCondition();
+        }
+
+        return true;
+    }
+
+
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
+    {
+        handler = _handler;
+
+        bUpgradedEffectOn = false;
+        bEffectOn = false;
+
+        var currentElement = _handler.statusSystem.GetCurrentAppliedBulletElement();
+        var inherenceCard = _handler.cardSlotSystem.GetCurrentInherenceCard();
+
+        if (inherenceCard == null)
+            return;
+        if (EffectConditionCheck() == false)
+            return;
+
+        if (bUpgraded == false)
+        {
             bEffectOn = true;
 
-            handler.statusSystem.ApplyBulletElementType(data);
+            _handler.statusSystem.ApplyBulletElementType(data);
         }
         else
         {
@@ -34,13 +75,13 @@ public class EffectCommand_BatteryCharge : CardEffectCommand<IComplexSystemActio
             {
                 bUpgradedEffectOn = true;
 
-                handler.statusSystem.ApplyDebuffElementType(debuff);
+                _handler.statusSystem.ApplyDebuffElementType(debuff);
             }
             else
             {
                 bEffectOn = true;
 
-                handler.statusSystem.ApplyBulletElementType(data);
+                _handler.statusSystem.ApplyBulletElementType(data);
             }
         }
     }

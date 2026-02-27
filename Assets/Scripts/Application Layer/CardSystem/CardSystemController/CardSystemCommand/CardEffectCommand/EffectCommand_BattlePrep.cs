@@ -10,13 +10,24 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
 
     IComplexSystemActionCommandHandler handler;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         gameSystemActionContext = GameSystemActionContextType.GraveCardsToHand;
+    }
+
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler _handler)
@@ -41,7 +52,7 @@ public class EffectCommand_BattlePrep : CardEffectCommand<IComplexSystemActionCo
 
         if (availableCards.Count > 1)
             handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Grave,
-                CardSelectionMode.GraveCardsToHand, valueModifier, availableCards, true, HandleCardSelectionResult);
+                CardSelectionMode.GraveCardsToHand, 1, availableCards, true, HandleCardSelectionResult);
         else
         {
             for (int i = 0; i < availableCards.Count; ++i)

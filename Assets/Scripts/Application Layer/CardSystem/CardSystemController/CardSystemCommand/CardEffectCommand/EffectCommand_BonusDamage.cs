@@ -6,8 +6,32 @@ public class EffectCommand_BonusDamage : CardEffectCommand<IStatusEffectCommandH
     [SerializeField] float bonusDamage = 0f;
     [SerializeField] float upgradedBonusDamage = 0f;
 
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
+        EffectConditionCheck();
+
         if (bUpgraded == false)
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
@@ -16,8 +40,6 @@ public class EffectCommand_BonusDamage : CardEffectCommand<IStatusEffectCommandH
         {
             cardStatusEffectCommandHandler.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)

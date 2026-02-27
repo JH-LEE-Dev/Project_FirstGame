@@ -8,29 +8,61 @@ public class EffectCommand_ElementalBoost : CardEffectCommand<IComplexSystemActi
     [SerializeField] private int bonusCrit = 0;
     [SerializeField] private float upgradedBonusDamage = 0f;
     [SerializeField] private int upgradedBonusCrit = 0;
-
+    private IComplexSystemActionCommandHandler handler = null;
     private bool bApplied = false;
 
-    protected override void Execute(IComplexSystemActionCommandHandler handler)
+    public override bool EffectConditionCheck()
     {
-        bApplied = false;
+        CalcValueModifier();
+
+        if (handler == null)
+            return false;
 
         var currentElement = handler.statusSystem.GetCurrentAppliedBulletElement();
 
-        if (currentElement.Count != 0)
+        if (currentElement.Count == 0)
+            return false;
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
         {
-            if (bUpgraded == false)
-            {
-                bApplied = true;
-                handler.statusSystem.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
-                handler.statusSystem.ApplyCriticalChanceModifier(bonusCrit * valueModifier);
-            }
-            else
-            {
-                bApplied = true;
-                handler.statusSystem.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier);
-                handler.statusSystem.ApplyCriticalChanceModifier(upgradedBonusCrit * valueModifier);
-            }
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
+    protected override void Execute(IComplexSystemActionCommandHandler _handler)
+    {
+        handler = _handler;
+        bApplied = false;
+
+        if (EffectConditionCheck() == false)
+            return;
+
+        var currentElement = _handler.statusSystem.GetCurrentAppliedBulletElement();
+
+        if (bUpgraded == false)
+        {
+            bApplied = true;
+            _handler.statusSystem.ApplyAdditionalAttackModifier(bonusDamage * valueModifier);
+            _handler.statusSystem.ApplyCriticalChanceModifier(bonusCrit * (int)valueModifier);
+        }
+        else
+        {
+            bApplied = true;
+            _handler.statusSystem.ApplyAdditionalAttackModifier(upgradedBonusDamage * valueModifier);
+            _handler.statusSystem.ApplyCriticalChanceModifier(upgradedBonusCrit * (int)valueModifier);
         }
     }
 
@@ -41,12 +73,12 @@ public class EffectCommand_ElementalBoost : CardEffectCommand<IComplexSystemActi
             if (bUpgraded == false)
             {
                 handler.statusSystem.ApplyAdditionalAttackModifier(-bonusDamage * valueModifier);
-                handler.statusSystem.ApplyCriticalChanceModifier(-bonusCrit * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(-bonusCrit * (int)valueModifier);
             }
             else
             {
                 handler.statusSystem.ApplyAdditionalAttackModifier(-upgradedBonusDamage * valueModifier);
-                handler.statusSystem.ApplyCriticalChanceModifier(-upgradedBonusCrit * valueModifier);
+                handler.statusSystem.ApplyCriticalChanceModifier(-upgradedBonusCrit * (int)valueModifier);
             }
         }
     }

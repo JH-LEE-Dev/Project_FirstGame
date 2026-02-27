@@ -6,6 +6,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Bullet/Recompense")]
 public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         var handPile = _handler.cardLogicSystem.GetHandPile();
@@ -61,8 +73,6 @@ public class EffectCommand_Recompense : CardEffectCommand<IComplexSystemActionCo
             _handler.cardLogicSystem.SetCardSystemContext(gameSystemActionContext);
             _handler.cardLogicSystem.DrawAgain(newDrawAmount);
         }
-
-        ResetCommandData();
     }
 
     protected override void Undo(IComplexSystemActionCommandHandler complexSystemActionCommandHandler)

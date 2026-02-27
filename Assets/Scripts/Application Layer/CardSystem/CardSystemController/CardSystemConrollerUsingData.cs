@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Structs-----------------------------------------
@@ -56,6 +55,18 @@ public struct CardDataControlSystemEventData
     public GameSystemActionContextType contextType;
 }
 
+public struct EffectModData
+{
+    public float value;
+    public BulletElementData bulletElementData;
+    public DebuffElementData debuffData;
+    public EffectModData(float _value,BulletElementData _bulletElementData, DebuffElementData _debuffData)
+    {
+        value = _value;
+        bulletElementData = _bulletElementData;
+        debuffData = _debuffData;
+    }
+}
 
 
 /// <summary>
@@ -209,4 +220,10 @@ public enum GameSystemActionContextType
     HandCardsToDeck,
     MAX,
     NoContext,
+}
+
+public enum EffectModType
+{
+    None,
+    AllValueModifier,
 }

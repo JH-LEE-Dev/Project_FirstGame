@@ -6,22 +6,43 @@ public class EffectCommand_CriticalChance : CardEffectCommand<IStatusEffectComma
     [SerializeField] private int bonusChance = 0;
     [SerializeField] private int upgradedBonusChance = 0;
 
+    private void CalcValueModifier()
+    {
+        if (cardEffectData.effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+        {
+            valueModifier = cardEffectData.effectModifiers[EffectModType.AllValueModifier].value;
+        }
+    }
+
+
+    public override bool EffectConditionCheck()
+    {
+        CalcValueModifier();
+
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
-        if (bUpgraded == false)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * valueModifier);
-        else
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusChance * valueModifier);
+        EffectConditionCheck();
 
-        ResetCommandData();
+        if (bUpgraded == false)
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(bonusChance * (int)valueModifier);
+        else
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(upgradedBonusChance * (int)valueModifier);
     }
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * valueModifier);
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-bonusChance * (int)valueModifier);
         else
-            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusChance * valueModifier);
-
-        ResetCommandData();
+            cardStatusEffectCommandHandler.ApplyCriticalChanceModifier(-upgradedBonusChance * (int)valueModifier);
     }
 }

@@ -9,9 +9,21 @@ public class EffectCommand_NaturalCycle_Ready : CardEffectCommand<IComplexSystem
 
     private bool bExecuted = false;
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes, Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
+    public override bool EffectConditionCheck()
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData, GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
+    {
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
     }
 
     protected override void Execute(IComplexSystemActionCommandHandler _handler)

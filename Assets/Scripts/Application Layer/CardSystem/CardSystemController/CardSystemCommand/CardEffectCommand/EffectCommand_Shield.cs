@@ -6,15 +6,24 @@ public class EffectCommand_Shield : CardEffectCommand<IStatusEffectCommandHandle
     [SerializeField] float bonusShield = 0f;
     [SerializeField] float upgradedBonusShield = 0f;
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IStatusEffectCommandHandler cardStatusEffectCommandHandler)
     {
         if (bUpgraded == false)
             cardStatusEffectCommandHandler.ApplyShieldModifier(bonusShield  * valueModifier);
         else
             cardStatusEffectCommandHandler.ApplyShieldModifier(upgradedBonusShield  * valueModifier);
-
-
-        ResetCommandData();
     }
 
     protected override void Undo(IStatusEffectCommandHandler cardStatusEffectCommandHandler)

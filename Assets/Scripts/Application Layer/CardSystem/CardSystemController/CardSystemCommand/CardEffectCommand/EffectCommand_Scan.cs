@@ -12,6 +12,19 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
 
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+
+        return true;
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler _handler)
     {
         availableCards.Clear();
@@ -63,8 +76,6 @@ public class EffectCommand_Scan : CardEffectCommand<IComplexSystemActionCommandH
                     handler.cardSystem.RequestCardLogicSystemActionCommand(CardLogicSystemActionType.GraveCardsToHand, writeBuffer.Slice(0, availableCards.Count), gameSystemActionContext);
             }
         }
-
-        ResetCommandData();
     }
 
     private void HandleCardSelectionResult(List<ICardDataInstanceProvider> _cards)

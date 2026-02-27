@@ -4,6 +4,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Cleanse")]
 public class EffectCommand_Cleanse : CardEffectCommand<IComplexSystemActionCommandHandler>
 {
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
     protected override void Execute(IComplexSystemActionCommandHandler handler)
     {
         bool bCleansed = false;

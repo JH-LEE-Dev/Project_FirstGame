@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 [CreateAssetMenu(menuName = "Command/CardEffect/Magic/Hand Enhancement")]
 public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemActionCommandHandler>
@@ -12,11 +11,22 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
 
     private List<ICardDataInstanceProvider> availableCards = new List<ICardDataInstanceProvider>(SYSTEM_VAR.maxDeckPileCount);
 
-    public override void InitializeCommand(int _valueModifier, bool _bUpgraded, Dictionary<BulletElementType, BulletElementData> _elementTypes,
-      Dictionary<DebuffElementEffectType, DebuffElementData> _debuffTypes,
+    public override bool EffectConditionCheck()
+    {
+        int newCondition = 0;
+
+        if (newCondition != condition)
+        {
+            CheckApplyCondition();
+            condition = newCondition;
+        }
+        return true;
+    }
+
+    public override void InitializeCommand(ICardEffectData _cardEffectData,
       GameSystemActionContextType _cardSystemContextType = GameSystemActionContextType.MAX)
     {
-        base.InitializeCommand(_valueModifier, _bUpgraded, _elementTypes, _debuffTypes, _cardSystemContextType);
+        base.InitializeCommand(_cardEffectData, _cardSystemContextType);
 
         gameSystemActionContext = GameSystemActionContextType.UpgradeCardsFromHand;
     }
@@ -44,7 +54,7 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
         {
             if (availableCards.Count > upgradeAmount)
                 handler.cardSelectionSystem.StartCardSelectionMode(SelectCardPileType.Hand, CardSelectionMode.UpgradeCardsToHand,
-                    upgradeAmount  * valueModifier, availableCards, true, HandleSelectionResult);
+                    upgradeAmount, availableCards, true, HandleSelectionResult);
             else
             {
                 for (int i = 0; i < availableCards.Count; ++i)
@@ -66,8 +76,6 @@ public class EffectCommand_HandEnhancement : CardEffectCommand<IComplexSystemAct
             if (availableCards.Count > 0)
                 handler.cardSystem.RequestCardDataControlSystemActionCommand(CardDataControlSystemActionType.CardsUpgraded, writeBuffer_Upgrade, gameSystemActionContext);
         }
-
-        ResetCommandData();
     }
 
     private void HandleSelectionResult(List<ICardDataInstanceProvider> _cards)

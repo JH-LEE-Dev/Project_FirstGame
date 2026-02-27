@@ -4,15 +4,22 @@ using UnityEngine;
 using static UnityEngine.UI.Image;
 
 [Serializable]
-public class CardDataInstance : ICardDataInstanceProvider
+public class CardDataInstance : ICardDataInstanceProvider,ICardEffectData
 {
+    public bool bUpgraded => bUpgrade;
+
+    IReadOnlyDictionary<BulletElementType, BulletElementData> ICardEffectData.elementTypes => elementTypes;
+
+    IReadOnlyDictionary<DebuffElementEffectType, DebuffElementData> ICardEffectData.debuffTypes => debuffTypes;
+
+    IReadOnlyDictionary<EffectModType, EffectModData> ICardEffectData.effectModifiers => effectModifiers;
+
     //카드 인스턴스마다 불변인 데이터는 cardData로 캡슐화.
     private CardData cardData;
 
     //카드 인스턴스마다 가변인 데이터는 CardDataInstance에 노출.
     public bool bUpgrade = false;
     public bool bPermanentUpgrade = false;
-    public int valueModifier = 1;
     public bool bPermanent = false;
 
     public Dictionary<BulletElementType, BulletElementData> elementTypes = new Dictionary<BulletElementType, BulletElementData>(SYSTEM_VAR.maxDebuffElementCount);
@@ -38,6 +45,8 @@ public class CardDataInstance : ICardDataInstanceProvider
     public CardEffectCommand GetHandPileExistEffect() { return HandPileExistEffect; }
 
     public CardUsingCondition cardUsingCondition;
+
+    public Dictionary<EffectModType, EffectModData> effectModifiers = new Dictionary<EffectModType, EffectModData>(SYSTEM_VAR.maxCardCount);
 
     public void Initialize(CardData cardData)
     {
@@ -137,7 +146,6 @@ public class CardDataInstance : ICardDataInstanceProvider
         bUpgrade = false;
         bPermanent = false;
         bPermanentUpgrade = false;
-        valueModifier = 1;
         ResetElement_Debuff();
     }
 
@@ -153,7 +161,7 @@ public class CardDataInstance : ICardDataInstanceProvider
 
     public void ResetCardData()
     {
-        valueModifier = 1;
+
     }
 
     public void SetUpgrade(bool boolean)
@@ -169,5 +177,11 @@ public class CardDataInstance : ICardDataInstanceProvider
     public bool IsUpgraded()
     {
         return bUpgrade || bPermanentUpgrade;
+    }
+
+
+    public void ApplyEffectMod(EffectModType _type, EffectModData _data)
+    {
+        effectModifiers.Add(_type, _data);
     }
 }

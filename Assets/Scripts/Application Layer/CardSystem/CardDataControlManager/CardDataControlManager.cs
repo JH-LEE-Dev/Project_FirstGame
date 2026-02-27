@@ -40,7 +40,7 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         }
     }
 
-    public void ExecuteCommand(GameSystemCommand actionCommand,bool bUndo)
+    public void ExecuteCommand(GameSystemCommand actionCommand, bool bUndo)
     {
         cardSystemContext = actionCommand.GetGameSystemContext();
 
@@ -55,7 +55,8 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         for (int i = 0; i < cards.Length; ++i)
         {
             if (cards[i].GetCardData().usingType == UsingType.Nesting)
-                cards[i].valueModifier *= valueModifier;
+                cards[i].effectModifiers.Add(EffectModType.AllValueModifier,
+                    new EffectModData(valueModifier, default, default));
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);
@@ -66,7 +67,19 @@ public class CardDataControlManager : MonoBehaviour, ICardDataControlActionComma
         for (int i = 0; i < cards.Length; ++i)
         {
             if (cards[i].GetCardData().usingType == UsingType.Nesting)
-                cards[i].valueModifier /= valueModifier;
+            {
+                if (cards[i].effectModifiers.ContainsKey(EffectModType.AllValueModifier))
+                {
+                    var data = cards[i].effectModifiers[EffectModType.AllValueModifier];
+                    data.value /= valueModifier;
+                    cards[i].effectModifiers[EffectModType.AllValueModifier] = data;
+
+                    if (data.value == 1)
+                    {
+                        cards[i].effectModifiers.Remove(EffectModType.AllValueModifier);
+                    }
+                }
+            }
         }
 
         cardSystemEventInvoker.Dispatch(CardDataControlSystemEventType.CardsValueModified, cardSystemContext, cards);
